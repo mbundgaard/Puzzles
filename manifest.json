@@ -31,8 +31,13 @@
     {
       "src": "icons/Ampeross-Qetto-2-Games.256.png",
       "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/Ampeross-Qetto-2-Games.apple.png",
+      "sizes": "232x232",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
