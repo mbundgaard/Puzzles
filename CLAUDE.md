@@ -19,6 +19,7 @@ This is a collection of browser-based puzzles and mind games. Each puzzle is a s
 
 All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyboard):
 
+- **Mobile first, desktop compatible**: Design for mobile screens first, but ensure it works well on desktop too
 - **No right-click dependencies**: Right-click is unavailable on touch devices. If a puzzle needs secondary actions (like marking cells), provide a visible toggle button or mode selector.
 - **No keyboard dependencies**: All gameplay must be possible with touch/tap only.
 - **Tap targets**: Interactive elements should be at least 44x44 pixels for easy tapping.
@@ -64,7 +65,11 @@ The main page should include:
 
 1. **Title**: "Tænkeren"
 2. **Subtitle**: Brief description in Danish
-3. **Puzzle grid**: Cards linking to each puzzle
+3. **Compact puzzle grid**: Small square tiles (3 columns on mobile, more on desktop)
+   - Each tile shows puzzle number and name only
+   - Info button (ℹ) on each tile opens description modal
+   - Tap tile to go directly to game
+   - Scalable design for 20+ games without excessive scrolling
 4. **Share button**: Icon (📤) in top-right corner that opens QR code popup
 5. **QR code popup**: Links to https://mbundgaard.github.io/Puzzles/index.html
 6. **iOS meta tags**: For "Add to Home Screen" functionality

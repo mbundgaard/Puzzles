@@ -27,11 +27,11 @@
             font-family: 'Georgia', serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 600px;
             margin: 0 auto;
             position: relative;
         }
@@ -40,23 +40,18 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(145deg, #f4e4bc 0%, #e8d5a8 100%);
-            border: 3px solid #8b5a2b;
+            border: 2px solid #8b5a2b;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
-        }
-
-        .share-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .share-btn:active {
@@ -65,92 +60,97 @@
 
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 25px;
+            padding-top: 5px;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             color: #e8d5b7;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            margin-bottom: 10px;
-            letter-spacing: 3px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
         }
 
         .subtitle {
-            color: #a0a0a0;
-            font-size: 1.2rem;
+            color: #888;
+            font-size: 0.9rem;
             font-style: italic;
+            margin-top: 5px;
         }
 
         .puzzle-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
-        .puzzle-card {
+        .puzzle-tile {
             background: linear-gradient(145deg, #f4e4bc 0%, #e8d5a8 100%);
-            border-radius: 12px;
-            padding: 25px;
+            border-radius: 10px;
             text-decoration: none;
             color: #2c1810;
-            box-shadow:
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                inset 0 2px 0 rgba(255, 255, 255, 0.4);
-            border: 3px solid #8b5a2b;
-            transition: all 0.3s ease;
-            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 2px solid #8b5a2b;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            position: relative;
+            aspect-ratio: 1;
+            justify-content: center;
         }
 
-        .puzzle-card:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.4);
+        .puzzle-tile:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .puzzle-number {
-            display: inline-block;
             background: linear-gradient(180deg, #6b8e23 0%, #556b2f 100%);
             color: white;
-            font-size: 0.85rem;
-            padding: 4px 12px;
-            border-radius: 15px;
-            margin-bottom: 12px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
             font-weight: bold;
+            margin-bottom: 6px;
         }
 
-        .puzzle-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #2c1810;
-        }
-
-        .puzzle-card p {
-            color: #5a4030;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .puzzle-card .play-hint {
-            margin-top: 15px;
-            color: #8b5a2b;
+        .puzzle-tile h2 {
             font-size: 0.85rem;
-            font-style: italic;
+            text-align: center;
+            line-height: 1.2;
         }
 
-        .puzzle-card .play-hint::after {
-            content: ' →';
+        .info-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 22px;
+            height: 22px;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: #8b5a2b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-btn:active {
+            background: rgba(0,0,0,0.2);
         }
 
         footer {
             text-align: center;
-            margin-top: 60px;
-            color: #606060;
-            font-size: 0.9rem;
+            margin-top: 30px;
+            color: #555;
+            font-size: 0.8rem;
         }
 
-        /* Modal/Popup styles */
+        /* Modal styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -158,10 +158,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal-overlay.active {
@@ -171,66 +172,83 @@
         .modal {
             background: linear-gradient(145deg, #f4e4bc 0%, #e8d5a8 100%);
             border-radius: 12px;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
-            border: 4px solid #8b5a2b;
+            border: 3px solid #8b5a2b;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            max-width: 320px;
+            max-width: 300px;
+            width: 100%;
             position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: 8px;
+            right: 12px;
             font-size: 1.5rem;
             color: #8b5a2b;
             cursor: pointer;
             line-height: 1;
         }
 
-        .modal-close:hover {
-            color: #2c1810;
-        }
-
         .modal h3 {
             color: #2c1810;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .modal p {
+            color: #5a4030;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .modal-play-btn {
+            display: inline-block;
+            background: linear-gradient(180deg, #6b8e23 0%, #556b2f 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-family: inherit;
+            box-shadow: 0 3px 0 #3d4f22;
+        }
+
+        .modal-play-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #3d4f22;
         }
 
         .qr-code {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .qr-code canvas {
-            display: block;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .share-url {
-            margin-top: 15px;
+            margin-top: 12px;
             color: #5a4030;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             word-break: break-all;
         }
 
-        @media (max-width: 500px) {
-            h1 {
-                font-size: 2rem;
+        @media (min-width: 500px) {
+            .puzzle-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 700px) {
+            .puzzle-grid {
+                grid-template-columns: repeat(5, 1fr);
             }
 
-            .puzzle-card {
-                padding: 20px;
-            }
-
-            .share-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 1.3rem;
+            .puzzle-tile h2 {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -243,22 +261,20 @@
 
         <header>
             <h1>Tænkeren</h1>
-            <p class="subtitle">En samling af klassiske spil og puslespil</p>
+            <p class="subtitle">Klassiske spil og puslespil</p>
         </header>
 
         <div class="puzzle-grid">
-            <a href="01-reversi/index.html" class="puzzle-card">
+            <a href="01-reversi/index.html" class="puzzle-tile" data-desc="Det klassiske strategispil hvor du erobrer modstanderens brikker. Spil mod en AI der beregner de bedste træk. Vælg mellem 6×6, 8×8 eller 10×10 brætter.">
                 <span class="puzzle-number">#01</span>
                 <h2>Reversi</h2>
-                <p>Det klassiske strategispil hvor du erobrer modstanderens brikker. Spil mod en AI der beregner de bedste træk. Vælg mellem 6×6, 8×8 eller 10×10 brætter.</p>
-                <div class="play-hint">Tryk for at spille</div>
+                <button class="info-btn" aria-label="Info">ℹ</button>
             </a>
 
-            <a href="02-tents-and-trees/index.html" class="puzzle-card">
+            <a href="02-tents-and-trees/index.html" class="puzzle-tile" data-desc="Et logikpuslespil hvor du placerer telte ved siden af træer. Hvert telt hører til ét træ, og telte må ikke røre hinanden. Brug række- og kolonne-tallene til at løse det.">
                 <span class="puzzle-number">#02</span>
                 <h2>Telte og Træer</h2>
-                <p>Et logikpuslespil hvor du placerer telte ved siden af træer. Hvert telt hører til ét træ, og telte må ikke røre hinanden. Brug række- og kolonne-tallene til at løse det.</p>
-                <div class="play-hint">Tryk for at spille</div>
+                <button class="info-btn" aria-label="Info">ℹ</button>
             </a>
         </div>
 
@@ -267,35 +283,62 @@
         </footer>
     </div>
 
-    <!-- QR Code Modal -->
-    <div class="modal-overlay" id="modal-overlay">
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="info-modal">
         <div class="modal">
-            <span class="modal-close" id="modal-close">×</span>
+            <span class="modal-close" id="info-close">×</span>
+            <h3 id="info-title"></h3>
+            <p id="info-desc"></p>
+            <a href="#" class="modal-play-btn" id="info-play">Spil nu</a>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal-overlay" id="qr-modal">
+        <div class="modal">
+            <span class="modal-close" id="qr-close">×</span>
             <h3>Del med venner</h3>
             <div class="qr-code">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR kode" width="180" height="180">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR kode" width="150" height="150">
             </div>
             <p class="share-url">https://mbundgaard.github.io/Puzzles/</p>
         </div>
     </div>
 
     <script>
+        // QR Modal
         const shareBtn = document.getElementById('share-btn');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalClose = document.getElementById('modal-close');
+        const qrModal = document.getElementById('qr-modal');
+        const qrClose = document.getElementById('qr-close');
 
-        shareBtn.addEventListener('click', () => {
-            modalOverlay.classList.add('active');
+        shareBtn.addEventListener('click', () => qrModal.classList.add('active'));
+        qrClose.addEventListener('click', () => qrModal.classList.remove('active'));
+        qrModal.addEventListener('click', (e) => {
+            if (e.target === qrModal) qrModal.classList.remove('active');
         });
 
-        modalClose.addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
+        // Info Modal
+        const infoModal = document.getElementById('info-modal');
+        const infoClose = document.getElementById('info-close');
+        const infoTitle = document.getElementById('info-title');
+        const infoDesc = document.getElementById('info-desc');
+        const infoPlay = document.getElementById('info-play');
+
+        document.querySelectorAll('.info-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const tile = btn.closest('.puzzle-tile');
+                infoTitle.textContent = tile.querySelector('h2').textContent;
+                infoDesc.textContent = tile.dataset.desc;
+                infoPlay.href = tile.href;
+                infoModal.classList.add('active');
+            });
         });
 
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('active');
-            }
+        infoClose.addEventListener('click', () => infoModal.classList.remove('active'));
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) infoModal.classList.remove('active');
         });
     </script>
 </body>
