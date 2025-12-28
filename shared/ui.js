@@ -326,68 +326,6 @@ const HjernespilUI = (() => {
                 cursor: not-allowed;
             }
 
-            .hjernespil-win-btn.secondary {
-                background: rgba(255, 255, 255, 0.1);
-                margin-top: 10px;
-            }
-
-            .hjernespil-leaderboard-section {
-                margin-bottom: 20px;
-            }
-
-            .hjernespil-leaderboard-section h3 {
-                font-size: 1rem;
-                color: rgba(255, 255, 255, 0.9);
-                margin-bottom: 10px;
-            }
-
-            .hjernespil-leaderboard {
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 10px;
-                padding: 10px;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-
-            .hjernespil-leaderboard .loading {
-                color: rgba(255, 255, 255, 0.5);
-                padding: 10px;
-            }
-
-            .hjernespil-leaderboard-entry {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 10px;
-                border-radius: 8px;
-            }
-
-            .hjernespil-leaderboard-entry:nth-child(odd) {
-                background: rgba(255, 255, 255, 0.03);
-            }
-
-            .hjernespil-leaderboard-entry.highlight {
-                background: rgba(34, 197, 94, 0.2);
-                border: 1px solid rgba(34, 197, 94, 0.3);
-            }
-
-            .hjernespil-leaderboard-rank {
-                font-weight: 700;
-                color: #22c55e;
-                width: 30px;
-            }
-
-            .hjernespil-leaderboard-name {
-                flex: 1;
-                text-align: left;
-                margin-left: 10px;
-                color: rgba(255, 255, 255, 0.9);
-            }
-
-            .hjernespil-leaderboard-wins {
-                color: rgba(255, 255, 255, 0.6);
-                font-size: 0.9rem;
-            }
         `;
         document.head.appendChild(style);
     }
@@ -560,74 +498,16 @@ const HjernespilUI = (() => {
                     <input type="text" class="hjernespil-win-nickname" placeholder="Indtast navn" maxlength="20">
                     <button class="hjernespil-win-btn hjernespil-submit-score">Gem Score</button>
                 </div>
-
-                <div class="hjernespil-leaderboard-section">
-                    <h3>Rangliste (denne måned)</h3>
-                    <div class="hjernespil-leaderboard">
-                        <p class="loading">Indlæser...</p>
-                    </div>
-                </div>
-
-                <button class="hjernespil-win-btn secondary hjernespil-close-win">Luk</button>
             </div>
         `;
 
         const nicknameInput = overlay.querySelector('.hjernespil-win-nickname');
         const submitBtn = overlay.querySelector('.hjernespil-submit-score');
-        const closeBtn = overlay.querySelector('.hjernespil-close-win');
-        const leaderboardEl = overlay.querySelector('.hjernespil-leaderboard');
-        const nicknameSection = overlay.querySelector('.hjernespil-nickname-section');
 
         // Pre-fill nickname
         const savedNickname = HjernespilAPI.getNickname();
         if (savedNickname) {
             nicknameInput.value = savedNickname;
-        }
-
-        // Close modal
-        closeBtn.onclick = () => {
-            overlay.classList.remove('active');
-        };
-
-        overlay.onclick = (e) => {
-            if (e.target === overlay) {
-                overlay.classList.remove('active');
-            }
-        };
-
-        // Helper: escape HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Render leaderboard
-        function renderLeaderboard(entries, highlightName) {
-            if (!entries || entries.length === 0) {
-                leaderboardEl.innerHTML = '<p class="loading">Ingen scores endnu</p>';
-                return;
-            }
-
-            leaderboardEl.innerHTML = entries.map((entry, i) => `
-                <div class="hjernespil-leaderboard-entry ${entry.nickname === highlightName ? 'highlight' : ''}">
-                    <span class="hjernespil-leaderboard-rank">${i + 1}.</span>
-                    <span class="hjernespil-leaderboard-name">${escapeHtml(entry.nickname)}</span>
-                    <span class="hjernespil-leaderboard-wins">${entry.wins} ${entry.wins === 1 ? 'sejr' : 'sejre'}</span>
-                </div>
-            `).join('');
-        }
-
-        // Load leaderboard
-        async function loadLeaderboard(highlightName = null) {
-            leaderboardEl.innerHTML = '<p class="loading">Indlæser...</p>';
-
-            try {
-                const data = await HjernespilAPI.getLeaderboard(gameNumber, 10);
-                renderLeaderboard(data.entries, highlightName);
-            } catch (error) {
-                leaderboardEl.innerHTML = '<p class="loading">Kunne ikke indlæse rangliste</p>';
-            }
         }
 
         // Submit score
@@ -646,14 +526,12 @@ const HjernespilUI = (() => {
             const result = await HjernespilAPI.recordWin(gameNumber, nickname);
 
             if (result.success) {
-                nicknameSection.classList.add('submitted');
-                loadLeaderboard(nickname);
+                overlay.classList.remove('active');
             } else {
                 alert(result.error || 'Kunne ikke gemme score');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gem Score';
             }
-
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Gem Score';
         };
 
         document.body.appendChild(overlay);
@@ -662,13 +540,13 @@ const HjernespilUI = (() => {
             overlay,
             open: () => {
                 // Reset state
-                nicknameSection.classList.remove('submitted');
                 const savedName = HjernespilAPI.getNickname();
                 if (savedName) {
                     nicknameInput.value = savedName;
                 }
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gem Score';
                 overlay.classList.add('active');
-                loadLeaderboard();
             }
         };
     }
