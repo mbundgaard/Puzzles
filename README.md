@@ -2,7 +2,7 @@
 
 A collection of browser-based puzzles and brain games. All games are touch-friendly and work great on mobile devices.
 
-This is a family project made just for fun - built 100% with [Claude Code](https://claude.ai/claude-code)!
+This is a family project made just for fun - built 100% with [Claude Code](https://claude.com/product/claude-code)!
 
 **[Play now → mbundgaard.github.io/Puzzles](https://mbundgaard.github.io/Puzzles/)**
 
@@ -126,7 +126,7 @@ python -m http.server 8000
 
 ## Built with Claude Code
 
-This entire project was built 100% with [Claude Code](https://claude.ai/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
+This entire project was built 100% with [Claude Code](https://claude.com/product/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
 
 ## License
 
