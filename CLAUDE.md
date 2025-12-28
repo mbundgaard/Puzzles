@@ -31,6 +31,8 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 
 ```
 ├── index.html              # Main puzzle index
+├── shared/
+│   └── api.js              # Shared API client (HjernespilAPI)
 ├── XX-puzzle-name/         # Numbered folder per puzzle
 │   ├── index.html          # Puzzle page
 │   ├── style.css           # Styles
@@ -120,6 +122,39 @@ Games are identified by their folder number (01-14). Numbers are never reused if
 | 12 | Rørføring |
 | 13 | 15-Puslespil |
 | 14 | Kodeknækker |
+
+### Shared API Client (shared/api.js)
+
+All games should include the shared API client for tracking and leaderboard:
+
+```html
+<script src="../shared/api.js"></script>
+```
+
+**Usage in games:**
+```javascript
+// Track game start (call on load or new game)
+HjernespilAPI.trackStart('01');
+
+// Track game completion (call on victory)
+HjernespilAPI.trackComplete('01');
+
+// Record win to leaderboard
+const nickname = HjernespilAPI.getNickname() || prompt('Dit navn:');
+if (HjernespilAPI.isValidNickname(nickname)) {
+    HjernespilAPI.setNickname(nickname);
+    await HjernespilAPI.recordWin('01', nickname);
+}
+```
+
+**Available methods:**
+- `trackStart(game)` - Track game start
+- `trackComplete(game)` - Track game completion
+- `recordWin(game, nickname)` - Record win to leaderboard
+- `getLeaderboard(game?, top?)` - Get leaderboard entries
+- `getTodayStats()` - Get today's starts/completions
+- `getNickname()` / `setNickname(name)` - Manage saved nickname
+- `isValidNickname(name)` - Validate nickname (2-20 chars)
 
 ## Git Workflow
 

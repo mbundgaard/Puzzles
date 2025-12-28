@@ -12,8 +12,11 @@ builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-// Register storage - swap Mock* for AzureTable* in production
-builder.Services.AddSingleton<IWinStorage, MockWinStorage>();
-builder.Services.AddSingleton<IEventStorage, MockEventStorage>();
+// Register Azure Table Storage
+var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage")
+    ?? throw new InvalidOperationException("AzureWebJobsStorage connection string not configured");
+
+builder.Services.AddSingleton<IWinStorage>(new AzureTableWinStorage(connectionString));
+builder.Services.AddSingleton<IEventStorage>(new AzureTableEventStorage(connectionString));
 
 builder.Build().Run();

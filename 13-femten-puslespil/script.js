@@ -41,6 +41,7 @@ class FifteenPuzzle {
         this.shuffle(100);
 
         this.render();
+        HjernespilAPI.trackStart('13');
     }
 
     shuffle(moves) {
@@ -144,6 +145,7 @@ class FifteenPuzzle {
         this.gameOver = true;
         this.stopTimer();
         this.boardEl.classList.add('won');
+        HjernespilAPI.trackComplete('13');
 
         setTimeout(() => {
             alert(`Tillykke! Du løste puslespillet på ${this.moves} træk og ${this.formatTime(this.time)}!`);

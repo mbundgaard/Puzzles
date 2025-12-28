@@ -69,6 +69,7 @@ class Minesweeper {
         this.firstClick = true;
         this.updateMinesCount();
         this.render();
+        HjernespilAPI.trackStart('06');
     }
 
     placeMines(excludeRow, excludeCol) {
@@ -195,6 +196,7 @@ class Minesweeper {
         if (this.checkWin()) {
             this.gameOver = true;
             setTimeout(() => this.victoryOverlay.classList.add('show'), 300);
+            HjernespilAPI.trackComplete('06');
         }
     }
 

@@ -85,6 +85,7 @@ class Game2048 {
         this.addRandomTile();
         this.addRandomTile();
         this.render();
+        HjernespilAPI.trackStart('05');
     }
 
     addRandomTile() {
@@ -117,6 +118,7 @@ class Game2048 {
             if (!this.won && this.hasWon()) {
                 this.won = true;
                 setTimeout(() => this.victoryOverlay.classList.add('show'), 300);
+                HjernespilAPI.trackComplete('05');
             }
 
             if (this.isGameOver()) {

@@ -217,6 +217,8 @@ class Ordleg {
         keys.forEach(key => {
             key.className = 'key' + (key.dataset.key.length > 1 ? ' wide' : '');
         });
+
+        HjernespilAPI.trackStart('10');
     }
 
     handleKeydown(e) {
@@ -310,6 +312,7 @@ class Ordleg {
                 const messages = ['Genialt!', 'Fantastisk!', 'Flot!', 'Godt gået!', 'Fint!', 'Puh!'];
                 this.showMessage(messages[this.currentRow], 'success');
                 this.gameOver = true;
+                HjernespilAPI.trackComplete('10');
             } else if (this.currentRow >= this.maxGuesses - 1) {
                 this.showMessage(`Ordet var: ${this.targetWord.toUpperCase()}`, 'error');
                 this.gameOver = true;

@@ -39,6 +39,7 @@ class PipePuzzle {
         this.status.className = 'status';
         this.generatePuzzle();
         this.render();
+        HjernespilAPI.trackStart('12');
     }
 
     generatePuzzle() {
@@ -285,6 +286,7 @@ class PipePuzzle {
             this.gameOver = true;
             this.status.textContent = 'Tillykke! Du klarede det!';
             this.status.className = 'status winner';
+            HjernespilAPI.trackComplete('12');
         }
     }
 }
