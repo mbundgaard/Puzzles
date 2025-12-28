@@ -89,3 +89,4 @@ The main page uses a modern gaming/app design with:
 - Commit messages in Danish
 - Push to feature branch, not main
 - Clear, descriptive commit messages
+- **Opdater tidsstempel**: Ved ændringer, opdater "Sidst opdateret" i footer på index.html med seneste commit-tidspunkt (format: "DD. måned ÅÅÅÅ kl. HH:MM")
