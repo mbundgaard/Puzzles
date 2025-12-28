@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="rotate-notice" id="rotate-notice">
+        <div class="rotate-content">
+            <div class="rotate-icon">📱</div>
+            <div class="rotate-arrow">↻</div>
+            <p>Vend telefonen til landskab for bedste oplevelse</p>
+            <button id="dismiss-rotate">Fortsæt alligevel</button>
+        </div>
+    </div>
+
     <div class="game-container">
         <header>
             <h1>Kalaha</h1>
@@ -15,9 +24,8 @@
 
         <div class="controls">
             <button id="new-game">Nyt Spil</button>
+            <div class="status" id="status">Din tur</div>
         </div>
-
-        <div class="status" id="status">Din tur</div>
 
         <div class="board">
             <div class="store ai-store" id="store-ai">

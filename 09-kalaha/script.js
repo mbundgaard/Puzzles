@@ -1,3 +1,35 @@
+// Check if should show rotate notice
+function checkRotateNotice() {
+    const rotateNotice = document.getElementById('rotate-notice');
+    const dismissBtn = document.getElementById('dismiss-rotate');
+
+    // Only show on mobile devices in portrait mode
+    const isMobile = window.innerWidth <= 768 && 'ontouchstart' in window;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const dismissed = sessionStorage.getItem('kalaha-rotate-dismissed');
+
+    if (isMobile && isPortrait && !dismissed) {
+        rotateNotice.classList.add('show');
+    } else {
+        rotateNotice.classList.remove('show');
+    }
+
+    dismissBtn.addEventListener('click', () => {
+        rotateNotice.classList.remove('show');
+        sessionStorage.setItem('kalaha-rotate-dismissed', 'true');
+    });
+
+    // Auto-hide when rotated to landscape
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > window.innerHeight) {
+            rotateNotice.classList.remove('show');
+            sessionStorage.setItem('kalaha-rotate-dismissed', 'true');
+        }
+    });
+}
+
+checkRotateNotice();
+
 class Kalaha {
     constructor() {
         // Board layout:
