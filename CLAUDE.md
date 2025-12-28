@@ -125,36 +125,103 @@ Games are identified by their folder number (01-14). Numbers are never reused if
 
 ### Shared API Client (shared/api.js)
 
-All games should include the shared API client for tracking and leaderboard:
+All games must include the shared API client for tracking:
 
 ```html
 <script src="../shared/api.js"></script>
+<script src="script.js"></script>
 ```
 
-**Usage in games:**
+#### Required Integration
+
+Every game MUST call these two methods:
+
 ```javascript
-// Track game start (call on load or new game)
-HjernespilAPI.trackStart('01');
+// 1. In newGame() function - track when a new game starts
+newGame() {
+    // ... game initialization code ...
+    HjernespilAPI.trackStart('XX');  // Replace XX with game number
+}
 
-// Track game completion (call on victory)
-HjernespilAPI.trackComplete('01');
-
-// Record win to leaderboard
-const nickname = HjernespilAPI.getNickname() || prompt('Dit navn:');
-if (HjernespilAPI.isValidNickname(nickname)) {
-    HjernespilAPI.setNickname(nickname);
-    await HjernespilAPI.recordWin('01', nickname);
+// 2. In victory detection - track when player wins
+if (playerWins) {
+    HjernespilAPI.trackComplete('XX');  // Replace XX with game number
 }
 ```
 
-**Available methods:**
-- `trackStart(game)` - Track game start
-- `trackComplete(game)` - Track game completion
-- `recordWin(game, nickname)` - Record win to leaderboard
-- `getLeaderboard(game?, top?)` - Get leaderboard entries
-- `getTodayStats()` - Get today's starts/completions
-- `getNickname()` / `setNickname(name)` - Manage saved nickname
-- `isValidNickname(name)` - Validate nickname (2-20 chars)
+#### Complete Integration Example
+
+```javascript
+class MyGame {
+    newGame() {
+        // Reset game state
+        this.board = this.generateBoard();
+        this.moves = 0;
+        this.gameOver = false;
+        this.render();
+
+        // Track game start
+        HjernespilAPI.trackStart('15');
+    }
+
+    checkWin() {
+        if (this.isSolved()) {
+            this.gameOver = true;
+            this.showVictory();
+
+            // Track completion
+            HjernespilAPI.trackComplete('15');
+        }
+    }
+}
+```
+
+#### Optional: Leaderboard Integration
+
+```javascript
+// Record win to leaderboard (optional feature)
+async function recordPlayerWin() {
+    const nickname = HjernespilAPI.getNickname() || prompt('Dit navn:');
+    if (HjernespilAPI.isValidNickname(nickname)) {
+        HjernespilAPI.setNickname(nickname);
+        const result = await HjernespilAPI.recordWin('01', nickname);
+        if (result.success) {
+            console.log('Win recorded!');
+        }
+    }
+}
+
+// Display leaderboard
+async function showLeaderboard() {
+    const data = await HjernespilAPI.getLeaderboard('01', 10);
+    data.entries.forEach((entry, i) => {
+        console.log(`${i+1}. ${entry.nickname}: ${entry.wins} wins`);
+    });
+}
+```
+
+#### All Available Methods
+
+| Method | Description | Returns |
+|--------|-------------|---------|
+| `trackStart(game)` | Track game start (fire-and-forget) | void |
+| `trackComplete(game)` | Track game completion (fire-and-forget) | void |
+| `trackEvent(game, event)` | Track custom event ("start" or "complete") | void |
+| `recordWin(game, nickname)` | Record win to leaderboard | `Promise<{success, message?, error?}>` |
+| `getLeaderboard(game?, top?)` | Get top players this month | `Promise<{period, entries[], totalWinsThisMonth}>` |
+| `getTodayStats()` | Get today's activity | `Promise<{date, starts, completions}>` |
+| `getUsageStats(game?)` | Get monthly usage stats | `Promise<{period, totalStarts, totalCompletions, perGame[]}>` |
+| `getStats()` | Get total wins this month | `Promise<{period, totalWins}>` |
+| `getNickname()` | Get saved nickname from localStorage | `string \| null` |
+| `setNickname(name)` | Save nickname to localStorage | void |
+| `isValidNickname(name)` | Validate nickname (2-20 chars) | boolean |
+
+#### Notes
+
+- `trackStart` and `trackComplete` are fire-and-forget (don't await)
+- Game numbers must be zero-padded strings: "01", "02", ... "14"
+- Nickname must be 2-20 characters
+- Rate limit: 1 win per game per minute per player
 
 ## Git Workflow
 
