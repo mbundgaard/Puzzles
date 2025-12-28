@@ -37,10 +37,13 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 
 ### Styling Guidelines
 
-- Board game aesthetic with warm, tactile feel
+- Modern gaming/app aesthetic with dark theme
+- Glassmorphism effects (blur, transparency, subtle borders)
 - Responsive design for mobile and desktop
-- Consistent color palette (browns, greens, parchment tones)
-- Clear visual feedback for interactions
+- Color palette: Dark backgrounds (#0f0f23), purple/magenta/cyan accents, white text
+- Poppins font for modern feel
+- Animated elements and smooth transitions
+- Clear visual feedback for interactions (scale on tap, color accents)
 
 ### Each Puzzle Should Have
 
@@ -61,21 +64,26 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 
 ## Main Page (index.html)
 
-The main page should include:
+The main page uses a modern gaming/app design with:
 
-1. **Title**: "Tænkeren"
-2. **Subtitle**: Brief description in Danish
-3. **Compact puzzle grid**: Small square tiles (3 columns on mobile, more on desktop)
-   - Each tile shows puzzle number and name only
-   - Info button (ℹ) on each tile opens description modal
-   - Tap tile to go directly to game
-   - Scalable design for 20+ games without excessive scrolling
-4. **Share button**: Icon (📤) in top-right corner that opens QR code popup
-5. **QR code popup**: Links to https://mbundgaard.github.io/Puzzles/index.html
-6. **iOS meta tags**: For "Add to Home Screen" functionality
+1. **Header**:
+   - Animated logo icon (🧠) with gradient background and float animation
+   - Title "Tænkeren" with gradient text effect
+   - Share button (📤) with glassmorphism style
+2. **Subtitle**: "Træn din hjerne med sjove udfordringer"
+3. **Game grid**: Square cards (2 columns on mobile, 3 on desktop)
+   - Each card has: badge (#XX), large icon, title, short description
+   - Glassmorphism background with colored accent line on tap
+   - Play indicator appears on active state
+   - Unique accent color per game
+4. **Footer**: Game count badge and "Flere spil kommer snart!"
+5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
+6. **QR modal**: Dark theme modal with pop animation
+7. **iOS/Android meta tags**: For "Add to Home Screen" functionality
    - `apple-mobile-web-app-capable`
    - `apple-mobile-web-app-title`
    - `apple-touch-icon` (180x180 PNG)
+   - `theme-color` (#0f0f23)
 
 ## Git Workflow
 
