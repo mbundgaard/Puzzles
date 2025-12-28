@@ -15,14 +15,17 @@ const HjernespilAPI = (() => {
      * @param {string} event - Event type: "start" or "complete"
      */
     async function trackEvent(game, event) {
+        console.log(`[HjernespilAPI] Tracking event: ${event} for game ${game}`);
         try {
-            await fetch(`${API_BASE}/event`, {
+            const response = await fetch(`${API_BASE}/event`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ game, event })
             });
+            const data = await response.json();
+            console.log(`[HjernespilAPI] Response:`, data);
         } catch (error) {
-            console.warn('Failed to track event:', error);
+            console.error('[HjernespilAPI] Failed to track event:', error);
         }
     }
 
