@@ -75,50 +75,57 @@
             padding-bottom: 40px;
         }
 
-        /* Header */
+        /* Header - App-like centered layout */
         header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding: 10px 0;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+            margin-bottom: 12px;
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .tagline {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .tagline .highlight {
+            color: #a5b4fc;
         }
 
         .header-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -129,30 +136,13 @@
         }
 
         .icon-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
         }
 
         .icon-btn:active {
             transform: scale(0.92);
             background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Subtitle */
-        .subtitle {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .subtitle p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-            font-weight: 400;
-        }
-
-        .subtitle .highlight {
-            color: #a5b4fc;
-            font-weight: 600;
         }
 
         /* Game Grid */
@@ -372,33 +362,12 @@
             padding: 20px;
         }
 
-        .refresh-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 25px;
-            color: rgba(255, 255, 255, 0.6);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .last-updated {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
         }
 
-        .refresh-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
-        .refresh-btn svg {
-            transition: transform 0.5s ease;
-        }
-
-        .refresh-btn.spinning svg {
+        .icon-btn.spinning svg {
             animation: spin 0.8s ease;
         }
 
@@ -407,10 +376,91 @@
             to { transform: rotate(360deg); }
         }
 
-        .last-updated {
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.7rem;
+        /* Install Banner */
+        .install-banner {
+            display: none;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .install-banner.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .install-banner-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            line-height: 1;
+        }
+
+        .install-banner-close:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .install-banner-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .install-banner-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .install-banner-text strong {
+            color: #a5b4fc;
+        }
+
+        .install-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .install-btn:active {
+            transform: scale(0.95);
+        }
+
+        .ios-instructions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        .ios-instructions svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
         }
 
         /* Responsive */
@@ -448,30 +498,54 @@
 
     <div class="container">
         <header>
-            <div class="logo">
-                <img src="icons/Ampeross-Qetto-2-Games.64.png" alt="Hjernespil" class="logo-icon">
-                <h1>Hjernespil</h1>
-            </div>
+            <img src="icons/Ampeross-Qetto-2-Games.128.png" alt="Hjernespil" class="logo-icon">
+            <h1>Hjernespil</h1>
+            <p class="tagline">Træn din hjerne med <span class="highlight">sjove udfordringer</span></p>
             <div class="header-actions">
+                <button class="icon-btn" id="refresh-btn" aria-label="Opdater">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 2v6h-6"/>
+                        <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                        <path d="M3 22v-6h6"/>
+                        <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                    </svg>
+                </button>
                 <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="icon-btn" aria-label="Send SMS">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                     </svg>
                 </a>
-                <button class="icon-btn" id="share-btn" aria-label="Del">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="18" cy="5" r="3"/>
-                        <circle cx="6" cy="12" r="3"/>
-                        <circle cx="18" cy="19" r="3"/>
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                <button class="icon-btn" id="share-btn" aria-label="Del QR">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
                     </svg>
                 </button>
             </div>
         </header>
 
-        <div class="subtitle">
-            <p>Træn din hjerne med <span class="highlight">sjove udfordringer</span></p>
+        <!-- Install Banner -->
+        <div class="install-banner" id="install-banner">
+            <button class="install-banner-close" id="install-banner-close">×</button>
+            <div class="install-banner-content">
+                <p class="install-banner-text">Installer <strong>Hjernespil</strong> som app</p>
+                <!-- Android/Chrome: Install button -->
+                <button class="install-btn" id="install-btn" style="display: none;">
+                    Installer App
+                </button>
+                <!-- iOS: Instructions -->
+                <div class="ios-instructions" id="ios-instructions" style="display: none;">
+                    <span>Tryk</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <polyline points="16 6 12 2 8 6"/>
+                        <line x1="12" y1="2" x2="12" y2="15"/>
+                    </svg>
+                    <span>og vælg <strong>"Føj til hjemmeskærm"</strong></span>
+                </div>
+            </div>
         </div>
 
         <div class="game-grid">
@@ -617,15 +691,6 @@
         </div>
 
         <div class="footer">
-            <button class="refresh-btn" id="refresh-btn" aria-label="Opdater">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 2v6h-6"/>
-                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
-                    <path d="M3 22v-6h6"/>
-                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
-                </svg>
-                <span>Opdater</span>
-            </button>
             <p class="last-updated">Sidst opdateret: 28. december 2025 kl. 16:17 UTC</p>
         </div>
     </div>
@@ -656,6 +721,71 @@
             refreshBtn.classList.add('spinning');
             setTimeout(() => location.reload(true), 500);
         };
+
+        // PWA Install Banner
+        (() => {
+            const banner = document.getElementById('install-banner');
+            const bannerClose = document.getElementById('install-banner-close');
+            const installBtn = document.getElementById('install-btn');
+            const iosInstructions = document.getElementById('ios-instructions');
+
+            const DISMISSED_KEY = 'pwa-banner-dismissed';
+            let deferredPrompt = null;
+
+            // Check if already installed (standalone mode)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true;
+
+            // Check if dismissed recently (7 days)
+            const dismissedAt = localStorage.getItem(DISMISSED_KEY);
+            const isDismissed = dismissedAt && (Date.now() - parseInt(dismissedAt)) < 7 * 24 * 60 * 60 * 1000;
+
+            if (isStandalone || isDismissed) {
+                return; // Don't show banner
+            }
+
+            // Detect iOS Safari
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+            const isIOSSafari = isIOS && isSafari;
+
+            // Android/Chrome: Listen for install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'block';
+                banner.classList.add('show');
+            });
+
+            // iOS Safari: Show instructions
+            if (isIOSSafari) {
+                iosInstructions.style.display = 'flex';
+                banner.classList.add('show');
+            }
+
+            // Install button click (Android/Chrome)
+            installBtn.onclick = async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    banner.classList.remove('show');
+                }
+                deferredPrompt = null;
+            };
+
+            // Close banner
+            bannerClose.onclick = () => {
+                banner.classList.remove('show');
+                localStorage.setItem(DISMISSED_KEY, Date.now().toString());
+            };
+
+            // Hide banner if app gets installed
+            window.addEventListener('appinstalled', () => {
+                banner.classList.remove('show');
+                deferredPrompt = null;
+            });
+        })();
     </script>
 </body>
 </html>

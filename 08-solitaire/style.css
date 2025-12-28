@@ -18,6 +18,7 @@ body {
 .game-container {
     max-width: 700px;
     margin: 0 auto;
+    position: relative;
 }
 
 header {
@@ -406,4 +407,25 @@ h1 {
     .game-area {
         padding: 20px;
     }
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    color: rgba(0, 0, 0, 0.5);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background: rgba(0, 0, 0, 0.2);
 }

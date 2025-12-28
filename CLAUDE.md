@@ -54,7 +54,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 1. Clear title and puzzle number
 2. "Nyt Spil" button (New Game)
 3. Rules/instructions section in Danish
-4. "Tilbage til oversigt" link (Back to Puzzles)
+4. Close button (X) in top-right corner to return to main page
 5. Victory detection and celebration
 6. Favicon link: `<link rel="icon" href="../favicon.ico">`
 7. API tracking (trackStart/trackComplete)
@@ -64,13 +64,59 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 1. Create folder `XX-puzzle-name/` with next available number
 2. Implement with index.html, style.css, script.js
 3. Add `<link rel="icon" href="../favicon.ico">` in `<head>`
-4. Add `<script src="../shared/api.js"></script>` before game script
-5. Add `HjernespilAPI.trackStart('XX')` in newGame()
-6. Add `HjernespilAPI.trackComplete('XX')` on victory
-7. Add entry to root index.html
-8. Update README.md puzzle table
-9. Ensure touch-only gameplay works
-10. All text in Danish
+4. Add close button as first child of container (see below)
+5. Add `<script src="../shared/api.js"></script>` before game script
+6. Add `HjernespilAPI.trackStart('XX')` in newGame()
+7. Add `HjernespilAPI.trackComplete('XX')` on victory
+8. Add entry to root index.html
+9. Update README.md puzzle table
+10. Ensure touch-only gameplay works
+11. All text in Danish
+
+### Close Button
+
+Each game page has an X button in the top-right corner to return to the main page. Add as first child inside the container:
+
+```html
+<div class="game-container">
+    <a href="../index.html" class="close-btn" aria-label="Luk">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </a>
+    <!-- rest of content -->
+</div>
+```
+
+Required CSS (adjust colors to match game theme):
+
+```css
+.game-container {
+    position: relative;  /* Add this */
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    color: rgba(0, 0, 0, 0.5);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background: rgba(0, 0, 0, 0.2);
+}
+```
 
 ### Favicon
 

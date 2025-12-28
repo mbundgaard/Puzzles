@@ -25,6 +25,28 @@ body {
     max-width: 600px;
     width: 100%;
     border: 4px solid #8b5a2b;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(44, 24, 16, 0.1);
+    border-radius: 50%;
+    color: #6b4423;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background: rgba(44, 24, 16, 0.2);
 }
 
 header {
