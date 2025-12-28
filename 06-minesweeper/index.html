@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minestryger - Puslespil #06</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Minestryger</h1>
+            <p class="subtitle">Puslespil #06</p>
+        </header>
+
+        <div class="controls">
+            <select id="difficulty">
+                <option value="easy">Let (8×8, 10 miner)</option>
+                <option value="medium" selected>Medium (10×10, 20 miner)</option>
+                <option value="hard">Svær (12×12, 35 miner)</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="status-bar">
+            <div class="mines-left">
+                <span>💣</span>
+                <span id="mines-count">20</span>
+            </div>
+            <div class="mode-toggle">
+                <button id="dig-mode" class="active">Grav</button>
+                <button id="flag-mode">🚩 Flag</button>
+            </div>
+        </div>
+
+        <div class="board-wrapper">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Find alle sikre felter uden at ramme en mine</li>
+                <li>Tallene viser hvor mange miner der er i nabofelterne</li>
+                <li>Brug "Flag" tilstand til at markere miner</li>
+                <li>Tryk for at grave eller sætte flag</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="overlay" id="game-over">
+        <div class="overlay-content lose">
+            <h2>Boom! 💥</h2>
+            <p>Du ramte en mine!</p>
+            <button id="retry">Prøv Igen</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="victory">
+        <div class="overlay-content win">
+            <h2>Tillykke! 🎉</h2>
+            <p>Du ryddede alle miner!</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

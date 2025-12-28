@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukommelse - Puslespil #07</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Hukommelse</h1>
+            <p class="subtitle">Puslespil #07</p>
+        </header>
+
+        <div class="controls">
+            <select id="size">
+                <option value="4">4 × 4 (8 par)</option>
+                <option value="6" selected>6 × 4 (12 par)</option>
+                <option value="8">8 × 4 (16 par)</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="label">Træk</span>
+                <span class="value" id="moves">0</span>
+            </div>
+            <div class="stat">
+                <span class="label">Par</span>
+                <span class="value" id="pairs">0 / 12</span>
+            </div>
+        </div>
+
+        <div class="board" id="board"></div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Find alle matchende par af kort</li>
+                <li>Tryk på et kort for at vende det</li>
+                <li>Husk hvor kortene er placeret</li>
+                <li>Prøv at klare det med så få træk som muligt</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="overlay" id="victory">
+        <div class="overlay-content">
+            <h2>Tillykke! 🎉</h2>
+            <p>Du fandt alle par på <span id="final-moves">0</span> træk!</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 - Puslespil #05</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>2048</h1>
+            <p class="subtitle">Puslespil #05</p>
+        </header>
+
+        <div class="score-panel">
+            <div class="score-box">
+                <span class="label">Score</span>
+                <span class="value" id="score">0</span>
+            </div>
+            <div class="score-box">
+                <span class="label">Bedste</span>
+                <span class="value" id="best">0</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="board-wrapper">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="swipe-controls">
+            <button class="swipe-btn" data-dir="up">▲</button>
+            <div class="swipe-row">
+                <button class="swipe-btn" data-dir="left">◀</button>
+                <button class="swipe-btn" data-dir="right">▶</button>
+            </div>
+            <button class="swipe-btn" data-dir="down">▼</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Swipe eller brug knapperne for at flytte fliserne</li>
+                <li>Når to fliser med samme tal mødes, smelter de sammen</li>
+                <li>Nå tallet 2048 for at vinde!</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="overlay" id="game-over">
+        <div class="overlay-content">
+            <h2>Spil Slut!</h2>
+            <p>Din score: <span id="final-score">0</span></p>
+            <button id="retry">Prøv Igen</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="victory">
+        <div class="overlay-content victory">
+            <h2>Du vandt!</h2>
+            <p>Du nåede 2048!</p>
+            <button id="continue">Fortsæt</button>
+            <button id="new-game-win">Nyt Spil</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

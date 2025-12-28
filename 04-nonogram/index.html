@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonogram - Puslespil #04</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Nonogram</h1>
+            <p class="subtitle">Puslespil #04</p>
+        </header>
+
+        <div class="controls">
+            <select id="size">
+                <option value="5">5 × 5</option>
+                <option value="8" selected>8 × 8</option>
+                <option value="10">10 × 10</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="mode-toggle">
+            <button id="fill-mode" class="active">Fyld</button>
+            <button id="mark-mode">Markér ✕</button>
+        </div>
+
+        <div class="puzzle-wrapper">
+            <div class="puzzle" id="puzzle"></div>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Udfyld felter for at afsløre det skjulte mønster</li>
+                <li>Tallene viser hvor mange felter i træk der skal udfyldes</li>
+                <li>Brug "Markér" til at markere tomme felter</li>
+                <li>Der skal være mindst ét tomt felt mellem grupperinger</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="victory-overlay" id="victory">
+        <div class="victory-content">
+            <h2>Tillykke!</h2>
+            <p>Du afslørede mønsteret!</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
