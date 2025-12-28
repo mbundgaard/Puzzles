@@ -320,4 +320,4 @@ The UI components initialize automatically when the DOM is ready. No manual setu
 - Commit messages in Danish
 - Push to feature branch, not main
 - Clear, descriptive commit messages
-- **Opdater tidsstempel**: Ved ændringer, opdater "Sidst opdateret" i footer på index.html med seneste commit-tidspunkt (format: "DD. måned ÅÅÅÅ kl. HH:MM UTC")
+- **Opdater tidsstempel FØR hver commit**: Opdater "Sidst opdateret" i footer på index.html med aktuel UTC tid (format: "DD. måned ÅÅÅÅ kl. HH:MM UTC"). Dette skal gøres før HVER commit der ændrer frontend-kode.
