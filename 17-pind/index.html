@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pind - Puslespil #17</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+        <header>
+            <h1>Pind</h1>
+            <p class="subtitle">Peg Solitaire</p>
+        </header>
+
+        <div class="controls">
+            <select id="board-type">
+                <option value="english" selected>Engelsk (33)</option>
+                <option value="european">Europæisk (37)</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="stats">
+            <span>Træk: <strong id="moves">0</strong></span>
+            <span>Pinde: <strong id="pegs">32</strong></span>
+            <button id="undo" disabled>Fortryd</button>
+        </div>
+
+        <div class="board-wrapper">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Hop over en pind med en anden pind</li>
+                <li>Den overspringede pind fjernes</li>
+                <li>Målet er at efterlade kun én pind</li>
+                <li>Perfekt løsning: Sidste pind i midten</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="victory-overlay" id="victory">
+        <div class="victory-content">
+            <h2 id="victory-title">Tillykke!</h2>
+            <p id="victory-message">Du klarede det!</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

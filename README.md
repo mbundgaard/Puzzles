@@ -22,6 +22,9 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 12 | [Rørføring](12-roerfoering/) | Rotate pipes to connect start to end |
 | 13 | [15-Puslespil](13-femten-puslespil/) | Slide tiles to arrange numbers 1-15 in order |
 | 14 | [Kodeknækker](14-kodeknaekker/) | Mastermind - crack the secret color code |
+| 15 | [Broer](15-broer/) | Connect islands with the correct number of bridges |
+| 16 | [Lys Op](16-lys-op/) | Place light bulbs to illuminate all cells |
+| 17 | [Pind](17-pind/) | Peg solitaire - leave only one peg standing |
 
 ## Features
 
@@ -78,7 +81,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 │   ├── Storage/            # Azure Table Storage implementations
 │   └── Program.cs          # DI and startup
 ├── icons/                  # App icons (16px to 512px)
-└── XX-game-name/           # Game folders (01-14)
+└── XX-game-name/           # Game folders (01-17)
     ├── index.html          # Game page
     ├── style.css           # Game-specific styles
     └── script.js           # Game logic
