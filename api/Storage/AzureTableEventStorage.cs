@@ -17,6 +17,7 @@ public class EventEntity : ITableEntity
     public string Game { get; set; } = string.Empty;
     public string EventType { get; set; } = string.Empty;    // "Start" or "Complete"
     public DateTime RecordedAt { get; set; }
+    public string? Nickname { get; set; }
 }
 
 /// <summary>
@@ -42,7 +43,8 @@ public class AzureTableEventStorage : IEventStorage
             RowKey = record.RowKey,
             Game = record.Game,
             EventType = record.EventType.ToString(),
-            RecordedAt = record.Timestamp
+            RecordedAt = record.Timestamp,
+            Nickname = record.Nickname
         };
 
         await _tableClient.AddEntityAsync(entity);

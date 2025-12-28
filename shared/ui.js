@@ -218,6 +218,176 @@ const HjernespilUI = (() => {
                 font-size: 3rem;
                 margin-bottom: 12px;
             }
+
+            /* Win Modal */
+            .hjernespil-win-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .hjernespil-win-overlay.active {
+                display: flex;
+            }
+
+            .hjernespil-win-modal {
+                background: linear-gradient(145deg, #1e1e3f 0%, #0f0f23 100%);
+                border-radius: 20px;
+                padding: 25px;
+                max-width: 350px;
+                width: 100%;
+                text-align: center;
+                animation: hjernespilModalPop 0.3s ease;
+                font-family: 'Poppins', sans-serif;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .hjernespil-win-modal h2 {
+                font-size: 1.8rem;
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 5px;
+            }
+
+            .hjernespil-win-message {
+                color: rgba(255, 255, 255, 0.7);
+                margin-bottom: 20px;
+            }
+
+            .hjernespil-nickname-section {
+                margin-bottom: 20px;
+            }
+
+            .hjernespil-nickname-section label {
+                display: block;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.7);
+                margin-bottom: 8px;
+            }
+
+            .hjernespil-nickname-section input {
+                width: 100%;
+                padding: 12px 15px;
+                font-size: 1rem;
+                font-family: 'Poppins', sans-serif;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                color: white;
+                margin-bottom: 10px;
+            }
+
+            .hjernespil-nickname-section input:focus {
+                outline: none;
+                border-color: #22c55e;
+            }
+
+            .hjernespil-nickname-section input::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
+
+            .hjernespil-nickname-section .hjernespil-win-btn {
+                width: 100%;
+            }
+
+            .hjernespil-nickname-section.submitted {
+                display: none;
+            }
+
+            .hjernespil-win-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+                font-weight: 600;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                color: white;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .hjernespil-win-btn:active {
+                transform: scale(0.95);
+            }
+
+            .hjernespil-win-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .hjernespil-win-btn.secondary {
+                background: rgba(255, 255, 255, 0.1);
+                margin-top: 10px;
+            }
+
+            .hjernespil-leaderboard-section {
+                margin-bottom: 20px;
+            }
+
+            .hjernespil-leaderboard-section h3 {
+                font-size: 1rem;
+                color: rgba(255, 255, 255, 0.9);
+                margin-bottom: 10px;
+            }
+
+            .hjernespil-leaderboard {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+                padding: 10px;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            .hjernespil-leaderboard .loading {
+                color: rgba(255, 255, 255, 0.5);
+                padding: 10px;
+            }
+
+            .hjernespil-leaderboard-entry {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 10px;
+                border-radius: 8px;
+            }
+
+            .hjernespil-leaderboard-entry:nth-child(odd) {
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            .hjernespil-leaderboard-entry.highlight {
+                background: rgba(34, 197, 94, 0.2);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+            }
+
+            .hjernespil-leaderboard-rank {
+                font-weight: 700;
+                color: #22c55e;
+                width: 30px;
+            }
+
+            .hjernespil-leaderboard-name {
+                flex: 1;
+                text-align: left;
+                margin-left: 10px;
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            .hjernespil-leaderboard-wins {
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 0.9rem;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -372,6 +542,157 @@ const HjernespilUI = (() => {
         return { overlay, open: () => overlay.classList.add('active') };
     }
 
+    // Win modal state
+    let winModal = null;
+    let winModalGameNumber = null;
+
+    // Create win modal
+    function createWinModal(gameNumber) {
+        const overlay = document.createElement('div');
+        overlay.className = 'hjernespil-win-overlay';
+        overlay.innerHTML = `
+            <div class="hjernespil-win-modal">
+                <h2>Tillykke!</h2>
+                <p class="hjernespil-win-message">Du klarede det!</p>
+
+                <div class="hjernespil-nickname-section">
+                    <label>Dit navn til ranglisten:</label>
+                    <input type="text" class="hjernespil-win-nickname" placeholder="Indtast navn" maxlength="20">
+                    <button class="hjernespil-win-btn hjernespil-submit-score">Gem Score</button>
+                </div>
+
+                <div class="hjernespil-leaderboard-section">
+                    <h3>Rangliste (denne måned)</h3>
+                    <div class="hjernespil-leaderboard">
+                        <p class="loading">Indlæser...</p>
+                    </div>
+                </div>
+
+                <button class="hjernespil-win-btn secondary hjernespil-close-win">Luk</button>
+            </div>
+        `;
+
+        const nicknameInput = overlay.querySelector('.hjernespil-win-nickname');
+        const submitBtn = overlay.querySelector('.hjernespil-submit-score');
+        const closeBtn = overlay.querySelector('.hjernespil-close-win');
+        const leaderboardEl = overlay.querySelector('.hjernespil-leaderboard');
+        const nicknameSection = overlay.querySelector('.hjernespil-nickname-section');
+
+        // Pre-fill nickname
+        const savedNickname = HjernespilAPI.getNickname();
+        if (savedNickname) {
+            nicknameInput.value = savedNickname;
+        }
+
+        // Close modal
+        closeBtn.onclick = () => {
+            overlay.classList.remove('active');
+        };
+
+        overlay.onclick = (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        };
+
+        // Helper: escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Render leaderboard
+        function renderLeaderboard(entries, highlightName) {
+            if (!entries || entries.length === 0) {
+                leaderboardEl.innerHTML = '<p class="loading">Ingen scores endnu</p>';
+                return;
+            }
+
+            leaderboardEl.innerHTML = entries.map((entry, i) => `
+                <div class="hjernespil-leaderboard-entry ${entry.nickname === highlightName ? 'highlight' : ''}">
+                    <span class="hjernespil-leaderboard-rank">${i + 1}.</span>
+                    <span class="hjernespil-leaderboard-name">${escapeHtml(entry.nickname)}</span>
+                    <span class="hjernespil-leaderboard-wins">${entry.wins} ${entry.wins === 1 ? 'sejr' : 'sejre'}</span>
+                </div>
+            `).join('');
+        }
+
+        // Load leaderboard
+        async function loadLeaderboard(highlightName = null) {
+            leaderboardEl.innerHTML = '<p class="loading">Indlæser...</p>';
+
+            try {
+                const data = await HjernespilAPI.getLeaderboard(gameNumber, 10);
+                renderLeaderboard(data.entries, highlightName);
+            } catch (error) {
+                leaderboardEl.innerHTML = '<p class="loading">Kunne ikke indlæse rangliste</p>';
+            }
+        }
+
+        // Submit score
+        submitBtn.onclick = async () => {
+            const nickname = nicknameInput.value.trim();
+
+            if (!HjernespilAPI.isValidNickname(nickname)) {
+                alert('Navnet skal være 2-20 tegn');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Gemmer...';
+
+            HjernespilAPI.setNickname(nickname);
+            const result = await HjernespilAPI.recordWin(gameNumber, nickname);
+
+            if (result.success) {
+                nicknameSection.classList.add('submitted');
+                loadLeaderboard(nickname);
+            } else {
+                alert(result.error || 'Kunne ikke gemme score');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Gem Score';
+        };
+
+        document.body.appendChild(overlay);
+
+        return {
+            overlay,
+            open: () => {
+                // Reset state
+                nicknameSection.classList.remove('submitted');
+                const savedName = HjernespilAPI.getNickname();
+                if (savedName) {
+                    nicknameInput.value = savedName;
+                }
+                overlay.classList.add('active');
+                loadLeaderboard();
+            }
+        };
+    }
+
+    // Show win modal (public API)
+    function showWinModal(gameNumberOverride = null) {
+        const gameNumber = gameNumberOverride || getGameNumber();
+        if (!gameNumber) {
+            console.warn('HjernespilUI: Could not detect game number');
+            return;
+        }
+
+        // Create modal if needed (or if game number changed)
+        if (!winModal || winModalGameNumber !== gameNumber) {
+            if (winModal) {
+                winModal.overlay.remove();
+            }
+            winModal = createWinModal(gameNumber);
+            winModalGameNumber = gameNumber;
+        }
+
+        winModal.open();
+    }
+
     // Initialize UI
     function init() {
         const gameNumber = getGameNumber();
@@ -413,6 +734,7 @@ const HjernespilUI = (() => {
 
     return {
         init,
-        getGameNumber
+        getGameNumber,
+        showWinModal
     };
 })();

@@ -20,6 +20,7 @@ public class EventRecord
     public string Game { get; set; } = string.Empty;
     public GameEventType EventType { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public string? Nickname { get; set; }
 
     // For Azure Table Storage
     public string PartitionKey => $"{Timestamp:yyyy-MM}";
@@ -33,6 +34,7 @@ public class EventRequest
 {
     public string Game { get; set; } = string.Empty;
     public string Event { get; set; } = string.Empty; // "start" or "complete"
+    public string? Nickname { get; set; }
 }
 
 /// <summary>

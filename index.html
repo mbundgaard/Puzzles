@@ -326,6 +326,132 @@
             font-weight: 700;
         }
 
+        /* Nickname Modal */
+        .nickname-modal .modal-emoji {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .nickname-modal p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .nickname-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .nickname-input:focus {
+            outline: none;
+            border-color: #a5b4fc;
+        }
+
+        .nickname-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nickname-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .nickname-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nickname-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nickname-skip {
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nickname-skip:active {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Leaderboard Modal */
+        .leaderboard-modal .modal-emoji {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .leaderboard-list {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 16px;
+        }
+
+        .leaderboard-list .loading {
+            color: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+
+        .leaderboard-entry:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .leaderboard-rank {
+            font-weight: 700;
+            color: #fbbf24;
+            width: 28px;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-entry:nth-child(1) .leaderboard-rank { color: #fbbf24; }
+        .leaderboard-entry:nth-child(2) .leaderboard-rank { color: #9ca3af; }
+        .leaderboard-entry:nth-child(3) .leaderboard-rank { color: #b45309; }
+
+        .leaderboard-name {
+            flex: 1;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .leaderboard-wins {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
         .qr-code {
             background: #fff;
             padding: 15px;
@@ -507,6 +633,18 @@
             <h1>Hjernespil</h1>
             <p class="tagline">Træn din hjerne med <span class="highlight">sjove udfordringer</span></p>
             <div class="header-actions">
+                <button class="icon-btn" id="leaderboard-btn" aria-label="Rangliste">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                        <path d="M4 22h16"/>
+                        <path d="M10 22V8a2 2 0 0 0-2-2H6v6"/>
+                        <path d="M14 22V8a2 2 0 0 1 2-2h2v6"/>
+                        <path d="M8 6v4"/>
+                        <path d="M16 6v4"/>
+                        <path d="M12 2v20"/>
+                    </svg>
+                </button>
                 <button class="icon-btn" id="refresh-btn" aria-label="Opdater">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 2v6h-6"/>
@@ -688,7 +826,7 @@
                 </svg>
                 Se mere på GitHub
             </a>
-            <p class="last-updated">Sidst opdateret: 28. december 2025 kl. 21:03 UTC</p>
+            <p class="last-updated">Sidst opdateret: 28. december 2025 kl. 21:47 UTC</p>
         </div>
     </div>
 
@@ -701,6 +839,30 @@
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR" width="140" height="140">
             </div>
             <p class="share-url">mbundgaard.github.io/Puzzles</p>
+        </div>
+    </div>
+
+    <!-- Nickname Modal -->
+    <div class="modal-overlay" id="nickname-modal">
+        <div class="modal nickname-modal">
+            <div class="modal-emoji">👋</div>
+            <h3>Hvad hedder du?</h3>
+            <p>Dit navn bruges til ranglisten</p>
+            <input type="text" class="nickname-input" id="nickname-input" placeholder="Dit navn" maxlength="20" autocomplete="off">
+            <button class="nickname-btn" id="nickname-save">Start spil</button>
+            <button class="nickname-skip" id="nickname-skip">Spring over</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal-overlay" id="leaderboard-modal">
+        <div class="modal leaderboard-modal">
+            <span class="modal-close" id="leaderboard-close">×</span>
+            <div class="modal-emoji">🏆</div>
+            <h3>Rangliste</h3>
+            <div class="leaderboard-list" id="leaderboard-list">
+                <p class="loading">Indlæser...</p>
+            </div>
         </div>
     </div>
 
@@ -718,6 +880,129 @@
             refreshBtn.classList.add('spinning');
             setTimeout(() => location.reload(true), 500);
         };
+
+        // Leaderboard Modal
+        (() => {
+            const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
+            const leaderboardBtn = document.getElementById('leaderboard-btn');
+            const leaderboardModal = document.getElementById('leaderboard-modal');
+            const leaderboardClose = document.getElementById('leaderboard-close');
+            const leaderboardList = document.getElementById('leaderboard-list');
+
+            async function loadLeaderboard() {
+                leaderboardList.innerHTML = '<p class="loading">Indlæser...</p>';
+
+                try {
+                    const response = await fetch(`${API_BASE}/leaderboard?game=all&top=20`);
+                    const data = await response.json();
+
+                    if (!data.entries || data.entries.length === 0) {
+                        leaderboardList.innerHTML = '<p class="loading">Ingen sejre endnu</p>';
+                        return;
+                    }
+
+                    leaderboardList.innerHTML = data.entries.map((entry, i) => `
+                        <div class="leaderboard-entry">
+                            <span class="leaderboard-rank">${i + 1}.</span>
+                            <span class="leaderboard-name">${escapeHtml(entry.nickname)}</span>
+                            <span class="leaderboard-wins">${entry.wins} ${entry.wins === 1 ? 'sejr' : 'sejre'}</span>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    leaderboardList.innerHTML = '<p class="loading">Kunne ikke indlæse</p>';
+                }
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            leaderboardBtn.onclick = () => {
+                leaderboardModal.classList.add('active');
+                loadLeaderboard();
+            };
+
+            leaderboardClose.onclick = () => leaderboardModal.classList.remove('active');
+            leaderboardModal.onclick = (e) => {
+                if (e.target === leaderboardModal) leaderboardModal.classList.remove('active');
+            };
+        })();
+
+        // Nickname Modal - Ask once before first game
+        (() => {
+            const NICKNAME_KEY = 'hjernespil_nickname';
+            const nicknameModal = document.getElementById('nickname-modal');
+            const nicknameInput = document.getElementById('nickname-input');
+            const nicknameSave = document.getElementById('nickname-save');
+            const nicknameSkip = document.getElementById('nickname-skip');
+            const gameCards = document.querySelectorAll('.game-card');
+
+            let pendingGameUrl = null;
+
+            // Check if nickname already exists
+            function hasNickname() {
+                const nickname = localStorage.getItem(NICKNAME_KEY);
+                return nickname && nickname.trim().length >= 2;
+            }
+
+            // Save nickname and navigate
+            function saveAndNavigate(nickname) {
+                if (nickname && nickname.trim().length >= 2 && nickname.trim().length <= 20) {
+                    localStorage.setItem(NICKNAME_KEY, nickname.trim());
+                }
+                nicknameModal.classList.remove('active');
+                if (pendingGameUrl) {
+                    window.location.href = pendingGameUrl;
+                }
+            }
+
+            // Intercept game card clicks
+            gameCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (hasNickname()) {
+                        // Already have nickname, allow navigation
+                        return;
+                    }
+
+                    // No nickname yet, show modal
+                    e.preventDefault();
+                    pendingGameUrl = card.href;
+                    nicknameInput.value = '';
+                    nicknameModal.classList.add('active');
+                    setTimeout(() => nicknameInput.focus(), 100);
+                });
+            });
+
+            // Save button
+            nicknameSave.onclick = () => {
+                saveAndNavigate(nicknameInput.value);
+            };
+
+            // Skip button
+            nicknameSkip.onclick = () => {
+                nicknameModal.classList.remove('active');
+                if (pendingGameUrl) {
+                    window.location.href = pendingGameUrl;
+                }
+            };
+
+            // Enter key to submit
+            nicknameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveAndNavigate(nicknameInput.value);
+                }
+            });
+
+            // Close on overlay click
+            nicknameModal.onclick = (e) => {
+                if (e.target === nicknameModal) {
+                    nicknameModal.classList.remove('active');
+                    pendingGameUrl = null;
+                }
+            };
+        })();
 
         // PWA Install Banner
         (() => {

@@ -64,6 +64,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 5. Victory detection and celebration
 6. Favicon link: `<link rel="icon" href="../favicon.ico">`
 7. API tracking (trackStart/trackComplete)
+8. Win modal with leaderboard (optional, via `HjernespilUI.showWinModal()`)
 
 ## Adding a New Puzzle
 
@@ -72,13 +73,14 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 3. Add `<link rel="icon" href="../favicon.ico">` in `<head>`
 4. Add close button as first child of container (see below)
 5. Add `<script src="../shared/api.js"></script>` before game script
-6. Add `<script src="../shared/ui.js"></script>` after api.js (adds feedback button)
+6. Add `<script src="../shared/ui.js"></script>` after api.js (adds feedback button + win modal)
 7. Add `HjernespilAPI.trackStart('XX')` in newGame()
 8. Add `HjernespilAPI.trackComplete('XX')` on victory
-9. Add entry to root index.html
-10. Update README.md puzzle table
-11. Ensure touch-only gameplay works
-12. All text in Danish
+9. (Optional) Add `HjernespilUI.showWinModal()` after trackComplete for leaderboard
+10. Add entry to root index.html
+11. Update README.md puzzle table
+12. Ensure touch-only gameplay works
+13. All text in Danish
 
 ### Close Button
 
@@ -308,12 +310,40 @@ Injects common UI elements into game pages. Include after api.js:
 
 - **Feedback button**: Speech bubble icon in top-left corner
 - **Feedback modal**: Star rating (1-5), optional comment, optional nickname
+- **Win modal**: Leaderboard display with nickname input for score submission
 - Auto-detects game number from URL path
 - Adapts colors for light (`.game-container`) and dark (`.container`) themes
 
 #### Auto-initialization
 
-The UI components initialize automatically when the DOM is ready. No manual setup required.
+The feedback button initializes automatically when the DOM is ready. No manual setup required.
+
+#### Win Modal with Leaderboard
+
+To show the win modal with leaderboard after a player wins:
+
+```javascript
+// In victory detection
+if (playerWins) {
+    HjernespilAPI.trackComplete('12');
+    HjernespilUI.showWinModal();  // Shows leaderboard + nickname input
+}
+```
+
+The win modal:
+- Displays "Tillykke!" (Congratulations)
+- Shows top 10 leaderboard for this month
+- Pre-fills nickname from localStorage if previously saved
+- Submits score via `HjernespilAPI.recordWin()`
+- Highlights the player's entry after submission
+
+#### Available Methods
+
+| Method | Description |
+|--------|-------------|
+| `HjernespilUI.showWinModal()` | Show win modal with leaderboard (auto-detects game number) |
+| `HjernespilUI.showWinModal('XX')` | Show win modal for specific game number |
+| `HjernespilUI.getGameNumber()` | Get current game number from URL |
 
 ## Git Workflow
 

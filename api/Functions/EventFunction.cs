@@ -51,16 +51,28 @@ public class EventFunction
             return new BadRequestObjectResult(new { error = "Event must be 'start' or 'complete'" });
         }
 
+        // Validate nickname if provided (2-20 chars)
+        string? nickname = null;
+        if (!string.IsNullOrWhiteSpace(eventRequest.Nickname))
+        {
+            nickname = eventRequest.Nickname.Trim();
+            if (nickname.Length < 2 || nickname.Length > 20)
+            {
+                nickname = null; // Ignore invalid nickname
+            }
+        }
+
         var record = new EventRecord
         {
             Game = game,
             EventType = eventType == "start" ? GameEventType.Start : GameEventType.Complete,
-            Timestamp = DateTime.UtcNow
+            Timestamp = DateTime.UtcNow,
+            Nickname = nickname
         };
 
         await _storage.RecordEventAsync(record);
 
-        _logger.LogInformation("Event recorded: {Event} for game {Game}", eventType, game);
+        _logger.LogInformation("Event recorded: {Event} for game {Game} by {Nickname}", eventType, game, nickname ?? "anonymous");
 
         return new OkObjectResult(new { success = true });
     }

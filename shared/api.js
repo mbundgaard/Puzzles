@@ -11,15 +11,21 @@ const HjernespilAPI = (() => {
 
     /**
      * Track a game event (start or complete).
+     * Includes nickname if saved in localStorage.
      * @param {string} game - Game number (e.g., "01", "02")
      * @param {string} event - Event type: "start" or "complete"
      */
     async function trackEvent(game, event) {
         try {
+            const nickname = getNickname();
             await fetch(`${API_BASE}/event`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ game, event })
+                body: JSON.stringify({
+                    game,
+                    event,
+                    nickname: nickname || undefined
+                })
             });
         } catch (error) {
             // Silently fail - don't disrupt gameplay
