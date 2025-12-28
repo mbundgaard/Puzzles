@@ -75,7 +75,7 @@ The main page uses a modern gaming/app design with:
    - Glassmorphism background with colored accent line on tap
    - Play indicator appears on active state
    - Unique accent color per game
-4. **Footer**: Game count badge and "Flere spil kommer snart!"
+4. **Footer**: Refresh button with spinning animation
 5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
 6. **QR modal**: Dark theme modal with pop animation
 7. **iOS/Android meta tags**: For "Add to Home Screen" functionality
