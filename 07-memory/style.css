@@ -59,7 +59,8 @@ h1 {
     font-size: 0.95rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     color: #fff;
     font-family: inherit;
     cursor: pointer;
@@ -198,7 +199,7 @@ h1 {
 
 .rules ul {
     list-style: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     font-size: 0.85rem;
 }
 
@@ -317,9 +318,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border-radius: 50%;
-    color: rgba(0, 0, 0, 0.5);
+    color: white;
     text-decoration: none;
     transition: all 0.2s ease;
 }

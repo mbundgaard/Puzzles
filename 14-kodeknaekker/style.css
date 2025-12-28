@@ -30,7 +30,8 @@ header {
 
 .puzzle-number {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -51,7 +52,8 @@ h1 {
     font-weight: 600;
     margin-bottom: 15px;
     padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border-radius: 25px;
     text-align: center;
 }
@@ -149,7 +151,8 @@ h1 {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border: 2px dashed rgba(255, 255, 255, 0.2);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -196,7 +199,8 @@ h1 {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .hint.black {
@@ -250,7 +254,8 @@ h1 {
 }
 
 .btn.secondary {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn.outline {
@@ -305,7 +310,7 @@ h1 {
 .back-link {
     display: block;
     text-align: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     text-decoration: none;
     padding: 15px;
     font-size: 0.9rem;
@@ -325,9 +330,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     text-decoration: none;
     transition: all 0.2s ease;
 }

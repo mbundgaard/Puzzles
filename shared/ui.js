@@ -15,7 +15,7 @@ const HjernespilUI = (() => {
     function injectStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            /* Feedback Button */
+            /* Feedback Button - works on both light and dark backgrounds */
             .hjernespil-feedback-btn {
                 position: absolute;
                 top: 12px;
@@ -25,28 +25,19 @@ const HjernespilUI = (() => {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: rgba(0, 0, 0, 0.15);
+                background: rgba(128, 128, 128, 0.3);
                 border: none;
                 border-radius: 50%;
-                color: rgba(0, 0, 0, 0.5);
+                color: white;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 z-index: 100;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             }
 
             .hjernespil-feedback-btn:active {
                 transform: scale(0.9);
-                background: rgba(0, 0, 0, 0.25);
-            }
-
-            /* Dark theme override */
-            .container .hjernespil-feedback-btn {
-                background: rgba(255, 255, 255, 0.1);
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .container .hjernespil-feedback-btn:active {
-                background: rgba(255, 255, 255, 0.2);
+                background: rgba(128, 128, 128, 0.5);
             }
 
             .hjernespil-feedback-btn svg {

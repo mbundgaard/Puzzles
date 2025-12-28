@@ -30,7 +30,8 @@ header {
 
 .puzzle-number {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -51,7 +52,8 @@ h1 {
     font-weight: 600;
     margin-bottom: 20px;
     padding: 10px 25px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border-radius: 25px;
     transition: all 0.3s ease;
 }
@@ -137,7 +139,7 @@ h1 {
 .score-label {
     display: block;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     margin-bottom: 4px;
 }
 
@@ -157,7 +159,7 @@ h1 {
 
 .difficulty span {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
 }
 
 .diff-btn {
@@ -165,7 +167,8 @@ h1 {
     font-size: 0.85rem;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     color: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
@@ -240,7 +243,7 @@ h1 {
 .back-link {
     display: block;
     text-align: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     text-decoration: none;
     padding: 15px;
     font-size: 0.9rem;
@@ -260,9 +263,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(128, 128, 128, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
+    color: white;
     text-decoration: none;
     transition: all 0.2s ease;
 }
