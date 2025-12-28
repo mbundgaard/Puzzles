@@ -133,6 +133,7 @@ class Memory {
         this.finalMovesEl.textContent = this.moves;
         this.victoryOverlay.classList.add('show');
         HjernespilAPI.trackComplete('07');
+        HjernespilUI.showWinModal();
     }
 }
 

@@ -202,6 +202,7 @@ class TicTacToe {
             this.scores.player++;
             this.playerScoreEl.textContent = this.scores.player;
             HjernespilAPI.trackComplete('11');
+            HjernespilUI.showWinModal();
         } else if (result === 'O') {
             this.status.textContent = 'AI vandt!';
             this.status.className = 'status loser';

@@ -119,6 +119,7 @@ class Game2048 {
                 this.won = true;
                 setTimeout(() => this.victoryOverlay.classList.add('show'), 300);
                 HjernespilAPI.trackComplete('05');
+                HjernespilUI.showWinModal();
             }
 
             if (this.isGameOver()) {

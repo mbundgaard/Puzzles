@@ -313,6 +313,7 @@ class Ordleg {
                 this.showMessage(messages[this.currentRow], 'success');
                 this.gameOver = true;
                 HjernespilAPI.trackComplete('10');
+                HjernespilUI.showWinModal();
             } else if (this.currentRow >= this.maxGuesses - 1) {
                 this.showMessage(`Ordet var: ${this.targetWord.toUpperCase()}`, 'error');
                 this.gameOver = true;

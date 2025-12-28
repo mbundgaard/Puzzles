@@ -208,6 +208,7 @@ class Mastermind {
             this.guessBtn.disabled = true;
             this.clearBtn.disabled = true;
             HjernespilAPI.trackComplete('14');
+            HjernespilUI.showWinModal();
             this.render();
             return;
         }

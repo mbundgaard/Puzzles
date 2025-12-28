@@ -419,6 +419,7 @@ class TentsAndTrees {
         this.updateStatus('Tillykke! Puslespillet er løst!');
         this.statusElement.classList.add('victory');
         HjernespilAPI.trackComplete('02');
+        HjernespilUI.showWinModal();
     }
 
     updateStatus(message) {

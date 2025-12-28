@@ -285,6 +285,7 @@ class Solitaire {
         this.finalMovesEl.textContent = this.moves;
         this.victoryOverlay.classList.add('show');
         HjernespilAPI.trackComplete('08');
+        HjernespilUI.showWinModal();
     }
 
     render() {

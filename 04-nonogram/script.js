@@ -156,6 +156,7 @@ class Nonogram {
     showVictory() {
         this.victoryOverlay.classList.add('show');
         HjernespilAPI.trackComplete('04');
+        HjernespilUI.showWinModal();
     }
 }
 
