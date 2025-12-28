@@ -57,3 +57,23 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 4. Update README.md puzzle table
 5. Ensure touch-only gameplay works
 6. All text in Danish
+
+## Main Page (index.html)
+
+The main page should include:
+
+1. **Title**: "Tænkeren"
+2. **Subtitle**: Brief description in Danish
+3. **Puzzle grid**: Cards linking to each puzzle
+4. **Share button**: Icon (📤) in top-right corner that opens QR code popup
+5. **QR code popup**: Links to https://mbundgaard.github.io/Puzzles/index.html
+6. **iOS meta tags**: For "Add to Home Screen" functionality
+   - `apple-mobile-web-app-capable`
+   - `apple-mobile-web-app-title`
+   - `apple-touch-icon` (180x180 PNG)
+
+## Git Workflow
+
+- Commit messages in Danish
+- Push to feature branch, not main
+- Clear, descriptive commit messages

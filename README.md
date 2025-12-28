@@ -1,21 +1,21 @@
-# Puslespil & Tankespil
+# Tænkeren
 
-En samling af klassiske puslespil og tankespil, der kan spilles i browseren.
+En samling af klassiske puslespil og tankespil til browseren. Alle spil er designet til at fungere på mobil med touch-only input.
 
-## Puslespil
+## Spil
 
 | # | Navn | Beskrivelse |
 |---|------|-------------|
-| 01 | [Reversi](01-reversi/) | Klassisk strategispil mod en AI-modstander. Erob brikker ved at omringe dem. Understøtter 6×6, 8×8 og 10×10 brætter. |
-| 02 | [Telte og Træer](02-tents-and-trees/) | Logikpuslespil: placér telte ved siden af træer. Hvert telt hører til ét træ, og telte må ikke røre hinanden. |
+| 01 | [Reversi](01-reversi/) | Strategispil mod AI. Erobr brikker ved at omringe dem. |
+| 02 | [Telte og Træer](02-tents-and-trees/) | Logikpuslespil. Placér telte ved træer uden de rører hinanden. |
 
 ## Spil Online
 
-Besøg [live-siden](https://mbundgaard.github.io/Puzzles/) for at spille.
+**[https://mbundgaard.github.io/Puzzles/](https://mbundgaard.github.io/Puzzles/)**
 
 ## Lokal Udvikling
 
-Ingen build-trin nødvendigt. Åbn blot `index.html` i en browser eller brug en statisk fil-server:
+Ingen build nødvendigt:
 
 ```bash
 npx serve .
@@ -24,13 +24,8 @@ npx serve .
 ## Struktur
 
 ```
-├── index.html          # Hovedside med puslespil-oversigt
-├── 01-reversi/         # Hvert puslespil i nummereret mappe
-│   ├── index.html
-│   ├── style.css
-│   └── game.js
+├── index.html              # Hovedside
+├── apple-touch-icon.png    # App-ikon til iOS
+├── 01-reversi/
 └── 02-tents-and-trees/
-    ├── index.html
-    ├── style.css
-    └── script.js
 ```
