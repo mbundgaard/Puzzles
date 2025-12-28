@@ -18,12 +18,15 @@ class TentsAndTrees {
         this.colClues = [];
         this.trees = [];
         this.gameWon = false;
+        this.mode = 'tent'; // 'tent' or 'mark'
 
         this.gridElement = document.getElementById('grid');
         this.rowCluesElement = document.getElementById('row-clues');
         this.colCluesElement = document.getElementById('column-clues');
         this.statusElement = document.getElementById('status');
         this.newGameButton = document.getElementById('new-game');
+        this.modeTentButton = document.getElementById('mode-tent');
+        this.modeMarkButton = document.getElementById('mode-mark');
 
         this.setupEventListeners();
         this.newGame();
@@ -32,8 +35,18 @@ class TentsAndTrees {
     setupEventListeners() {
         this.newGameButton.addEventListener('click', () => this.newGame());
 
+        // Mode toggle buttons
+        this.modeTentButton.addEventListener('click', () => this.setMode('tent'));
+        this.modeMarkButton.addEventListener('click', () => this.setMode('mark'));
+
         // Prevent context menu on grid
         this.gridElement.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+        this.modeTentButton.classList.toggle('active', mode === 'tent');
+        this.modeMarkButton.classList.toggle('active', mode === 'mark');
     }
 
     newGame() {
@@ -313,10 +326,22 @@ class TentsAndTrees {
         if (this.gameWon) return;
         if (this.grid[row][col] === TREE) return;
 
-        if (this.grid[row][col] === TENT) {
-            this.grid[row][col] = EMPTY;
-        } else if (this.grid[row][col] === EMPTY || this.grid[row][col] === MARKED) {
-            this.grid[row][col] = TENT;
+        if (this.mode === 'tent') {
+            // Tent mode: place or remove tent
+            if (this.grid[row][col] === TENT) {
+                this.grid[row][col] = EMPTY;
+            } else if (this.grid[row][col] === EMPTY || this.grid[row][col] === MARKED) {
+                this.grid[row][col] = TENT;
+            }
+        } else {
+            // Mark mode: place or remove mark
+            if (this.grid[row][col] === MARKED) {
+                this.grid[row][col] = EMPTY;
+            } else if (this.grid[row][col] === EMPTY) {
+                this.grid[row][col] = MARKED;
+            } else if (this.grid[row][col] === TENT) {
+                this.grid[row][col] = MARKED;
+            }
         }
 
         this.render();
