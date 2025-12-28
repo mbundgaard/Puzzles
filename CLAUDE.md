@@ -350,4 +350,4 @@ The win modal:
 - Commit messages in Danish
 - Push to `claude/main` branch (allows Claude to push directly without PR)
 - Clear, descriptive commit messages
-- **Update timestamp BEFORE each commit**: Update "Sidst opdateret" in index.html footer with current UTC time (format: "DD. month YYYY kl. HH:MM UTC", month in Danish). Do this before EVERY commit that changes frontend code.
+- **Update timestamp BEFORE each commit**: Update "Sidst opdateret" in index.html footer with current Danish local time (format: "DD. month YYYY kl. HH:MM", month in Danish). Denmark uses CET (UTC+1) in winter and CEST (UTC+2) in summer. Do this before EVERY commit that changes frontend code.
