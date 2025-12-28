@@ -52,7 +52,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 1. Clear title and puzzle number
 2. "Nyt Spil" button (New Game)
 3. Rules/instructions section in Danish
-4. "Tilbage til Puslespil" link (Back to Puzzles)
+4. "Tilbage til oversigt" link (Back to Puzzles)
 5. Victory detection and celebration
 
 ## Adding a New Puzzle
@@ -69,7 +69,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 The main page uses a modern gaming/app design with:
 
 1. **Header**:
-   - Title "Tænkeren" with gradient text effect
+   - Title "Hjernespil" with gradient text effect
    - Share button (SVG icon) with glassmorphism style
 2. **Subtitle**: "Træn din hjerne med sjove udfordringer"
 3. **Game grid**: Square cards (2 columns on mobile, 3 on desktop)
@@ -85,6 +85,41 @@ The main page uses a modern gaming/app design with:
    - `apple-mobile-web-app-title`
    - `apple-touch-icon` (180x180 PNG)
    - `theme-color` (#0f0f23)
+
+## Backend API
+
+**Base URL:** `https://puzzlesapi.azurewebsites.net`
+
+### Endpoints
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/api/win` | Record a win `{nickname, game}` |
+| GET | `/api/leaderboard?game=all&top=10` | Get top players this month |
+| GET | `/api/stats` | Get total wins this month |
+| POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
+| GET | `/api/usage?game=all` | Get usage stats this month |
+| GET | `/api/today` | Get today's starts and completions |
+
+### Game numbers
+Games are identified by their folder number (01-14). Numbers are never reused if a game is removed.
+
+| Number | Game |
+|--------|------|
+| 01 | Reversi |
+| 02 | Telte og Træer |
+| 03 | Sudoku |
+| 04 | Nonogram |
+| 05 | 2048 |
+| 06 | Minestryger |
+| 07 | Hukommelse |
+| 08 | Kabale |
+| 09 | Kalaha |
+| 10 | Ordleg |
+| 11 | Kryds og Bolle |
+| 12 | Rørføring |
+| 13 | 15-Puslespil |
+| 14 | Kodeknækker |
 
 ## Git Workflow
 
