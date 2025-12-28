@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puzzles & Mind Games</title>
+    <title>Puslespil & Tankespil</title>
     <style>
         * {
             margin: 0;
@@ -110,6 +110,39 @@
             font-size: 0.9rem;
         }
 
+        .share-section {
+            margin-top: 50px;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .share-section h3 {
+            color: #e8d5b7;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code canvas {
+            display: block;
+        }
+
+        .share-url {
+            margin-top: 15px;
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
         @media (max-width: 500px) {
             h1 {
                 font-size: 2rem;
@@ -124,29 +157,46 @@
 <body>
     <div class="container">
         <header>
-            <h1>Puzzles & Mind Games</h1>
-            <p class="subtitle">A collection of classic games and brain teasers</p>
+            <h1>Puslespil & Tankespil</h1>
+            <p class="subtitle">En samling af klassiske spil og hjernevrider</p>
         </header>
 
         <div class="puzzle-grid">
             <a href="01-reversi/index.html" class="puzzle-card">
                 <span class="puzzle-number">#01</span>
                 <h2>Reversi</h2>
-                <p>The classic strategy game of capturing opponent pieces. Play against an AI that calculates the best moves. Choose from 6×6, 8×8, or 10×10 board sizes.</p>
-                <div class="play-hint">Click to play</div>
+                <p>Det klassiske strategispil hvor du erobrer modstanderens brikker. Spil mod en AI der beregner de bedste træk. Vælg mellem 6×6, 8×8 eller 10×10 brætter.</p>
+                <div class="play-hint">Tryk for at spille</div>
             </a>
 
             <a href="02-tents-and-trees/index.html" class="puzzle-card">
                 <span class="puzzle-number">#02</span>
-                <h2>Tents and Trees</h2>
-                <p>A logic puzzle where you place tents next to trees. Each tent pairs with one tree, and tents cannot touch each other. Use the row and column clues to solve it.</p>
-                <div class="play-hint">Click to play</div>
+                <h2>Telte og Træer</h2>
+                <p>Et logikpuslespil hvor du placerer telte ved siden af træer. Hvert telt hører til ét træ, og telte må ikke røre hinanden. Brug række- og kolonne-tallene til at løse det.</p>
+                <div class="play-hint">Tryk for at spille</div>
             </a>
         </div>
 
+        <div class="share-section">
+            <h3>Del med venner</h3>
+            <div class="qr-code" id="qr-code"></div>
+            <p class="share-url" id="share-url"></p>
+        </div>
+
         <footer>
-            <p>More puzzles coming soon...</p>
+            <p>Flere puslespil kommer snart...</p>
         </footer>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        const url = window.location.href;
+        document.getElementById('share-url').textContent = url;
+        QRCode.toCanvas(document.createElement('canvas'), url, { width: 150 }, (err, canvas) => {
+            if (!err) {
+                document.getElementById('qr-code').appendChild(canvas);
+            }
+        });
+    </script>
 </body>
 </html>

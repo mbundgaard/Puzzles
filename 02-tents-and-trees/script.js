@@ -54,7 +54,7 @@ class TentsAndTrees {
         this.statusElement.classList.remove('victory');
         this.generatePuzzle();
         this.render();
-        this.updateStatus('Place tents next to trees');
+        this.updateStatus('Placér telte ved siden af træer');
     }
 
     generatePuzzle() {
@@ -415,7 +415,7 @@ class TentsAndTrees {
 
         // Victory!
         this.gameWon = true;
-        this.updateStatus('Congratulations! Puzzle solved!');
+        this.updateStatus('Tillykke! Puslespillet er løst!');
         this.statusElement.classList.add('victory');
     }
 

@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reversi - Puzzle #01</title>
+    <title>Reversi - Puslespil #01</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
         <header>
             <h1>Reversi</h1>
-            <p class="subtitle">Puzzle #01</p>
+            <p class="subtitle">Puslespil #01</p>
         </header>
 
         <div class="controls">
-            <label for="board-size">Board Size:</label>
+            <label for="board-size">Størrelse:</label>
             <select id="board-size">
                 <option value="6">6 × 6</option>
                 <option value="8" selected>8 × 8</option>
                 <option value="10">10 × 10</option>
             </select>
-            <button id="new-game">New Game</button>
+            <button id="new-game">Nyt Spil</button>
         </div>
 
         <div class="score-board">
             <div class="player human">
                 <div class="disk black"></div>
-                <span class="label">You</span>
+                <span class="label">Dig</span>
                 <span class="score" id="black-score">2</span>
             </div>
             <div class="player ai">
@@ -36,23 +36,23 @@
             </div>
         </div>
 
-        <div class="status" id="status">Your turn</div>
+        <div class="status" id="status">Din tur</div>
 
         <div class="board-wrapper">
             <div class="board" id="board"></div>
         </div>
 
         <div class="rules">
-            <h3>How to Play</h3>
+            <h3>Sådan spiller du</h3>
             <ul>
-                <li>You play as Black, AI plays as White</li>
-                <li>Click a cell to place your disk</li>
-                <li>Capture opponent disks by flanking them</li>
-                <li>The player with the most disks wins</li>
+                <li>Du spiller som sort, AI spiller som hvid</li>
+                <li>Tryk på et felt for at placere din brik</li>
+                <li>Erobr modstanderens brikker ved at omringe dem</li>
+                <li>Spilleren med flest brikker vinder</li>
             </ul>
         </div>
 
-        <a href="../index.html" class="back-link">← Back to Puzzles</a>
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
     </div>
 
     <script src="game.js"></script>

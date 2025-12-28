@@ -1,31 +1,31 @@
-# Puzzles & Mind Games
+# Puslespil & Tankespil
 
-A collection of classic puzzles and mind games, playable in the browser.
+En samling af klassiske puslespil og tankespil, der kan spilles i browseren.
 
-## Puzzles
+## Puslespil
 
-| # | Name | Description |
+| # | Navn | Beskrivelse |
 |---|------|-------------|
-| 01 | [Reversi](01-reversi/) | Classic strategy game against an AI opponent. Capture pieces by flanking. Supports 6×6, 8×8, and 10×10 boards. |
-| 02 | [Tents and Trees](02-tents-and-trees/) | Logic puzzle: place tents next to trees. Each tent pairs with one tree, tents can't touch. Use row/column clues. |
+| 01 | [Reversi](01-reversi/) | Klassisk strategispil mod en AI-modstander. Erob brikker ved at omringe dem. Understøtter 6×6, 8×8 og 10×10 brætter. |
+| 02 | [Telte og Træer](02-tents-and-trees/) | Logikpuslespil: placér telte ved siden af træer. Hvert telt hører til ét træ, og telte må ikke røre hinanden. |
 
-## Play Online
+## Spil Online
 
-Visit the [live site](https://mbundgaard.github.io/Puzzles/) to play.
+Besøg [live-siden](https://mbundgaard.github.io/Puzzles/) for at spille.
 
-## Local Development
+## Lokal Udvikling
 
-No build step required. Simply open `index.html` in a browser or serve with any static file server:
+Ingen build-trin nødvendigt. Åbn blot `index.html` i en browser eller brug en statisk fil-server:
 
 ```bash
 npx serve .
 ```
 
-## Structure
+## Struktur
 
 ```
-├── index.html          # Main puzzle index
-├── 01-reversi/         # Each puzzle in numbered folder
+├── index.html          # Hovedside med puslespil-oversigt
+├── 01-reversi/         # Hvert puslespil i nummereret mappe
 │   ├── index.html
 │   ├── style.css
 │   └── game.js

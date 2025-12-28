@@ -373,7 +373,7 @@ class GameUI {
 
             if (currentMoves.length === 0) {
                 // Current player must pass
-                this.setStatus(`${this.game.currentPlayer === BLACK ? 'You' : 'AI'} must pass - no valid moves`);
+                this.setStatus(`${this.game.currentPlayer === BLACK ? 'Du' : 'AI'} må passe - ingen gyldige træk`);
                 await this.delay(1000);
                 this.game.currentPlayer = opponent;
                 continue;
@@ -393,7 +393,7 @@ class GameUI {
     }
 
     async aiTurn() {
-        this.setStatus('AI is thinking...', true);
+        this.setStatus('AI tænker...', true);
         this.renderBoard();
 
         // Small delay to show thinking state
@@ -438,11 +438,11 @@ class GameUI {
             const pieces = this.game.countPieces();
             let message;
             if (pieces.black > pieces.white) {
-                message = `You win! ${pieces.black} - ${pieces.white}`;
+                message = `Du vandt! ${pieces.black} - ${pieces.white}`;
             } else if (pieces.white > pieces.black) {
-                message = `AI wins! ${pieces.white} - ${pieces.black}`;
+                message = `AI vandt! ${pieces.white} - ${pieces.black}`;
             } else {
-                message = `It's a tie! ${pieces.black} - ${pieces.white}`;
+                message = `Uafgjort! ${pieces.black} - ${pieces.white}`;
             }
             this.statusElement.textContent = message;
             this.statusElement.classList.add('game-over');
@@ -450,9 +450,9 @@ class GameUI {
         } else {
             this.statusElement.classList.remove('game-over');
             if (this.game.currentPlayer === BLACK) {
-                this.setStatus('Your turn');
+                this.setStatus('Din tur');
             } else {
-                this.setStatus('AI is thinking...', true);
+                this.setStatus('AI tænker...', true);
             }
         }
     }
