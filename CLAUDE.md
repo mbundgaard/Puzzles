@@ -67,9 +67,8 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 The main page uses a modern gaming/app design with:
 
 1. **Header**:
-   - Animated logo icon (🧠) with gradient background and float animation
    - Title "Tænkeren" with gradient text effect
-   - Share button (📤) with glassmorphism style
+   - Share button (SVG icon) with glassmorphism style
 2. **Subtitle**: "Træn din hjerne med sjove udfordringer"
 3. **Game grid**: Square cards (2 columns on mobile, 3 on desktop)
    - Each card has: badge (#XX), large icon, title, short description
