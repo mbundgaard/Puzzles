@@ -91,18 +91,37 @@ class Kalaha {
 
         let currentPit = pitIndex;
 
-        while (stones > 0) {
-            currentPit = (currentPit + 1) % 14;
+        // Relay sowing: continue until landing in empty pit or store
+        while (true) {
+            // Distribute current stones
+            while (stones > 0) {
+                currentPit = (currentPit + 1) % 14;
 
-            // Skip opponent's store
-            if (isPlayer && currentPit === 13) continue;
-            if (!isPlayer && currentPit === 6) continue;
+                // Skip opponent's store
+                if (isPlayer && currentPit === 13) continue;
+                if (!isPlayer && currentPit === 6) continue;
 
-            this.pits[currentPit]++;
-            stones--;
+                this.pits[currentPit]++;
+                stones--;
+            }
+
+            // Check if we landed in a store (ends this sowing round)
+            if (currentPit === 6 || currentPit === 13) {
+                break;
+            }
+
+            // Check if we landed in an empty pit (turn ends)
+            if (this.pits[currentPit] === 1) {
+                // We just added one stone, so it was empty before
+                break;
+            }
+
+            // Landed in non-empty pit: pick up stones and continue
+            stones = this.pits[currentPit];
+            this.pits[currentPit] = 0;
         }
 
-        // Check for capture
+        // Check for capture (only if landed in own empty pit, not store)
         if (isPlayer && currentPit >= 0 && currentPit < 6 && this.pits[currentPit] === 1) {
             const oppositePit = 12 - currentPit;
             if (this.pits[oppositePit] > 0) {
@@ -128,7 +147,7 @@ class Kalaha {
             return;
         }
 
-        // Check for extra turn
+        // Check for extra turn (landing in own store)
         const landedInOwnStore = (isPlayer && currentPit === 6) || (!isPlayer && currentPit === 13);
 
         if (!landedInOwnStore) {
@@ -179,40 +198,53 @@ class Kalaha {
     }
 
     evaluateMove(pitIndex) {
-        let score = this.pits[pitIndex];
-
-        // Calculate where we'd land
-        let stones = this.pits[pitIndex];
+        // Simulate the move with relay sowing
+        let tempPits = [...this.pits];
+        let stones = tempPits[pitIndex];
+        tempPits[pitIndex] = 0;
         let current = pitIndex;
-        while (stones > 0) {
-            current = (current + 1) % 14;
-            if (current === 6) continue; // Skip player's store
-            stones--;
+        let stonesCollected = 0;
+
+        // Relay sowing simulation
+        while (true) {
+            while (stones > 0) {
+                current = (current + 1) % 14;
+                if (current === 6) continue; // Skip player's store
+                tempPits[current]++;
+                stones--;
+            }
+
+            // Landed in store
+            if (current === 13) {
+                stonesCollected++;
+                break;
+            }
+
+            // Landed in empty pit
+            if (tempPits[current] === 1) {
+                break;
+            }
+
+            // Continue relay
+            stones = tempPits[current];
+            tempPits[current] = 0;
         }
+
+        let score = 0;
 
         // Bonus for landing in own store (extra turn)
         if (current === 13) {
             score += 100;
         }
 
+        // Calculate stones gained in store
+        score += (tempPits[13] - this.pits[13]) * 15;
+
         // Bonus for capture
-        if (current >= 7 && current < 13) {
-            // Simulate if it would be a capture
-            let tempStones = this.pits[pitIndex];
-            let tempPits = [...this.pits];
-            tempPits[pitIndex] = 0;
-            let c = pitIndex;
-            while (tempStones > 0) {
-                c = (c + 1) % 14;
-                if (c === 6) continue;
-                tempPits[c]++;
-                tempStones--;
-            }
-            if (tempPits[current] === 1) {
-                const opposite = 12 - current;
-                if (this.pits[opposite] > 0) {
-                    score += this.pits[opposite] * 10;
-                }
+        if (current >= 7 && current < 13 && tempPits[current] === 1) {
+            const opposite = 12 - current;
+            if (tempPits[opposite] > 0) {
+                score += tempPits[opposite] * 10;
             }
         }
 
