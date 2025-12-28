@@ -131,6 +131,36 @@ const HjernespilAPI = (() => {
         }
     }
 
+    // ============ Feedback ============
+
+    /**
+     * Submit feedback for a game.
+     * @param {string} game - Game number (e.g., "01", "02")
+     * @param {Object} feedback - Feedback data
+     * @param {number} feedback.rating - Rating 1-5
+     * @param {string} [feedback.text] - Optional feedback text
+     * @param {string} [feedback.nickname] - Optional nickname
+     * @returns {Promise<{success: boolean, message?: string, error?: string}>}
+     */
+    async function submitFeedback(game, { rating, text = null, nickname = null }) {
+        try {
+            const response = await fetch(`${API_BASE}/feedback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    game,
+                    rating,
+                    text: text || undefined,
+                    nickname: nickname || getNickname() || undefined
+                })
+            });
+            return await response.json();
+        } catch (error) {
+            console.warn('Failed to submit feedback:', error);
+            return { success: false, error: 'Netværksfejl' };
+        }
+    }
+
     // ============ Nickname Management ============
 
     /**
@@ -168,6 +198,9 @@ const HjernespilAPI = (() => {
 
         // Win recording
         recordWin,
+
+        // Feedback
+        submitFeedback,
 
         // Leaderboard & stats
         getLeaderboard,

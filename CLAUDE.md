@@ -32,11 +32,17 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 ```
 ├── index.html              # Main puzzle index
 ├── shared/
-│   └── api.js              # Shared API client (HjernespilAPI)
+│   ├── api.js              # Shared API client (HjernespilAPI)
+│   └── ui.js               # Shared UI components (feedback button)
 ├── XX-puzzle-name/         # Numbered folder per puzzle
 │   ├── index.html          # Puzzle page
 │   ├── style.css           # Styles
 │   └── script.js           # Game logic
+├── api/                    # Azure Functions backend
+│   ├── Functions/          # HTTP endpoints
+│   ├── Models/             # Data models
+│   ├── Storage/            # Azure Table Storage implementations
+│   └── Program.cs          # DI and startup
 ```
 
 ### Styling Guidelines
@@ -66,12 +72,13 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 3. Add `<link rel="icon" href="../favicon.ico">` in `<head>`
 4. Add close button as first child of container (see below)
 5. Add `<script src="../shared/api.js"></script>` before game script
-6. Add `HjernespilAPI.trackStart('XX')` in newGame()
-7. Add `HjernespilAPI.trackComplete('XX')` on victory
-8. Add entry to root index.html
-9. Update README.md puzzle table
-10. Ensure touch-only gameplay works
-11. All text in Danish
+6. Add `<script src="../shared/ui.js"></script>` after api.js (adds feedback button)
+7. Add `HjernespilAPI.trackStart('XX')` in newGame()
+8. Add `HjernespilAPI.trackComplete('XX')` on victory
+9. Add entry to root index.html
+10. Update README.md puzzle table
+11. Ensure touch-only gameplay works
+12. All text in Danish
 
 ### Close Button
 
@@ -135,7 +142,7 @@ The main page uses a modern gaming/app design with:
    - Share button (SVG icon) with glassmorphism style
 2. **Subtitle**: "Træn din hjerne med sjove udfordringer"
 3. **Game grid**: Square cards (2 columns on mobile, 3 on desktop)
-   - Each card has: badge (#XX), large icon, title, short description
+   - Each card has: large icon, title, short description
    - Glassmorphism background with colored accent line on tap
    - Play indicator appears on active state
    - Unique accent color per game
@@ -162,6 +169,9 @@ The main page uses a modern gaming/app design with:
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
+| POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` |
+| GET | `/api/feedback?game=XX&limit=50` | Get recent feedback |
+| GET | `/api/feedback/stats` | Get feedback statistics |
 
 ### Game numbers
 Games are identified by their folder number (01-14). Numbers are never reused if a game is removed.
@@ -275,6 +285,7 @@ async function showLeaderboard() {
 | `getNickname()` | Get saved nickname from localStorage | `string \| null` |
 | `setNickname(name)` | Save nickname to localStorage | void |
 | `isValidNickname(name)` | Validate nickname (2-20 chars) | boolean |
+| `submitFeedback(game, {rating, text?, nickname?})` | Submit user feedback (1-5 rating) | `Promise<{success, message?, error?}>` |
 
 #### Notes
 
@@ -282,6 +293,27 @@ async function showLeaderboard() {
 - Game numbers must be zero-padded strings: "01", "02", ... "14"
 - Nickname must be 2-20 characters
 - Rate limit: 1 win per game per minute per player
+
+### Shared UI Components (shared/ui.js)
+
+Injects common UI elements into game pages. Include after api.js:
+
+```html
+<script src="../shared/api.js"></script>
+<script src="../shared/ui.js"></script>
+<script src="script.js"></script>
+```
+
+#### What it provides
+
+- **Feedback button**: Speech bubble icon in top-left corner
+- **Feedback modal**: Star rating (1-5), optional comment, optional nickname
+- Auto-detects game number from URL path
+- Adapts colors for light (`.game-container`) and dark (`.container`) themes
+
+#### Auto-initialization
+
+The UI components initialize automatically when the DOM is ready. No manual setup required.
 
 ## Git Workflow
 
