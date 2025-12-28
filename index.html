@@ -21,6 +21,34 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        .share-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #f4e4bc 0%, #e8d5a8 100%);
+            border: 3px solid #8b5a2b;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .share-btn:active {
+            transform: scale(0.95);
         }
 
         header {
@@ -110,18 +138,53 @@
             font-size: 0.9rem;
         }
 
-        .share-section {
-            margin-top: 50px;
-            text-align: center;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+        /* Modal/Popup styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
 
-        .share-section h3 {
-            color: #e8d5b7;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(145deg, #f4e4bc 0%, #e8d5a8 100%);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 4px solid #8b5a2b;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 320px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #8b5a2b;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #2c1810;
+        }
+
+        .modal h3 {
+            color: #2c1810;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
         }
 
         .qr-code {
@@ -129,7 +192,7 @@
             padding: 15px;
             border-radius: 8px;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .qr-code canvas {
@@ -138,8 +201,8 @@
 
         .share-url {
             margin-top: 15px;
-            color: #a0a0a0;
-            font-size: 0.85rem;
+            color: #5a4030;
+            font-size: 0.75rem;
             word-break: break-all;
         }
 
@@ -151,11 +214,21 @@
             .puzzle-card {
                 padding: 20px;
             }
+
+            .share-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="share-btn" id="share-btn" aria-label="Del">
+            <span>📤</span>
+        </button>
+
         <header>
             <h1>Puslespil & Tankespil</h1>
             <p class="subtitle">En samling af klassiske spil og hjernevrider</p>
@@ -177,24 +250,49 @@
             </a>
         </div>
 
-        <div class="share-section">
-            <h3>Del med venner</h3>
-            <div class="qr-code" id="qr-code"></div>
-            <p class="share-url" id="share-url"></p>
-        </div>
-
         <footer>
             <p>Flere puslespil kommer snart...</p>
         </footer>
     </div>
 
+    <!-- QR Code Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <span class="modal-close" id="modal-close">×</span>
+            <h3>Del med venner</h3>
+            <div class="qr-code" id="qr-code"></div>
+            <p class="share-url">https://mbundgaard.github.io/Puzzles/</p>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
-        const url = window.location.href;
-        document.getElementById('share-url').textContent = url;
-        QRCode.toCanvas(document.createElement('canvas'), url, { width: 150 }, (err, canvas) => {
-            if (!err) {
-                document.getElementById('qr-code').appendChild(canvas);
+        const shareBtn = document.getElementById('share-btn');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalClose = document.getElementById('modal-close');
+        const qrContainer = document.getElementById('qr-code');
+        const shareUrl = 'https://mbundgaard.github.io/Puzzles/index.html';
+        let qrGenerated = false;
+
+        shareBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('active');
+            if (!qrGenerated) {
+                QRCode.toCanvas(document.createElement('canvas'), shareUrl, { width: 180 }, (err, canvas) => {
+                    if (!err) {
+                        qrContainer.appendChild(canvas);
+                        qrGenerated = true;
+                    }
+                });
+            }
+        });
+
+        modalClose.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
             }
         });
     </script>
