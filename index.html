@@ -260,30 +260,20 @@
         <div class="modal">
             <span class="modal-close" id="modal-close">×</span>
             <h3>Del med venner</h3>
-            <div class="qr-code" id="qr-code"></div>
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR kode" width="180" height="180">
+            </div>
             <p class="share-url">https://mbundgaard.github.io/Puzzles/</p>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
         const shareBtn = document.getElementById('share-btn');
         const modalOverlay = document.getElementById('modal-overlay');
         const modalClose = document.getElementById('modal-close');
-        const qrContainer = document.getElementById('qr-code');
-        const shareUrl = 'https://mbundgaard.github.io/Puzzles/index.html';
-        let qrGenerated = false;
 
         shareBtn.addEventListener('click', () => {
             modalOverlay.classList.add('active');
-            if (!qrGenerated) {
-                QRCode.toCanvas(document.createElement('canvas'), shareUrl, { width: 180 }, (err, canvas) => {
-                    if (!err) {
-                        qrContainer.appendChild(canvas);
-                        qrGenerated = true;
-                    }
-                });
-            }
         });
 
         modalClose.addEventListener('click', () => {
