@@ -363,6 +363,41 @@
             font-weight: 600;
         }
 
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .refresh-btn svg {
+            transition: transform 0.5s ease;
+        }
+
+        .refresh-btn.spinning svg {
+            animation: spin 0.8s ease;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Responsive */
         @media (min-width: 500px) {
             .container {
@@ -443,6 +478,15 @@
                 🎮 <span>2</span> spil tilgængelige
             </div>
             <p>Flere spil kommer snart!</p>
+            <button class="refresh-btn" id="refresh-btn" aria-label="Opdater">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2v6h-6"/>
+                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                    <path d="M3 22v-6h6"/>
+                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                </svg>
+                <span>Opdater</span>
+            </button>
         </div>
     </div>
 
@@ -462,10 +506,16 @@
         const shareBtn = document.getElementById('share-btn');
         const modal = document.getElementById('qr-modal');
         const closeBtn = document.getElementById('qr-close');
+        const refreshBtn = document.getElementById('refresh-btn');
 
         shareBtn.onclick = () => modal.classList.add('active');
         closeBtn.onclick = () => modal.classList.remove('active');
         modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+
+        refreshBtn.onclick = () => {
+            refreshBtn.classList.add('spinning');
+            setTimeout(() => location.reload(true), 500);
+        };
     </script>
 </body>
 </html>
