@@ -118,6 +118,8 @@ See [CLAUDE.md](CLAUDE.md) for complete API documentation and development guidel
 
 This entire project was built 100% with [Claude Code](https://claude.com/product/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
 
+**Fun fact:** The concept and first version was built entirely on a mobile phone using the Claude app and the GitHub app. The conversation started with: *"I'm wondering if I can build an app using my phone only"* - and here we are!
+
 ## License
 
 MIT License - use it however you like!
