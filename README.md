@@ -1,32 +1,42 @@
-# The Thinker
+# Hjernespil
 
-A collection of classic puzzles and brain games for the browser. All games are designed to work on mobile with touch-only input.
+A collection of browser-based puzzles and brain games. All games are touch-friendly and work great on mobile devices.
+
+This is a family project made just for fun!
 
 ## Games
 
-### 01 - [Reversi](01-reversi/)
-
-Classic strategy board game against an AI opponent. You play as black, the AI plays as white. Capture your opponent's pieces by surrounding them horizontally, vertically, or diagonally. The player with the most pieces at the end wins.
-
-**Features:**
-- AI opponent using Minimax algorithm with alpha-beta pruning
-- Configurable board sizes: 6×6, 8×8, or 10×10
-- Animated piece flipping
-- Valid move highlighting
-
-### 02 - [Tents and Trees](02-tents-and-trees/)
-
-Logic puzzle where you place tents on a grid. Each tent must be orthogonally adjacent (up/down/left/right) to exactly one tree, and each tree has exactly one paired tent. Tents cannot touch each other, not even diagonally. Use the row and column clues to determine where tents should be placed.
-
-**Features:**
-- Randomly generated 8×8 puzzles
-- Two placement modes: Tent and Mark (to mark empty cells)
-- Visual feedback for correct/exceeded clue counts
-- Invalid placement highlighting
+| # | Game | Description |
+|---|------|-------------|
+| 01 | [Reversi](01-reversi/) | Classic strategy game - capture opponent pieces by surrounding them |
+| 02 | [Telte og Træer](02-tents-and-trees/) | Logic puzzle - place tents next to trees without touching |
+| 03 | [Sudoku](03-sudoku/) | Fill the grid so each row, column, and box contains 1-9 |
+| 04 | [Nonogram](04-nonogram/) | Reveal the hidden picture using number clues |
+| 05 | [2048](05-2048/) | Slide and merge tiles to reach 2048 |
+| 06 | [Minestryger](06-minesweeper/) | Find all safe cells without hitting a mine |
+| 07 | [Hukommelse](07-memory/) | Match pairs of cards by remembering their positions |
+| 08 | [Kabale](08-solitaire/) | Classic card game - move all cards to the foundations |
+| 09 | [Kalaha](09-kalaha/) | Ancient strategy game - capture more stones than the AI |
+| 10 | [Ordleg](10-ordleg/) | Guess the 5-letter Danish word in 6 tries |
+| 11 | [Kryds og Bolle](11-kryds-og-bolle/) | Tic-tac-toe against an AI opponent |
+| 12 | [Rørføring](12-roerfoering/) | Rotate pipes to connect start to end |
+| 13 | [15-Puslespil](13-femten-puslespil/) | Slide tiles to arrange numbers 1-15 in order |
+| 14 | [Kodeknækker](14-kodeknaekker/) | Mastermind - crack the secret color code |
 
 ## Play Online
 
 **[https://mbundgaard.github.io/Puzzles/](https://mbundgaard.github.io/Puzzles/)**
+
+## API
+
+The games connect to a simple backend API for usage tracking and leaderboards:
+
+- **Base URL:** `https://puzzlesapi.azurewebsites.net`
+- Tracks game starts and completions
+- Monthly leaderboards for wins
+- Built with Azure Functions and Table Storage
+
+See [CLAUDE.md](CLAUDE.md) for full API documentation.
 
 ## Local Development
 
@@ -40,7 +50,12 @@ npx serve .
 
 ```
 ├── index.html              # Main page
-├── icons/                  # App icons (various sizes)
-├── 01-reversi/
-└── 02-tents-and-trees/
+├── shared/
+│   └── api.js              # Shared API client
+├── api/                    # Azure Functions backend
+├── icons/                  # App icons
+└── XX-game-name/           # Game folders (01-14)
+    ├── index.html
+    ├── style.css
+    └── script.js
 ```
