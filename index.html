@@ -83,6 +83,19 @@
             padding: 10px 0;
         }
 
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
         h1 {
             font-size: 1.8rem;
             font-weight: 800;
@@ -433,7 +446,10 @@
 
     <div class="container">
         <header>
-            <h1>Hjernespil</h1>
+            <div class="logo">
+                <img src="icons/Ampeross-Qetto-2-Games.64.png" alt="Hjernespil" class="logo-icon">
+                <h1>Hjernespil</h1>
+            </div>
             <div class="header-actions">
                 <button class="icon-btn" id="share-btn" aria-label="Del">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
