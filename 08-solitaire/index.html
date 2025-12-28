@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kabale - Puslespil #08</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Kabale</h1>
+            <p class="subtitle">Puslespil #08</p>
+        </header>
+
+        <div class="controls">
+            <button id="new-game">Nyt Spil</button>
+            <div class="move-counter">
+                <span>Træk:</span>
+                <span id="moves">0</span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="top-row">
+                <div class="stock-waste">
+                    <div class="pile stock" id="stock">
+                        <div class="card back"></div>
+                    </div>
+                    <div class="pile waste" id="waste"></div>
+                </div>
+                <div class="foundations" id="foundations">
+                    <div class="pile foundation" data-suit="0"></div>
+                    <div class="pile foundation" data-suit="1"></div>
+                    <div class="pile foundation" data-suit="2"></div>
+                    <div class="pile foundation" data-suit="3"></div>
+                </div>
+            </div>
+
+            <div class="tableau" id="tableau">
+                <div class="pile column" data-col="0"></div>
+                <div class="pile column" data-col="1"></div>
+                <div class="pile column" data-col="2"></div>
+                <div class="pile column" data-col="3"></div>
+                <div class="pile column" data-col="4"></div>
+                <div class="pile column" data-col="5"></div>
+                <div class="pile column" data-col="6"></div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Flyt alle kort til fundamenterne (øverst til højre)</li>
+                <li>Byg fundamenter op fra 1-13 i samme farve</li>
+                <li>Byg kolonner ned med skiftende farver (🌸🔥 ↔ 🌊🍀)</li>
+                <li>Tryk på bunken for at trække nye kort</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="overlay" id="victory">
+        <div class="overlay-content">
+            <h2>Tillykke! 🎉</h2>
+            <p>Du klarede kabalen på <span id="final-moves">0</span> træk!</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
