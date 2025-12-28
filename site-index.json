@@ -1,0 +1,70 @@
+{
+  "baseUrl": "https://mbundgaard.github.io/Puzzles",
+  "generated": "2025-12-28T22:06:32Z",
+  "shared": [
+    "https://mbundgaard.github.io/Puzzles/shared/api.js",
+    "https://mbundgaard.github.io/Puzzles/shared/ui.js"
+  ],
+  "games": [
+    {
+      "name": "Reversi",
+      "url": "https://mbundgaard.github.io/Puzzles/01-reversi/index.html"
+    },
+    {
+      "name": "Telte og Træer",
+      "url": "https://mbundgaard.github.io/Puzzles/02-tents-and-trees/index.html"
+    },
+    {
+      "name": "Sudoku",
+      "url": "https://mbundgaard.github.io/Puzzles/03-sudoku/index.html"
+    },
+    {
+      "name": "Nonogram",
+      "url": "https://mbundgaard.github.io/Puzzles/04-nonogram/index.html"
+    },
+    {
+      "name": "2048",
+      "url": "https://mbundgaard.github.io/Puzzles/05-2048/index.html"
+    },
+    {
+      "name": "Minestryger",
+      "url": "https://mbundgaard.github.io/Puzzles/06-minesweeper/index.html"
+    },
+    {
+      "name": "Hukommelse",
+      "url": "https://mbundgaard.github.io/Puzzles/07-memory/index.html"
+    },
+    {
+      "name": "Kabale",
+      "url": "https://mbundgaard.github.io/Puzzles/08-solitaire/index.html"
+    },
+    {
+      "name": "Kalaha",
+      "url": "https://mbundgaard.github.io/Puzzles/09-kalaha/index.html"
+    },
+    {
+      "name": "Ordleg",
+      "url": "https://mbundgaard.github.io/Puzzles/10-ordleg/index.html"
+    },
+    {
+      "name": "Kryds og Bolle",
+      "url": "https://mbundgaard.github.io/Puzzles/11-kryds-og-bolle/index.html"
+    },
+    {
+      "name": "Rørføring",
+      "url": "https://mbundgaard.github.io/Puzzles/12-roerfoering/index.html"
+    },
+    {
+      "name": "15-Puslespil",
+      "url": "https://mbundgaard.github.io/Puzzles/13-femten-puslespil/index.html"
+    },
+    {
+      "name": "Kodeknækker",
+      "url": "https://mbundgaard.github.io/Puzzles/14-kodeknaekker/index.html"
+    }
+  ],
+  "other": [
+    "https://mbundgaard.github.io/Puzzles/index.html",
+    "https://mbundgaard.github.io/Puzzles/manifest.json"
+  ]
+}
