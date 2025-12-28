@@ -56,15 +56,29 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 3. Rules/instructions section in Danish
 4. "Tilbage til oversigt" link (Back to Puzzles)
 5. Victory detection and celebration
+6. Favicon link: `<link rel="icon" href="../favicon.ico">`
+7. API tracking (trackStart/trackComplete)
 
 ## Adding a New Puzzle
 
 1. Create folder `XX-puzzle-name/` with next available number
 2. Implement with index.html, style.css, script.js
-3. Add entry to root index.html
-4. Update README.md puzzle table
-5. Ensure touch-only gameplay works
-6. All text in Danish
+3. Add `<link rel="icon" href="../favicon.ico">` in `<head>`
+4. Add `<script src="../shared/api.js"></script>` before game script
+5. Add `HjernespilAPI.trackStart('XX')` in newGame()
+6. Add `HjernespilAPI.trackComplete('XX')` on victory
+7. Add entry to root index.html
+8. Update README.md puzzle table
+9. Ensure touch-only gameplay works
+10. All text in Danish
+
+### Favicon
+
+The favicon is at `/favicon.ico` in the root. Each game page must include an explicit link because GitHub Pages serves from `/Puzzles/`, not the root:
+
+```html
+<link rel="icon" href="../favicon.ico">
+```
 
 ## Main Page (index.html)
 
