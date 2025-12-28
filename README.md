@@ -114,16 +114,6 @@ See [CLAUDE.md](CLAUDE.md) for complete API documentation and development guidel
 4. Add to main page `index.html`
 5. Follow guidelines in [CLAUDE.md](CLAUDE.md)
 
-### Run Locally
-
-```bash
-# Simple HTTP server
-npx serve .
-
-# Or with Python
-python -m http.server 8000
-```
-
 ## Built with Claude Code
 
 This entire project was built 100% with [Claude Code](https://claude.com/product/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
