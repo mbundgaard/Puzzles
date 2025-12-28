@@ -8,7 +8,9 @@ This is a collection of browser-based puzzles and mind games. Each puzzle is a s
 
 ### Language
 
-**All UI text must be in Danish.** This includes:
+**Communication with Claude must be in English.** All conversation, questions, and responses should be in English.
+
+**All UI/content text must be in Danish.** This includes:
 - Titles and subtitles
 - Button labels
 - Instructions and rules
