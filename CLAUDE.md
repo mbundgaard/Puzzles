@@ -57,7 +57,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 
 ### Each Puzzle Should Have
 
-1. Clear title and puzzle number
+1. Clear title
 2. "Nyt Spil" button (New Game)
 3. Rules/instructions section in Danish
 4. Close button (X) in top-right corner to return to main page

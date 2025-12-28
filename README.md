@@ -4,8 +4,6 @@ A collection of browser-based puzzles and brain games. All games are touch-frien
 
 This is a family project made just for fun - built 100% with [Claude Code](https://claude.com/product/claude-code)!
 
-**[Play now → mbundgaard.github.io/Puzzles](https://mbundgaard.github.io/Puzzles/)**
-
 ## Games
 
 | # | Game | Description |
