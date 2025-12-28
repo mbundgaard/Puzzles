@@ -38,14 +38,6 @@ The games connect to a simple backend API for usage tracking and leaderboards:
 
 See [CLAUDE.md](CLAUDE.md) for full API documentation.
 
-## Local Development
-
-No build required:
-
-```bash
-npx serve .
-```
-
 ## Structure
 
 ```
