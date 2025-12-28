@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #0f0f23;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+#new-game {
+    padding: 10px 30px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+#new-game:active {
+    transform: scale(0.95);
+}
+
+.status {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+.status.thinking {
+    color: #fbbf24;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.board {
+    display: flex;
+    gap: 10px;
+    background: linear-gradient(145deg, #5d4e37 0%, #3d3225 100%);
+    padding: 15px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.store {
+    width: 60px;
+    background: linear-gradient(180deg, #2a2318 0%, #1a1610 100%);
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.store-count {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.store-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.ai-store .store-count {
+    color: #f87171;
+}
+
+.player-store .store-count {
+    color: #4ade80;
+}
+
+.pits-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pits {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.pit {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(180deg, #2a2318 0%, #1a1610 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s;
+    cursor: default;
+}
+
+.player-pits .pit {
+    cursor: pointer;
+}
+
+.player-pits .pit:not(.empty):not(.disabled):active {
+    transform: scale(0.9);
+    background: linear-gradient(180deg, #3a3328 0%, #2a2620 100%);
+}
+
+.player-pits .pit:not(.empty):not(.disabled) {
+    box-shadow:
+        inset 0 3px 6px rgba(0, 0, 0, 0.5),
+        0 0 0 2px rgba(74, 222, 128, 0.3);
+}
+
+.pit.empty {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.pit.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pit.highlight {
+    animation: pitPulse 0.5s ease;
+}
+
+@keyframes pitPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.pit.last-drop {
+    box-shadow:
+        inset 0 3px 6px rgba(0, 0, 0, 0.5),
+        0 0 0 3px rgba(251, 191, 36, 0.6);
+}
+
+.rules {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.rules h3 {
+    color: #a5b4fc;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.rules ul {
+    list-style: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.rules li {
+    padding: 3px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.rules li::before {
+    content: '•';
+    position: absolute;
+    left: 5px;
+    color: #667eea;
+}
+
+.back-link {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.back-link:active {
+    color: #fff;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.overlay-content {
+    background: linear-gradient(145deg, #1e1e3f 0%, #0f0f23 100%);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.overlay-content h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.overlay-content h2.win {
+    color: #4ade80;
+}
+
+.overlay-content h2.lose {
+    color: #f87171;
+}
+
+.overlay-content h2.draw {
+    color: #fbbf24;
+}
+
+.overlay-content p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 25px;
+}
+
+#play-again {
+    padding: 12px 30px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+#play-again:active {
+    transform: scale(0.95);
+}
+
+@media (min-width: 450px) {
+    .pit {
+        width: 52px;
+        height: 52px;
+        font-size: 1.3rem;
+    }
+
+    .store {
+        width: 70px;
+    }
+
+    .store-count {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 550px) {
+    .pit {
+        width: 58px;
+        height: 58px;
+        font-size: 1.4rem;
+    }
+
+    .store {
+        width: 80px;
+    }
+
+    .board {
+        padding: 20px;
+    }
+}

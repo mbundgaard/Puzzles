@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalaha - Puslespil #09</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Kalaha</h1>
+            <p class="subtitle">Puslespil #09</p>
+        </header>
+
+        <div class="controls">
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="status" id="status">Din tur</div>
+
+        <div class="board">
+            <div class="store ai-store" id="store-ai">
+                <span class="store-count">0</span>
+                <span class="store-label">AI</span>
+            </div>
+
+            <div class="pits-area">
+                <div class="pits ai-pits" id="ai-pits">
+                    <div class="pit" data-pit="12">4</div>
+                    <div class="pit" data-pit="11">4</div>
+                    <div class="pit" data-pit="10">4</div>
+                    <div class="pit" data-pit="9">4</div>
+                    <div class="pit" data-pit="8">4</div>
+                    <div class="pit" data-pit="7">4</div>
+                </div>
+                <div class="pits player-pits" id="player-pits">
+                    <div class="pit" data-pit="0">4</div>
+                    <div class="pit" data-pit="1">4</div>
+                    <div class="pit" data-pit="2">4</div>
+                    <div class="pit" data-pit="3">4</div>
+                    <div class="pit" data-pit="4">4</div>
+                    <div class="pit" data-pit="5">4</div>
+                </div>
+            </div>
+
+            <div class="store player-store" id="store-player">
+                <span class="store-count">0</span>
+                <span class="store-label">Dig</span>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Tryk på en af dine huller (nederste række) for at så</li>
+                <li>Stenene fordeles mod uret, én i hvert hul</li>
+                <li>Spring modstanderens mål over</li>
+                <li>Lander du i dit mål, får du en ekstra tur</li>
+                <li>Lander du i et tomt hul på din side, fanger du modstanderens sten overfor</li>
+                <li>Spilleren med flest sten i målet vinder</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <div class="overlay" id="game-over">
+        <div class="overlay-content" id="overlay-content">
+            <h2 id="result-title">Spil slut!</h2>
+            <p id="result-text">Resultat</p>
+            <button id="play-again">Spil Igen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
