@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>15-Puslespil - Tænkeren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="puzzle-number">#13</span>
+            <h1>15-Puslespil</h1>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Træk</span>
+                <span class="stat-value" id="moves">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Tid</span>
+                <span class="stat-value" id="time">0:00</span>
+            </div>
+        </div>
+
+        <div class="board" id="board"></div>
+
+        <div class="controls">
+            <button class="btn" id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Tryk på en brik ved siden af det tomme felt for at flytte den</li>
+                <li>Arranger tallene fra 1-15 i rækkefølge</li>
+                <li>Det tomme felt skal ende nederst til højre</li>
+                <li>Prøv at løse puslespillet med så få træk som muligt</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

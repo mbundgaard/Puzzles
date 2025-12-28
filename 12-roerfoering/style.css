@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #0f0f23;
+    min-height: 100vh;
+    color: white;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.puzzle-number {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding: 10px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.status.winner {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    animation: celebrate 0.5s ease;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.board {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cell:active {
+    transform: scale(0.95);
+}
+
+.cell.connected .pipe {
+    stroke: #22d3ee;
+    filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.5));
+}
+
+.cell svg {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease;
+}
+
+.pipe {
+    stroke: rgba(255, 255, 255, 0.4);
+    stroke-width: 8;
+    stroke-linecap: round;
+    fill: none;
+}
+
+.cell.start {
+    background: rgba(34, 197, 94, 0.2);
+    border: 2px solid #22c55e;
+}
+
+.cell.end {
+    background: rgba(239, 68, 68, 0.2);
+    border: 2px solid #ef4444;
+}
+
+.endpoint {
+    fill: #22c55e;
+}
+
+.cell.end .endpoint {
+    fill: #ef4444;
+}
+
+.difficulty {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.diff-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.diff-btn.active {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.diff-btn:active {
+    transform: scale(0.95);
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.rules {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.rules h3 {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.rules ul {
+    list-style: none;
+}
+
+.rules li {
+    padding: 6px 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    padding-left: 20px;
+    position: relative;
+}
+
+.rules li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #06b6d4;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    padding: 15px;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.back-link:active {
+    color: white;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ordleg - Tænkeren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="puzzle-number">#10</span>
+            <h1>Ordleg</h1>
+        </header>
+
+        <div class="game-container">
+            <div class="board" id="board"></div>
+
+            <div class="keyboard" id="keyboard"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="controls">
+            <button class="btn" id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Gæt det hemmelige 5-bogstavs ord på 6 forsøg</li>
+                <li>Skriv et ord og tryk Enter for at gætte</li>
+                <li><span class="color-box correct"></span> Grøn = bogstav er korrekt placeret</li>
+                <li><span class="color-box present"></span> Gul = bogstav er i ordet, men forkert plads</li>
+                <li><span class="color-box absent"></span> Grå = bogstav er ikke i ordet</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

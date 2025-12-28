@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kryds og Bolle - Tænkeren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="puzzle-number">#11</span>
+            <h1>Kryds og Bolle</h1>
+        </header>
+
+        <div class="status" id="status">Din tur (X)</div>
+
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+
+        <div class="score">
+            <div class="score-item">
+                <span class="score-label">Du (X)</span>
+                <span class="score-value" id="player-score">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Uafgjort</span>
+                <span class="score-value" id="draw-score">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">AI (O)</span>
+                <span class="score-value" id="ai-score">0</span>
+            </div>
+        </div>
+
+        <div class="difficulty">
+            <span>Sværhedsgrad:</span>
+            <button class="diff-btn active" data-diff="easy">Let</button>
+            <button class="diff-btn" data-diff="medium">Normal</button>
+            <button class="diff-btn" data-diff="hard">Svær</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Du spiller som X, computeren er O</li>
+                <li>Tryk på et felt for at placere dit kryds</li>
+                <li>Få tre på stribe (vandret, lodret eller diagonalt) for at vinde</li>
+                <li>Vælg sværhedsgrad for at justere AI'ens niveau</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

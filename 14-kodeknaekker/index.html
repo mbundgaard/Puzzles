@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kodeknækker - Tænkeren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="puzzle-number">#14</span>
+            <h1>Kodeknækker</h1>
+        </header>
+
+        <div class="status" id="status">Gæt den hemmelige kode</div>
+
+        <div class="color-picker" id="color-picker"></div>
+
+        <div class="board" id="board"></div>
+
+        <div class="controls">
+            <button class="btn secondary" id="clear-btn">Ryd</button>
+            <button class="btn" id="guess-btn">Gæt</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn outline" id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Vælg en farve og tryk på et felt for at placere den</li>
+                <li>Tryk "Gæt" når du har udfyldt alle 4 felter</li>
+                <li><span class="peg black"></span> Sort = rigtig farve, rigtig plads</li>
+                <li><span class="peg white"></span> Hvid = rigtig farve, forkert plads</li>
+                <li>Du har 10 forsøg til at knække koden</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

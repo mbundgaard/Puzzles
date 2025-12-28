@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Rørføring - Tænkeren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="puzzle-number">#12</span>
+            <h1>Rørføring</h1>
+        </header>
+
+        <div class="status" id="status">Forbind start til slut</div>
+
+        <div class="board" id="board"></div>
+
+        <div class="difficulty">
+            <button class="diff-btn active" data-size="4">4×4</button>
+            <button class="diff-btn" data-size="5">5×5</button>
+            <button class="diff-btn" data-size="6">6×6</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="rules">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Tryk på en flise for at dreje den 90°</li>
+                <li>Forbind det grønne startpunkt til det røde slutpunkt</li>
+                <li>Alle rør skal danne en sammenhængende vej</li>
+                <li>Vælg gitterstørrelse for at ændre sværhedsgrad</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Tilbage til Puslespil</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
