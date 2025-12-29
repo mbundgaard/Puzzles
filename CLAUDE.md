@@ -1,5 +1,7 @@
 # Claude Development Guidelines
 
+> **Note:** After reading this file, also read `index.html` in this folder to understand the current game catalog and UI structure.
+
 ## Project Overview
 
 This is a collection of browser-based puzzles and mind games. Each puzzle is a standalone HTML/CSS/JS application in its own numbered folder.
