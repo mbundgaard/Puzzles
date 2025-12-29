@@ -136,7 +136,8 @@ public class GitHubService : IGitHubService
             {
                 title,
                 body = body.ToString(),
-                labels
+                labels,
+                assignees = new[] { _owner }
             };
 
             var json = JsonSerializer.Serialize(payload);
