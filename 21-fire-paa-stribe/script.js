@@ -230,15 +230,9 @@ class ConnectFour {
 
     getBestMove(depth) {
         let bestScore = -Infinity;
-        let bestCol = 3; // Default to center
+        let bestCols = [];
 
         const validCols = this.getValidColumns();
-
-        // Shuffle to add variety when scores are equal
-        this.shuffleArray(validCols);
-
-        // Prioritize center columns
-        validCols.sort((a, b) => Math.abs(a - 3) - Math.abs(b - 3));
 
         for (const col of validCols) {
             const row = this.getLowestEmptyRow(col);
@@ -250,11 +244,14 @@ class ConnectFour {
 
             if (score > bestScore) {
                 bestScore = score;
-                bestCol = col;
+                bestCols = [col];
+            } else if (score === bestScore) {
+                bestCols.push(col);
             }
         }
 
-        return bestCol;
+        // Randomly pick among equally good moves
+        return bestCols[Math.floor(Math.random() * bestCols.length)];
     }
 
     minimax(depth, alpha, beta, isMaximizing) {
