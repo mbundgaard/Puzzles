@@ -167,9 +167,7 @@ The main page uses a modern gaming/app design with:
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
-| POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` |
-| GET | `/api/feedback?game=XX&limit=50` | Get recent feedback |
-| GET | `/api/feedback/stats` | Get feedback statistics |
+| POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` → creates GitHub issue |
 
 ### Game numbers
 
