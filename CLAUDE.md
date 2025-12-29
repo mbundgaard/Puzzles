@@ -10,7 +10,7 @@ These are user feedback and bug reports waiting to be addressed.
 
 ---
 
-> **Note:** Also read `README.md` for project overview and game list.
+> **Note:** Also read `README.md` and `index.html` for project overview and game list.
 
 ## Project Overview
 
