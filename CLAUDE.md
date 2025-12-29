@@ -12,6 +12,8 @@ This is a collection of browser-based puzzles and mind games. Each puzzle is a s
 
 **Communication with Claude must be in English.** All conversation, questions, and responses should be in English.
 
+**Commit messages must be in English.**
+
 **All UI/content text must be in Danish.** This includes:
 - Titles and subtitles
 - Button labels
@@ -329,7 +331,8 @@ The win modal:
 
 ## Git Workflow
 
-- Commit messages in English
+**IMPORTANT: Commit messages must be in English.**
+
 - Push to `claude/main` branch (allows Claude to push directly without PR)
 - Clear, descriptive commit messages
 - **Update timestamp BEFORE each commit**: Update "Sidst opdateret" in index.html footer with current Danish local time (format: "DD. month YYYY kl. HH:MM", month in Danish). Denmark uses CET (UTC+1) in winter and CEST (UTC+2) in summer. Do this before EVERY commit.
