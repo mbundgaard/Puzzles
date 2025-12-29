@@ -40,32 +40,11 @@ class Fibonacci {
             }
         });
 
-        // Touch controls
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        this.boardEl.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        this.boardEl.addEventListener('touchend', (e) => {
-            if (e.changedTouches.length === 0) return;
-
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-
-            const dx = touchEndX - touchStartX;
-            const dy = touchEndY - touchStartY;
-
-            const minSwipe = 30;
-
-            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > minSwipe) {
-                this.handleMove(dx > 0 ? 'right' : 'left');
-            } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > minSwipe) {
-                this.handleMove(dy > 0 ? 'down' : 'up');
-            }
-        }, { passive: true });
+        // Arrow button controls
+        document.getElementById('btn-up').addEventListener('click', () => this.handleMove('up'));
+        document.getElementById('btn-down').addEventListener('click', () => this.handleMove('down'));
+        document.getElementById('btn-left').addEventListener('click', () => this.handleMove('left'));
+        document.getElementById('btn-right').addEventListener('click', () => this.handleMove('right'));
     }
 
     newGame() {

@@ -14,7 +14,6 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    touch-action: none;
 }
 
 .container {
@@ -139,7 +138,41 @@ h1 {
 .game-area {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+.arrow-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.arrow-row {
+    display: flex;
+    gap: 8px;
+}
+
+.arrow-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 1.4rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.arrow-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 #board {

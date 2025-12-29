@@ -28,6 +28,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 - **No keyboard dependencies**: All gameplay must be possible with touch/tap only.
 - **Tap targets**: Interactive elements should be at least 44x44 pixels for easy tapping.
 - **No hover-only interactions**: Any hover effects should be supplementary, not required for gameplay.
+- **No swipe gestures**: Avoid swipe-based controls as they conflict with page scrolling and browser gestures. Use visible arrow buttons instead for directional input.
 
 ### Structure
 
