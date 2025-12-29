@@ -40,14 +40,21 @@ class Game2048 {
             btn.addEventListener('click', () => this.move(btn.dataset.dir));
         });
 
-        // Touch swipe
+        // Touch swipe - prevent browser navigation
         let startX, startY;
-        document.addEventListener('touchstart', (e) => {
+        const gameArea = document.querySelector('.game-container');
+
+        gameArea.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
         }, { passive: true });
 
-        document.addEventListener('touchend', (e) => {
+        gameArea.addEventListener('touchmove', (e) => {
+            if (!startX || !startY) return;
+            e.preventDefault(); // Prevent browser swipe navigation
+        }, { passive: false });
+
+        gameArea.addEventListener('touchend', (e) => {
             if (!startX || !startY) return;
             const diffX = e.changedTouches[0].clientX - startX;
             const diffY = e.changedTouches[0].clientY - startY;
