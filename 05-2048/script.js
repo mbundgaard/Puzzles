@@ -35,41 +35,10 @@ class Game2048 {
             this.newGame();
         });
 
-        // Swipe controls
+        // Arrow button controls
         document.querySelectorAll('.swipe-btn').forEach(btn => {
             btn.addEventListener('click', () => this.move(btn.dataset.dir));
         });
-
-        // Touch swipe - prevent browser navigation
-        let startX, startY;
-        const gameArea = document.querySelector('.game-container');
-
-        gameArea.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, { passive: true });
-
-        gameArea.addEventListener('touchmove', (e) => {
-            if (!startX || !startY) return;
-            e.preventDefault(); // Prevent browser swipe navigation
-        }, { passive: false });
-
-        gameArea.addEventListener('touchend', (e) => {
-            if (!startX || !startY) return;
-            const diffX = e.changedTouches[0].clientX - startX;
-            const diffY = e.changedTouches[0].clientY - startY;
-
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                if (Math.abs(diffX) > 30) {
-                    this.move(diffX > 0 ? 'right' : 'left');
-                }
-            } else {
-                if (Math.abs(diffY) > 30) {
-                    this.move(diffY > 0 ? 'down' : 'up');
-                }
-            }
-            startX = startY = null;
-        }, { passive: true });
 
         // Keyboard
         document.addEventListener('keydown', (e) => {
