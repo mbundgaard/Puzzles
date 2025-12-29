@@ -64,10 +64,11 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 2. "Nyt Spil" button (New Game)
 3. Rules/instructions section in Danish
 4. Close button (X) in top-right corner to return to main page
-5. Victory detection and celebration
-6. Favicon link: `<link rel="icon" href="../favicon.ico">`
-7. API tracking (trackStart/trackComplete)
-8. Win modal with leaderboard (via `HjernespilUI.showWinModal(points)` - points: 1-5)
+5. Feedback button (⭐) in top-left corner (auto-added by shared/ui.js)
+6. Victory detection and celebration
+7. Favicon link: `<link rel="icon" href="../favicon.ico">`
+8. API tracking (trackStart/trackComplete)
+9. Win modal with leaderboard (via `HjernespilUI.showWinModal(points)` - points: 1-5)
 
 ## Adding a New Puzzle
 
@@ -182,29 +183,10 @@ The main page uses a modern gaming/app design with:
 | GET | `/api/feedback/stats` | Get feedback statistics |
 
 ### Game numbers
-Games are identified by their folder number (01-19). Numbers are never reused if a game is removed.
 
-| Number | Game |
-|--------|------|
-| 01 | Reversi |
-| 02 | Telte og Træer |
-| 03 | Sudoku |
-| 04 | Nonogram |
-| 05 | 2048 |
-| 06 | Minestryger |
-| 07 | Hukommelse |
-| 08 | Kabale |
-| 09 | Kalaha |
-| 10 | Ordleg |
-| 11 | Kryds og Bolle |
-| 12 | Rørføring |
-| 13 | 15-Puslespil |
-| 14 | Kodeknækker |
-| 15 | Broer |
-| 16 | Lys Op |
-| 17 | Pind |
-| 18 | Dam |
-| 19 | Mølle |
+Games are identified by their folder number (e.g., "01", "02"). Numbers are never reused if a game is removed.
+
+See `README.md` for the complete list of games with their numbers and point values.
 
 ### Shared API Client (shared/api.js)
 
@@ -303,9 +285,8 @@ async function showLeaderboard() {
 #### Notes
 
 - `trackStart` and `trackComplete` are fire-and-forget (don't await)
-- Game numbers must be zero-padded strings: "01", "02", ... "19"
+- Game numbers must be zero-padded strings (e.g., "01", "02")
 - Nickname must be 2-20 characters
-- Rate limit: 1 win per game per minute per player
 
 ### Shared UI Components (shared/ui.js)
 

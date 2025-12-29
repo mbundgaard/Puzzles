@@ -455,6 +455,59 @@
             font-size: 0.85rem;
         }
 
+        /* Info Modal */
+        .info-modal {
+            max-width: 340px;
+        }
+
+        .info-app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+
+        .info-content {
+            text-align: left;
+            margin-top: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .info-content p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .info-content h4 {
+            color: #a5b4fc;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 16px 0 8px 0;
+        }
+
+        .info-content ul {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0 0 12px 20px;
+        }
+
+        .info-content li {
+            margin-bottom: 4px;
+        }
+
+        .info-credit {
+            margin-top: 20px !important;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4) !important;
+            font-size: 0.8rem !important;
+            text-align: center;
+        }
+
         .qr-code {
             background: #fff;
             padding: 15px;
@@ -667,6 +720,13 @@
                         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
                     </svg>
                 </button>
+                <button class="icon-btn" id="info-btn" aria-label="Info">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                </button>
             </div>
         </header>
 
@@ -856,7 +916,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 21:48</p>
+            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 22:02</p>
         </div>
     </div>
 
@@ -892,6 +952,30 @@
             <h3>Rangliste</h3>
             <div class="leaderboard-list" id="leaderboard-list">
                 <p class="loading">Indlæser...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="modal info-modal">
+            <span class="modal-close" id="info-close">×</span>
+            <img src="icons/Ampeross-Qetto-2-Games.64.png" alt="Hjernespil" class="info-app-icon">
+            <h3>Om Hjernespil</h3>
+            <div class="info-content">
+                <p>Hjernespil er en samling af klassiske puslespil og hjernetrim, som du kan spille direkte på din telefon.</p>
+
+                <h4>Point og rangliste</h4>
+                <p>Når du løser et spil, optjener du 1-5 point. Indtast dit kaldenavn efter en sejr for at komme på ranglisten.</p>
+
+                <h4>Tips</h4>
+                <ul>
+                    <li>Alle spil virker på mobil og tablet</li>
+                    <li>Tryk på feedback-knappen øverst til venstre for at give feedback</li>
+                    <li>Dine point akkumuleres over tid</li>
+                </ul>
+
+                <p class="info-credit">Udviklet af familien Rabjerg, Bødtker og Bundgaard</p>
             </div>
         </div>
     </div>
@@ -957,6 +1041,19 @@
             leaderboardClose.onclick = () => leaderboardModal.classList.remove('active');
             leaderboardModal.onclick = (e) => {
                 if (e.target === leaderboardModal) leaderboardModal.classList.remove('active');
+            };
+        })();
+
+        // Info Modal
+        (() => {
+            const infoBtn = document.getElementById('info-btn');
+            const infoModal = document.getElementById('info-modal');
+            const infoClose = document.getElementById('info-close');
+
+            infoBtn.onclick = () => infoModal.classList.add('active');
+            infoClose.onclick = () => infoModal.classList.remove('active');
+            infoModal.onclick = (e) => {
+                if (e.target === infoModal) infoModal.classList.remove('active');
             };
         })();
 
