@@ -197,7 +197,7 @@ class Minesweeper {
             this.gameOver = true;
             setTimeout(() => this.victoryOverlay.classList.add('show'), 300);
             HjernespilAPI.trackComplete('06');
-            HjernespilUI.showWinModal();
+            HjernespilUI.showWinModal(3);
         }
     }
 

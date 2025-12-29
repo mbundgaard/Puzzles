@@ -441,7 +441,7 @@ class GameUI {
             if (pieces.black > pieces.white) {
                 message = `Du vandt! ${pieces.black} - ${pieces.white}`;
                 HjernespilAPI.trackComplete('01');
-                HjernespilUI.showWinModal();
+                HjernespilUI.showWinModal(3);
             } else if (pieces.white > pieces.black) {
                 message = `AI vandt! ${pieces.white} - ${pieces.black}`;
             } else {

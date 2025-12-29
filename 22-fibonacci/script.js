@@ -342,7 +342,7 @@ class Fibonacci {
                     this.messageEl.className = 'message victory';
 
                     HjernespilAPI.trackComplete('22');
-                    HjernespilUI.showWinModal();
+                    HjernespilUI.showWinModal(3);
 
                     return true;
                 }

@@ -54,14 +54,15 @@ const HjernespilAPI = (() => {
      * Record a win to the leaderboard.
      * @param {string} game - Game number
      * @param {string} nickname - Player nickname (2-20 chars)
+     * @param {number} [points=1] - Points awarded (1-5)
      * @returns {Promise<{success: boolean, message?: string, error?: string}>}
      */
-    async function recordWin(game, nickname) {
+    async function recordWin(game, nickname, points = 1) {
         try {
             const response = await fetch(`${API_BASE}/win`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ game, nickname })
+                body: JSON.stringify({ game, nickname, points })
             });
             return await response.json();
         } catch (error) {
@@ -76,7 +77,7 @@ const HjernespilAPI = (() => {
      * Get the leaderboard.
      * @param {string} [game] - Optional game filter (null = all games)
      * @param {number} [top=10] - Number of entries to return
-     * @returns {Promise<{period: string, entries: Array, totalWinsThisMonth: number}>}
+     * @returns {Promise<{period: string, entries: Array, totalPoints: number}>}
      */
     async function getLeaderboard(game = null, top = 10) {
         try {
@@ -87,7 +88,7 @@ const HjernespilAPI = (() => {
             return await response.json();
         } catch (error) {
             console.warn('Failed to get leaderboard:', error);
-            return { entries: [], totalWinsThisMonth: 0 };
+            return { entries: [], totalPoints: 0 };
         }
     }
 
@@ -124,8 +125,8 @@ const HjernespilAPI = (() => {
     }
 
     /**
-     * Get total wins this month.
-     * @returns {Promise<{period: string, totalWins: number}>}
+     * Get total points this month.
+     * @returns {Promise<{period: string, totalPoints: number}>}
      */
     async function getStats() {
         try {
@@ -133,7 +134,7 @@ const HjernespilAPI = (() => {
             return await response.json();
         } catch (error) {
             console.warn('Failed to get stats:', error);
-            return { totalWins: 0 };
+            return { totalPoints: 0 };
         }
     }
 

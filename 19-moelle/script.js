@@ -405,7 +405,7 @@ class NineMensMorris {
             this.victoryMessage.textContent = 'Du vandt over computeren!';
             this.setStatus('Du vandt!', 'winner');
             HjernespilAPI.trackComplete('19');
-            HjernespilUI.showWinModal();
+            HjernespilUI.showWinModal(3);
         } else {
             this.victoryTitle.textContent = 'Spil slut';
             this.victoryTitle.className = 'loser';

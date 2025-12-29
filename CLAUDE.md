@@ -67,7 +67,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 5. Victory detection and celebration
 6. Favicon link: `<link rel="icon" href="../favicon.ico">`
 7. API tracking (trackStart/trackComplete)
-8. Win modal with leaderboard (optional, via `HjernespilUI.showWinModal()`)
+8. Win modal with leaderboard (via `HjernespilUI.showWinModal(points)` - points: 1-5)
 
 ## Adding a New Puzzle
 
@@ -79,12 +79,14 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 6. Add `<script src="../shared/ui.js"></script>` after api.js (adds feedback button + win modal)
 7. Add `HjernespilAPI.trackStart('XX')` in newGame()
 8. Add `HjernespilAPI.trackComplete('XX')` on victory
-9. Add `HjernespilUI.showWinModal()` after trackComplete for leaderboard
+9. Add `HjernespilUI.showWinModal(points)` after trackComplete (points: 1-5)
 10. Add entry to root index.html
-11. Update README.md puzzle table
+11. Update README.md puzzle table (include Points column)
 12. Update site-index.json with new game entry
 13. Ensure touch-only gameplay works
 14. All text in Danish
+
+**Note:** If the point value for a game is changed, update the Points column in README.md to match.
 
 ### Close Button
 

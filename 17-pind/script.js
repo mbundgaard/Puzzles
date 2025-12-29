@@ -215,13 +215,13 @@ class PegSolitaire {
                 this.victoryTitle.className = '';
                 this.victoryMessage.textContent = 'Du efterlod kun én pind i midten!';
                 HjernespilAPI.trackComplete('17');
-                HjernespilUI.showWinModal();
+                HjernespilUI.showWinModal(3);
             } else {
                 this.victoryTitle.textContent = 'Næsten!';
                 this.victoryTitle.className = 'near-win';
                 this.victoryMessage.textContent = 'Kun én pind tilbage, men ikke i midten.';
                 HjernespilAPI.trackComplete('17');
-                HjernespilUI.showWinModal();
+                HjernespilUI.showWinModal(3);
             }
 
             setTimeout(() => {

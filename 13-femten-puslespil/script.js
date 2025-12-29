@@ -146,7 +146,7 @@ class FifteenPuzzle {
         this.stopTimer();
         this.boardEl.classList.add('won');
         HjernespilAPI.trackComplete('13');
-        HjernespilUI.showWinModal();
+        HjernespilUI.showWinModal(3);
 
         setTimeout(() => {
             alert(`Tillykke! Du løste puslespillet på ${this.moves} træk og ${this.formatTime(this.time)}!`);

@@ -137,7 +137,7 @@ class LightUp {
             setTimeout(() => {
                 this.victoryOverlay.classList.add('show');
                 HjernespilAPI.trackComplete('16');
-                HjernespilUI.showWinModal();
+                HjernespilUI.showWinModal(3);
             }, 300);
         }
     }

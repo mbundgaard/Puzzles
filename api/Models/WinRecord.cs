@@ -10,6 +10,7 @@ public class WinRecord
 {
     public string Nickname { get; set; } = string.Empty;
     public string Game { get; set; } = string.Empty;
+    public int Points { get; set; } = 1;
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
     // For Azure Table Storage
@@ -24,6 +25,7 @@ public class WinRequest
 {
     public string Nickname { get; set; } = string.Empty;
     public string Game { get; set; } = string.Empty;
+    public int Points { get; set; } = 1;
 }
 
 /// <summary>
@@ -33,8 +35,7 @@ public class LeaderboardEntry
 {
     public int Rank { get; set; }
     public string Nickname { get; set; } = string.Empty;
-    public int Wins { get; set; }
-    public string? Title { get; set; }
+    public int Points { get; set; }
 }
 
 /// <summary>
@@ -44,6 +45,6 @@ public class LeaderboardResponse
 {
     public string Period { get; set; } = string.Empty;
     public string? Game { get; set; }
-    public int TotalWinsThisMonth { get; set; }
+    public int TotalPoints { get; set; }
     public List<LeaderboardEntry> Entries { get; set; } = [];
 }

@@ -293,7 +293,7 @@ class Kalaha {
             this.resultTitle.textContent = 'Du vandt! 🎉';
             this.resultTitle.className = 'win';
             HjernespilAPI.trackComplete('09');
-            HjernespilUI.showWinModal();
+            HjernespilUI.showWinModal(3);
         } else if (aiScore > playerScore) {
             this.resultTitle.textContent = 'AI vandt!';
             this.resultTitle.className = 'lose';

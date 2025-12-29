@@ -327,7 +327,7 @@ class Checkers {
             this.victoryMessage.textContent = 'Du vandt over computeren!';
             this.setStatus('Du vandt!', 'winner');
             HjernespilAPI.trackComplete('18');
-            HjernespilUI.showWinModal();
+            HjernespilUI.showWinModal(3);
         } else {
             this.victoryTitle.textContent = 'Spil slut';
             this.victoryTitle.className = 'loser';

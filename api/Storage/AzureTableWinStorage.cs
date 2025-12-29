@@ -16,6 +16,7 @@ public class WinEntity : ITableEntity
 
     public string Nickname { get; set; } = string.Empty;
     public string Game { get; set; } = string.Empty;
+    public int Points { get; set; } = 1;
     public DateTime RecordedAt { get; set; }
 }
 
@@ -26,16 +27,6 @@ public class AzureTableWinStorage : IWinStorage
 {
     private readonly TableClient _tableClient;
     private const string TableName = "Wins";
-
-    // Fun titles based on win count
-    private static readonly Dictionary<int, string> Titles = new()
-    {
-        { 50, "Mester" },
-        { 25, "Ekspert" },
-        { 10, "Entusiast" },
-        { 5, "Nybegynder" },
-        { 1, "Debutant" }
-    };
 
     public AzureTableWinStorage(string connectionString)
     {
@@ -52,6 +43,7 @@ public class AzureTableWinStorage : IWinStorage
             RowKey = record.RowKey,
             Nickname = record.Nickname,
             Game = record.Game,
+            Points = record.Points,
             RecordedAt = record.Timestamp
         };
 
@@ -61,13 +53,11 @@ public class AzureTableWinStorage : IWinStorage
 
     public async Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int top = 10)
     {
-        var currentMonth = DateTime.UtcNow.ToString("yyyy-MM");
-
-        // Query all wins for this month
-        var filter = $"PartitionKey eq '{currentMonth}'";
+        // Query all wins (no partition key filter - get all time)
+        string? filter = null;
         if (!string.IsNullOrEmpty(game))
         {
-            filter += $" and Game eq '{game}'";
+            filter = $"Game eq '{game}'";
         }
 
         var wins = new List<WinEntity>();
@@ -76,30 +66,29 @@ public class AzureTableWinStorage : IWinStorage
             wins.Add(entity);
         }
 
-        // Group by nickname and count
+        // Group by nickname and sum points
         var grouped = wins
             .GroupBy(w => w.Nickname.ToLowerInvariant())
             .Select(g => new
             {
                 Nickname = g.First().Nickname,
-                Wins = g.Count()
+                Points = g.Sum(w => w.Points)
             })
-            .OrderByDescending(x => x.Wins)
+            .OrderByDescending(x => x.Points)
             .Take(top)
             .Select((x, i) => new LeaderboardEntry
             {
                 Rank = i + 1,
                 Nickname = x.Nickname,
-                Wins = x.Wins,
-                Title = GetTitle(x.Wins)
+                Points = x.Points
             })
             .ToList();
 
         return new LeaderboardResponse
         {
-            Period = currentMonth,
+            Period = "all-time",
             Game = game,
-            TotalWinsThisMonth = wins.Count,
+            TotalPoints = wins.Sum(w => w.Points),
             Entries = grouped
         };
     }
@@ -123,27 +112,14 @@ public class AzureTableWinStorage : IWinStorage
         return false;
     }
 
-    public async Task<int> GetTotalWinsThisMonthAsync()
+    public async Task<int> GetTotalPointsAsync()
     {
-        var currentMonth = DateTime.UtcNow.ToString("yyyy-MM");
-        var filter = $"PartitionKey eq '{currentMonth}'";
-
-        var count = 0;
-        await foreach (var _ in _tableClient.QueryAsync<WinEntity>(filter, select: new[] { "PartitionKey" }))
+        var totalPoints = 0;
+        await foreach (var entity in _tableClient.QueryAsync<WinEntity>(select: new[] { "Points" }))
         {
-            count++;
+            totalPoints += entity.Points;
         }
 
-        return count;
-    }
-
-    private static string? GetTitle(int wins)
-    {
-        foreach (var (threshold, title) in Titles.OrderByDescending(x => x.Key))
-        {
-            if (wins >= threshold)
-                return title;
-        }
-        return null;
+        return totalPoints;
     }
 }

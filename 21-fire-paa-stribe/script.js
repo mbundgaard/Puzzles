@@ -135,7 +135,7 @@ class ConnectFour {
                 this.statusEl.className = 'status player-turn';
 
                 HjernespilAPI.trackComplete('21');
-                setTimeout(() => HjernespilUI.showWinModal(), 500);
+                setTimeout(() => HjernespilUI.showWinModal(3), 500);
             } else {
                 this.messageEl.textContent = 'Computeren vandt!';
                 this.messageEl.className = 'message defeat';

@@ -6,27 +6,30 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 
 ## Games
 
-| # | Game | Description |
-|---|------|-------------|
-| 01 | [Reversi](01-reversi/) | Classic strategy game - capture opponent pieces by surrounding them |
-| 02 | [Telte og Træer](02-tents-and-trees/) | Logic puzzle - place tents next to trees without touching |
-| 03 | [Sudoku](03-sudoku/) | Fill the grid so each row, column, and box contains 1-9 |
-| 04 | [Nonogram](04-nonogram/) | Reveal the hidden picture using number clues |
-| 05 | [2048](05-2048/) | Slide and merge tiles to reach 2048 |
-| 06 | [Minestryger](06-minesweeper/) | Find all safe cells without hitting a mine |
-| 07 | [Hukommelse](07-memory/) | Match pairs of cards by remembering their positions |
-| 08 | [Kabale](08-solitaire/) | Classic card game - move all cards to the foundations |
-| 09 | [Kalaha](09-kalaha/) | Ancient strategy game - capture more stones than the AI |
-| 10 | [Ordleg](10-ordleg/) | Guess the 5-letter Danish word in 6 tries |
-| 11 | [Kryds og Bolle](11-kryds-og-bolle/) | Tic-tac-toe against an AI opponent |
-| 12 | [Rørføring](12-roerfoering/) | Rotate pipes to connect start to end |
-| 13 | [15-Puslespil](13-femten-puslespil/) | Slide tiles to arrange numbers 1-15 in order |
-| 14 | [Kodeknækker](14-kodeknaekker/) | Mastermind - crack the secret color code |
-| 15 | [Broer](15-broer/) | Connect islands with the correct number of bridges |
-| 16 | [Lys Op](16-lys-op/) | Place light bulbs to illuminate all cells |
-| 17 | [Pind](17-pind/) | Peg solitaire - leave only one peg standing |
-| 18 | [Dam](18-dam/) | Checkers against AI with forced captures |
-| 19 | [Mølle](19-moelle/) | Nine Men's Morris - form mills to capture pieces |
+| # | Game | Points | Description |
+|---|------|--------|-------------|
+| 01 | [Reversi](01-reversi/) | 3 | Classic strategy game - capture opponent pieces by surrounding them |
+| 02 | [Telte og Træer](02-tents-and-trees/) | 3 | Logic puzzle - place tents next to trees without touching |
+| 03 | [Sudoku](03-sudoku/) | 3 | Fill the grid so each row, column, and box contains 1-9 |
+| 04 | [Nonogram](04-nonogram/) | 3 | Reveal the hidden picture using number clues |
+| 05 | [2048](05-2048/) | 3 | Slide and merge tiles to reach 2048 |
+| 06 | [Minestryger](06-minesweeper/) | 3 | Find all safe cells without hitting a mine |
+| 07 | [Hukommelse](07-memory/) | 3 | Match pairs of cards by remembering their positions |
+| 08 | [Kabale](08-solitaire/) | 3 | Classic card game - move all cards to the foundations |
+| 09 | [Kalaha](09-kalaha/) | 3 | Ancient strategy game - capture more stones than the AI |
+| 10 | [Ordleg](10-ordleg/) | 1/3/5 | Guess the 5-letter Danish word in 6 tries |
+| 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | Tic-tac-toe against an AI opponent |
+| 12 | [Rørføring](12-roerfoering/) | 3 | Rotate pipes to connect start to end |
+| 13 | [15-Puslespil](13-femten-puslespil/) | 3 | Slide tiles to arrange numbers 1-15 in order |
+| 14 | [Kodeknækker](14-kodeknaekker/) | 3 | Mastermind - crack the secret color code |
+| 15 | [Broer](15-broer/) | 3 | Connect islands with the correct number of bridges |
+| 16 | [Lys Op](16-lys-op/) | 3 | Place light bulbs to illuminate all cells |
+| 17 | [Pind](17-pind/) | 3 | Peg solitaire - leave only one peg standing |
+| 18 | [Dam](18-dam/) | 3 | Checkers against AI with forced captures |
+| 19 | [Mølle](19-moelle/) | 3 | Nine Men's Morris - form mills to capture pieces |
+| 20 | [Slitherlink](20-slitherlink/) | 3 | Draw a loop following number clues |
+| 21 | [Fire på Stribe](21-fire-paa-stribe/) | 3 | Connect four in a row against AI |
+| 22 | [Fibonacci](22-fibonacci/) | 3 | Merge Fibonacci numbers to reach 610 |
 
 ## Features
 
@@ -48,7 +51,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 
 ### Statistics & Tracking
 - Anonymous tracking of game starts and completions
-- Monthly leaderboard for wins
+- Monthly leaderboard with points (1-5 points per win depending on game/difficulty)
 - API for fetching statistics
 
 ## Technology
@@ -83,7 +86,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 │   ├── Storage/            # Azure Table Storage implementations
 │   └── Program.cs          # DI and startup
 ├── icons/                  # App icons (16px to 512px)
-└── XX-game-name/           # Game folders (01-19)
+└── XX-game-name/           # Game folders (01-22)
     ├── index.html          # Game page
     ├── style.css           # Game-specific styles
     └── script.js           # Game logic

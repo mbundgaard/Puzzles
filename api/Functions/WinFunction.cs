@@ -51,10 +51,18 @@ public class WinFunction
             return new BadRequestObjectResult(new { error = "Invalid game number" });
         }
 
+        // Validate points (1-5)
+        var points = winRequest.Points;
+        if (points < 1 || points > 5)
+        {
+            return new BadRequestObjectResult(new { error = "Points must be between 1 and 5" });
+        }
+
         var record = new WinRecord
         {
             Nickname = nickname,
             Game = game,
+            Points = points,
             Timestamp = DateTime.UtcNow
         };
 

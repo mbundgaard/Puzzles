@@ -259,6 +259,13 @@ const HjernespilUI = (() => {
                 margin-bottom: 5px;
             }
 
+            .hjernespil-win-points {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #fbbf24;
+                margin-bottom: 5px;
+            }
+
             .hjernespil-win-message {
                 color: rgba(255, 255, 255, 0.7);
                 margin-bottom: 20px;
@@ -483,6 +490,7 @@ const HjernespilUI = (() => {
     // Win modal state
     let winModal = null;
     let winModalGameNumber = null;
+    let winModalPoints = 1;
 
     // Create win modal
     function createWinModal(gameNumber) {
@@ -491,6 +499,7 @@ const HjernespilUI = (() => {
         overlay.innerHTML = `
             <div class="hjernespil-win-modal">
                 <h2>Tillykke!</h2>
+                <p class="hjernespil-win-points"></p>
                 <p class="hjernespil-win-message">Du klarede det!</p>
 
                 <div class="hjernespil-nickname-section">
@@ -503,6 +512,7 @@ const HjernespilUI = (() => {
 
         const nicknameInput = overlay.querySelector('.hjernespil-win-nickname');
         const submitBtn = overlay.querySelector('.hjernespil-submit-score');
+        const pointsDisplay = overlay.querySelector('.hjernespil-win-points');
 
         // Pre-fill nickname
         const savedNickname = HjernespilAPI.getNickname();
@@ -523,7 +533,7 @@ const HjernespilUI = (() => {
             submitBtn.textContent = 'Gemmer...';
 
             HjernespilAPI.setNickname(nickname);
-            const result = await HjernespilAPI.recordWin(gameNumber, nickname);
+            const result = await HjernespilAPI.recordWin(gameNumber, nickname, winModalPoints);
 
             if (result.success) {
                 overlay.classList.remove('active');
@@ -538,7 +548,14 @@ const HjernespilUI = (() => {
 
         return {
             overlay,
-            open: () => {
+            pointsDisplay,
+            nicknameInput,
+            submitBtn,
+            open: (points) => {
+                // Update points display
+                winModalPoints = points;
+                pointsDisplay.textContent = `+${points} point`;
+
                 // Reset state
                 const savedName = HjernespilAPI.getNickname();
                 if (savedName) {
@@ -552,7 +569,9 @@ const HjernespilUI = (() => {
     }
 
     // Show win modal (public API)
-    function showWinModal(gameNumberOverride = null) {
+    // @param {number} points - Points awarded (1-5), defaults to 1
+    // @param {string} [gameNumberOverride] - Optional game number override
+    function showWinModal(points = 1, gameNumberOverride = null) {
         const gameNumber = gameNumberOverride || getGameNumber();
         if (!gameNumber) {
             console.warn('HjernespilUI: Could not detect game number');
@@ -568,7 +587,7 @@ const HjernespilUI = (() => {
             winModalGameNumber = gameNumber;
         }
 
-        winModal.open();
+        winModal.open(points);
     }
 
     // Initialize UI

@@ -186,7 +186,7 @@ class Sudoku {
     showVictory() {
         this.victoryOverlay.classList.add('show');
         HjernespilAPI.trackComplete('03');
-        HjernespilUI.showWinModal();
+        HjernespilUI.showWinModal(3);
     }
 }
 

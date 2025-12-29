@@ -47,13 +47,12 @@ public class LeaderboardFunction
     public async Task<IActionResult> GetStats(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stats")] HttpRequest req)
     {
-        var totalWins = await _storage.GetTotalWinsThisMonthAsync();
-        var currentMonth = DateTime.UtcNow.ToString("yyyy-MM");
+        var totalPoints = await _storage.GetTotalPointsAsync();
 
         return new OkObjectResult(new
         {
-            period = currentMonth,
-            totalWins
+            period = "all-time",
+            totalPoints
         });
     }
 }

@@ -329,7 +329,7 @@ class Bridges {
             setTimeout(() => {
                 this.victoryOverlay.classList.add('show');
                 HjernespilAPI.trackComplete('15');
-                HjernespilUI.showWinModal();
+                HjernespilUI.showWinModal(3);
             }, 300);
         }
     }

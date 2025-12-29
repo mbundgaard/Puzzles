@@ -26,7 +26,7 @@ public interface IWinStorage
     Task<bool> HasRecentWinAsync(string nickname, string game, TimeSpan window);
 
     /// <summary>
-    /// Gets total wins this month across all games.
+    /// Gets total points across all games (all time).
     /// </summary>
-    Task<int> GetTotalWinsThisMonthAsync();
+    Task<int> GetTotalPointsAsync();
 }

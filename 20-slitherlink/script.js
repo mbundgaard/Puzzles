@@ -385,7 +385,7 @@ class Slitherlink {
         this.message.className = 'message victory';
 
         HjernespilAPI.trackComplete('20');
-        HjernespilUI.showWinModal();
+        HjernespilUI.showWinModal(3);
 
         return true;
     }
