@@ -7,7 +7,7 @@
 At the start of each session, check for open GitHub issues:
 
 ```bash
-curl -s "https://api.github.com/repos/mbundgaard/Puzzles/issues?state=open" | jq -r '.[] | "- #\(.number): \(.title)"'
+gh issue list --repo mbundgaard/Puzzles --state open
 ```
 
 These are user feedback and bug reports that may need attention.
