@@ -6,9 +6,7 @@
 
 At the start of each session, check for open GitHub issues:
 
-```bash
-gh issue list --repo mbundgaard/Puzzles --state open
-```
+https://api.github.com/repos/mbundgaard/Puzzles/issues?state=open
 
 These are user feedback and bug reports that may need attention.
 
