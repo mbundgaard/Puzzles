@@ -2,6 +2,16 @@
 
 > **Note:** Also read `README.md` for project overview and game list, and `index.html` for the current UI structure.
 
+## Open Issues
+
+At the start of each session, check for open GitHub issues:
+
+```bash
+curl -s "https://api.github.com/repos/mbundgaard/Puzzles/issues?state=open" | jq -r '.[] | "- #\(.number): \(.title)"'
+```
+
+These are user feedback and bug reports that may need attention.
+
 ## Project Overview
 
 This is a collection of browser-based puzzles and mind games. Each puzzle is a standalone HTML/CSS/JS application in its own numbered folder.
@@ -168,6 +178,17 @@ The main page uses a modern gaming/app design with:
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
 | POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` → creates GitHub issue |
+
+### Feedback System
+
+User feedback is submitted via the API and automatically creates GitHub issues:
+
+- **Regular feedback** (games 01-99): Creates issue titled `[GameName] ⭐⭐⭐ Feedback`
+- **Game suggestions** (game 00): Creates issue titled `Spilforslag: [suggestion text]`
+
+Issues appear at: https://github.com/mbundgaard/Puzzles/issues
+
+When fixing issues from feedback, reference the issue number in the commit message (e.g., `Fixes #5`) to auto-close it.
 
 ### Game numbers
 
