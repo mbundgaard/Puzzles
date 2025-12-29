@@ -151,6 +151,7 @@ class Ordleg {
         this.message = document.getElementById('message');
         this.newGameBtn = document.getElementById('new-game');
         this.difficultySelect = document.getElementById('difficulty');
+        this.hintsRow = document.getElementById('hints-row');
 
         this.newGameBtn.addEventListener('click', () => this.newGame());
         this.difficultySelect.addEventListener('change', () => this.newGame());
@@ -158,7 +159,18 @@ class Ordleg {
 
         this.createBoard();
         this.createKeyboard();
+        this.createHintsRow();
         this.newGame();
+    }
+
+    createHintsRow() {
+        this.hintsRow.innerHTML = '';
+        for (let i = 0; i < this.wordLength; i++) {
+            const hint = document.createElement('div');
+            hint.className = 'hint-tile';
+            hint.dataset.position = i;
+            this.hintsRow.appendChild(hint);
+        }
     }
 
     createBoard() {
@@ -216,6 +228,13 @@ class Ordleg {
             tile.className = 'tile';
         });
 
+        // Reset hints row
+        const hintTiles = this.hintsRow.querySelectorAll('.hint-tile');
+        hintTiles.forEach(tile => {
+            tile.textContent = '';
+            tile.classList.remove('revealed');
+        });
+
         // Reset keyboard
         const keys = this.keyboard.querySelectorAll('.key');
         keys.forEach(key => {
@@ -234,30 +253,27 @@ class Ordleg {
         }
         // Hard: no hints
 
+        // Initialize currentGuess with empty positions
+        this.currentGuess = Array(this.wordLength).fill('').join('');
+
+        // Fill in hint letters in currentGuess
+        for (const pos of this.revealedPositions) {
+            let guessArray = this.currentGuess.split('');
+            guessArray[pos] = this.targetWord[pos];
+            this.currentGuess = guessArray.join('');
+        }
+
         HjernespilAPI.trackStart('10');
     }
 
     revealHint(position) {
         const letter = this.targetWord[position];
-        const row = this.board.children[0];
-        const tile = row.children[position];
+        const hintTile = this.hintsRow.children[position];
 
-        tile.textContent = letter;
-        tile.classList.add('filled', 'hint');
+        hintTile.textContent = letter;
+        hintTile.classList.add('revealed');
 
         this.revealedPositions.push(position);
-
-        // Update currentGuess to include the hint letter at the right position
-        // Build the guess string with placeholders
-        let guessArray = this.currentGuess.split('');
-        while (guessArray.length < this.wordLength) {
-            guessArray.push('');
-        }
-        guessArray[position] = letter;
-        this.currentGuess = guessArray.join('');
-
-        // Move currentTile to first empty position
-        this.updateCurrentTile();
     }
 
     updateCurrentTile() {
