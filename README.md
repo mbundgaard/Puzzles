@@ -47,7 +47,13 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ### Feedback System
 - Rate each game with stars (1-5)
 - Optional comment and nickname
+- "Foreslå Spil" card to suggest new games (uses game "00")
 - Helps improve the games
+
+### First Visit Info
+- Info modal shows automatically on first visit
+- Explains points system and features
+- Saved to localStorage so it only shows once
 
 ### Statistics & Tracking
 - Anonymous tracking of game starts and completions
@@ -94,19 +100,9 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 
 ## API
 
-Backend API for tracking and leaderboards:
+Backend API for tracking and leaderboards.
 
 **Base URL:** `https://puzzlesapi.azurewebsites.net`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/event` | Record game start/completion |
-| POST | `/api/feedback` | Submit feedback |
-| POST | `/api/win` | Record win to leaderboard |
-| GET | `/api/leaderboard` | Get top players |
-| GET | `/api/usage` | Get usage statistics |
-| GET | `/api/today` | Get today's activity |
-| GET | `/api/feedback/stats` | Get feedback statistics |
 
 See [CLAUDE.md](CLAUDE.md) for complete API documentation and development guidelines.
 

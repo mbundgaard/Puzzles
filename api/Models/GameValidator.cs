@@ -7,30 +7,9 @@ namespace Puzzles.Models;
 public static class GameValidator
 {
     /// <summary>
-    /// Explicit set of valid game numbers.
-    /// Update this when adding/removing games.
-    /// </summary>
-    public static readonly HashSet<string> ValidGames =
-    [
-        "01", // Reversi
-        "02", // Telte og Træer
-        "03", // Sudoku
-        "04", // Nonogram
-        "05", // 2048
-        "06", // Minestryger
-        "07", // Hukommelse
-        "08", // Kabale
-        "09", // Kalaha
-        "10", // Ordleg
-        "11", // Kryds og Bolle
-        "12", // Rørføring
-        "13", // 15-Puslespil
-        "14"  // Kodeknækker
-    ];
-
-    /// <summary>
     /// Validates and normalizes a game number.
     /// Accepts "1", "01", "  01  " etc. Returns normalized "01" format or null if invalid.
+    /// Accepts any number 0-99.
     /// </summary>
     public static string? NormalizeGame(string? game)
     {
@@ -40,10 +19,9 @@ public static class GameValidator
         var trimmed = game.Trim();
 
         // Try parse as int to normalize to 2-digit format
-        if (int.TryParse(trimmed, out var num))
+        if (int.TryParse(trimmed, out var num) && num >= 0 && num <= 99)
         {
-            var normalized = num.ToString("D2");
-            return ValidGames.Contains(normalized) ? normalized : null;
+            return num.ToString("D2");
         }
 
         return null;

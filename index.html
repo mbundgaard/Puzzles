@@ -1010,7 +1010,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 22:08</p>
+            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 22:18</p>
         </div>
     </div>
 
@@ -1153,15 +1153,26 @@
 
         // Info Modal
         (() => {
+            const INFO_SHOWN_KEY = 'hjernespil_info_shown';
             const infoBtn = document.getElementById('info-btn');
             const infoModal = document.getElementById('info-modal');
             const infoClose = document.getElementById('info-close');
 
+            function closeInfo() {
+                infoModal.classList.remove('active');
+                localStorage.setItem(INFO_SHOWN_KEY, 'true');
+            }
+
             infoBtn.onclick = () => infoModal.classList.add('active');
-            infoClose.onclick = () => infoModal.classList.remove('active');
+            infoClose.onclick = closeInfo;
             infoModal.onclick = (e) => {
-                if (e.target === infoModal) infoModal.classList.remove('active');
+                if (e.target === infoModal) closeInfo();
             };
+
+            // Show info modal on first visit
+            if (!localStorage.getItem(INFO_SHOWN_KEY)) {
+                infoModal.classList.add('active');
+            }
         })();
 
         // Suggest Game Modal

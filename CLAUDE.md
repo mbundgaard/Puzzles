@@ -1,6 +1,6 @@
 # Claude Development Guidelines
 
-> **Note:** After reading this file, also read `index.html` in this folder to understand the current game catalog and UI structure.
+> **Note:** Also read `README.md` for project overview and game list, and `index.html` for the current UI structure.
 
 ## Project Overview
 
@@ -29,24 +29,6 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 - **Tap targets**: Interactive elements should be at least 44x44 pixels for easy tapping.
 - **No hover-only interactions**: Any hover effects should be supplementary, not required for gameplay.
 - **No swipe gestures**: Avoid swipe-based controls as they conflict with page scrolling and browser gestures. Use visible arrow buttons instead for directional input.
-
-### Structure
-
-```
-├── index.html              # Main puzzle index
-├── shared/
-│   ├── api.js              # Shared API client (HjernespilAPI)
-│   └── ui.js               # Shared UI components (feedback button)
-├── XX-puzzle-name/         # Numbered folder per puzzle
-│   ├── index.html          # Puzzle page
-│   ├── style.css           # Styles
-│   └── script.js           # Game logic
-├── api/                    # Azure Functions backend
-│   ├── Functions/          # HTTP endpoints
-│   ├── Models/             # Data models
-│   ├── Storage/            # Azure Table Storage implementations
-│   └── Program.cs          # DI and startup
-```
 
 ### Styling Guidelines
 
@@ -148,16 +130,21 @@ The main page uses a modern gaming/app design with:
 
 1. **Header**:
    - Title "Hjernespil" with gradient text effect
-   - Share button (SVG icon) with glassmorphism style
+   - Icon buttons: refresh, SMS share, QR share, leaderboard, info
 2. **Subtitle**: "Træn din hjerne med sjove udfordringer"
 3. **Game grid**: Square cards (2 columns on mobile, 3 on desktop)
    - Each card has: large icon, title, short description
    - Glassmorphism background with colored accent line on tap
    - Play indicator appears on active state
    - Unique accent color per game
-4. **Footer**: Refresh button with spinning animation
+   - "Foreslå Spil" card at end (+ icon, dashed border) - submits to feedback API with game "00"
+4. **Footer**: GitHub link and last updated timestamp
 5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
-6. **QR modal**: Dark theme modal with pop animation
+6. **Modals**:
+   - QR modal: Share link with QR code
+   - Leaderboard modal: Top players with points
+   - Info modal: About, points system, tips (shows on first visit, saved to localStorage)
+   - Suggest modal: Text input for game suggestions
 7. **iOS/Android meta tags**: For "Add to Home Screen" functionality
    - `apple-mobile-web-app-capable`
    - `apple-mobile-web-app-title`
@@ -184,7 +171,10 @@ The main page uses a modern gaming/app design with:
 
 ### Game numbers
 
-Games are identified by their folder number (e.g., "01", "02"). Numbers are never reused if a game is removed.
+Games are identified by their folder number (e.g., "01", "02"). The API accepts any game number from 00-99 (normalized to 2-digit format).
+
+- **"00"**: Reserved for game suggestions (via "Foreslå Spil" on main page)
+- **"01"-"99"**: Game folders
 
 See `README.md` for the complete list of games with their numbers and point values.
 
