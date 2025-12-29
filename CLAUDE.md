@@ -178,17 +178,31 @@ The main page uses a modern gaming/app design with:
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
 | POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` → creates GitHub issue |
+| POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
 
 ### Feedback System
 
 User feedback is submitted via the API and automatically creates GitHub issues:
 
-- **Regular feedback** (games 01-99): Creates issue titled `[GameName] ⭐⭐⭐ Feedback`
-- **Game suggestions** (game 00): Creates issue titled `Spilforslag: [suggestion text]`
+- **Regular feedback** (games 01-99): Creates issue titled `Feedback: Game XX`
+- **Game suggestions** (game 00): Creates issue titled `New Game Suggestion`
 
 Issues appear at: https://github.com/mbundgaard/Puzzles/issues
 
-When fixing issues from feedback, reference the issue number in the commit message (e.g., `Fixes #5`) to auto-close it.
+### Closing Issues
+
+When fixing an issue, **do NOT use `Fixes #X` in commit messages**. Instead, after pushing the fix:
+
+1. Call the API to close the issue with a descriptive comment:
+```bash
+curl -X POST https://puzzlesapi.azurewebsites.net/api/issue/close \
+  -H "Content-Type: application/json" \
+  -d '{"issueNumber": 9, "comment": "Fixed: Renamed game from Kodeknækker to Mastermind."}'
+```
+
+2. Or use WebFetch to call the API directly.
+
+This ensures the issue has a clear explanation of what was done, rather than just "Closed by commit".
 
 ### Game numbers
 

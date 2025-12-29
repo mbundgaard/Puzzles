@@ -124,4 +124,56 @@ public class GitHubService : IGitHubService
             return false;
         }
     }
+
+    public async Task<bool> CloseIssueAsync(int issueNumber, string comment)
+    {
+        if (string.IsNullOrEmpty(_token))
+        {
+            _logger.LogWarning("GitHub token not configured, skipping issue close");
+            return false;
+        }
+
+        try
+        {
+            // First, add the comment
+            var commentPayload = new { body = comment };
+            var commentJson = JsonSerializer.Serialize(commentPayload);
+            var commentContent = new StringContent(commentJson, Encoding.UTF8, "application/json");
+
+            var commentUrl = $"https://api.github.com/repos/{_owner}/{_repo}/issues/{issueNumber}/comments";
+            var commentResponse = await _httpClient.PostAsync(commentUrl, commentContent);
+
+            if (!commentResponse.IsSuccessStatusCode)
+            {
+                var responseBody = await commentResponse.Content.ReadAsStringAsync();
+                _logger.LogError("Failed to add comment to issue {Issue}: {Status} - {Body}",
+                    issueNumber, commentResponse.StatusCode, responseBody);
+                return false;
+            }
+
+            // Then, close the issue
+            var closePayload = new { state = "closed" };
+            var closeJson = JsonSerializer.Serialize(closePayload);
+            var closeContent = new StringContent(closeJson, Encoding.UTF8, "application/json");
+
+            var closeUrl = $"https://api.github.com/repos/{_owner}/{_repo}/issues/{issueNumber}";
+            var closeResponse = await _httpClient.PatchAsync(closeUrl, closeContent);
+
+            if (closeResponse.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("GitHub issue {Issue} closed with comment", issueNumber);
+                return true;
+            }
+
+            var closeResponseBody = await closeResponse.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to close issue {Issue}: {Status} - {Body}",
+                issueNumber, closeResponse.StatusCode, closeResponseBody);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error closing GitHub issue {Issue}", issueNumber);
+            return false;
+        }
+    }
 }

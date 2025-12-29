@@ -1,7 +1,7 @@
 namespace Puzzles.Services;
 
 /// <summary>
-/// Service for creating GitHub issues from feedback.
+/// Service for managing GitHub issues.
 /// </summary>
 public interface IGitHubService
 {
@@ -14,4 +14,12 @@ public interface IGitHubService
     /// <param name="nickname">Optional nickname</param>
     /// <returns>True if issue was created successfully</returns>
     Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname);
+
+    /// <summary>
+    /// Closes a GitHub issue with a comment explaining the resolution.
+    /// </summary>
+    /// <param name="issueNumber">The issue number to close</param>
+    /// <param name="comment">Comment explaining what was done to resolve the issue</param>
+    /// <returns>True if issue was closed successfully</returns>
+    Task<bool> CloseIssueAsync(int issueNumber, string comment);
 }
