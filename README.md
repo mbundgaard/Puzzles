@@ -21,7 +21,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | Tic-tac-toe against an AI opponent |
 | 12 | [Rørføring](12-roerfoering/) | 1 | Rotate pipes to connect start to end |
 | 13 | [15-Puslespil](13-femten-puslespil/) | 3 | Slide tiles to arrange numbers 1-15 in order |
-| 14 | [Kodeknækker](14-kodeknaekker/) | 3 | Mastermind - crack the secret color code |
+| 14 | [Mastermind](14-kodeknaekker/) | 3 | Crack the secret color code |
 | 15 | [Broer](15-broer/) | 3 | Connect islands with the correct number of bridges |
 | 16 | [Lys Op](16-lys-op/) | 3 | Place light bulbs to illuminate all cells |
 | 17 | [Pind](17-pind/) | 3 | Peg solitaire - leave only one peg standing |

@@ -47,7 +47,7 @@
       "url": "https://mbundgaard.github.io/Puzzles/13-femten-puslespil/index.html"
     },
     {
-      "name": "Kodeknækker",
+      "name": "Mastermind",
       "url": "https://mbundgaard.github.io/Puzzles/14-kodeknaekker/index.html"
     },
     {
@@ -71,8 +71,8 @@
       "url": "https://mbundgaard.github.io/Puzzles/21-fire-paa-stribe/index.html"
     },
     {
-      "name": "Fibonacci",
-      "url": "https://mbundgaard.github.io/Puzzles/22-fibonacci/index.html"
+      "name": "Tårnet i Hanoi",
+      "url": "https://mbundgaard.github.io/Puzzles/22-hanoi/index.html"
     }
   ],
   "other": [
