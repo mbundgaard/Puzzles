@@ -16,30 +16,6 @@ public class GitHubService : IGitHubService
     private readonly string _owner;
     private readonly string _repo;
 
-    private static readonly Dictionary<string, string> GameNames = new()
-    {
-        ["00"] = "Forslag",
-        ["01"] = "Reversi",
-        ["02"] = "Telte og Træer",
-        ["03"] = "Sudoku",
-        ["04"] = "Nonogram",
-        ["05"] = "2048",
-        ["06"] = "Minestryger",
-        ["07"] = "Hukommelse",
-        ["08"] = "Kabale",
-        ["09"] = "Kalaha",
-        ["10"] = "Ordleg",
-        ["11"] = "Kryds og Bolle",
-        ["12"] = "Rørføring",
-        ["13"] = "15-Puslespil",
-        ["14"] = "Kodeknækker",
-        ["15"] = "Skakspring",
-        ["16"] = "Futoshiki",
-        ["17"] = "Lyskryds",
-        ["18"] = "Killer Sudoku",
-        ["19"] = "Rangering"
-    };
-
     public GitHubService(HttpClient httpClient, ILogger<GitHubService> logger)
     {
         _httpClient = httpClient;
@@ -59,7 +35,7 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> CreateFeedbackIssueAsync(string game, int rating, string? text, string? nickname)
+    public async Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -69,21 +45,17 @@ public class GitHubService : IGitHubService
 
         try
         {
-            var gameName = GameNames.GetValueOrDefault(game, $"Spil {game}");
             var isGameSuggestion = game == "00";
 
             // Build title
             string title;
             if (isGameSuggestion)
             {
-                title = $"Spilforslag: {text?.Split('\n').FirstOrDefault()?.Trim() ?? "Ny idé"}";
-                if (title.Length > 80)
-                    title = title[..77] + "...";
+                title = "New Game Suggestion";
             }
             else
             {
-                var stars = new string('⭐', rating);
-                title = $"[{gameName}] {stars} Feedback";
+                title = $"Feedback: Game {game}";
             }
 
             // Build body
@@ -91,20 +63,24 @@ public class GitHubService : IGitHubService
 
             if (isGameSuggestion)
             {
-                body.AppendLine("## Spilforslag");
+                body.AppendLine("## Game Suggestion");
                 body.AppendLine();
-                body.AppendLine(text ?? "(Ingen beskrivelse)");
+                body.AppendLine(text ?? "(No description)");
             }
             else
             {
-                body.AppendLine($"## Feedback for {gameName}");
+                body.AppendLine($"## Feedback for Game {game}");
                 body.AppendLine();
-                body.AppendLine($"**Bedømmelse:** {new string('⭐', rating)} ({rating}/5)");
-                body.AppendLine();
+
+                if (rating.HasValue)
+                {
+                    body.AppendLine($"**Rating:** {new string('⭐', rating.Value)} ({rating.Value}/5)");
+                    body.AppendLine();
+                }
 
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    body.AppendLine("**Kommentar:**");
+                    body.AppendLine("**Comment:**");
                     body.AppendLine(text);
                     body.AppendLine();
                 }
@@ -112,12 +88,12 @@ public class GitHubService : IGitHubService
 
             if (!string.IsNullOrWhiteSpace(nickname))
             {
-                body.AppendLine($"**Fra:** {nickname}");
+                body.AppendLine($"**From:** {nickname}");
             }
 
             body.AppendLine();
             body.AppendLine("---");
-            body.AppendLine("*Automatisk oprettet fra feedback-formular*");
+            body.AppendLine("*Auto-generated from feedback form*");
 
             var payload = new
             {

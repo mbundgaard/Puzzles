@@ -1,14 +1,16 @@
 # Claude Development Guidelines
 
-> **Note:** Also read `README.md` for project overview and game list, and `index.html` for the current UI structure.
+## ⚠️ FIRST: Check Open Issues
 
-## Open Issues
-
-At the start of each session, check for open GitHub issues:
+**Before doing anything else, fetch and list open issues:**
 
 https://api.github.com/repos/mbundgaard/Puzzles/issues?state=open
 
-These are user feedback and bug reports that may need attention.
+These are user feedback and bug reports waiting to be addressed.
+
+---
+
+> **Note:** Also read `README.md` for project overview and game list.
 
 ## Project Overview
 

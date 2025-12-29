@@ -6,7 +6,7 @@ namespace Puzzles.Models;
 public class FeedbackRequest
 {
     public string Game { get; set; } = string.Empty;
-    public int Rating { get; set; } // 1-5
+    public int? Rating { get; set; } // 1-5, optional
     public string? Text { get; set; }
     public string? Nickname { get; set; }
 }

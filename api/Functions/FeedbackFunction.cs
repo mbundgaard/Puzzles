@@ -44,8 +44,8 @@ public class FeedbackFunction
             return new BadRequestObjectResult(new { error = "Invalid game number" });
         }
 
-        // Validate rating (1-5)
-        if (feedbackRequest.Rating < 1 || feedbackRequest.Rating > 5)
+        // Validate rating if provided (1-5)
+        if (feedbackRequest.Rating.HasValue && (feedbackRequest.Rating < 1 || feedbackRequest.Rating > 5))
         {
             return new BadRequestObjectResult(new { error = "Rating must be between 1 and 5" });
         }
@@ -67,7 +67,7 @@ public class FeedbackFunction
         // Create GitHub issue (fire-and-forget, don't block response)
         _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname);
 
-        _logger.LogInformation("Feedback submitted: game={Game}, rating={Rating}", game, feedbackRequest.Rating);
+        _logger.LogInformation("Feedback submitted: game={Game}, rating={Rating}", game, feedbackRequest.Rating?.ToString() ?? "none");
 
         return new OkObjectResult(new { success = true, message = "Tak for din feedback!" });
     }

@@ -368,7 +368,7 @@ const HjernespilUI = (() => {
                     </div>
                     <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..." maxlength="500"></textarea>
                     <input type="text" class="hjernespil-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
-                    <button class="hjernespil-submit-btn" disabled>Send feedback</button>
+                    <button class="hjernespil-submit-btn">Send feedback</button>
                 </div>
             </div>
         `;
@@ -391,7 +391,6 @@ const HjernespilUI = (() => {
                 selectedRating = 0;
                 stars.forEach(s => s.classList.remove('active'));
                 textarea.value = '';
-                submitBtn.disabled = true;
                 // Reset content if showing success
                 if (content.querySelector('.hjernespil-success')) {
                     content.innerHTML = `
@@ -405,7 +404,7 @@ const HjernespilUI = (() => {
                         </div>
                         <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..." maxlength="500"></textarea>
                         <input type="text" class="hjernespil-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
-                        <button class="hjernespil-submit-btn" disabled>Send feedback</button>
+                        <button class="hjernespil-submit-btn">Send feedback</button>
                     `;
                     initStarListeners();
                 }
@@ -428,7 +427,6 @@ const HjernespilUI = (() => {
                     currentStars.forEach((s, i) => {
                         s.classList.toggle('active', i < selectedRating);
                     });
-                    currentSubmitBtn.disabled = false;
                 };
 
                 star.onmouseenter = () => {
@@ -448,14 +446,12 @@ const HjernespilUI = (() => {
             // Submit feedback
             if (currentSubmitBtn) {
                 currentSubmitBtn.onclick = async () => {
-                    if (selectedRating === 0) return;
-
                     currentSubmitBtn.disabled = true;
                     currentSubmitBtn.textContent = 'Sender...';
 
                     try {
                         const result = await HjernespilAPI.submitFeedback(gameNumber, {
-                            rating: selectedRating,
+                            rating: selectedRating > 0 ? selectedRating : null,
                             text: currentTextarea.value.trim() || null,
                             nickname: currentNickname.value.trim() || null
                         });
