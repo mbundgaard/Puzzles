@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -19,7 +20,10 @@ public class CloseIssueFunction
 
     public class CloseIssueRequest
     {
+        [JsonPropertyName("issueNumber")]
         public int IssueNumber { get; set; }
+
+        [JsonPropertyName("comment")]
         public string Comment { get; set; } = string.Empty;
     }
 
