@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fire på Stribe - Hjernespil</title>
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+
+        <h1>Fire på Stribe</h1>
+        <p class="subtitle">Få fire på række før computeren</p>
+
+        <div class="controls">
+            <select id="difficulty">
+                <option value="easy">Let</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Svær</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="status" id="status">Din tur</div>
+
+        <div class="game-area">
+            <div id="board"></div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="help-section">
+            <button class="help-toggle" id="help-toggle">Sådan spiller du</button>
+            <div class="help-content" id="help-content">
+                <ul>
+                    <li>Tryk på en kolonne for at slippe din brik</li>
+                    <li>Brikken falder til den laveste ledige plads</li>
+                    <li>Få fire brikker på række (vandret, lodret eller diagonalt)</li>
+                    <li>Du spiller med gule brikker, computeren med røde</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

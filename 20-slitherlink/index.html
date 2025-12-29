@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Slitherlink - Hjernespil</title>
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+
+        <h1>Slitherlink</h1>
+        <p class="subtitle">Tegn en lukket sløjfe</p>
+
+        <div class="controls">
+            <select id="difficulty">
+                <option value="easy">Let (5x5)</option>
+                <option value="medium" selected>Medium (7x7)</option>
+                <option value="hard">Svær (9x9)</option>
+            </select>
+            <button id="new-game">Nyt Spil</button>
+        </div>
+
+        <div class="game-area">
+            <div id="board"></div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="help-section">
+            <button class="help-toggle" id="help-toggle">Sådan spiller du</button>
+            <div class="help-content" id="help-content">
+                <ul>
+                    <li>Tegn en enkelt lukket sløjfe langs gitterlinjerne</li>
+                    <li>Tryk mellem to prikker for at tilføje/fjerne en kant</li>
+                    <li>Tallene viser hvor mange kanter der omkranser feltet</li>
+                    <li>Sløjfen må ikke krydse sig selv eller have åbne ender</li>
+                    <li>Grøn = tallet er opfyldt, Rød = for mange kanter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

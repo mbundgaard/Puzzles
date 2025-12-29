@@ -188,9 +188,6 @@
         }
 
         .game-card.reversi { --card-accent: linear-gradient(90deg, #4ade80, #22c55e); }
-        .game-card.tents { --card-accent: linear-gradient(90deg, #fbbf24, #f59e0b); }
-        .game-card.sudoku { --card-accent: linear-gradient(90deg, #667eea, #764ba2); }
-        .game-card.nonogram { --card-accent: linear-gradient(90deg, #ec4899, #d946ef); }
         .game-card.game2048 { --card-accent: linear-gradient(90deg, #f59e0b, #ef4444); }
         .game-card.minesweeper { --card-accent: linear-gradient(90deg, #ef4444, #dc2626); }
         .game-card.memory { --card-accent: linear-gradient(90deg, #06b6d4, #0891b2); }
@@ -201,11 +198,12 @@
         .game-card.pipes { --card-accent: linear-gradient(90deg, #06b6d4, #22d3ee); }
         .game-card.fifteen { --card-accent: linear-gradient(90deg, #f59e0b, #fbbf24); }
         .game-card.mastermind { --card-accent: linear-gradient(90deg, #f43f5e, #fb7185); }
-        .game-card.bridges { --card-accent: linear-gradient(90deg, #06b6d4, #67e8f9); }
-        .game-card.lightup { --card-accent: linear-gradient(90deg, #fbbf24, #fcd34d); }
         .game-card.pegsolitaire { --card-accent: linear-gradient(90deg, #a855f7, #c084fc); }
         .game-card.checkers { --card-accent: linear-gradient(90deg, #ef4444, #f87171); }
         .game-card.morris { --card-accent: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .game-card.slitherlink { --card-accent: linear-gradient(90deg, #667eea, #764ba2); }
+        .game-card.connectfour { --card-accent: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        .game-card.fibonacci { --card-accent: linear-gradient(90deg, #10b981, #f59e0b); }
 
         .card-icon {
             flex: 1;
@@ -704,33 +702,6 @@
                 <div class="play-indicator"></div>
             </a>
 
-            <a href="02-tents-and-trees/index.html" class="game-card tents">
-                <div class="card-icon">🏕️</div>
-                <div class="card-content">
-                    <h2>Telte & Træer</h2>
-                    <p>Logisk placering</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="03-sudoku/index.html" class="game-card sudoku">
-                <div class="card-icon">🔢</div>
-                <div class="card-content">
-                    <h2>Sudoku</h2>
-                    <p>Klassisk talpuslespil</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="04-nonogram/index.html" class="game-card nonogram">
-                <div class="card-icon">🖼️</div>
-                <div class="card-content">
-                    <h2>Nonogram</h2>
-                    <p>Afslør mønsteret</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
             <a href="05-2048/index.html" class="game-card game2048">
                 <div class="card-icon">🎯</div>
                 <div class="card-content">
@@ -821,24 +792,6 @@
                 <div class="play-indicator"></div>
             </a>
 
-            <a href="15-broer/index.html" class="game-card bridges">
-                <div class="card-icon">🌉</div>
-                <div class="card-content">
-                    <h2>Broer</h2>
-                    <p>Forbind øerne</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="16-lys-op/index.html" class="game-card lightup">
-                <div class="card-icon">💡</div>
-                <div class="card-content">
-                    <h2>Lys Op</h2>
-                    <p>Belys alle felter</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
             <a href="17-pind/index.html" class="game-card pegsolitaire">
                 <div class="card-icon">🎯</div>
                 <div class="card-content">
@@ -865,6 +818,33 @@
                 </div>
                 <div class="play-indicator"></div>
             </a>
+
+            <a href="20-slitherlink/index.html" class="game-card slitherlink">
+                <div class="card-icon">🔁</div>
+                <div class="card-content">
+                    <h2>Slitherlink</h2>
+                    <p>Tegn en lukket sløjfe</p>
+                </div>
+                <div class="play-indicator"></div>
+            </a>
+
+            <a href="21-fire-paa-stribe/index.html" class="game-card connectfour">
+                <div class="card-icon">🔴</div>
+                <div class="card-content">
+                    <h2>Fire på Stribe</h2>
+                    <p>Fire på række</p>
+                </div>
+                <div class="play-indicator"></div>
+            </a>
+
+            <a href="22-fibonacci/index.html" class="game-card fibonacci">
+                <div class="card-icon">🌀</div>
+                <div class="card-content">
+                    <h2>Fibonacci</h2>
+                    <p>Kombiner Fibonacci-tal</p>
+                </div>
+                <div class="play-indicator"></div>
+            </a>
         </div>
 
         <div class="footer">
@@ -876,7 +856,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 00:40</p>
+            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 10:37</p>
         </div>
     </div>
 
