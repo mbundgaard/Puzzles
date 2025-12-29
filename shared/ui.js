@@ -461,6 +461,11 @@ const HjernespilUI = (() => {
                         });
 
                         if (result.success) {
+                            // Save nickname if provided
+                            const nickname = currentNickname.value.trim();
+                            if (nickname) {
+                                HjernespilAPI.setNickname(nickname);
+                            }
                             content.innerHTML = `
                                 <div class="hjernespil-success">
                                     <div class="hjernespil-success-icon">🎉</div>
@@ -482,7 +487,18 @@ const HjernespilUI = (() => {
 
         initStarListeners();
 
-        return { overlay, open: () => overlay.classList.add('active') };
+        return {
+            overlay,
+            open: () => {
+                // Pre-fill nickname from localStorage
+                const nicknameInput = overlay.querySelector('.hjernespil-nickname');
+                const savedNickname = HjernespilAPI.getNickname();
+                if (nicknameInput && savedNickname) {
+                    nicknameInput.value = savedNickname;
+                }
+                overlay.classList.add('active');
+            }
+        };
     }
 
     // Win modal state
