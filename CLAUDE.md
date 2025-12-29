@@ -193,16 +193,16 @@ Issues appear at: https://github.com/mbundgaard/Puzzles/issues
 
 When fixing an issue, **do NOT use `Fixes #X` in commit messages**. Instead, after pushing the fix:
 
-1. Call the API to close the issue with a descriptive comment:
+1. Call the API to close the issue with a descriptive comment (supports Markdown):
 ```bash
 curl -X POST https://puzzlesapi.azurewebsites.net/api/issue/close \
   -H "Content-Type: application/json" \
-  -d '{"issueNumber": 9, "comment": "Fixed: Renamed game from Kodeknækker to Mastermind."}'
+  -d '{"issueNumber": 9, "comment": "**Fixed:** Renamed game from Kodeknækker to Mastermind.\n\n- Updated title in game page\n- Updated main index.html\n- Updated README.md"}'
 ```
 
-2. Or use WebFetch to call the API directly.
+2. Or use Bash with curl to call the API.
 
-This ensures the issue has a clear explanation of what was done, rather than just "Closed by commit".
+The comment supports full GitHub Markdown (bold, lists, code blocks, etc.). This ensures the issue has a clear explanation of what was done.
 
 ### Game numbers
 
