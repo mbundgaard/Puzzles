@@ -177,7 +177,7 @@ The main page uses a modern gaming/app design with:
 | GET | `/api/feedback/stats` | Get feedback statistics |
 
 ### Game numbers
-Games are identified by their folder number (01-17). Numbers are never reused if a game is removed.
+Games are identified by their folder number (01-19). Numbers are never reused if a game is removed.
 
 | Number | Game |
 |--------|------|
@@ -198,6 +198,8 @@ Games are identified by their folder number (01-17). Numbers are never reused if
 | 15 | Broer |
 | 16 | Lys Op |
 | 17 | Pind |
+| 18 | Dam |
+| 19 | Mølle |
 
 ### Shared API Client (shared/api.js)
 
@@ -296,7 +298,7 @@ async function showLeaderboard() {
 #### Notes
 
 - `trackStart` and `trackComplete` are fire-and-forget (don't await)
-- Game numbers must be zero-padded strings: "01", "02", ... "17"
+- Game numbers must be zero-padded strings: "01", "02", ... "19"
 - Nickname must be 2-20 characters
 - Rate limit: 1 win per game per minute per player
 

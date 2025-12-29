@@ -25,6 +25,8 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 15 | [Broer](15-broer/) | Connect islands with the correct number of bridges |
 | 16 | [Lys Op](16-lys-op/) | Place light bulbs to illuminate all cells |
 | 17 | [Pind](17-pind/) | Peg solitaire - leave only one peg standing |
+| 18 | [Dam](18-dam/) | Checkers against AI with forced captures |
+| 19 | [Mølle](19-moelle/) | Nine Men's Morris - form mills to capture pieces |
 
 ## Features
 
@@ -81,7 +83,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 │   ├── Storage/            # Azure Table Storage implementations
 │   └── Program.cs          # DI and startup
 ├── icons/                  # App icons (16px to 512px)
-└── XX-game-name/           # Game folders (01-17)
+└── XX-game-name/           # Game folders (01-19)
     ├── index.html          # Game page
     ├── style.css           # Game-specific styles
     └── script.js           # Game logic
