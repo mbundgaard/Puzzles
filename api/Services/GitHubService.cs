@@ -45,7 +45,7 @@ public class GitHubService : IGitHubService
         _httpClient = httpClient;
         _logger = logger;
         _token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-        _owner = Environment.GetEnvironmentVariable("GITHUB_OWNER") ?? "martinrabjerg";
+        _owner = Environment.GetEnvironmentVariable("GITHUB_OWNER") ?? "mbundgaard";
         _repo = Environment.GetEnvironmentVariable("GITHUB_REPO") ?? "Puzzles";
 
         if (!string.IsNullOrEmpty(_token))
