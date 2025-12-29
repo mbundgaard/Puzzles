@@ -287,7 +287,7 @@ class PipePuzzle {
             this.status.textContent = 'Tillykke! Du klarede det!';
             this.status.className = 'status winner';
             HjernespilAPI.trackComplete('12');
-            HjernespilUI.showWinModal(3);
+            HjernespilUI.showWinModal(1);
         }
     }
 }

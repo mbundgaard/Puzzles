@@ -50,7 +50,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 4. Close button (X) in top-right corner to return to main page
 5. Feedback button (⭐) in top-left corner (auto-added by shared/ui.js)
 6. Victory detection and celebration
-7. Favicon link: `<link rel="icon" href="../favicon.ico">`
+7. Favicon link: `<link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">`
 8. API tracking (trackStart/trackComplete)
 9. Win modal with leaderboard (via `HjernespilUI.showWinModal(points)` - points: 1-5)
 
@@ -58,7 +58,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 
 1. Create folder `XX-puzzle-name/` with next available number
 2. Implement with index.html, style.css, script.js
-3. Add `<link rel="icon" href="../favicon.ico">` in `<head>`
+3. Add `<link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">` in `<head>`
 4. Add close button as first child of container (see below)
 5. Add `<script src="../shared/api.js"></script>` before game script
 6. Add `<script src="../shared/ui.js"></script>` after api.js (adds feedback button + win modal)
@@ -120,10 +120,10 @@ Required CSS (adjust colors to match game theme):
 
 ### Favicon
 
-The favicon is at `/favicon.ico` in the root. Each game page must include an explicit link because GitHub Pages serves from `/Puzzles/`, not the root:
+The favicon is in the `icons/` folder. Each game page must include an explicit link:
 
 ```html
-<link rel="icon" href="../favicon.ico">
+<link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
 ```
 
 ## Main Page (index.html)
