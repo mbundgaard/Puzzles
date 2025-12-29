@@ -224,6 +224,7 @@ class ConnectFour {
         if (!this.gameOver) {
             this.currentPlayer = this.PLAYER;
             this.updateStatus();
+            this.render();
         }
     }
 
