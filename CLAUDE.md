@@ -171,9 +171,9 @@ The main page uses a modern gaming/app design with:
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| POST | `/api/win` | Record a win `{nickname, game}` |
-| GET | `/api/leaderboard?game=all&top=10` | Get top players this month |
-| GET | `/api/stats` | Get total wins this month |
+| POST | `/api/win` | Record a win `{nickname, game, points}` (points: 1-5) |
+| GET | `/api/leaderboard?game=all&top=10` | Get top players (all-time points) |
+| GET | `/api/stats` | Get total points (all-time) |
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
@@ -278,7 +278,7 @@ async function recordPlayerWin() {
 async function showLeaderboard() {
     const data = await HjernespilAPI.getLeaderboard('01', 10);
     data.entries.forEach((entry, i) => {
-        console.log(`${i+1}. ${entry.nickname}: ${entry.wins} wins`);
+        console.log(`${i+1}. ${entry.nickname}: ${entry.points} points`);
     });
 }
 ```
@@ -290,11 +290,11 @@ async function showLeaderboard() {
 | `trackStart(game)` | Track game start (fire-and-forget) | void |
 | `trackComplete(game)` | Track game completion (fire-and-forget) | void |
 | `trackEvent(game, event)` | Track custom event ("start" or "complete") | void |
-| `recordWin(game, nickname)` | Record win to leaderboard | `Promise<{success, message?, error?}>` |
-| `getLeaderboard(game?, top?)` | Get top players this month | `Promise<{period, entries[], totalWinsThisMonth}>` |
+| `recordWin(game, nickname, points)` | Record win to leaderboard (points: 1-5) | `Promise<{success, message?, error?}>` |
+| `getLeaderboard(game?, top?)` | Get top players (all-time) | `Promise<{period, entries[], totalPoints}>` |
 | `getTodayStats()` | Get today's activity | `Promise<{date, starts, completions}>` |
 | `getUsageStats(game?)` | Get monthly usage stats | `Promise<{period, totalStarts, totalCompletions, perGame[]}>` |
-| `getStats()` | Get total wins this month | `Promise<{period, totalWins}>` |
+| `getStats()` | Get total points (all-time) | `Promise<{period, totalPoints}>` |
 | `getNickname()` | Get saved nickname from localStorage | `string \| null` |
 | `setNickname(name)` | Save nickname to localStorage | void |
 | `isValidNickname(name)` | Validate nickname (2-20 chars) | boolean |
@@ -331,29 +331,29 @@ The feedback button initializes automatically when the DOM is ready. No manual s
 
 #### Win Modal with Leaderboard
 
-To show the win modal with leaderboard after a player wins:
+To show the win modal after a player wins:
 
 ```javascript
 // In victory detection
 if (playerWins) {
     HjernespilAPI.trackComplete('12');
-    HjernespilUI.showWinModal();  // Shows leaderboard + nickname input
+    HjernespilUI.showWinModal(3);  // Shows points awarded + nickname input
 }
 ```
 
 The win modal:
 - Displays "Tillykke!" (Congratulations)
-- Shows top 10 leaderboard for this month
+- Shows points awarded (e.g., "+3 point")
+- Nickname input for leaderboard submission
 - Pre-fills nickname from localStorage if previously saved
-- Submits score via `HjernespilAPI.recordWin()`
-- Highlights the player's entry after submission
+- Submits score via `HjernespilAPI.recordWin(game, nickname, points)`
 
 #### Available Methods
 
 | Method | Description |
 |--------|-------------|
-| `HjernespilUI.showWinModal()` | Show win modal with leaderboard (auto-detects game number) |
-| `HjernespilUI.showWinModal('XX')` | Show win modal for specific game number |
+| `HjernespilUI.showWinModal(points)` | Show win modal with points (1-5), auto-detects game number |
+| `HjernespilUI.showWinModal(points, 'XX')` | Show win modal for specific game number |
 | `HjernespilUI.getGameNumber()` | Get current game number from URL |
 
 ## Git Workflow

@@ -450,7 +450,7 @@
             font-weight: 500;
         }
 
-        .leaderboard-wins {
+        .leaderboard-points {
             color: rgba(255, 255, 255, 0.5);
             font-size: 0.85rem;
         }
@@ -856,7 +856,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 20:33</p>
+            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 20:47 UTC</p>
         </div>
     </div>
 
@@ -927,7 +927,7 @@
                     const data = await response.json();
 
                     if (!data.entries || data.entries.length === 0) {
-                        leaderboardList.innerHTML = '<p class="loading">Ingen sejre endnu</p>';
+                        leaderboardList.innerHTML = '<p class="loading">Ingen point endnu</p>';
                         return;
                     }
 
@@ -935,7 +935,7 @@
                         <div class="leaderboard-entry">
                             <span class="leaderboard-rank">${i + 1}.</span>
                             <span class="leaderboard-name">${escapeHtml(entry.nickname)}</span>
-                            <span class="leaderboard-wins">${entry.wins} ${entry.wins === 1 ? 'sejr' : 'sejre'}</span>
+                            <span class="leaderboard-points">${entry.points} point</span>
                         </div>
                     `).join('');
                 } catch (error) {

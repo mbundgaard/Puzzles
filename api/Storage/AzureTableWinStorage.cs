@@ -66,13 +66,13 @@ public class AzureTableWinStorage : IWinStorage
             wins.Add(entity);
         }
 
-        // Group by nickname and sum points
+        // Group by nickname and sum points (old records without Points get 1 point)
         var grouped = wins
             .GroupBy(w => w.Nickname.ToLowerInvariant())
             .Select(g => new
             {
                 Nickname = g.First().Nickname,
-                Points = g.Sum(w => w.Points)
+                Points = g.Sum(w => w.Points > 0 ? w.Points : 1)
             })
             .OrderByDescending(x => x.Points)
             .Take(top)
@@ -88,7 +88,7 @@ public class AzureTableWinStorage : IWinStorage
         {
             Period = "all-time",
             Game = game,
-            TotalPoints = wins.Sum(w => w.Points),
+            TotalPoints = wins.Sum(w => w.Points > 0 ? w.Points : 1),
             Entries = grouped
         };
     }
@@ -117,7 +117,8 @@ public class AzureTableWinStorage : IWinStorage
         var totalPoints = 0;
         await foreach (var entity in _tableClient.QueryAsync<WinEntity>(select: new[] { "Points" }))
         {
-            totalPoints += entity.Points;
+            // Old records without Points get 1 point
+            totalPoints += entity.Points > 0 ? entity.Points : 1;
         }
 
         return totalPoints;
