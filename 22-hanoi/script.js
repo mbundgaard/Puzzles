@@ -1,6 +1,7 @@
 class TowerOfHanoi {
     constructor() {
         this.numDisks = 4;
+        this.points = 1;
         this.pegs = [[], [], []];
         this.moves = 0;
         this.selectedPeg = null;
@@ -10,7 +11,7 @@ class TowerOfHanoi {
         this.minimumEl = document.getElementById('minimum');
         this.newGameBtn = document.getElementById('new-game');
         this.pegElements = document.querySelectorAll('.peg');
-        this.diskButtons = document.querySelectorAll('.disk-btn');
+        this.levelButtons = document.querySelectorAll('.level-btn');
 
         this.init();
     }
@@ -18,12 +19,13 @@ class TowerOfHanoi {
     init() {
         this.newGameBtn.addEventListener('click', () => this.newGame());
 
-        // Disk count selector
-        this.diskButtons.forEach(btn => {
+        // Level selector
+        this.levelButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                this.diskButtons.forEach(b => b.classList.remove('active'));
+                this.levelButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 this.numDisks = parseInt(btn.dataset.disks);
+                this.points = parseInt(btn.dataset.points);
                 this.newGame();
             });
         });
@@ -170,21 +172,12 @@ class TowerOfHanoi {
             this.gameWon = true;
             document.querySelector('.game-area').classList.add('won');
 
-            // Calculate points based on efficiency
-            const minMoves = Math.pow(2, this.numDisks) - 1;
-            let points = 1;
-            if (this.moves === minMoves) {
-                points = 3; // Perfect solution
-            } else if (this.moves <= minMoves * 1.5) {
-                points = 2; // Good solution
-            }
-
             setTimeout(() => {
                 document.querySelector('.game-area').classList.remove('won');
             }, 3000);
 
             HjernespilAPI.trackComplete('22');
-            HjernespilUI.showWinModal(points);
+            HjernespilUI.showWinModal(this.points);
         }
     }
 }
