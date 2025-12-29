@@ -205,6 +205,18 @@
         .game-card.connectfour { --card-accent: linear-gradient(90deg, #fbbf24, #f59e0b); }
         .game-card.fibonacci { --card-accent: linear-gradient(90deg, #10b981, #f59e0b); }
 
+        .game-card.suggest-card {
+            --card-accent: linear-gradient(90deg, #a855f7, #ec4899);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+        }
+
+        .game-card.suggest-card .card-icon {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
         .card-icon {
             flex: 1;
             display: flex;
@@ -506,6 +518,75 @@
             color: rgba(255, 255, 255, 0.4) !important;
             font-size: 0.8rem !important;
             text-align: center;
+        }
+
+        /* Suggest Modal */
+        .suggest-modal {
+            max-width: 340px;
+        }
+
+        .suggest-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .suggest-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: none;
+            margin-bottom: 12px;
+        }
+
+        .suggest-input:focus {
+            outline: none;
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .suggest-nickname {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .suggest-nickname:focus {
+            outline: none;
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .suggest-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .suggest-submit:active {
+            transform: scale(0.98);
+        }
+
+        .suggest-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .qr-code {
@@ -905,6 +986,19 @@
                 </div>
                 <div class="play-indicator"></div>
             </a>
+
+            <button class="game-card suggest-card" id="suggest-btn">
+                <div class="card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h2>Foreslå Spil</h2>
+                    <p>Del din idé</p>
+                </div>
+            </button>
         </div>
 
         <div class="footer">
@@ -916,7 +1010,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 22:02</p>
+            <p class="last-updated">Sidst opdateret: 29. december 2025 kl. 22:08</p>
         </div>
     </div>
 
@@ -977,6 +1071,19 @@
 
                 <p class="info-credit">Udviklet af familien Rabjerg, Bødtker og Bundgaard</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Suggest Game Modal -->
+    <div class="modal-overlay" id="suggest-modal">
+        <div class="modal suggest-modal">
+            <span class="modal-close" id="suggest-close">×</span>
+            <div class="modal-emoji">💡</div>
+            <h3>Foreslå et spil</h3>
+            <p class="suggest-description">Har du en idé til et nyt spil? Del den med os!</p>
+            <textarea class="suggest-input" id="suggest-input" placeholder="Beskriv dit spilforslag..." rows="4" maxlength="500"></textarea>
+            <input type="text" class="suggest-nickname" id="suggest-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
+            <button class="suggest-submit" id="suggest-submit">Send forslag</button>
         </div>
     </div>
 
@@ -1055,6 +1162,72 @@
             infoModal.onclick = (e) => {
                 if (e.target === infoModal) infoModal.classList.remove('active');
             };
+        })();
+
+        // Suggest Game Modal
+        (() => {
+            const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
+            const NICKNAME_KEY = 'hjernespil_nickname';
+
+            const suggestBtn = document.getElementById('suggest-btn');
+            const suggestModal = document.getElementById('suggest-modal');
+            const suggestClose = document.getElementById('suggest-close');
+            const suggestInput = document.getElementById('suggest-input');
+            const suggestNickname = document.getElementById('suggest-nickname');
+            const suggestSubmit = document.getElementById('suggest-submit');
+
+            function openModal() {
+                suggestModal.classList.add('active');
+                suggestInput.value = '';
+                suggestNickname.value = localStorage.getItem(NICKNAME_KEY) || '';
+                suggestInput.focus();
+            }
+
+            function closeModal() {
+                suggestModal.classList.remove('active');
+            }
+
+            async function submitSuggestion() {
+                const text = suggestInput.value.trim();
+                if (!text) return;
+
+                const nickname = suggestNickname.value.trim();
+                if (nickname) {
+                    localStorage.setItem(NICKNAME_KEY, nickname);
+                }
+
+                suggestSubmit.disabled = true;
+                suggestSubmit.textContent = 'Sender...';
+
+                try {
+                    await fetch(`${API_BASE}/feedback`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            game: '00',
+                            rating: 5,
+                            text: text,
+                            nickname: nickname || undefined
+                        })
+                    });
+                    suggestSubmit.textContent = 'Tak for dit forslag!';
+                    setTimeout(closeModal, 1500);
+                } catch (error) {
+                    suggestSubmit.textContent = 'Fejl - prøv igen';
+                } finally {
+                    setTimeout(() => {
+                        suggestSubmit.disabled = false;
+                        suggestSubmit.textContent = 'Send forslag';
+                    }, 2000);
+                }
+            }
+
+            suggestBtn.onclick = openModal;
+            suggestClose.onclick = closeModal;
+            suggestModal.onclick = (e) => {
+                if (e.target === suggestModal) closeModal();
+            };
+            suggestSubmit.onclick = submitSuggestion;
         })();
 
         // Nickname Modal - Ask once before first game
