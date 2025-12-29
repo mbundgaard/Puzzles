@@ -119,25 +119,10 @@ public class GitHubService : IGitHubService
             body.AppendLine("---");
             body.AppendLine("*Automatisk oprettet fra feedback-formular*");
 
-            // Build labels
-            var labels = new List<string> { "feedback" };
-            if (isGameSuggestion)
-            {
-                labels.Add("suggestion");
-            }
-            else
-            {
-                labels.Add($"game-{game}");
-                if (rating <= 2) labels.Add("needs-attention");
-                if (rating >= 4) labels.Add("positive");
-            }
-
             var payload = new
             {
                 title,
-                body = body.ToString(),
-                labels,
-                assignees = new[] { _owner }
+                body = body.ToString()
             };
 
             var json = JsonSerializer.Serialize(payload);
