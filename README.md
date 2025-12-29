@@ -29,7 +29,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 19 | [Mølle](19-moelle/) | 3 | Nine Men's Morris - form mills to capture pieces |
 | 20 | [Slitherlink](20-slitherlink/) | 3 | Draw a loop following number clues |
 | 21 | [Fire på Stribe](21-fire-paa-stribe/) | 3 | Connect four in a row against AI |
-| 22 | [Fibonacci](22-fibonacci/) | 3 | Merge Fibonacci numbers to reach 610 |
+| 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | Move all disks to the rightmost peg |
 
 ## Features
 
