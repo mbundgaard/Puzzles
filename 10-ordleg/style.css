@@ -94,17 +94,19 @@ h1 {
     gap: 4px;
     width: 100%;
     max-width: 280px;
-    height: 20px;
+    margin-top: -6px;
+    margin-bottom: -6px;
 }
 
 .hint-letter {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
     text-transform: uppercase;
+    height: 22px;
 }
 
 .guess-btn {

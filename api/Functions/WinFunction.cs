@@ -51,12 +51,6 @@ public class WinFunction
             return new BadRequestObjectResult(new { error = "Invalid game number" });
         }
 
-        // Rate limit: 1 win per game per minute
-        if (await _storage.HasRecentWinAsync(nickname, game, TimeSpan.FromMinutes(1)))
-        {
-            return new ConflictObjectResult(new { error = "Too fast! Wait a minute between wins." });
-        }
-
         var record = new WinRecord
         {
             Nickname = nickname,
