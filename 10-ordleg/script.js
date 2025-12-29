@@ -151,26 +151,16 @@ class Ordleg {
         this.message = document.getElementById('message');
         this.newGameBtn = document.getElementById('new-game');
         this.difficultySelect = document.getElementById('difficulty');
-        this.hintsRow = document.getElementById('hints-row');
+        this.guessBtn = document.getElementById('guess-btn');
 
         this.newGameBtn.addEventListener('click', () => this.newGame());
         this.difficultySelect.addEventListener('change', () => this.newGame());
+        this.guessBtn.addEventListener('click', () => this.submitGuess());
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
 
         this.createBoard();
         this.createKeyboard();
-        this.createHintsRow();
         this.newGame();
-    }
-
-    createHintsRow() {
-        this.hintsRow.innerHTML = '';
-        for (let i = 0; i < this.wordLength; i++) {
-            const hint = document.createElement('div');
-            hint.className = 'hint-tile';
-            hint.dataset.position = i;
-            this.hintsRow.appendChild(hint);
-        }
     }
 
     createBoard() {
@@ -228,13 +218,6 @@ class Ordleg {
             tile.className = 'tile';
         });
 
-        // Reset hints row
-        const hintTiles = this.hintsRow.querySelectorAll('.hint-tile');
-        hintTiles.forEach(tile => {
-            tile.textContent = '';
-            tile.classList.remove('revealed');
-        });
-
         // Reset keyboard
         const keys = this.keyboard.querySelectorAll('.key');
         keys.forEach(key => {
@@ -256,23 +239,23 @@ class Ordleg {
         // Initialize currentGuess with empty positions
         this.currentGuess = Array(this.wordLength).fill('').join('');
 
-        // Fill in hint letters in currentGuess
+        // Fill in hint letters in currentGuess and show on board
         for (const pos of this.revealedPositions) {
             let guessArray = this.currentGuess.split('');
             guessArray[pos] = this.targetWord[pos];
             this.currentGuess = guessArray.join('');
+
+            // Show hint in current row
+            const row = this.board.children[this.currentRow];
+            const tile = row.children[pos];
+            tile.textContent = this.targetWord[pos];
+            tile.classList.add('hint', 'filled');
         }
 
         HjernespilAPI.trackStart('10');
     }
 
     revealHint(position) {
-        const letter = this.targetWord[position];
-        const hintTile = this.hintsRow.children[position];
-
-        hintTile.textContent = letter;
-        hintTile.classList.add('revealed');
-
         this.revealedPositions.push(position);
     }
 
@@ -422,7 +405,19 @@ class Ordleg {
             } else {
                 this.currentRow++;
                 this.currentTile = 0;
-                this.currentGuess = '';
+                this.currentGuess = Array(this.wordLength).fill('').join('');
+
+                // Show hints in new row
+                const row = this.board.children[this.currentRow];
+                for (const pos of this.revealedPositions) {
+                    let guessArray = this.currentGuess.split('');
+                    guessArray[pos] = this.targetWord[pos];
+                    this.currentGuess = guessArray.join('');
+
+                    const tile = row.children[pos];
+                    tile.textContent = this.targetWord[pos];
+                    tile.classList.add('hint', 'filled');
+                }
             }
         }, this.wordLength * 100 + 300);
     }
