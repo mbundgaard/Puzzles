@@ -88,6 +88,12 @@ h1 {
     animation: pop 0.1s ease;
 }
 
+.tile.hint {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.6);
+    color: rgba(255, 255, 255, 0.9);
+}
+
 @keyframes pop {
     50% { transform: scale(1.1); }
 }
@@ -202,7 +208,30 @@ h1 {
 .controls {
     display: flex;
     justify-content: center;
+    gap: 10px;
     margin: 15px 0;
+}
+
+.controls select {
+    padding: 12px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.controls select:active {
+    transform: scale(0.95);
+}
+
+.controls select option {
+    background: #1a1a2e;
+    color: white;
 }
 
 .btn {

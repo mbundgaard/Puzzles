@@ -144,13 +144,16 @@ class Ordleg {
         this.targetWord = '';
         this.gameOver = false;
         this.keyStates = {};
+        this.revealedPositions = []; // Positions that are pre-revealed as hints
 
         this.board = document.getElementById('board');
         this.keyboard = document.getElementById('keyboard');
         this.message = document.getElementById('message');
         this.newGameBtn = document.getElementById('new-game');
+        this.difficultySelect = document.getElementById('difficulty');
 
         this.newGameBtn.addEventListener('click', () => this.newGame());
+        this.difficultySelect.addEventListener('change', () => this.newGame());
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
 
         this.createBoard();
@@ -202,6 +205,7 @@ class Ordleg {
         this.currentGuess = '';
         this.gameOver = false;
         this.keyStates = {};
+        this.revealedPositions = [];
         this.message.textContent = '';
         this.message.className = 'message';
 
@@ -218,7 +222,54 @@ class Ordleg {
             key.className = 'key' + (key.dataset.key.length > 1 ? ' wide' : '');
         });
 
+        // Reveal hints based on difficulty
+        const difficulty = this.difficultySelect.value;
+        if (difficulty === 'easy') {
+            // Reveal letters 2 and 5 (indices 1 and 4)
+            this.revealHint(1);
+            this.revealHint(4);
+        } else if (difficulty === 'medium') {
+            // Reveal letter 5 (index 4)
+            this.revealHint(4);
+        }
+        // Hard: no hints
+
         HjernespilAPI.trackStart('10');
+    }
+
+    revealHint(position) {
+        const letter = this.targetWord[position];
+        const row = this.board.children[0];
+        const tile = row.children[position];
+
+        tile.textContent = letter;
+        tile.classList.add('filled', 'hint');
+
+        this.revealedPositions.push(position);
+
+        // Update currentGuess to include the hint letter at the right position
+        // Build the guess string with placeholders
+        let guessArray = this.currentGuess.split('');
+        while (guessArray.length < this.wordLength) {
+            guessArray.push('');
+        }
+        guessArray[position] = letter;
+        this.currentGuess = guessArray.join('');
+
+        // Move currentTile to first empty position
+        this.updateCurrentTile();
+    }
+
+    updateCurrentTile() {
+        // Find the first empty position that isn't a revealed hint
+        for (let i = 0; i < this.wordLength; i++) {
+            if (!this.revealedPositions.includes(i) && this.currentGuess[i] === '') {
+                this.currentTile = i;
+                return;
+            }
+        }
+        // If all non-hint positions are filled, set to the end
+        this.currentTile = this.wordLength;
     }
 
     handleKeydown(e) {
@@ -248,27 +299,62 @@ class Ordleg {
     addLetter(letter) {
         if (this.currentTile >= this.wordLength) return;
 
+        // Skip over revealed hint positions
+        while (this.currentTile < this.wordLength &&
+               this.revealedPositions.includes(this.currentTile)) {
+            this.currentTile++;
+        }
+        if (this.currentTile >= this.wordLength) return;
+
         const row = this.board.children[this.currentRow];
         const tile = row.children[this.currentTile];
         tile.textContent = letter;
         tile.classList.add('filled');
-        this.currentGuess += letter;
+
+        // Update guess array
+        let guessArray = this.currentGuess.split('');
+        while (guessArray.length < this.wordLength) {
+            guessArray.push('');
+        }
+        guessArray[this.currentTile] = letter;
+        this.currentGuess = guessArray.join('');
+
         this.currentTile++;
+
+        // Skip over revealed hint positions for next input
+        while (this.currentTile < this.wordLength &&
+               this.revealedPositions.includes(this.currentTile)) {
+            this.currentTile++;
+        }
     }
 
     deleteLetter() {
         if (this.currentTile <= 0) return;
 
+        // Move back, skipping hint positions
         this.currentTile--;
+        while (this.currentTile > 0 && this.revealedPositions.includes(this.currentTile)) {
+            this.currentTile--;
+        }
+
+        // Don't delete hint letters
+        if (this.revealedPositions.includes(this.currentTile)) return;
+
         const row = this.board.children[this.currentRow];
         const tile = row.children[this.currentTile];
         tile.textContent = '';
         tile.classList.remove('filled');
-        this.currentGuess = this.currentGuess.slice(0, -1);
+
+        // Update guess array
+        let guessArray = this.currentGuess.split('');
+        guessArray[this.currentTile] = '';
+        this.currentGuess = guessArray.join('');
     }
 
     submitGuess() {
-        if (this.currentGuess.length !== this.wordLength) {
+        // Check if all positions are filled (no empty strings)
+        const filledCount = this.currentGuess.split('').filter(c => c !== '').length;
+        if (filledCount !== this.wordLength) {
             this.showMessage('Ordet skal være 5 bogstaver', 'error');
             return;
         }
