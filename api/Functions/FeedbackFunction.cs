@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
+using Puzzles.Services;
 using Puzzles.Storage;
 
 namespace Puzzles.Functions;
@@ -11,11 +12,13 @@ public class FeedbackFunction
 {
     private readonly ILogger<FeedbackFunction> _logger;
     private readonly IFeedbackStorage _storage;
+    private readonly IGitHubService _gitHubService;
 
-    public FeedbackFunction(ILogger<FeedbackFunction> logger, IFeedbackStorage storage)
+    public FeedbackFunction(ILogger<FeedbackFunction> logger, IFeedbackStorage storage, IGitHubService gitHubService)
     {
         _logger = logger;
         _storage = storage;
+        _gitHubService = gitHubService;
     }
 
     [Function("SubmitFeedback")]
@@ -74,6 +77,9 @@ public class FeedbackFunction
         };
 
         await _storage.RecordFeedbackAsync(record);
+
+        // Create GitHub issue (fire-and-forget, don't block response)
+        _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname);
 
         _logger.LogInformation("Feedback recorded: game={Game}, rating={Rating}", game, feedbackRequest.Rating);
 

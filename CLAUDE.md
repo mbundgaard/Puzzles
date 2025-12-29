@@ -292,11 +292,12 @@ Injects common UI elements into game pages. Include after api.js:
 
 #### What it provides
 
-- **Feedback button**: Speech bubble icon in top-left corner
-- **Feedback modal**: Star rating (1-5), optional comment, optional nickname
-- **Win modal**: Leaderboard display with nickname input for score submission
+- **Feedback button**: Star icon in top-left corner
+- **Feedback modal**: Star rating (1-5), optional comment, nickname (pre-filled from localStorage, saved on submit)
+- **Win modal**: Points display with nickname input for leaderboard (pre-filled from localStorage, saved on submit)
 - Auto-detects game number from URL path
 - Adapts colors for light (`.game-container`) and dark (`.container`) themes
+- Nickname is shared across feedback and win modals via localStorage
 
 #### Auto-initialization
 
