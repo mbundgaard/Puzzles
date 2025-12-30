@@ -367,6 +367,47 @@ The win modal:
 | `HjernespilUI.showWinModal(points, 'XX')` | Show win modal for specific game number |
 | `HjernespilUI.getGameNumber()` | Get current game number from URL |
 
+### Daily Win Limits (Anti-Farming)
+
+Some games have daily win limits to prevent point farming. Players can only earn points once per day per difficulty/puzzle.
+
+#### Games with daily limits
+
+| Game | Limit Type | Points |
+|------|------------|--------|
+| 12 Rørføring | Per difficulty (easy/medium/hard) | 1/2/3 |
+| 24 Tangram | Per puzzle (6 puzzles) | 1/3/5 |
+
+#### How it works
+
+- Uses localStorage with date-based keys (e.g., `roerfoering-easy-won: "2025-12-30"`)
+- After winning, the level/puzzle is marked as won for today
+- Won items show a ✓ checkmark and are disabled (non-clickable)
+- Resets automatically at midnight (new date = new key)
+
+#### Implementation pattern
+
+```javascript
+getTodayKey() {
+    return new Date().toISOString().split('T')[0];
+}
+
+isWonToday(id) {
+    return localStorage.getItem(`game-${id}-won`) === this.getTodayKey();
+}
+
+markWonToday(id) {
+    localStorage.setItem(`game-${id}-won`, this.getTodayKey());
+}
+```
+
+#### When to add daily limits
+
+Consider adding daily limits to games that:
+- Can be won quickly (< 1 minute)
+- Have easy difficulty levels
+- Show signs of farming in the Events table
+
 ## Git Workflow
 
 **IMPORTANT: Commit messages must be in English.**
