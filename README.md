@@ -31,7 +31,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 21 | [Fire på Stribe](21-fire-paa-stribe/) | 3 | Connect four in a row against AI |
 | 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | Move all disks to the rightmost peg |
 | 23 | [Slange](23-slange/) | 2/3/4 | Classic snake game with win condition |
-| 24 | [Tangram](24-tangram/) | 3 | Drag and rotate pieces to cover the shape |
+| 24 | [Tangram](24-tangram/) | 2/3/4 | Drag and rotate pieces to cover the shape |
 
 ## Features
 
