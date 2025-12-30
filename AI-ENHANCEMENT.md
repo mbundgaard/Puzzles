@@ -444,3 +444,64 @@ public async Task<IActionResult> AI(
 3. 🥉 Mastermind - Clear logical deduction
 4. 4️⃣ Reversi - Deep strategic analysis
 5. 5️⃣ Kalaha - Interesting move optimization
+
+---
+
+## 🏆 Best Candidate: Ordleg
+
+### Why Ordleg is the Best Choice
+
+**Ordleg** (the Danish Wordle clone) is the ideal first candidate for AI enhancement because:
+
+1. **Natural Language Fit** - Word games are inherently linguistic, making AI responses feel natural
+2. **Rich Hint Potential** - Many ways to hint without spoiling (synonyms, categories, letter patterns)
+3. **Low Complexity** - Simple game state (guesses + feedback colors) is easy to serialize
+4. **High User Value** - Players often get stuck and would appreciate intelligent hints
+5. **Safe Experimentation** - Hints don't break the game; players can still solve themselves
+
+### How It Enhances the Experience
+
+| Without AI | With AI |
+|------------|---------|
+| Stuck? Give up or guess randomly | "The word is related to nature..." |
+| No learning | "Words with Ø often end in -ØR or -ØG" |
+| Frustrating losses | "You were close! The pattern A_E_E often means..." |
+| Static experience | Personalized hints based on skill level |
+
+### User Interaction Examples
+
+**Player:** "Jeg sidder fast, giv mig et hint"
+**AI:** "Ordet har noget med dyr at gøre. Tænk på noget der flyver."
+
+**Player:** "Hvad betyder de gule bogstaver?"
+**AI:** "De gule bogstaver (E og S) er i ordet, men på forkert plads. Prøv at flytte dem til andre positioner."
+
+**Player:** "Er der et mønster jeg bør kende?"
+**AI:** "Baseret på dine gæt: Du ved at ordet har E (ikke position 2) og S (ikke position 4). Ord der starter med S og har E i midten er værd at prøve."
+
+### Implementation Direction
+
+#### API Approach
+- Create endpoint `POST /api/ai/ordleg` that accepts game state (guesses, feedback, category)
+- Send game context to Claude/GPT with instructions to never reveal the word directly
+- Return natural language hints in Danish
+
+#### Hint Strategy Levels
+Progress from subtle to more helpful based on how stuck the player is:
+
+1. **Category hints** - "Tænk på noget i naturen"
+2. **Semantic hints** - "Det ligner noget der kan flyve"
+3. **Letter patterns** - "Mange ord med Ø ender på -ØR"
+4. **Position hints** - "Prøv at sætte E i position 3"
+5. **Strong hints** - "Det rimer på 'BJØRN'"
+
+#### UI Integration
+- Add a 💡 button next to the feedback button
+- Show AI response in a modal or toast message
+- Limit to 3 hints per game to maintain challenge
+
+#### Key Considerations
+- **Cost control:** Use smaller models (GPT-4o-mini, Haiku) for simple hints
+- **Rate limiting:** Max hints per game and per day
+- **Language:** All responses must be in Danish
+- **Safety:** Never reveal the word directly, even if asked
