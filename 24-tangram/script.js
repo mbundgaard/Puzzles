@@ -1,7 +1,7 @@
 class DissectionPuzzle {
     constructor() {
         // Puzzle files to load
-        this.puzzleFiles = ['t-puslespil.json', 'klassisk.json', 'fem-dele.json', 'hus.json', 'diamant.json'];
+        this.puzzleFiles = ['t.json', 'pil.json', 'klassisk.json', 'fem-dele.json', 'hus.json', 'diamant.json'];
         this.puzzles = [];
 
         this.currentPuzzle = null;
