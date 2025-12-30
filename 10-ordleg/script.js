@@ -19,7 +19,8 @@ async function loadWordCategory(category) {
 // Load all word categories
 async function loadAllWords() {
     await Promise.all([
-        loadWordCategory('kids'),
+        loadWordCategory('kids-general'),
+        loadWordCategory('kids-slang'),
         loadWordCategory('animals'),
         loadWordCategory('food'),
         loadWordCategory('mixed')
