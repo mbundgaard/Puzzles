@@ -409,10 +409,44 @@ Consider adding daily limits to games that:
 - Have easy difficulty levels
 - Show signs of farming in the Events table
 
+### Version Check (Auto-Update)
+
+The app automatically checks for updates and reloads when a newer version is available.
+
+#### How it works
+
+1. `APP_VERSION` (Unix timestamp UTC) is stored at the top of index.html script section
+2. When user returns from a game or PWA resumes, client calls `POST /api/version`
+3. If server has newer version → auto-reload → show toast "Opdateret til nyeste version ✓"
+4. Refresh button (🔄) also checks: if same version, shows "Allerede opdateret ✓" without reload
+
+#### API endpoint
+
+```
+POST /api/version
+Body: { "version": 1767137931 }
+Response: { "newVersionExists": true/false }
+```
+
+- If client version > stored: saves client version, returns `false`
+- If client version < stored: returns `true` (client should reload)
+- If equal: returns `false`
+
+#### Footer timestamp
+
+The footer "Sidst opdateret" is rendered from `APP_VERSION` using Danish locale:
+
+```javascript
+new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
+    day: 'numeric', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+});
+```
+
 ## Git Workflow
 
 **IMPORTANT: Commit messages must be in English.**
 
 - Push to `claude/main` branch (allows Claude to push directly without PR)
 - Clear, descriptive commit messages
-- **Update timestamp BEFORE each commit**: Update "Sidst opdateret" in index.html footer with current Danish local time (format: "DD. month YYYY kl. HH:MM", month in Danish). Denmark uses CET (UTC+1) in winter and CEST (UTC+2) in summer. Do this before EVERY commit.
+- **Update APP_VERSION BEFORE each commit**: Update the `APP_VERSION` constant in index.html with current Unix timestamp (UTC). Use `date +%s` to get the timestamp. This is used for version checking and renders the footer timestamp in Danish local time.
