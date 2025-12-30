@@ -445,7 +445,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 8px;
-            max-height: 300px;
+            max-height: 420px;
             overflow-y: auto;
             margin-top: 16px;
         }
@@ -1059,7 +1059,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 19:23</p>
+            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 19:45</p>
         </div>
     </div>
 
@@ -1163,7 +1163,7 @@
                 leaderboardList.innerHTML = '<p class="loading">Indlæser...</p>';
 
                 try {
-                    const response = await fetch(`${API_BASE}/leaderboard?game=all&top=20`);
+                    const response = await fetch(`${API_BASE}/leaderboard?game=all&top=10`);
                     const data = await response.json();
 
                     if (!data.entries || data.entries.length === 0) {
