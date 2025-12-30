@@ -10,6 +10,7 @@ class SnakeGame {
         this.scoreEl = document.getElementById('score');
         this.targetEl = document.getElementById('target');
         this.startScreen = document.getElementById('start-screen');
+        this.controlsEl = document.getElementById('controls');
         this.gameOverOverlay = document.getElementById('game-over');
         this.finalScoreEl = document.getElementById('final-score');
         this.retryBtn = document.getElementById('retry');
@@ -51,6 +52,7 @@ class SnakeGame {
 
     showStartScreen() {
         this.startScreen.classList.remove('hidden');
+        this.controlsEl.classList.remove('visible');
         // Render empty board for background
         const config = this.difficulties.medium;
         this.size = config.size;
@@ -81,6 +83,7 @@ class SnakeGame {
         this.nextDirection = { x: 1, y: 0 };
 
         this.startScreen.classList.add('hidden');
+        this.controlsEl.classList.add('visible');
         this.renderBoard();
         this.placeFood();
 
