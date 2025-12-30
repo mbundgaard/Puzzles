@@ -230,6 +230,17 @@ h1 {
     transform: scale(0.95);
 }
 
+.diff-btn.won-today {
+    background: rgba(34, 197, 94, 0.2);
+    color: rgba(34, 197, 94, 0.8);
+    border-color: rgba(34, 197, 94, 0.3);
+    cursor: default;
+}
+
+.diff-btn.won-today::after {
+    content: ' ✓';
+}
+
 .controls {
     margin-bottom: 15px;
 }

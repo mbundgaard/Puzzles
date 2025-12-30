@@ -20,14 +20,72 @@ class PipePuzzle {
 
         this.diffBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                const diff = btn.dataset.difficulty;
+                if (this.isWonToday(diff)) return;
                 this.diffBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                this.difficulty = btn.dataset.difficulty;
+                this.difficulty = diff;
                 this.newGame();
             });
         });
 
-        this.newGame();
+        this.updateDifficultyButtons();
+        this.selectFirstAvailable();
+    }
+
+    getTodayKey() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    isWonToday(difficulty) {
+        const key = `roerfoering-${difficulty}-won`;
+        return localStorage.getItem(key) === this.getTodayKey();
+    }
+
+    markWonToday(difficulty) {
+        const key = `roerfoering-${difficulty}-won`;
+        localStorage.setItem(key, this.getTodayKey());
+    }
+
+    updateDifficultyButtons() {
+        this.diffBtns.forEach(btn => {
+            const diff = btn.dataset.difficulty;
+            if (this.isWonToday(diff)) {
+                btn.classList.add('won-today');
+                btn.title = 'Vundet!';
+            } else {
+                btn.classList.remove('won-today');
+                btn.title = '';
+            }
+        });
+    }
+
+    selectFirstAvailable() {
+        // Find first difficulty not won today
+        const difficulties = ['easy', 'medium', 'hard'];
+        let selected = null;
+
+        for (const diff of difficulties) {
+            if (!this.isWonToday(diff)) {
+                selected = diff;
+                break;
+            }
+        }
+
+        if (selected) {
+            this.difficulty = selected;
+            this.diffBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.difficulty === selected);
+            });
+            this.newGame();
+        } else {
+            // All won today - show message
+            this.difficulty = null;
+            this.status.textContent = 'Du har vundet alle sværhedsgrader i dag! Kom tilbage i morgen.';
+            this.status.className = 'status winner';
+            this.boardEl.innerHTML = '';
+            this.trayEl.innerHTML = '';
+        }
     }
 
     newGame() {
@@ -368,9 +426,12 @@ class PipePuzzle {
             });
 
             // Points based on difficulty
-            let points = 2;
-            if (this.difficulty === 'medium') points = 3;
-            if (this.difficulty === 'hard') points = 4;
+            let points = 1;
+            if (this.difficulty === 'medium') points = 2;
+            if (this.difficulty === 'hard') points = 3;
+
+            this.markWonToday(this.difficulty);
+            this.updateDifficultyButtons();
 
             HjernespilAPI.trackComplete('12');
             HjernespilUI.showWinModal(points);

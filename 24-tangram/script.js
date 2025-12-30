@@ -28,6 +28,20 @@ class DissectionPuzzle {
         this.init();
     }
 
+    getTodayKey() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    isWonToday(puzzleId) {
+        const key = `tangram-${puzzleId}-won`;
+        return localStorage.getItem(key) === this.getTodayKey();
+    }
+
+    markWonToday(puzzleId) {
+        const key = `tangram-${puzzleId}-won`;
+        localStorage.setItem(key, this.getTodayKey());
+    }
+
     async init() {
         this.backBtn.addEventListener('click', () => this.showSelector());
         this.resetBtn.addEventListener('click', () => this.resetPuzzle());
@@ -62,20 +76,23 @@ class DissectionPuzzle {
         for (const puzzle of this.puzzles) {
             if (!puzzle.data) continue;
 
+            const wonToday = this.isWonToday(puzzle.data.id);
             const item = document.createElement('div');
-            item.className = 'puzzle-item';
+            item.className = 'puzzle-item' + (wonToday ? ' won-today' : '');
             item.innerHTML = `
                 <div class="puzzle-thumbnail">
                     ${this.createThumbnailSVG(puzzle.data)}
                 </div>
                 <div class="puzzle-info">
-                    <h3>${puzzle.data.name}</h3>
+                    <h3>${puzzle.data.name}${wonToday ? ' ✓' : ''}</h3>
                     <p>${puzzle.data.description}</p>
                 </div>
                 <span class="puzzle-difficulty ${puzzle.data.difficulty}">${this.getDifficultyLabel(puzzle.data.difficulty)}</span>
             `;
 
-            item.addEventListener('click', () => this.startPuzzle(puzzle.data));
+            if (!wonToday) {
+                item.addEventListener('click', () => this.startPuzzle(puzzle.data));
+            }
             this.puzzleList.appendChild(item);
         }
     }
@@ -97,6 +114,7 @@ class DissectionPuzzle {
         this.gameArea.classList.add('hidden');
         this.puzzleSelector.classList.remove('hidden');
         this.currentPuzzle = null;
+        this.renderPuzzleList();
     }
 
     startPuzzle(puzzleData) {
@@ -396,6 +414,7 @@ class DissectionPuzzle {
         if (this.coverage >= 0.95 && !this.hasWon) {
             this.hasWon = true;
             this.coverageEl.textContent = '100% dækket';
+            this.markWonToday(this.currentPuzzle.id);
             setTimeout(() => {
                 HjernespilAPI.trackComplete('24');
                 HjernespilUI.showWinModal(this.currentPuzzle.points);

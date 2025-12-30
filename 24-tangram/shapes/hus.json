@@ -3,7 +3,7 @@
   "name": "Huset",
   "description": "Byg et hus med seks dele",
   "difficulty": "hard",
-  "points": 4,
+  "points": 5,
   "targetShape": {
     "points": [[100,0], [200,80], [200,200], [0,200], [0,80]],
     "width": 200,

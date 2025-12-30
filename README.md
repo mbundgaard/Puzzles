@@ -19,7 +19,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 09 | [Kalaha](09-kalaha/) | 3 | Ancient strategy game - capture more stones than the AI |
 | 10 | [Ordleg](10-ordleg/) | 1/3/5 | Guess the 5-letter Danish word in 6 tries |
 | 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | Tic-tac-toe against an AI opponent |
-| 12 | [Rørføring](12-roerfoering/) | 2/3/4 | Place pipes to connect start to end |
+| 12 | [Rørføring](12-roerfoering/) | 1/2/3 | Place pipes to connect start to end |
 | 13 | [15-Puslespil](13-femten-puslespil/) | 3 | Slide tiles to arrange numbers 1-15 in order |
 | 14 | [Mastermind](14-kodeknaekker/) | 3 | Crack the secret color code |
 | 15 | [Broer](15-broer/) | 3 | Connect islands with the correct number of bridges |
@@ -31,7 +31,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 21 | [Fire på Stribe](21-fire-paa-stribe/) | 3 | Connect four in a row against AI |
 | 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | Move all disks to the rightmost peg |
 | 23 | [Slange](23-slange/) | 2/3/4 | Classic snake game with win condition |
-| 24 | [Tangram](24-tangram/) | 2/3/4 | Drag and rotate pieces to cover the shape |
+| 24 | [Tangram](24-tangram/) | 1/3/5 | Drag and rotate pieces to cover the shape |
 
 ## Features
 

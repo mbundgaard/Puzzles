@@ -3,7 +3,7 @@
   "name": "Pilen",
   "description": "Saml fem dele til en pil",
   "difficulty": "easy",
-  "points": 2,
+  "points": 1,
   "targetShape": {
     "points": [[0,60], [120,60], [120,0], [200,100], [120,200], [120,140], [0,140]],
     "width": 200,
