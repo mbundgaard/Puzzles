@@ -1,20 +1,17 @@
 class PipePuzzle {
     constructor() {
-        this.size = 4;
+        this.size = 6;
         this.board = [];
+        this.tray = [];
+        this.selectedPipe = null;
         this.startPos = { row: 0, col: 0 };
-        this.endPos = { row: 0, col: 0 };
+        this.endPos = { row: 5, col: 5 };
         this.gameOver = false;
-
-        // Pipe types: connections in each direction [top, right, bottom, left]
-        this.pipeTypes = {
-            straight: [[1, 0, 1, 0], [0, 1, 0, 1]], // vertical, horizontal
-            corner: [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1]], // TR, RB, BL, LT
-            tee: [[1, 1, 1, 0], [1, 1, 0, 1], [1, 0, 1, 1], [0, 1, 1, 1]], // no-L, no-B, no-R, no-T
-            cross: [[1, 1, 1, 1]]
-        };
+        this.difficulty = 'medium';
+        this.fixedCells = new Set();
 
         this.boardEl = document.getElementById('board');
+        this.trayEl = document.getElementById('tray');
         this.status = document.getElementById('status');
         this.newGameBtn = document.getElementById('new-game');
         this.diffBtns = document.querySelectorAll('.diff-btn');
@@ -25,7 +22,7 @@ class PipePuzzle {
             btn.addEventListener('click', () => {
                 this.diffBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                this.size = parseInt(btn.dataset.size);
+                this.difficulty = btn.dataset.difficulty;
                 this.newGame();
             });
         });
@@ -35,109 +32,131 @@ class PipePuzzle {
 
     newGame() {
         this.gameOver = false;
-        this.status.textContent = 'Forbind start til slut';
+        this.selectedPipe = null;
+        this.fixedCells = new Set();
+        this.status.textContent = 'Placer alle rør for at forbinde start til slut';
         this.status.className = 'status';
+
+        // Initialize empty board
+        this.board = [];
+        for (let r = 0; r < this.size; r++) {
+            this.board.push([]);
+            for (let c = 0; c < this.size; c++) {
+                this.board[r].push(null);
+            }
+        }
+
+        this.tray = [];
         this.generatePuzzle();
         this.render();
         HjernespilAPI.trackStart('12');
     }
 
     generatePuzzle() {
-        // Create a solved path first, then scramble
-        this.board = [];
-        for (let r = 0; r < this.size; r++) {
-            this.board.push([]);
-            for (let c = 0; c < this.size; c++) {
-                this.board[r].push({ type: null, rotation: 0, connections: [0, 0, 0, 0] });
-            }
-        }
-
-        // Set start and end positions
-        this.startPos = { row: 0, col: 0 };
-        this.endPos = { row: this.size - 1, col: this.size - 1 };
-
-        // Generate a path from start to end using DFS
+        // Generate a solved path first
         const path = this.generatePath();
+        const pipes = [];
 
-        // Fill path with appropriate pipes
+        // Create pipes for the path
         for (let i = 0; i < path.length; i++) {
             const { row, col } = path[i];
             const connections = [0, 0, 0, 0]; // top, right, bottom, left
 
             if (i > 0) {
                 const prev = path[i - 1];
-                if (prev.row < row) connections[0] = 1; // from top
-                if (prev.row > row) connections[2] = 1; // from bottom
-                if (prev.col < col) connections[3] = 1; // from left
-                if (prev.col > col) connections[1] = 1; // from right
+                if (prev.row < row) connections[0] = 1;
+                if (prev.row > row) connections[2] = 1;
+                if (prev.col < col) connections[3] = 1;
+                if (prev.col > col) connections[1] = 1;
             }
 
             if (i < path.length - 1) {
                 const next = path[i + 1];
-                if (next.row < row) connections[0] = 1; // to top
-                if (next.row > row) connections[2] = 1; // to bottom
-                if (next.col < col) connections[3] = 1; // to left
-                if (next.col > col) connections[1] = 1; // to right
+                if (next.row < row) connections[0] = 1;
+                if (next.row > row) connections[2] = 1;
+                if (next.col < col) connections[3] = 1;
+                if (next.col > col) connections[1] = 1;
             }
 
-            this.board[row][col].connections = connections;
-            this.board[row][col].type = this.getPipeType(connections);
-            this.board[row][col].rotation = 0;
+            pipes.push({
+                connections: connections,
+                correctRow: row,
+                correctCol: col,
+                id: i
+            });
         }
 
-        // Scramble by rotating each pipe randomly
-        for (let r = 0; r < this.size; r++) {
-            for (let c = 0; c < this.size; c++) {
-                if (this.board[r][c].type) {
-                    const rotations = Math.floor(Math.random() * 4);
-                    for (let i = 0; i < rotations; i++) {
-                        this.rotatePipe(r, c, false);
-                    }
-                }
-            }
+        // Determine fixed pipes based on difficulty
+        let fixedCount = 0;
+        if (this.difficulty === 'easy') fixedCount = 2;
+        else if (this.difficulty === 'medium') fixedCount = 1;
+        else fixedCount = 0;
+
+        // Shuffle pipes to pick random ones to fix
+        const shuffledIndices = [...Array(pipes.length).keys()];
+        this.shuffleArray(shuffledIndices);
+
+        // Place fixed pipes on board
+        for (let i = 0; i < fixedCount && i < pipes.length; i++) {
+            const pipeIdx = shuffledIndices[i];
+            const pipe = pipes[pipeIdx];
+            this.board[pipe.correctRow][pipe.correctCol] = {
+                connections: pipe.connections,
+                id: pipe.id
+            };
+            this.fixedCells.add(`${pipe.correctRow},${pipe.correctCol}`);
         }
+
+        // Put remaining pipes in tray (shuffled)
+        for (let i = fixedCount; i < shuffledIndices.length; i++) {
+            const pipeIdx = shuffledIndices[i];
+            const pipe = pipes[pipeIdx];
+            this.tray.push({
+                connections: pipe.connections,
+                id: pipe.id
+            });
+        }
+
+        this.shuffleArray(this.tray);
     }
 
     generatePath() {
-        const path = [this.startPos];
+        // Generate a winding path from start to end
+        const path = [{ ...this.startPos }];
         const visited = new Set();
         visited.add(`${this.startPos.row},${this.startPos.col}`);
 
-        while (path.length > 0) {
-            const current = path[path.length - 1];
+        let current = { ...this.startPos };
 
-            if (current.row === this.endPos.row && current.col === this.endPos.col) {
-                return path;
-            }
-
+        while (current.row !== this.endPos.row || current.col !== this.endPos.col) {
             const neighbors = this.getNeighbors(current.row, current.col)
                 .filter(n => !visited.has(`${n.row},${n.col}`));
 
-            // Prefer moving towards end
+            if (neighbors.length === 0) {
+                // Backtrack if stuck
+                if (path.length > 1) {
+                    path.pop();
+                    current = path[path.length - 1];
+                    continue;
+                }
+                break;
+            }
+
+            // Add randomness but generally move towards end
             neighbors.sort((a, b) => {
                 const distA = Math.abs(a.row - this.endPos.row) + Math.abs(a.col - this.endPos.col);
                 const distB = Math.abs(b.row - this.endPos.row) + Math.abs(b.col - this.endPos.col);
-                return distA - distB + (Math.random() - 0.5);
+                // Add significant randomness to create winding paths
+                return (distA - distB) + (Math.random() - 0.5) * 4;
             });
 
-            if (neighbors.length > 0) {
-                const next = neighbors[0];
-                path.push(next);
-                visited.add(`${next.row},${next.col}`);
-            } else {
-                path.pop();
-            }
+            const next = neighbors[0];
+            path.push(next);
+            visited.add(`${next.row},${next.col}`);
+            current = next;
         }
 
-        // Fallback: simple path
-        const simplePath = [];
-        for (let c = 0; c <= this.endPos.col; c++) {
-            simplePath.push({ row: 0, col: c });
-        }
-        for (let r = 1; r <= this.endPos.row; r++) {
-            simplePath.push({ row: r, col: this.endPos.col });
-        }
-        return simplePath;
+        return path;
     }
 
     getNeighbors(row, col) {
@@ -149,35 +168,19 @@ class PipePuzzle {
         return neighbors;
     }
 
-    getPipeType(connections) {
-        const count = connections.reduce((a, b) => a + b, 0);
-        if (count === 2) {
-            if ((connections[0] && connections[2]) || (connections[1] && connections[3])) {
-                return 'straight';
-            }
-            return 'corner';
-        }
-        if (count === 3) return 'tee';
-        if (count === 4) return 'cross';
-        return 'end';
-    }
-
-    rotatePipe(row, col, checkWin = true) {
-        const cell = this.board[row][col];
-        if (!cell.type) return;
-
-        // Rotate connections array
-        const last = cell.connections.pop();
-        cell.connections.unshift(last);
-        cell.rotation = (cell.rotation + 90) % 360;
-
-        if (checkWin) {
-            this.render();
-            this.checkConnection();
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
     }
 
     render() {
+        this.renderBoard();
+        this.renderTray();
+    }
+
+    renderBoard() {
         this.boardEl.innerHTML = '';
         this.boardEl.style.gridTemplateColumns = `repeat(${this.size}, 1fr)`;
 
@@ -186,36 +189,88 @@ class PipePuzzle {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
 
-                if (r === this.startPos.row && c === this.startPos.col) {
-                    cell.classList.add('start');
-                }
-                if (r === this.endPos.row && c === this.endPos.col) {
-                    cell.classList.add('end');
-                }
+                const isStart = r === this.startPos.row && c === this.startPos.col;
+                const isEnd = r === this.endPos.row && c === this.endPos.col;
+                const isFixed = this.fixedCells.has(`${r},${c}`);
+
+                if (isStart) cell.classList.add('start');
+                if (isEnd) cell.classList.add('end');
+                if (isFixed) cell.classList.add('fixed');
 
                 const pipe = this.board[r][c];
-                if (pipe.type) {
-                    cell.innerHTML = this.createPipeSVG(pipe.connections, pipe.rotation,
-                        (r === this.startPos.row && c === this.startPos.col) ||
-                        (r === this.endPos.row && c === this.endPos.col));
+                if (pipe) {
+                    cell.innerHTML = this.createPipeSVG(pipe.connections, isStart || isEnd);
+                    cell.classList.add('has-pipe');
                 }
 
-                cell.addEventListener('click', () => {
-                    if (!this.gameOver) {
-                        this.rotatePipe(r, c);
-                    }
-                });
+                if (!this.gameOver && !isFixed) {
+                    cell.addEventListener('click', () => this.handleCellClick(r, c));
+                }
 
                 this.boardEl.appendChild(cell);
             }
         }
     }
 
-    createPipeSVG(connections, rotation, isEndpoint) {
+    renderTray() {
+        this.trayEl.innerHTML = '';
+
+        if (this.tray.length === 0) {
+            this.trayEl.innerHTML = '<div class="tray-empty">Alle rør er placeret</div>';
+            return;
+        }
+
+        this.tray.forEach((pipe, index) => {
+            const pipeEl = document.createElement('div');
+            pipeEl.className = 'tray-pipe';
+            if (this.selectedPipe === index) {
+                pipeEl.classList.add('selected');
+            }
+            pipeEl.innerHTML = this.createPipeSVG(pipe.connections, false);
+
+            pipeEl.addEventListener('click', () => {
+                if (this.gameOver) return;
+                if (this.selectedPipe === index) {
+                    this.selectedPipe = null;
+                } else {
+                    this.selectedPipe = index;
+                }
+                this.render();
+            });
+
+            this.trayEl.appendChild(pipeEl);
+        });
+    }
+
+    handleCellClick(row, col) {
+        if (this.gameOver) return;
+        if (this.fixedCells.has(`${row},${col}`)) return;
+
+        const currentPipe = this.board[row][col];
+
+        if (currentPipe !== null) {
+            // Return pipe to tray
+            this.tray.push(currentPipe);
+            this.board[row][col] = null;
+            this.selectedPipe = null;
+            this.render();
+            return;
+        }
+
+        if (this.selectedPipe !== null) {
+            // Place selected pipe
+            const pipe = this.tray[this.selectedPipe];
+            this.board[row][col] = pipe;
+            this.tray.splice(this.selectedPipe, 1);
+            this.selectedPipe = null;
+            this.render();
+            this.checkWin();
+        }
+    }
+
+    createPipeSVG(connections, isEndpoint) {
         const [top, right, bottom, left] = connections;
         let paths = '';
-
-        // Center point
         const cx = 25, cy = 25;
 
         if (top) paths += `<line class="pipe" x1="${cx}" y1="0" x2="${cx}" y2="${cy}"/>`;
@@ -225,35 +280,33 @@ class PipePuzzle {
 
         if (isEndpoint) {
             paths += `<circle class="endpoint" cx="${cx}" cy="${cy}" r="6"/>`;
+        } else {
+            paths += `<circle class="pipe-center" cx="${cx}" cy="${cy}" r="4"/>`;
         }
 
         return `<svg viewBox="0 0 50 50">${paths}</svg>`;
     }
 
-    checkConnection() {
-        // BFS from start to end
+    checkWin() {
+        // Must use all pipes
+        if (this.tray.length > 0) return;
+
+        // Check if path connects start to end
         const visited = new Set();
         const queue = [this.startPos];
         visited.add(`${this.startPos.row},${this.startPos.col}`);
 
-        // Reset connected state
-        const cells = this.boardEl.querySelectorAll('.cell');
-        cells.forEach(cell => cell.classList.remove('connected'));
-
-        const connectedCells = [];
-
         while (queue.length > 0) {
             const current = queue.shift();
-            connectedCells.push(current);
-
             const currentPipe = this.board[current.row][current.col];
-            const [top, right, bottom, left] = currentPipe.connections;
+
+            if (!currentPipe) continue;
 
             const directions = [
-                { dr: -1, dc: 0, myDir: 0, theirDir: 2 }, // top
-                { dr: 0, dc: 1, myDir: 1, theirDir: 3 },  // right
-                { dr: 1, dc: 0, myDir: 2, theirDir: 0 },  // bottom
-                { dr: 0, dc: -1, myDir: 3, theirDir: 1 }  // left
+                { dr: -1, dc: 0, myDir: 0, theirDir: 2 },
+                { dr: 0, dc: 1, myDir: 1, theirDir: 3 },
+                { dr: 1, dc: 0, myDir: 2, theirDir: 0 },
+                { dr: 0, dc: -1, myDir: 3, theirDir: 1 }
             ];
 
             for (const dir of directions) {
@@ -266,7 +319,7 @@ class PipePuzzle {
                 if (visited.has(`${nr},${nc}`)) continue;
 
                 const neighborPipe = this.board[nr][nc];
-                if (!neighborPipe.type) continue;
+                if (!neighborPipe) continue;
 
                 if (neighborPipe.connections[dir.theirDir]) {
                     visited.add(`${nr},${nc}`);
@@ -275,19 +328,25 @@ class PipePuzzle {
             }
         }
 
-        // Mark connected cells
-        connectedCells.forEach(pos => {
-            const idx = pos.row * this.size + pos.col;
-            cells[idx].classList.add('connected');
-        });
-
-        // Check if end is reached
         if (visited.has(`${this.endPos.row},${this.endPos.col}`)) {
             this.gameOver = true;
             this.status.textContent = 'Tillykke! Du klarede det!';
             this.status.className = 'status winner';
+
+            // Highlight connected path
+            const cells = this.boardEl.querySelectorAll('.cell');
+            visited.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                cells[r * this.size + c].classList.add('connected');
+            });
+
+            // Points based on difficulty
+            let points = 1;
+            if (this.difficulty === 'medium') points = 2;
+            if (this.difficulty === 'hard') points = 3;
+
             HjernespilAPI.trackComplete('12');
-            HjernespilUI.showWinModal(1);
+            HjernespilUI.showWinModal(points);
         }
     }
 }

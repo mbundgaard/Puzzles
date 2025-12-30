@@ -19,14 +19,16 @@
             <h1>Rørføring</h1>
         </header>
 
-        <div class="status" id="status">Forbind start til slut</div>
+        <div class="status" id="status">Placer alle rør for at forbinde start til slut</div>
 
         <div class="board" id="board"></div>
 
+        <div class="tray" id="tray"></div>
+
         <div class="difficulty">
-            <button class="diff-btn active" data-size="4">4×4</button>
-            <button class="diff-btn" data-size="5">5×5</button>
-            <button class="diff-btn" data-size="6">6×6</button>
+            <button class="diff-btn" data-difficulty="easy">Let</button>
+            <button class="diff-btn active" data-difficulty="medium">Mellem</button>
+            <button class="diff-btn" data-difficulty="hard">Svær</button>
         </div>
 
         <div class="controls">
@@ -36,10 +38,11 @@
         <div class="rules">
             <h3>Sådan spiller du</h3>
             <ul>
-                <li>Tryk på en flise for at dreje den 90°</li>
-                <li>Forbind det grønne startpunkt til det røde slutpunkt</li>
-                <li>Alle rør skal danne en sammenhængende vej</li>
-                <li>Vælg gitterstørrelse for at ændre sværhedsgrad</li>
+                <li>Vælg et rør fra bakken nedenfor</li>
+                <li>Tryk på en celle for at placere røret</li>
+                <li>Tryk på et placeret rør for at fjerne det</li>
+                <li>Forbind start (grøn) til slut (rød)</li>
+                <li>Du skal bruge alle rør fra bakken</li>
             </ul>
         </div>
 
