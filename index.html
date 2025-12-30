@@ -35,6 +35,17 @@
             overflow-x: hidden;
         }
 
+        /* Hide all scrollbars */
+        body, html {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        body::-webkit-scrollbar,
+        html::-webkit-scrollbar {
+            display: none; /* Chrome/Safari/Opera */
+        }
+
         /* Animated background */
         .bg-animation {
             position: fixed;
@@ -1059,7 +1070,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 22:43</p>
+            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 22:48</p>
         </div>
     </div>
 
