@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tangram - Hjernespil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+        <header>
+            <h1>Tangram</h1>
+        </header>
+
+        <div class="puzzle-selector" id="puzzle-selector">
+            <h2>Vælg puslespil</h2>
+            <div class="puzzle-list" id="puzzle-list"></div>
+
+            <div class="rules">
+                <h3>Sådan spiller du</h3>
+                <ul>
+                    <li>Træk brikkerne ind i figuren</li>
+                    <li>Tryk på en brik for at rotere den 45°</li>
+                    <li>Dæk hele figuren for at vinde</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="game-area hidden" id="game-area">
+            <div class="game-header">
+                <button class="back-btn" id="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Tilbage
+                </button>
+                <div class="puzzle-name" id="puzzle-name"></div>
+                <button class="reset-btn" id="reset-btn">Nulstil</button>
+            </div>
+
+            <div class="hint-text">Tryk for at rotere - Træk for at flytte</div>
+
+            <div class="play-area" id="play-area">
+                <svg id="puzzle-svg" class="puzzle-svg"></svg>
+            </div>
+
+            <div class="progress" id="progress">
+                <span id="coverage">0% dækket</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

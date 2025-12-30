@@ -205,6 +205,7 @@
         .game-card.connectfour { --card-accent: linear-gradient(90deg, #fbbf24, #f59e0b); }
         .game-card.hanoi { --card-accent: linear-gradient(90deg, #8b5cf6, #a855f7); }
         .game-card.snake { --card-accent: linear-gradient(90deg, #4ade80, #22c55e); }
+        .game-card.dissection { --card-accent: linear-gradient(90deg, #a855f7, #ec4899); }
 
         .game-card.suggest-card {
             --card-accent: linear-gradient(90deg, #a855f7, #ec4899);
@@ -505,6 +506,12 @@
             margin-top: 16px;
             max-height: 400px;
             overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .info-content::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
 
         .info-content p {
@@ -799,19 +806,6 @@
                         <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
                     </svg>
                 </button>
-                <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="icon-btn" aria-label="Send SMS">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    </svg>
-                </a>
-                <button class="icon-btn" id="share-btn" aria-label="Del QR">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/>
-                        <rect x="14" y="3" width="7" height="7"/>
-                        <rect x="3" y="14" width="7" height="7"/>
-                        <rect x="14" y="14" width="7" height="7"/>
-                    </svg>
-                </button>
                 <button class="icon-btn" id="leaderboard-btn" aria-label="Rangliste">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
@@ -820,6 +814,27 @@
                         <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
                         <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
                         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                    </svg>
+                </button>
+                <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="icon-btn" aria-label="Send SMS">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        <circle cx="8" cy="10" r="1" fill="currentColor"/>
+                        <circle cx="12" cy="10" r="1" fill="currentColor"/>
+                        <circle cx="16" cy="10" r="1" fill="currentColor"/>
+                    </svg>
+                </a>
+                <button class="icon-btn" id="share-btn" aria-label="Del QR">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="5" y="5" width="3" height="3" fill="currentColor"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="16" y="5" width="3" height="3" fill="currentColor"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                        <rect x="5" y="16" width="3" height="3" fill="currentColor"/>
+                        <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
+                        <rect x="18" y="14" width="3" height="3" fill="currentColor"/>
+                        <rect x="14" y="18" width="3" height="3" fill="currentColor"/>
                     </svg>
                 </button>
                 <button class="icon-btn" id="info-btn" aria-label="Info">
@@ -855,6 +870,24 @@
         </div>
 
         <div class="game-grid">
+            <a href="24-tangram/index.html" class="game-card dissection">
+                <div class="card-badge">NY</div>
+                <div class="card-icon">
+                    <svg viewBox="0 0 40 40" width="40" height="40">
+                        <polygon points="0,0 20,0 20,20" fill="#ef4444"/>
+                        <polygon points="20,0 40,0 40,20 20,20" fill="#22c55e"/>
+                        <polygon points="0,0 0,20 20,20" fill="#3b82f6"/>
+                        <polygon points="0,20 20,20 20,40 0,40" fill="#f59e0b"/>
+                        <polygon points="20,20 40,20 40,40 20,40" fill="#a855f7"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h2>Tangram</h2>
+                    <p>Dæk figuren</p>
+                </div>
+                <div class="play-indicator"></div>
+            </a>
+
             <a href="23-slange/index.html" class="game-card snake">
                 <div class="card-badge">NY</div>
                 <div class="card-icon">🐍</div>
@@ -1026,7 +1059,7 @@
             </a>
             <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
             <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 11:30</p>
+            <p class="last-updated">Sidst opdateret: 30. december 2025 kl. 15:39</p>
         </div>
     </div>
 
