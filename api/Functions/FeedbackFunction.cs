@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -25,7 +27,10 @@ public class FeedbackFunction
         FeedbackRequest? feedbackRequest;
         try
         {
-            feedbackRequest = await req.ReadFromJsonAsync<FeedbackRequest>();
+            // Explicitly read as UTF-8 to handle Danish characters (æøå)
+            using var reader = new StreamReader(req.Body, Encoding.UTF8);
+            var body = await reader.ReadToEndAsync();
+            feedbackRequest = JsonSerializer.Deserialize<FeedbackRequest>(body);
         }
         catch
         {

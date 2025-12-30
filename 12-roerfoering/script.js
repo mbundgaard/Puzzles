@@ -53,8 +53,19 @@ class PipePuzzle {
     }
 
     generatePuzzle() {
-        // Generate a solved path first
-        const path = this.generatePath();
+        // Minimum path length based on difficulty (adds complexity)
+        let minPathLength = 12; // Easy
+        if (this.difficulty === 'medium') minPathLength = 14;
+        if (this.difficulty === 'hard') minPathLength = 16;
+
+        // Generate a solved path first (retry if too short)
+        let path;
+        let attempts = 0;
+        do {
+            path = this.generatePath();
+            attempts++;
+        } while (path.length < minPathLength && attempts < 50);
+
         const pipes = [];
 
         // Create pipes for the path
@@ -163,7 +174,7 @@ class PipePuzzle {
                 const distA = Math.abs(a.row - this.endPos.row) + Math.abs(a.col - this.endPos.col);
                 const distB = Math.abs(b.row - this.endPos.row) + Math.abs(b.col - this.endPos.col);
                 // Add significant randomness to create winding paths
-                return (distA - distB) + (Math.random() - 0.5) * 4;
+                return (distA - distB) + (Math.random() - 0.5) * 6;
             });
 
             const next = neighbors[0];

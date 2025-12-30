@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,10 @@ public class CloseIssueFunction
         CloseIssueRequest? request;
         try
         {
-            request = await req.ReadFromJsonAsync<CloseIssueRequest>();
+            // Explicitly read as UTF-8 to handle Danish characters (æøå)
+            using var reader = new StreamReader(req.Body, Encoding.UTF8);
+            var body = await reader.ReadToEndAsync();
+            request = JsonSerializer.Deserialize<CloseIssueRequest>(body);
         }
         catch
         {
