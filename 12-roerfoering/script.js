@@ -7,7 +7,7 @@ class PipePuzzle {
         this.startPos = { row: 0, col: 0 };
         this.endPos = { row: 5, col: 5 };
         this.gameOver = false;
-        this.difficulty = 'medium';
+        this.difficulty = 'hard';
         this.fixedCells = new Set();
 
         this.boardEl = document.getElementById('board');
