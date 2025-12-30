@@ -183,6 +183,7 @@ The main page uses a modern gaming/app design with:
 | GET | `/api/today` | Get today's starts and completions |
 | POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` → creates GitHub issue |
 | POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
+| POST | `/api/version` | Check version `{version}` → `{newVersionExists: bool}` |
 
 ### Feedback System
 
