@@ -149,6 +149,10 @@ The main page uses a modern gaming/app design with:
    - Glassmorphism background with colored accent line on tap
    - Play indicator appears on active state
    - Unique accent color per game
+   - **Badges**: Games can have badges to highlight them:
+     - `<div class="card-badge">NY</div>` - Green badge for new games
+     - `<div class="card-badge updated">OPDATERET</div>` - Orange badge for updated games
+     - Badged games should be placed at the top of the grid
    - "Foreslå Spil" card at end (+ icon, dashed border) - submits to feedback API with game "00"
 4. **Footer**: GitHub link and last updated timestamp
 5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
