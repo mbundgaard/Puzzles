@@ -86,20 +86,39 @@ class PipePuzzle {
             });
         }
 
-        // Determine fixed pipes based on difficulty
-        let fixedCount = 0;
-        if (this.difficulty === 'easy') fixedCount = 2;
-        else if (this.difficulty === 'medium') fixedCount = 1;
-        else fixedCount = 0;
+        // Always place start and end pipes on the board
+        const startPipe = pipes[0];
+        const endPipe = pipes[pipes.length - 1];
 
-        // Shuffle pipes to pick random ones to fix
-        const shuffledIndices = [...Array(pipes.length).keys()];
+        this.board[startPipe.correctRow][startPipe.correctCol] = {
+            connections: startPipe.connections,
+            id: startPipe.id
+        };
+        this.fixedCells.add(`${startPipe.correctRow},${startPipe.correctCol}`);
+
+        this.board[endPipe.correctRow][endPipe.correctCol] = {
+            connections: endPipe.connections,
+            id: endPipe.id
+        };
+        this.fixedCells.add(`${endPipe.correctRow},${endPipe.correctCol}`);
+
+        // Get middle pipes (exclude start and end)
+        const middlePipes = pipes.slice(1, -1);
+
+        // Determine additional fixed pipes based on difficulty
+        let additionalFixed = 0;
+        if (this.difficulty === 'easy') additionalFixed = 2;
+        else if (this.difficulty === 'medium') additionalFixed = 1;
+        else additionalFixed = 0;
+
+        // Shuffle middle pipes to pick random ones to fix
+        const shuffledIndices = [...Array(middlePipes.length).keys()];
         this.shuffleArray(shuffledIndices);
 
-        // Place fixed pipes on board
-        for (let i = 0; i < fixedCount && i < pipes.length; i++) {
+        // Place additional fixed pipes on board
+        for (let i = 0; i < additionalFixed && i < middlePipes.length; i++) {
             const pipeIdx = shuffledIndices[i];
-            const pipe = pipes[pipeIdx];
+            const pipe = middlePipes[pipeIdx];
             this.board[pipe.correctRow][pipe.correctCol] = {
                 connections: pipe.connections,
                 id: pipe.id
@@ -107,10 +126,10 @@ class PipePuzzle {
             this.fixedCells.add(`${pipe.correctRow},${pipe.correctCol}`);
         }
 
-        // Put remaining pipes in tray (shuffled)
-        for (let i = fixedCount; i < shuffledIndices.length; i++) {
+        // Put remaining middle pipes in tray (shuffled)
+        for (let i = additionalFixed; i < shuffledIndices.length; i++) {
             const pipeIdx = shuffledIndices[i];
-            const pipe = pipes[pipeIdx];
+            const pipe = middlePipes[pipeIdx];
             this.tray.push({
                 connections: pipe.connections,
                 id: pipe.id
