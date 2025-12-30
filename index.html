@@ -1171,7 +1171,7 @@
 
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767137214;
+        const APP_VERSION = 1767137931;
 
         // Render footer timestamp in Danish local time
         document.getElementById('last-updated').textContent =
@@ -1185,13 +1185,45 @@
         const closeBtn = document.getElementById('qr-close');
         const refreshBtn = document.getElementById('refresh-btn');
 
+        // Shared toast function
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'version-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            });
+        }
+
         shareBtn.onclick = () => modal.classList.add('active');
         closeBtn.onclick = () => modal.classList.remove('active');
         modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
 
-        refreshBtn.onclick = () => {
+        refreshBtn.onclick = async () => {
             refreshBtn.classList.add('spinning');
-            setTimeout(() => location.reload(true), 500);
+            try {
+                const response = await fetch('https://puzzlesapi.azurewebsites.net/api/version', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ version: APP_VERSION })
+                });
+                const data = await response.json();
+                if (data.newVersionExists) {
+                    sessionStorage.setItem('versionUpdated', 'true');
+                    location.reload();
+                } else {
+                    refreshBtn.classList.remove('spinning');
+                    showToast('Allerede opdateret ✓');
+                }
+            } catch (e) {
+                // API failed, just reload normally
+                location.reload(true);
+            }
         };
 
         // Leaderboard Modal
@@ -1480,22 +1512,6 @@
             if (sessionStorage.getItem('versionUpdated')) {
                 sessionStorage.removeItem('versionUpdated');
                 showToast('Opdateret til nyeste version ✓');
-            }
-
-            function showToast(message) {
-                const toast = document.createElement('div');
-                toast.className = 'version-toast';
-                toast.textContent = message;
-                document.body.appendChild(toast);
-
-                // Trigger animation
-                requestAnimationFrame(() => {
-                    toast.classList.add('show');
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                        setTimeout(() => toast.remove(), 300);
-                    }, 3000);
-                });
             }
 
             async function checkVersion() {
