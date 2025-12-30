@@ -1,178 +1,30 @@
-// Danish 5-letter words organized by category
-const WORD_CATEGORIES = {
-    // Kids words - simple, everyday words children know (all exactly 5 letters)
-    kids: [
-        'bamse', 'banan', 'biler', 'blade', 'bluse', 'bombe', 'borde', 'breve',
-        'briks', 'bruge', 'bukse', 'cykel', 'danse', 'dreng', 'dukke', 'dufte',
-        'falde', 'farve', 'ferie', 'finde', 'fiske', 'fjols', 'frisk', 'frugt',
-        'fugle', 'gerne', 'giraf', 'glade', 'grine', 'grønt', 'gummi', 'gynge',
-        'haste', 'hente', 'heste', 'himle', 'hobby', 'holde', 'hoppe', 'hunde',
-        'hurra', 'huske', 'hygge', 'hytte', 'højde', 'jakke', 'juice', 'kager',
-        'kalde', 'kanin', 'kaste', 'klare', 'klods', 'komme', 'krone', 'kugle',
-        'kunne', 'kysse', 'lampe', 'legen', 'lette', 'lilje', 'lomme', 'lykke',
-        'lytte', 'læser', 'løber', 'malte', 'mange', 'musik', 'måned', 'natur',
-        'noget', 'nøgle', 'panda', 'penge', 'piger', 'pinde', 'plads', 'prøve',
-        'puden', 'pusle', 'pynte', 'påske', 'ramme', 'regne', 'rejse', 'ringe',
-        'rolig', 'runde', 'sange', 'senge', 'sidde', 'sjove', 'skibe', 'skole',
-        'skove', 'skyer', 'smile', 'snore', 'solen', 'spise', 'stole', 'super',
-        'synge', 'sætte', 'tager', 'takke', 'tante', 'tænde', 'tænke', 'vande',
-        'varme', 'vaske', 'vende', 'video', 'vinde', 'virke', 'vores', 'zebra',
-        'æbler', 'bolde', 'tegne', 'maler', 'bader', 'leger', 'sover', 'lyser'
-    ],
-
-    // Animal words (all exactly 5 letters)
-    animals: [
-        'bjørn', 'bæver', 'fasan', 'fluer', 'fugle', 'giraf', 'haren', 'hejre',
-        'heste', 'hjort', 'hunde', 'hveps', 'hønen', 'ilder', 'katte', 'koala',
-        'krage', 'larve', 'lemur', 'løven', 'mejse', 'musen', 'myrer', 'odder',
-        'ørnen', 'panda', 'rotte', 'ræven', 'selen', 'slang', 'snegl', 'stork',
-        'svale', 'svane', 'tiger', 'tudse', 'ulven', 'viben', 'zebra', 'ørred',
-        'øgler', 'geden', 'lamme', 'hanen', 'gåsen', 'anden', 'hajer', 'hvale',
-        'lunde', 'mågen', 'uglen', 'finke', 'gople', 'humle', 'krebs', 'loppe'
-    ],
-
-    // Food words (all exactly 5 letters)
-    food: [
-        'banan', 'bacon', 'bolle', 'brune', 'dadel', 'dille', 'figen', 'fløde',
-        'frisk', 'frugt', 'grønt', 'gummi', 'juice', 'kager', 'kakao', 'kaffe',
-        'kanel', 'kikse', 'kogte', 'kødet', 'lakse', 'mango', 'melon', 'mynte',
-        'nudel', 'nødde', 'olier', 'olive', 'pasta', 'peber', 'pesto', 'pizza',
-        'porre', 'pølse', 'rejer', 'ribbe', 'risen', 'rosin', 'salat', 'salte',
-        'sauce', 'sirup', 'smage', 'snack', 'sukke', 'suppe', 'sushi', 'svamp',
-        'sylte', 'toast', 'tomat', 'torsk', 'vafle', 'æbler', 'ærter', 'brønd',
-        'smøre', 'pærer', 'kylåe', 'flæsk', 'fedte', 'stegs', 'gryde', 'krems'
-    ],
-
-    // Mixed/general words (original list)
-    mixed: [
-        'abort', 'adler', 'alder', 'andre', 'angst', 'antal', 'april', 'armen',
-        'bager', 'banen', 'basis', 'bedre', 'befri', 'begge', 'begiv', 'behov',
-        'beløb', 'betal', 'bevæg', 'bidra', 'bilen', 'bingo', 'bitre', 'blade',
-        'blank', 'blege', 'blidt', 'blind', 'blitz', 'blokk', 'blund', 'blues',
-        'blyge', 'bogus', 'bolig', 'bombe', 'bonus', 'borde', 'borne', 'bragt',
-        'brand', 'brask', 'bravo', 'breve', 'briks', 'brise', 'brugt', 'bruge',
-        'brysk', 'bukse', 'buler', 'bunde', 'burde', 'butik', 'bydel', 'bygge',
-        'bytte', 'cello', 'celle', 'cider', 'cigar', 'cirka', 'civil', 'daler',
-        'damer', 'danne', 'dansk', 'dativ', 'debut', 'delta', 'demon', 'depot',
-        'dette', 'diger', 'digte', 'disco', 'ditto', 'dogme', 'doven', 'dragt',
-        'drama', 'dreng', 'drift', 'drink', 'dufte', 'dulgt', 'dumme', 'dunke',
-        'dvale', 'dybde', 'dyner', 'dyret', 'efter', 'elite', 'elske', 'emner',
-        'endog', 'enhed', 'enkel', 'enlig', 'enten', 'essay', 'etage', 'fabel',
-        'facon', 'fader', 'fakta', 'falde', 'falsk', 'fange', 'farce', 'faren',
-        'farve', 'fatal', 'fauna', 'favne', 'fejle', 'femte', 'ferie', 'fiber',
-        'figur', 'filen', 'finke', 'firma', 'fiske', 'fjeld', 'fjern', 'fjord',
-        'fjols', 'flade', 'flest', 'flink', 'flirt', 'flora', 'flyde', 'flygt',
-        'fløde', 'fodre', 'fokus', 'folie', 'forel', 'forme', 'forny', 'forud',
-        'forum', 'fotos', 'fragt', 'frank', 'freds', 'frisk', 'frost', 'frugt',
-        'fugle', 'fugte', 'fulde', 'fyrre', 'fælde', 'færge', 'gader', 'gafle',
-        'galge', 'gange', 'gaven', 'gerne', 'gifte', 'gilde', 'giraf', 'givet',
-        'glans', 'glemt', 'globe', 'gnave', 'gnist', 'godse', 'godte', 'gople',
-        'grene', 'grine', 'grisk', 'grube', 'gryde', 'grøft', 'gulve', 'gummi',
-        'gynge', 'gæste', 'gøgle', 'hacke', 'hadet', 'halen', 'halte', 'halve',
-        'hamle', 'hamre', 'hands', 'harem', 'harme', 'harpe', 'haspe', 'haste',
-        'havet', 'heden', 'hegne', 'hejse', 'hekse', 'helle', 'helst', 'hente',
-        'herre', 'heste', 'hidse', 'higet', 'himle', 'hinke', 'hirse', 'hjælp',
-        'hobby', 'holde', 'hoppe', 'horde', 'hotel', 'hoved', 'huffe', 'hugge',
-        'huler', 'humle', 'humor', 'hunde', 'hurra', 'huske', 'hveps', 'hvide',
-        'hvile', 'hvori', 'hygge', 'hykle', 'hylde', 'hyrde', 'hytte', 'hæfte',
-        'hælde', 'hænde', 'hærge', 'hævde', 'højde', 'hønen', 'høres', 'høste',
-        'ideel', 'ideer', 'igler', 'iltre', 'imøde', 'indre', 'indse', 'intet',
-        'ironi', 'items', 'ivrig', 'jager', 'jakke', 'jamme', 'japan', 'jeans',
-        'jesus', 'jorde', 'joule', 'jubel', 'juice', 'jumpe', 'junge', 'juvel',
-        'kabel', 'kager', 'kakao', 'kalde', 'kamin', 'kampe', 'kanal', 'kande',
-        'kanin', 'kante', 'kappe', 'kapre', 'karat', 'karma', 'karre', 'kaste',
-        'kedel', 'kegle', 'kende', 'kerne', 'kikke', 'kilde', 'klage', 'klang',
-        'klaps', 'klare', 'klase', 'klemt', 'klint', 'kloak', 'klods', 'klone',
-        'kløer', 'kløft', 'knage', 'knald', 'knibe', 'knirk', 'knive', 'knold',
-        'knude', 'knuge', 'koble', 'koger', 'kogge', 'kogle', 'kokes', 'kolik',
-        'komet', 'komme', 'konto', 'konus', 'koral', 'koste', 'kraft', 'krans',
-        'krebs', 'kridt', 'krise', 'krone', 'krudt', 'kruse', 'kudsk', 'kugle',
-        'kulde', 'kumme', 'kunde', 'kunne', 'kunst', 'kupon', 'kurre', 'kurve',
-        'kvaje', 'kvart', 'kvide', 'kvikt', 'kvote', 'kysse', 'kæmpe', 'kærte',
-        'køber', 'kølig', 'køres', 'ladet', 'lager', 'lagre', 'lampe', 'lange',
-        'laser', 'lavet', 'leder', 'ledet', 'legat', 'lejre', 'lemme', 'lette',
-        'lever', 'lidet', 'ligne', 'lilje', 'limit', 'linde', 'liner', 'linje',
-        'liste', 'liter', 'livet', 'lodge', 'logik', 'lomme', 'loppe', 'lotto',
-        'lover', 'lufte', 'lunde', 'lunge', 'lunte', 'lygte', 'lykke', 'lynet',
-        'lyrik', 'lyske', 'lyste', 'lytte', 'læber', 'læder', 'læger', 'lægte',
-        'lække', 'længe', 'lærke', 'læser', 'løfte', 'løjer', 'lønne', 'løser',
-        'mafia', 'mager', 'magte', 'major', 'malke', 'mange', 'mappe', 'march',
-        'marin', 'maske', 'masse', 'matte', 'medal', 'medie', 'mejse', 'melde',
-        'melon', 'mener', 'messe', 'metal', 'meter', 'micro', 'midja', 'midte',
-        'milde', 'minut', 'miste', 'model', 'moden', 'modig', 'modul', 'mogul',
-        'mokka', 'ommer', 'moral', 'morde', 'motor', 'motto', 'mudre', 'multi',
-        'mumle', 'murer', 'musik', 'mynte', 'mødet', 'mødes', 'mølle', 'mørke',
-        'måned', 'måtte', 'nabel', 'nagle', 'naive', 'nakke', 'narre', 'natur',
-        'navle', 'negle', 'neste', 'netto', 'niece', 'nippe', 'nitte', 'nodal',
-        'nogen', 'noget', 'nogle', 'norme', 'notar', 'noter', 'nudge', 'nuppe',
-        'nyder', 'nytår', 'nøgen', 'nøgle', 'nåede', 'ocean', 'odder', 'offer',
-        'okker', 'oktan', 'olive', 'oncle', 'opera', 'optog', 'orden', 'orgel',
-        'orgie', 'orkid', 'otter', 'ovale', 'palet', 'palme', 'panda', 'pande',
-        'panel', 'panik', 'parat', 'parti', 'parts', 'passe', 'pasta', 'pedal',
-        'pejle', 'pelse', 'penge', 'perle', 'petit', 'piano', 'pigen', 'pikke',
-        'pille', 'pilot', 'pinde', 'pines', 'pinse', 'pirat', 'piske', 'pivot',
-        'pixel', 'pizza', 'pjece', 'plade', 'plads', 'plane', 'plast', 'pleje',
-        'pligt', 'plump', 'plums', 'polar', 'polet', 'polsk', 'porer', 'poste',
-        'potts', 'prale', 'prent', 'prile', 'prins', 'prøve', 'pulje', 'punkt',
-        'puppe', 'purer', 'pusle', 'puste', 'putte', 'pynte', 'pælen', 'pølse',
-        'påske', 'rager', 'rails', 'ramle', 'ramme', 'rampe', 'ranke', 'rappe',
-        'rasle', 'raste', 'ratio', 'reale', 'regel', 'regne', 'rejse', 'rense',
-        'rente', 'repos', 'revne', 'ribbe', 'ridse', 'rigel', 'rille', 'rinds',
-        'ringe', 'risen', 'rival', 'rodet', 'rodne', 'rolle', 'roman', 'rombe',
-        'roser', 'rosin', 'rough', 'route', 'rubin', 'rugge', 'rugte', 'ruine',
-        'rulle', 'rumle', 'runde', 'runge', 'ruske', 'russe', 'ruste', 'rydde',
-        'ryger', 'rygte', 'rykke', 'rynke', 'ryste', 'ræven', 'rødme', 'røget',
-        'røgte', 'røres', 'råden', 'sabel', 'safir', 'sagte', 'sakse', 'salat',
-        'saldo', 'salme', 'salon', 'salte', 'salve', 'samba', 'samle', 'samme',
-        'sande', 'sange', 'sanse', 'satan', 'sauce', 'scene', 'segle', 'sejle',
-        'sekst', 'seler', 'sende', 'serie', 'serve', 'serum', 'sexet', 'shore',
-        'sidde', 'sider', 'siede', 'sigte', 'sikre', 'silke', 'simre', 'sinke',
-        'sirup', 'sjusk', 'skabe', 'skade', 'skaft', 'skala', 'skalk', 'skank',
-        'skare', 'skarp', 'skema', 'skibe', 'skide', 'skilt', 'skind', 'skive',
-        'skjul', 'skole', 'skove', 'skrab', 'skrig', 'skrin', 'skrue', 'skruk',
-        'skræk', 'skråt', 'skudt', 'skuet', 'skunk', 'skyde', 'skyer', 'slags',
-        'slank', 'slave', 'slibe', 'slide', 'sluge', 'smage', 'smask', 'smide',
-        'smile', 'smuds', 'smule', 'smyge', 'snack', 'snavs', 'snige', 'snore',
-        'sober', 'solid', 'solve', 'sonde', 'sorge', 'sorte', 'spare', 'spand',
-        'spids', 'spild', 'spion', 'spire', 'splid', 'sport', 'spray', 'spænd',
-        'spøge', 'stald', 'stand', 'stang', 'start', 'stave', 'stedt', 'stege',
-        'stegt', 'stene', 'stift', 'stigs', 'stile', 'stive', 'stjal', 'stock',
-        'stole', 'storm', 'straf', 'stram', 'streg', 'strid', 'strik', 'strip',
-        'strøm', 'stude', 'stuen', 'stump', 'stund', 'stunt', 'style', 'styrt',
-        'stærk', 'støbe', 'støde', 'støje', 'suger', 'suite', 'sukke', 'summe',
-        'super', 'suppe', 'surfe', 'surge', 'svagt', 'svale', 'svamp', 'svane',
-        'svare', 'svedt', 'svigt', 'sving', 'sylte', 'synge', 'synke', 'syrer',
-        'sæben', 'sælge', 'sænke', 'sæson', 'sætte', 'søger', 'sømme', 'sønne',
-        'søren', 'søvne', 'tabel', 'taber', 'tacos', 'tager', 'takke', 'takte',
-        'taler', 'talte', 'tamme', 'tands', 'tanke', 'tante', 'tapre', 'taske',
-        'taste', 'teint', 'tekst', 'telte', 'temme', 'tempo', 'teori', 'terps',
-        'teste', 'tiger', 'tigge', 'tikke', 'tilde', 'timer', 'tindr', 'tinge',
-        'tisse', 'titel', 'tjald', 'tjene', 'toast', 'toget', 'tolke', 'tomme',
-        'toner', 'toppe', 'torne', 'total', 'totem', 'totur', 'trend', 'trist',
-        'trone', 'tropp', 'trues', 'trumf', 'trunk', 'trust', 'træde', 'træer',
-        'træet', 'træls', 'træne', 'tråde', 'tuber', 'tuder', 'tulip', 'tumle',
-        'tuner', 'tunge', 'tunis', 'turde', 'tusch', 'tvang', 'tvivl', 'tyded',
-        'tyder', 'tynde', 'typer', 'typis', 'tyrke', 'tyske', 'tælle', 'tænde',
-        'tænke', 'tærsk', 'tømme', 'tørke', 'tørre', 'tårne', 'udart', 'udbed',
-        'udbud', 'udelt', 'udfør', 'udgav', 'udkom', 'udlæg', 'udnyt', 'udret',
-        'udsat', 'udsyn', 'udøve', 'ufine', 'ugift', 'ugler', 'uheld', 'uklar',
-        'ultra', 'under', 'ungen', 'unger', 'union', 'units', 'urent', 'urter',
-        'usagt', 'usund', 'uvant', 'uvejr', 'uvorn', 'vabel', 'vaden', 'vafle',
-        'vager', 'vagle', 'vagts', 'vakle', 'valen', 'valid', 'valse', 'vandt',
-        'vaner', 'vange', 'vante', 'varme', 'varte', 'vasal', 'vaske', 'vejen',
-        'vende', 'vendt', 'venne', 'verfe', 'verse', 'viber', 'video', 'vifte',
-        'viger', 'vikar', 'vikle', 'vilde', 'vilje', 'villa', 'vildt', 'vimse',
-        'vinde', 'vinyl', 'vippe', 'virke', 'virus', 'visen', 'viser', 'visir',
-        'visse', 'vital', 'vivat', 'vodka', 'vogte', 'volde', 'volte', 'vover',
-        'vragt', 'vrede', 'vride', 'vrøvl', 'vulst', 'vække', 'vægte', 'vælde',
-        'vælge', 'vælte', 'værdi', 'værge', 'værne', 'værst', 'væsen', 'væske',
-        'vøffe', 'yacht', 'ydede', 'ydere', 'yding', 'ydmyg', 'yogis', 'zebra',
-        'zoner', 'zoome', 'åbent', 'åbner', 'ånder', 'årets', 'årlig'
-    ]
-};
+// Word categories will be loaded from JSON files
+const WORD_CATEGORIES = {};
 
 // Valid Danish letters
 const DANISH_LETTERS = 'abcdefghijklmnopqrstuvwxyzæøå';
+
+// Load word list from JSON file
+async function loadWordCategory(category) {
+    try {
+        const response = await fetch(`words/${category}.json`);
+        const words = await response.json();
+        WORD_CATEGORIES[category] = words.filter(word => word.length === 5);
+    } catch (error) {
+        console.error(`Failed to load ${category} words:`, error);
+        WORD_CATEGORIES[category] = [];
+    }
+}
+
+// Load all word categories
+async function loadAllWords() {
+    await Promise.all([
+        loadWordCategory('kids'),
+        loadWordCategory('animals'),
+        loadWordCategory('food'),
+        loadWordCategory('mixed')
+    ]);
+}
 
 class Ordleg {
     constructor() {
@@ -184,7 +36,8 @@ class Ordleg {
         this.targetWord = '';
         this.gameOver = false;
         this.keyStates = {};
-        this.revealedPositions = []; // Positions that are pre-revealed as hints
+        this.revealedPositions = [];
+        this.wordsLoaded = false;
 
         this.board = document.getElementById('board');
         this.keyboard = document.getElementById('keyboard');
@@ -203,6 +56,14 @@ class Ordleg {
 
         this.createBoard();
         this.createKeyboard();
+        this.init();
+    }
+
+    async init() {
+        this.showMessage('Indlæser ord...', '');
+        await loadAllWords();
+        this.wordsLoaded = true;
+        this.message.textContent = '';
         this.newGame();
     }
 
@@ -244,9 +105,17 @@ class Ordleg {
     }
 
     newGame() {
-        // Get words for selected category, filter to exactly 5 letters
+        if (!this.wordsLoaded) return;
+
+        // Get words for selected category
         const category = this.categorySelect.value;
-        const wordList = WORD_CATEGORIES[category].filter(word => word.length === 5);
+        const wordList = WORD_CATEGORIES[category] || [];
+
+        if (wordList.length === 0) {
+            this.showMessage('Ingen ord fundet for denne kategori', 'error');
+            return;
+        }
+
         this.targetWord = wordList[Math.floor(Math.random() * wordList.length)].toLowerCase();
 
         this.currentRow = 0;
@@ -312,7 +181,7 @@ class Ordleg {
     }
 
     handleKeydown(e) {
-        if (this.gameOver) return;
+        if (this.gameOver || !this.wordsLoaded) return;
 
         if (e.key === 'Enter') {
             this.handleKey('enter');
@@ -324,7 +193,7 @@ class Ordleg {
     }
 
     handleKey(key) {
-        if (this.gameOver) return;
+        if (this.gameOver || !this.wordsLoaded) return;
 
         if (key === 'enter') {
             this.submitGuess();
