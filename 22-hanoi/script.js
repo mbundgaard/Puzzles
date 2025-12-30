@@ -54,7 +54,8 @@ class TowerOfHanoi {
             this.pegs[0].push(i);
         }
 
-        // Update minimum moves display (2^n - 1)
+        // Update displays
+        this.movesEl.textContent = this.moves;
         const minMoves = Math.pow(2, this.numDisks) - 1;
         this.minimumEl.textContent = minMoves;
 
