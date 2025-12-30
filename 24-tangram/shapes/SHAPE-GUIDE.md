@@ -27,6 +27,7 @@ This guide explains how to create new shapes for the Tangram game.
   "pieces": [
     {
       "id": "p1",
+      "description": "Optional description",
       "color": "#ef4444",
       "points": [[x1,y1], [x2,y2], ...]
     }
@@ -44,13 +45,16 @@ This guide explains how to create new shapes for the Tangram game.
 - **points**: Points awarded on completion (2=easy, 3=medium, 4=hard)
 
 ### targetShape
-- **points**: Array of [x, y] coordinates defining the polygon vertices, clockwise order
-- **width**: Bounding box width (should match the actual shape width)
-- **height**: Bounding box height (should match the actual shape height)
+- **points**: Array of [x, y] coordinates defining the polygon vertices
+- **width**: Bounding box width
+- **height**: Bounding box height
+
+**The target shape can be any polygon** - squares, rectangles, T-shapes, arrows, stars, letters, or any other closed shape. It does not need to be a square.
 
 ### pieces
 Each piece needs:
 - **id**: Unique within the shape (e.g., "p1", "p2")
+- **description**: Optional text describing the piece
 - **color**: Hex color code - use distinct, vibrant colors
 - **points**: Array of [x, y] coordinates defining the piece polygon
 
@@ -61,16 +65,27 @@ Each piece needs:
 - Y increases downward
 - Use integer values for cleaner rendering
 
+### Key Concept: Solution-Based Coordinates
+
+**Piece coordinates are defined as they appear in the solved puzzle.**
+
+When designing a puzzle:
+1. Draw the complete solution with all pieces in place
+2. Read off each piece's vertex coordinates from the solution
+3. The game will scatter the pieces at start; the player must reassemble them
+
+This makes puzzle creation straightforward - just trace the solution!
+
 ## Shape Size
 
-**Target size: 200x200 units** (can be rectangular, e.g., 200x150)
+**Target size: ~200x200 units** (can be any aspect ratio)
 
 This size works well because:
 - Large enough for comfortable touch interaction on mobile
 - Fits nicely in the play area with padding
 - Pieces are easy to grab and manipulate
 
-Keep shapes between **150-250 units** in each dimension. Smaller shapes make pieces too fiddly; larger shapes may not fit well on mobile screens.
+Keep shapes between **150-250 units** in each dimension.
 
 ## Design Rules
 
@@ -92,65 +107,111 @@ Use these distinct, vibrant colors:
 - **Medium** (3 pts): 4-5 pieces, some rotation required
 - **Hard** (4 pts): 5+ pieces, multiple rotations, non-obvious fit
 
-## Example: T-Shape
+## Example: Fem Dele (Five Pieces)
+
+This puzzle has 5 pieces that fill a 200x200 square. Here's the solution layout:
+
+```
+    0       75      125 150     200
+    +--------+-------+---+-------+
+  0 |   P1   |      P2   |       |
+    |  (red) +---+-------+ P5    |
+ 50 |        |   |       |(purple)
+    +        |   +-------+       |
+ 75 +--------+   |               |
+    |            |               |
+    |     P4     |               |
+125 |   (blue)   +---------------+
+    |            |               |
+150 +---+--------+               |
+    |P3 |                        |
+    |(cy|                        |
+200 +---+------------------------+
+    0  50
+```
+
+Key intersection points:
+- (75, 75) - where P1, P2, and P4 meet
+- (125, 125) - where P2, P4, and P5 meet
+- (150, 0) - top edge where P1 and P2 meet
+- (200, 50) - right edge where P2 and P5 meet
 
 ```json
 {
-  "id": "t-shape",
-  "name": "T-Figur",
-  "description": "Saml fire dele til et T",
-  "difficulty": "medium",
-  "points": 3,
+  "id": "fem-dele",
+  "name": "Fem Dele",
+  "description": "Saml fem dele til en firkant",
+  "difficulty": "hard",
+  "points": 4,
   "targetShape": {
-    "points": [[0,0], [200,0], [200,67], [133,67], [133,200], [67,200], [67,67], [0,67]],
+    "points": [[0,0], [200,0], [200,200], [0,200]],
     "width": 200,
     "height": 200
   },
   "pieces": [
     {
       "id": "p1",
+      "description": "Left quadrilateral",
       "color": "#ef4444",
-      "points": [[0,0], [67,0], [67,67]]
+      "points": [[0,0], [150,0], [75,75], [0,150]]
     },
     {
       "id": "p2",
+      "description": "Top-right pentagon",
       "color": "#22c55e",
-      "points": [[0,0], [0,67], [67,67]]
+      "points": [[75,75], [150,0], [200,0], [200,50], [125,125]]
     },
     {
       "id": "p3",
-      "color": "#3b82f6",
-      "points": [[0,0], [67,0], [67,200], [0,200]]
+      "description": "Bottom-left square",
+      "color": "#06b6d4",
+      "points": [[0,150], [50,150], [50,200], [0,200]]
     },
     {
       "id": "p4",
-      "color": "#f59e0b",
-      "points": [[0,0], [67,0], [67,67], [0,67]]
+      "description": "Central hexagon",
+      "color": "#3b82f6",
+      "points": [[0,150], [75,75], [125,125], [200,200], [50,200], [50,150]]
+    },
+    {
+      "id": "p5",
+      "description": "Right triangle",
+      "color": "#a855f7",
+      "points": [[125,125], [200,50], [200,200]]
     }
   ]
 }
 ```
 
-## Shape Ideas
+Notice how each piece's coordinates match its position in the solved puzzle:
+- P1 starts at (0,0) because it's in the top-left corner
+- P3 is at (0,150) to (50,200) because it's the small square in the bottom-left
+- P5 fills the right side from (125,125) to (200,200)
 
-Here are some classic tangram-style shapes to create:
-- Arrow pointing right/up
-- House silhouette
-- Heart shape
-- Star (5-pointed)
-- Cross / Plus sign
-- Diamond
-- Parallelogram
-- Boat
-- Cat silhouette
-- Number shapes (1, 4, 7)
-- Letters (F, L, T, Z)
+## Target Shape Examples
+
+The target doesn't have to be a square. Here are some ideas:
+
+**T-Shape:**
+```json
+"points": [[0,0], [200,0], [200,67], [133,67], [133,200], [67,200], [67,67], [0,67]]
+```
+
+**Arrow pointing right:**
+```json
+"points": [[0,50], [150,50], [150,0], [200,100], [150,200], [150,150], [0,150]]
+```
+
+**House silhouette:**
+```json
+"points": [[100,0], [200,80], [200,200], [0,200], [0,80]]
+```
 
 ## Adding a New Shape
 
 1. Create a new `.json` file in the `shapes/` folder
 2. Add the filename to the `puzzleFiles` array in `script.js`:
    ```javascript
-   this.puzzleFiles = ['t-puslespil.json', 'your-new-shape.json'];
+   this.puzzleFiles = ['t-puslespil.json', 'fem-dele.json', 'your-new-shape.json'];
    ```
 3. Test that pieces can cover the target exactly

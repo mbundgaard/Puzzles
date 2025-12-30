@@ -14,7 +14,6 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    overflow: hidden;
 }
 
 .game-container {
@@ -51,16 +50,18 @@ h1 {
 }
 
 .puzzle-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    margin-bottom: 15px;
 }
 
 .puzzle-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
+    gap: 8px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -74,8 +75,8 @@ h1 {
 }
 
 .puzzle-thumbnail {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     display: flex;
@@ -84,24 +85,23 @@ h1 {
 }
 
 .puzzle-thumbnail svg {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
 }
 
 .puzzle-info {
-    flex: 1;
+    text-align: center;
 }
 
 .puzzle-info h3 {
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .puzzle-info p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.8rem;
+    display: none;
 }
 
 .puzzle-difficulty {

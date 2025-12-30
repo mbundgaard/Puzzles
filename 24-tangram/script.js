@@ -1,7 +1,7 @@
 class DissectionPuzzle {
     constructor() {
         // Puzzle files to load
-        this.puzzleFiles = ['t-puslespil.json', 'fem-dele.json'];
+        this.puzzleFiles = ['t-puslespil.json', 'klassisk.json', 'fem-dele.json', 'hus.json', 'diamant.json'];
         this.puzzles = [];
 
         this.currentPuzzle = null;
@@ -117,7 +117,7 @@ class DissectionPuzzle {
 
     setupSVG() {
         const target = this.currentPuzzle.targetShape;
-        const padding = 60;
+        const padding = 30;
         const viewWidth = target.width + padding * 2;
         const viewHeight = target.height + padding * 2;
 

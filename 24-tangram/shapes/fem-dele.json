@@ -2,8 +2,8 @@
   "id": "fem-dele",
   "name": "Fem Dele",
   "description": "Saml fem dele til en firkant",
-  "difficulty": "hard",
-  "points": 4,
+  "difficulty": "medium",
+  "points": 3,
   "targetShape": {
     "points": [[0,0], [200,0], [200,200], [0,200]],
     "width": 200,
