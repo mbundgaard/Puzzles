@@ -105,11 +105,8 @@ class PipePuzzle {
         // Get middle pipes (exclude start and end)
         const middlePipes = pipes.slice(1, -1);
 
-        // Determine additional fixed pipes based on difficulty
+        // No additional fixed pipes - all middle pipes go to tray
         let additionalFixed = 0;
-        if (this.difficulty === 'easy') additionalFixed = 2;
-        else if (this.difficulty === 'medium') additionalFixed = 1;
-        else additionalFixed = 0;
 
         // Shuffle middle pipes to pick random ones to fix
         const shuffledIndices = [...Array(middlePipes.length).keys()];
@@ -360,9 +357,9 @@ class PipePuzzle {
             });
 
             // Points based on difficulty
-            let points = 1;
-            if (this.difficulty === 'medium') points = 2;
-            if (this.difficulty === 'hard') points = 3;
+            let points = 2;
+            if (this.difficulty === 'medium') points = 3;
+            if (this.difficulty === 'hard') points = 4;
 
             HjernespilAPI.trackComplete('12');
             HjernespilUI.showWinModal(points);
