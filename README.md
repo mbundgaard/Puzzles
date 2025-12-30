@@ -47,7 +47,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ### Feedback System
 - Rate each game with stars (1-5)
 - Optional comment and nickname
-- "Foreslå Spil" card to suggest new games (uses game "00")
+- "Foreslå Spil" card to suggest new games
 - Helps improve the games
 
 ### First Visit Info
