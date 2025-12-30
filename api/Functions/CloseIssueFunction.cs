@@ -39,7 +39,8 @@ public class CloseIssueFunction
             // Explicitly read as UTF-8 to handle Danish characters (æøå)
             using var reader = new StreamReader(req.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();
-            request = JsonSerializer.Deserialize<CloseIssueRequest>(body);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            request = JsonSerializer.Deserialize<CloseIssueRequest>(body, options);
         }
         catch
         {

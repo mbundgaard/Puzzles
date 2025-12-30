@@ -91,10 +91,6 @@ public class GitHubService : IGitHubService
                 body.AppendLine($"**From:** {nickname}");
             }
 
-            body.AppendLine();
-            body.AppendLine("---");
-            body.AppendLine("*Auto-generated from feedback form*");
-
             var payload = new
             {
                 title,

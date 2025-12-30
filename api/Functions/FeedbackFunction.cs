@@ -30,7 +30,8 @@ public class FeedbackFunction
             // Explicitly read as UTF-8 to handle Danish characters (æøå)
             using var reader = new StreamReader(req.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();
-            feedbackRequest = JsonSerializer.Deserialize<FeedbackRequest>(body);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            feedbackRequest = JsonSerializer.Deserialize<FeedbackRequest>(body, options);
         }
         catch
         {
