@@ -43,8 +43,8 @@ class SnakeGame {
         // Keyboard controls
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
 
-        // Touch/swipe controls
-        this.setupSwipeControls();
+        // Arrow button controls
+        this.setupButtonControls();
 
         this.showStartScreen();
     }
@@ -212,45 +212,35 @@ class SnakeGame {
         }
     }
 
-    setupSwipeControls() {
-        let touchStartX = 0;
-        let touchStartY = 0;
-        const minSwipeDistance = 30;
+    setupButtonControls() {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
 
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-            if (!this.gameRunning) return;
-
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-
-            const deltaX = touchEndX - touchStartX;
-            const deltaY = touchEndY - touchStartY;
-
-            if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
-                return;
+        btnUp.addEventListener('click', () => {
+            if (this.gameRunning && this.direction.y !== 1) {
+                this.nextDirection = { x: 0, y: -1 };
             }
+        });
 
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal swipe
-                if (deltaX > 0 && this.direction.x !== -1) {
-                    this.nextDirection = { x: 1, y: 0 };
-                } else if (deltaX < 0 && this.direction.x !== 1) {
-                    this.nextDirection = { x: -1, y: 0 };
-                }
-            } else {
-                // Vertical swipe
-                if (deltaY > 0 && this.direction.y !== -1) {
-                    this.nextDirection = { x: 0, y: 1 };
-                } else if (deltaY < 0 && this.direction.y !== 1) {
-                    this.nextDirection = { x: 0, y: -1 };
-                }
+        btnDown.addEventListener('click', () => {
+            if (this.gameRunning && this.direction.y !== -1) {
+                this.nextDirection = { x: 0, y: 1 };
             }
-        }, { passive: true });
+        });
+
+        btnLeft.addEventListener('click', () => {
+            if (this.gameRunning && this.direction.x !== 1) {
+                this.nextDirection = { x: -1, y: 0 };
+            }
+        });
+
+        btnRight.addEventListener('click', () => {
+            if (this.gameRunning && this.direction.x !== -1) {
+                this.nextDirection = { x: 1, y: 0 };
+            }
+        });
     }
 
     gameOver() {

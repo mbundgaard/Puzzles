@@ -171,11 +171,41 @@ h1 {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
-.controls-hint {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.85rem;
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 15px;
+}
+
+.controls-row {
+    display: flex;
+    gap: 8px;
+}
+
+.arrow-btn {
+    width: 56px;
+    height: 56px;
+    background: rgba(128, 128, 128, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.arrow-btn:active {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    transform: scale(0.95);
+}
+
+.arrow-btn svg {
+    pointer-events: none;
 }
 
 .rules {
