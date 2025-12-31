@@ -150,9 +150,11 @@ The main page uses a modern gaming/app design with:
    - Play indicator appears on active state
    - Unique accent color per game
    - **Badges**: Games can have badges to highlight them:
-     - `<div class="card-badge">NY</div>` - Green badge for new games
-     - `<div class="card-badge updated">OPDATERET</div>` - Orange badge for updated games
+     - `<div class="card-badge">NY</div>` - Green badge for new games (created within 7 days)
+     - `<div class="card-badge updated">OPDATERET</div>` - Orange badge for updated games (updated within 7 days, not new)
      - Badged games should be placed at the top of the grid
+     - Badge dates are tracked in README.md (Created/Updated columns)
+     - Remove badge when game is older than 7 days
    - "Foreslå Spil" card at end (+ icon, dashed border) - submits to feedback API with game "00"
 4. **Footer**: GitHub link and last updated timestamp
 5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
