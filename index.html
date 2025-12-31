@@ -446,20 +446,6 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 18px;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .modal-close:active {
-            color: #fff;
-        }
-
         .modal h3 {
             color: #fff;
             margin-bottom: 20px;
@@ -1118,8 +1104,7 @@
     <!-- QR Modal -->
     <div class="modal-overlay" id="qr-modal">
         <div class="modal">
-            <span class="modal-close" id="qr-close">×</span>
-            <div class="modal-emoji">🔗</div>
+                        <div class="modal-emoji">🔗</div>
             <h3>Del Hjerne<span class="highlight">spil</span> med venner</h3>
             <p class="modal-subtitle">Scan for at dele</p>
             <div class="qr-code">
@@ -1142,8 +1127,7 @@
     <!-- Leaderboard Modal -->
     <div class="modal-overlay" id="leaderboard-modal">
         <div class="modal leaderboard-modal">
-            <span class="modal-close" id="leaderboard-close">×</span>
-            <div class="modal-emoji">🏆</div>
+                        <div class="modal-emoji">🏆</div>
             <h3>Rangliste</h3>
             <div class="leaderboard-list" id="leaderboard-list">
                 <p class="loading">Indlæser...</p>
@@ -1154,8 +1138,7 @@
     <!-- Info Modal -->
     <div class="modal-overlay" id="info-modal">
         <div class="modal">
-            <span class="modal-close" id="info-close">×</span>
-            <div class="modal-emoji">ℹ️</div>
+                        <div class="modal-emoji">ℹ️</div>
             <h3>Om Hjerne<span class="highlight">spil</span></h3>
             <div class="info-content">
                 <p>Hjernespil er en samling af klassiske puslespil og hjernetrim, som du kan spille direkte på din telefon.</p>
@@ -1178,8 +1161,7 @@
     <!-- Unified Feedback Modal -->
     <div class="modal-overlay" id="feedback-modal">
         <div class="modal feedback-modal">
-            <span class="modal-close" id="feedback-close">×</span>
-            <div class="modal-emoji">💬</div>
+                        <div class="modal-emoji">💬</div>
             <h3>Feedback</h3>
             <select class="feedback-select" id="feedback-game">
                 <option value="">Vælg spil...</option>
@@ -1213,7 +1195,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767198207;
+        const APP_VERSION = 1767198449;
 
         // ========== OVERFLOW MENU ==========
         (() => {
@@ -1311,8 +1293,6 @@
         // ========== QR MODAL ==========
         (() => {
             const modal = document.getElementById('qr-modal');
-            const closeBtn = document.getElementById('qr-close');
-            closeBtn.onclick = () => modal.classList.remove('active');
             modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
         })();
 
@@ -1321,7 +1301,6 @@
             const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
             const leaderboardBtn = document.getElementById('leaderboard-btn');
             const leaderboardModal = document.getElementById('leaderboard-modal');
-            const leaderboardClose = document.getElementById('leaderboard-close');
             const leaderboardList = document.getElementById('leaderboard-list');
 
             async function loadLeaderboard() {
@@ -1356,7 +1335,6 @@
                 loadLeaderboard();
             };
 
-            leaderboardClose.onclick = () => leaderboardModal.classList.remove('active');
             leaderboardModal.onclick = (e) => {
                 if (e.target === leaderboardModal) leaderboardModal.classList.remove('active');
             };
@@ -1366,14 +1344,12 @@
         (() => {
             const INFO_SHOWN_KEY = 'hjernespil_info_shown';
             const infoModal = document.getElementById('info-modal');
-            const infoClose = document.getElementById('info-close');
 
             function closeInfo() {
                 infoModal.classList.remove('active');
                 localStorage.setItem(INFO_SHOWN_KEY, 'true');
             }
 
-            infoClose.onclick = closeInfo;
             infoModal.onclick = (e) => {
                 if (e.target === infoModal) closeInfo();
             };
@@ -1390,7 +1366,6 @@
             const NICKNAME_KEY = 'hjernespil_nickname';
 
             const feedbackModal = document.getElementById('feedback-modal');
-            const feedbackClose = document.getElementById('feedback-close');
             const feedbackGame = document.getElementById('feedback-game');
             const feedbackInput = document.getElementById('feedback-input');
             const feedbackNickname = document.getElementById('feedback-nickname');
@@ -1458,7 +1433,6 @@
             // Footer button - pre-select "Foreslå nyt spil"
             document.getElementById('suggest-btn').onclick = () => openModal('00');
 
-            feedbackClose.onclick = closeModal;
             feedbackModal.onclick = (e) => {
                 if (e.target === feedbackModal) closeModal();
             };

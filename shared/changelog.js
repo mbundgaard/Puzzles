@@ -169,7 +169,6 @@
     const modalHTML = `
         <div class="modal-overlay" id="changelog-modal">
             <div class="modal changelog-modal">
-                <span class="modal-close" id="changelog-close">×</span>
                 <div class="modal-emoji">📋</div>
                 <h3>Opdateringer i Hjerne<span class="highlight">spil</span></h3>
                 <div class="changelog-list">
@@ -187,7 +186,6 @@
         // Get elements
         const changelogBadge = document.getElementById('changelog-badge');
         const changelogModal = document.getElementById('changelog-modal');
-        const changelogClose = document.getElementById('changelog-close');
 
         if (!changelogModal) return;
 
@@ -204,13 +202,6 @@
             if (changelogBadge) {
                 changelogBadge.style.display = 'none';
             }
-        }
-
-        // Close modal
-        if (changelogClose) {
-            changelogClose.onclick = () => {
-                changelogModal.classList.remove('active');
-            };
         }
 
         // Close on overlay click
