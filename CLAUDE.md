@@ -284,21 +284,25 @@ The comment supports full GitHub Markdown (bold, lists, code blocks, etc.).
 
 The changelog is displayed in a modal on the main page. Entries are stored in `shared/changelog.js`.
 
+A notification dot appears on the changelog button when new entries exist since the user's last view.
+
 #### Adding a changelog entry
 
 When closing an issue, add a new entry at the **TOP** of the `CHANGELOG_ENTRIES` array:
 
 ```javascript
 const CHANGELOG_ENTRIES = [
-    // Add new entries here (newest first)
-    { issue: 34, date: 'Jan 1', text: 'Added changelog modal to main page' },
+    // Add new entries here (sorted by closedAt descending)
+    { issue: 35, closedAt: '2025-12-31T14:30:00Z', text: 'Added notification dot to changelog' },
     // ... existing entries
 ];
 ```
 
 - **issue**: GitHub issue number
-- **date**: Close date in format "Mon DD" (e.g., "Dec 31", "Jan 1")
+- **closedAt**: ISO timestamp from GitHub's `closed_at` field (e.g., `2025-12-31T14:30:00Z`)
 - **text**: Short English description of what was fixed/added
+
+The display date (e.g., "Dec 31") is derived automatically from the timestamp.
 
 #### Comparing with GitHub
 
