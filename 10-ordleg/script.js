@@ -4,12 +4,61 @@ const WORD_CATEGORIES = {};
 // Valid Danish letters
 const DANISH_LETTERS = 'abcdefghijklmnopqrstuvwxyzæøå';
 
+// Words that are definite forms or plurals - should be excluded
+// These are words where players might be confused because they expect base forms
+const EXCLUDED_WORDS = new Set([
+    // Definite forms (-en suffix = common gender "the")
+    'armen', 'banen', 'bilen', 'faren', 'gaven', 'halen', 'hønen', 'pigen',
+    'risen', 'ræven', 'stuen', 'vejen', 'visen', 'ungen', 'pælen', 'filen',
+    'rosen', 'basen', 'bøgen', 'dosen', 'enden', 'foden', 'haven', 'huden',
+    'køen', 'luen', 'muren', 'nålen', 'posen', 'ruden', 'solen', 'timen',
+    // Animal definite forms
+    'haren', 'løven', 'musen', 'ørnen', 'selen', 'ulven', 'viben', 'geden',
+    'hanen', 'gåsen', 'anden', 'mågen', 'uglen',
+    // Definite forms (-et suffix = neuter gender "the")
+    'dyret', 'hadet', 'havet', 'huset', 'livet', 'lynet', 'mødet', 'toget',
+    'træet', 'higet', 'øjet', 'året', 'arket', 'bedet', 'benet', 'buret',
+    'dunet', 'egnet', 'emnet', 'fadet', 'gulvet', 'hjulet', 'hornet',
+    // Common plurals (-e suffix)
+    'blade', 'borde', 'breve', 'fugle', 'heste', 'hunde', 'kampe', 'lande',
+    'skibe', 'skove', 'stene', 'telte', 'træer', 'ugler', 'biler', 'bøger',
+    'katte', 'lamme', 'fluer', 'myrer', 'øgler', 'hvale',
+    // Common plurals (-er suffix)
+    'damer', 'gader', 'huler', 'ideer', 'kager', 'noter', 'roser', 'sider',
+    'skyer', 'toner', 'typer', 'unger', 'urter', 'haver', 'haner', 'haser',
+    'hajer', 'ilder',
+    // Past participles and other declined forms
+    'brugt', 'glemt', 'klemt', 'svedt'
+]);
+
+// Check if a word looks like a definite or plural form
+function isLikelyDeclinedForm(word) {
+    word = word.toLowerCase();
+
+    // Check explicit exclusion list first
+    if (EXCLUDED_WORDS.has(word)) return true;
+
+    // Skip words that are known valid base forms (whitelist common exceptions)
+    const validBaseWords = new Set([
+        'under', 'efter', 'moden', 'nøgen', 'åben', 'egen', 'given', 'maven',
+        'oven', 'inden', 'siden', 'ballet', 'buffet', 'hotel', 'motel',
+        'internet', 'budget', 'toilet', 'piget', 'riget', 'skabet',
+        'penge', 'mange', 'længe', 'hygge', 'sange', 'tunge', 'nogle',
+        'andre', 'begge', 'femte', 'halve', 'første', 'sidste', 'bedre'
+    ]);
+    if (validBaseWords.has(word)) return false;
+
+    return false;
+}
+
 // Load word list from JSON file
 async function loadWordCategory(category) {
     try {
         const response = await fetch(`words/${category}.json`);
         const words = await response.json();
-        WORD_CATEGORIES[category] = words.filter(word => word.length === 5);
+        WORD_CATEGORIES[category] = words
+            .filter(word => word.length === 5)
+            .filter(word => !isLikelyDeclinedForm(word));
     } catch (error) {
         console.error(`Failed to load ${category} words:`, error);
         WORD_CATEGORIES[category] = [];
@@ -230,10 +279,15 @@ class Ordleg {
     }
 
     submitGuess() {
+        if (this.gameOver) return;
+
         if (this.currentGuess.length !== this.wordLength) {
             this.showMessage('Ordet skal være 5 bogstaver', 'error');
             return;
         }
+
+        // Prevent multiple submissions during animation
+        this.gameOver = true;
 
         // Check guess and reveal tiles
         const row = this.board.children[this.currentRow];
@@ -273,14 +327,16 @@ class Ordleg {
             if (guess === this.targetWord) {
                 const messages = ['Genialt!', 'Fantastisk!', 'Flot!', 'Godt gået!', 'Fint!', 'Puh!'];
                 this.showMessage(messages[this.currentRow], 'success');
-                this.gameOver = true;
+                // gameOver already set before animation
                 HjernespilAPI.trackComplete('10');
                 const points = { easy: 1, medium: 3, hard: 5 }[this.difficultySelect.value] || 3;
                 HjernespilUI.showWinModal(points);
             } else if (this.currentRow >= this.maxGuesses - 1) {
                 this.showMessage(`Ordet var: ${this.targetWord.toUpperCase()}`, 'error');
-                this.gameOver = true;
+                // gameOver already set before animation
             } else {
+                // Wrong guess but game continues - allow more guesses
+                this.gameOver = false;
                 this.currentRow++;
                 this.currentTile = 0;
                 this.currentGuess = '';
