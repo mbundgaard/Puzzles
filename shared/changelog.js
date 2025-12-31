@@ -1,6 +1,7 @@
 // Changelog Modal - Self-contained component
 // Changelog entries sorted by closedAt timestamp descending
 // Each entry has data-issue attribute for easy comparison with GitHub
+// Exposes HjernespilChangelog.open() for menu integration
 
 (function() {
     'use strict';
@@ -137,23 +138,6 @@
             line-height: 1.4;
             margin: 0;
         }
-
-        /* Notification dot */
-        #changelog-btn {
-            position: relative;
-        }
-
-        #changelog-btn.has-notification::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-            box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
-        }
     `;
     document.head.appendChild(style);
 
@@ -181,7 +165,7 @@
             <div class="modal changelog-modal">
                 <span class="modal-close" id="changelog-close">×</span>
                 <div class="modal-emoji">📋</div>
-                <h3>What's New</h3>
+                <h3>Nyheder</h3>
                 <div class="changelog-list">
                     ${generateEntriesHTML()}
                 </div>
@@ -195,35 +179,45 @@
         document.body.insertAdjacentHTML('beforeend', modalHTML);
 
         // Get elements
-        const changelogBtn = document.getElementById('changelog-btn');
+        const changelogBadge = document.getElementById('changelog-badge');
         const changelogModal = document.getElementById('changelog-modal');
         const changelogClose = document.getElementById('changelog-close');
 
-        if (!changelogBtn || !changelogModal) return;
+        if (!changelogModal) return;
 
-        // Check for unseen updates and show notification dot
-        if (hasUnseenUpdates()) {
-            changelogBtn.classList.add('has-notification');
+        // Check for unseen updates and show badge
+        if (changelogBadge && hasUnseenUpdates()) {
+            changelogBadge.style.display = '';
         }
 
-        // Open modal
-        changelogBtn.onclick = () => {
+        // Open modal function (exposed globally)
+        function openModal() {
             changelogModal.classList.add('active');
-            // Mark as viewed and remove notification
+            // Mark as viewed and hide badge
             markAsViewed();
-            changelogBtn.classList.remove('has-notification');
-        };
+            if (changelogBadge) {
+                changelogBadge.style.display = 'none';
+            }
+        }
 
         // Close modal
-        changelogClose.onclick = () => {
-            changelogModal.classList.remove('active');
-        };
+        if (changelogClose) {
+            changelogClose.onclick = () => {
+                changelogModal.classList.remove('active');
+            };
+        }
 
         // Close on overlay click
         changelogModal.onclick = (e) => {
             if (e.target === changelogModal) {
                 changelogModal.classList.remove('active');
             }
+        };
+
+        // Expose API
+        window.HjernespilChangelog = {
+            open: openModal,
+            hasUnseenUpdates: hasUnseenUpdates
         };
     }
 

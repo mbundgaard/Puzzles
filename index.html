@@ -20,7 +20,7 @@
     <link rel="manifest" href="manifest.json">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
         * {
             margin: 0;
@@ -28,22 +28,25 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: #0f0f23;
-            min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         /* Hide all scrollbars */
-        body, html {
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
+        * {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-
-        body::-webkit-scrollbar,
-        html::-webkit-scrollbar {
-            display: none; /* Chrome/Safari/Opera */
+        *::-webkit-scrollbar {
+            display: none;
         }
 
         /* Animated background */
@@ -77,246 +80,327 @@
             50% { transform: scale(1.1) rotate(3deg); }
         }
 
-        .container {
+        /* ========== HEADER ========== */
+        .header {
             position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            padding-bottom: 40px;
-        }
-
-        /* Header - App-like centered layout */
-        header {
+            z-index: 50;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            margin-bottom: 25px;
-            padding: 10px 0;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
-            margin-bottom: 12px;
+        .header.hidden {
+            transform: translateY(-100%);
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
             letter-spacing: -0.5px;
-            margin-bottom: 6px;
         }
 
-        .tagline {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-            font-weight: 400;
-            margin-bottom: 16px;
-        }
-
-        .tagline .highlight {
-            color: #a5b4fc;
+        .logo .highlight {
+            color: #a855f7;
         }
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 8px;
+            position: relative;
         }
 
         .icon-btn {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-decoration: none;
+            font-size: 18px;
         }
 
         .icon-btn svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
         }
 
-        .icon-btn:active {
-            transform: scale(0.92);
+        .icon-btn:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Game Grid */
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+        .icon-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.25);
         }
 
-        .game-card {
-            position: relative;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            text-decoration: none;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
+        .menu-btn {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
 
-        .game-card::before {
-            content: '';
+        /* ========== OVERFLOW MENU ========== */
+        .overflow-menu {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: calc(100% + 8px);
             right: 0;
-            height: 3px;
-            background: var(--card-accent);
+            background: rgba(42, 42, 74, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            min-width: 200px;
+            overflow: hidden;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(-10px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 100;
         }
 
-        .game-card:active {
-            transform: scale(0.96);
-        }
-
-        .game-card:active::before {
+        .overflow-menu.open {
             opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
 
-        .game-card.reversi { --card-accent: linear-gradient(90deg, #4ade80, #22c55e); }
-        .game-card.game2048 { --card-accent: linear-gradient(90deg, #f59e0b, #ef4444); }
-        .game-card.minesweeper { --card-accent: linear-gradient(90deg, #ef4444, #dc2626); }
-        .game-card.memory { --card-accent: linear-gradient(90deg, #06b6d4, #0891b2); }
-        .game-card.solitaire { --card-accent: linear-gradient(90deg, #8b5cf6, #6366f1); }
-        .game-card.kalaha { --card-accent: linear-gradient(90deg, #92400e, #b45309); }
-        .game-card.ordleg { --card-accent: linear-gradient(90deg, #22c55e, #16a34a); }
-        .game-card.tictactoe { --card-accent: linear-gradient(90deg, #ec4899, #f472b6); }
-        .game-card.pipes { --card-accent: linear-gradient(90deg, #06b6d4, #22d3ee); }
-        .game-card.fifteen { --card-accent: linear-gradient(90deg, #f59e0b, #fbbf24); }
-        .game-card.mastermind { --card-accent: linear-gradient(90deg, #f43f5e, #fb7185); }
-        .game-card.pegsolitaire { --card-accent: linear-gradient(90deg, #a855f7, #c084fc); }
-        .game-card.checkers { --card-accent: linear-gradient(90deg, #ef4444, #f87171); }
-        .game-card.morris { --card-accent: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        .game-card.slitherlink { --card-accent: linear-gradient(90deg, #667eea, #764ba2); }
-        .game-card.connectfour { --card-accent: linear-gradient(90deg, #fbbf24, #f59e0b); }
-        .game-card.hanoi { --card-accent: linear-gradient(90deg, #8b5cf6, #a855f7); }
-        .game-card.snake { --card-accent: linear-gradient(90deg, #4ade80, #22c55e); }
-        .game-card.dissection { --card-accent: linear-gradient(90deg, #a855f7, #ec4899); }
-        .game-card.battleship { --card-accent: linear-gradient(90deg, #0ea5e9, #0284c7); }
-
-        .game-card.suggest-card {
-            --card-accent: linear-gradient(90deg, #a855f7, #ec4899);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            font-family: inherit;
-            text-align: left;
-        }
-
-        .game-card.suggest-card .card-icon {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .card-icon {
-            flex: 1;
+        .menu-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            gap: 12px;
+            padding: 14px 16px;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
         }
 
-        .card-content {
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 4px 0;
+        }
+
+        /* Badge for changelog */
+        .menu-item .menu-badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 8px;
+            min-width: 18px;
             text-align: center;
         }
 
-        .card-content h2 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-
-        .card-content p {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 400;
-        }
-
-        /* Coming Soon Cards */
-        .game-card.coming-soon {
-            opacity: 0.5;
+        /* ========== BACKDROP ========== */
+        .menu-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
             pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 40;
         }
 
-        .card-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+        .menu-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .card-badge.updated {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        /* ========== CONTENT ========== */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            position: relative;
+            z-index: 1;
         }
 
-        .game-card.coming-soon .card-badge {
-            background: rgba(255, 255, 255, 0.15);
+        .content-inner {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* Play button effect */
-        .play-indicator {
-            position: absolute;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
+        /* ========== GAME LIST ========== */
+        .game-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .game-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .game-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .game-card:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .game-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: all 0.3s ease;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
-        .play-indicator::after {
-            content: '▶';
+        /* Game icon background colors */
+        .game-card.battleship .game-icon { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .game-card.dissection .game-icon { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+        .game-card.snake .game-icon { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .game-card.hanoi .game-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .game-card.pipes .game-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .game-card.ordleg .game-icon { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .game-card.reversi .game-icon { background: linear-gradient(135deg, #4ade80, #22c55e); }
+        .game-card.minesweeper .game-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .game-card.memory .game-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .game-card.solitaire .game-icon { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .game-card.kalaha .game-icon { background: linear-gradient(135deg, #b45309, #92400e); }
+        .game-card.tictactoe .game-icon { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .game-card.fifteen .game-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .game-card.mastermind .game-icon { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+        .game-card.pegsolitaire .game-icon { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+        .game-card.checkers .game-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .game-card.morris .game-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .game-card.connectfour .game-icon { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+
+        .game-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .game-name {
             color: white;
-            font-size: 1.2rem;
-            margin-left: 3px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
         }
 
-        .game-card:active .play-indicator {
-            opacity: 1;
+        .game-desc {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
         }
 
-        /* Modal */
+        .game-arrow {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        /* Game badges */
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 40px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-badge.updated {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* ========== STICKY FOOTER ========== */
+        .sticky-footer {
+            position: relative;
+            z-index: 10;
+            padding: 16px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .sticky-footer.hidden {
+            transform: translateY(100%);
+        }
+
+        .sticky-footer-inner {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .idea-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .idea-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .idea-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== MODALS ========== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -375,12 +459,12 @@
             font-weight: 700;
         }
 
-        /* Nickname Modal */
-        .nickname-modal .modal-emoji {
+        .modal-emoji {
             font-size: 3rem;
             margin-bottom: 10px;
         }
 
+        /* Nickname Modal */
         .nickname-modal p {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
@@ -448,11 +532,6 @@
         }
 
         /* Leaderboard Modal */
-        .leaderboard-modal .modal-emoji {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
         .leaderboard-list {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -518,12 +597,6 @@
             margin-top: 16px;
             max-height: 400px;
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
-        }
-
-        .info-content::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
         }
 
         .info-content p {
@@ -551,27 +624,39 @@
             margin-bottom: 4px;
         }
 
-        .info-credit {
-            margin-top: 20px !important;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.4) !important;
-            font-size: 0.8rem !important;
-            text-align: center;
-        }
-
-        /* Suggest Modal */
-        .suggest-modal {
+        /* Feedback Modal */
+        .feedback-modal {
             max-width: 340px;
         }
 
-        .suggest-description {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
+        .feedback-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
             margin-bottom: 16px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
         }
 
-        .suggest-input {
+        .feedback-select:focus {
+            outline: none;
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .feedback-select option {
+            background: #1e1e3f;
+            color: #fff;
+        }
+
+        .feedback-input {
             width: 100%;
             padding: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -584,27 +669,14 @@
             margin-bottom: 8px;
             max-height: 150px;
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
         }
 
-        .suggest-input::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
-        }
-
-        .suggest-input:focus {
+        .feedback-input:focus {
             outline: none;
             border-color: rgba(168, 85, 247, 0.5);
         }
 
-        .suggest-language-hint {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 12px;
-            font-style: italic;
-        }
-
-        .suggest-nickname {
+        .feedback-nickname {
             width: 100%;
             padding: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -616,12 +688,12 @@
             margin-bottom: 16px;
         }
 
-        .suggest-nickname:focus {
+        .feedback-nickname:focus {
             outline: none;
             border-color: rgba(168, 85, 247, 0.5);
         }
 
-        .suggest-submit {
+        .feedback-submit {
             width: 100%;
             padding: 14px;
             border: none;
@@ -635,15 +707,16 @@
             transition: transform 0.2s, opacity 0.2s;
         }
 
-        .suggest-submit:active {
+        .feedback-submit:active {
             transform: scale(0.98);
         }
 
-        .suggest-submit:disabled {
+        .feedback-submit:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
+        /* QR Modal */
         .qr-code {
             background: #fff;
             padding: 15px;
@@ -659,22 +732,10 @@
             word-break: break-all;
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .last-updated {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.7rem;
-        }
-
         /* Version update toast */
         .version-toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: rgba(34, 197, 94, 0.95);
@@ -694,25 +755,7 @@
             opacity: 1;
         }
 
-        .footer-link {
-            color: rgba(165, 180, 252, 0.7);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .footer-link:hover,
-        .footer-link:active {
-            color: #a5b4fc;
-        }
-
-        .github-icon {
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-            margin-right: 4px;
-            opacity: 0.7;
-        }
-
+        /* Icon button spinning animation */
         .icon-btn.spinning svg {
             animation: spin 0.8s ease;
         }
@@ -727,9 +770,9 @@
             display: none;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
             text-align: center;
             position: relative;
         }
@@ -757,20 +800,16 @@
             line-height: 1;
         }
 
-        .install-banner-close:hover {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
         .install-banner-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .install-banner-text {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .install-banner-text strong {
@@ -784,10 +823,9 @@
             padding: 10px 24px;
             border-radius: 25px;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .install-btn:active {
@@ -798,339 +836,282 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .ios-instructions svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
-        }
-
-        /* Responsive */
-        @media (min-width: 500px) {
-            .container {
-                padding: 30px;
-            }
-
-            h1 {
-                font-size: 2.2rem;
-            }
-
-            .game-grid {
-                gap: 20px;
-            }
-
-            .card-icon {
-                font-size: 3.5rem;
-            }
-
-            .card-content h2 {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (min-width: 700px) {
-            .game-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
         }
     </style>
 </head>
 <body>
     <div class="bg-animation"></div>
 
-    <div class="container">
-        <header>
-            <img src="icons/Ampeross-Qetto-2-Games.128.png" alt="Hjernespil" class="logo-icon">
-            <h1>Hjernespil</h1>
-            <p class="tagline">Træn din hjerne med <span class="highlight">sjove udfordringer</span></p>
-            <div class="header-actions">
-                <button class="icon-btn" id="refresh-btn" aria-label="Opdater">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 2v6h-6"/>
-                        <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
-                        <path d="M3 22v-6h6"/>
-                        <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
-                    </svg>
-                </button>
-                <button class="icon-btn" id="leaderboard-btn" aria-label="Rangliste">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-                        <path d="M4 22h16"/>
-                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-                    </svg>
-                </button>
-                <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="icon-btn" aria-label="Send SMS">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        <circle cx="8" cy="10" r="1" fill="currentColor"/>
-                        <circle cx="12" cy="10" r="1" fill="currentColor"/>
-                        <circle cx="16" cy="10" r="1" fill="currentColor"/>
-                    </svg>
-                </a>
-                <button class="icon-btn" id="share-btn" aria-label="Del QR">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/>
-                        <rect x="5" y="5" width="3" height="3" fill="currentColor"/>
-                        <rect x="14" y="3" width="7" height="7"/>
-                        <rect x="16" y="5" width="3" height="3" fill="currentColor"/>
-                        <rect x="3" y="14" width="7" height="7"/>
-                        <rect x="5" y="16" width="3" height="3" fill="currentColor"/>
-                        <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
-                        <rect x="18" y="14" width="3" height="3" fill="currentColor"/>
-                        <rect x="14" y="18" width="3" height="3" fill="currentColor"/>
-                    </svg>
-                </button>
-                <button class="icon-btn" id="changelog-btn" aria-label="Changelog">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                        <polyline points="10 9 9 9 8 9"/>
-                    </svg>
-                </button>
-                <button class="icon-btn" id="info-btn" aria-label="Info">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 16v-4"/>
-                        <path d="M12 8h.01"/>
-                    </svg>
-                </button>
-            </div>
-        </header>
+    <!-- Backdrop for menu -->
+    <div class="menu-backdrop" id="menu-backdrop"></div>
 
-        <!-- Install Banner -->
-        <div class="install-banner" id="install-banner">
-            <button class="install-banner-close" id="install-banner-close">×</button>
-            <div class="install-banner-content">
-                <p class="install-banner-text">Installer <strong>Hjernespil</strong> som app</p>
-                <!-- Android/Chrome: Install button -->
-                <button class="install-btn" id="install-btn" style="display: none;">
-                    Installer App
-                </button>
-                <!-- iOS: Instructions -->
-                <div class="ios-instructions" id="ios-instructions" style="display: none;">
-                    <span>Tryk</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                        <polyline points="16 6 12 2 8 6"/>
-                        <line x1="12" y1="2" x2="12" y2="15"/>
-                    </svg>
-                    <span>og vælg <strong>"Føj til hjemmeskærm"</strong></span>
-                </div>
-            </div>
-        </div>
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="logo">Hjerne<span class="highlight">spil</span></div>
 
-        <div class="game-grid">
-            <a href="25-saenke-slagskibe/index.html" class="game-card battleship">
-                <div class="card-badge">NY</div>
-                <div class="card-icon">🚢</div>
-                <div class="card-content">
-                    <h2>Sænke Slagskibe</h2>
-                    <p>Sænk fjendens flåde</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="24-tangram/index.html" class="game-card dissection">
-                <div class="card-badge">NY</div>
-                <div class="card-icon">
-                    <svg viewBox="0 0 40 40" width="40" height="40">
-                        <polygon points="0,0 20,0 20,20" fill="#ef4444"/>
-                        <polygon points="20,0 40,0 40,20 20,20" fill="#22c55e"/>
-                        <polygon points="0,0 0,20 20,20" fill="#3b82f6"/>
-                        <polygon points="0,20 20,20 20,40 0,40" fill="#f59e0b"/>
-                        <polygon points="20,20 40,20 40,40 20,40" fill="#a855f7"/>
-                    </svg>
-                </div>
-                <div class="card-content">
-                    <h2>Tangram</h2>
-                    <p>Dæk figuren</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="23-slange/index.html" class="game-card snake">
-                <div class="card-badge">NY</div>
-                <div class="card-icon">🐍</div>
-                <div class="card-content">
-                    <h2>Slange</h2>
-                    <p>Spis og voks</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="22-hanoi/index.html" class="game-card hanoi">
-                <div class="card-badge">NY</div>
-                <div class="card-icon">🗼</div>
-                <div class="card-content">
-                    <h2>Tårnet i Hanoi</h2>
-                    <p>Flyt alle skiver</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="12-roerfoering/index.html" class="game-card pipes">
-                <div class="card-badge updated">OPDATERET</div>
-                <div class="card-icon">🔧</div>
-                <div class="card-content">
-                    <h2>Rørføring</h2>
-                    <p>Placer rørene rigtigt</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="10-ordleg/index.html" class="game-card ordleg">
-                <div class="card-badge updated">OPDATERET</div>
-                <div class="card-icon">📝</div>
-                <div class="card-content">
-                    <h2>Ordleg</h2>
-                    <p>Gæt dagens ord</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="01-reversi/index.html" class="game-card reversi">
-                <div class="card-icon">⚫</div>
-                <div class="card-content">
-                    <h2>Reversi</h2>
-                    <p>Erobr brikkerne</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="06-minesweeper/index.html" class="game-card minesweeper">
-                <div class="card-icon">💣</div>
-                <div class="card-content">
-                    <h2>Minestryger</h2>
-                    <p>Undgå minerne</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="07-memory/index.html" class="game-card memory">
-                <div class="card-icon">🃏</div>
-                <div class="card-content">
-                    <h2>Hukommelse</h2>
-                    <p>Find alle par</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="08-solitaire/index.html" class="game-card solitaire">
-                <div class="card-icon">🌸</div>
-                <div class="card-content">
-                    <h2>Kabale</h2>
-                    <p>Klassisk kortspil</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="09-kalaha/index.html" class="game-card kalaha">
-                <div class="card-icon">🥜</div>
-                <div class="card-content">
-                    <h2>Kalaha</h2>
-                    <p>Saml flest sten</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="11-kryds-og-bolle/index.html" class="game-card tictactoe">
-                <div class="card-icon">❌</div>
-                <div class="card-content">
-                    <h2>Kryds og Bolle</h2>
-                    <p>Tre på stribe</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="13-femten-puslespil/index.html" class="game-card fifteen">
-                <div class="card-icon">🔢</div>
-                <div class="card-content">
-                    <h2>15-Puslespil</h2>
-                    <p>Flyt fliserne</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="14-kodeknaekker/index.html" class="game-card mastermind">
-                <div class="card-icon">🔮</div>
-                <div class="card-content">
-                    <h2>Mastermind</h2>
-                    <p>Knæk farvekoden</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="17-pind/index.html" class="game-card pegsolitaire">
-                <div class="card-icon">🎯</div>
-                <div class="card-content">
-                    <h2>Pind</h2>
-                    <p>Efterlad kun én</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="18-dam/index.html" class="game-card checkers">
-                <div class="card-icon">⚫</div>
-                <div class="card-content">
-                    <h2>Dam</h2>
-                    <p>Spring over modstanderen</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="19-moelle/index.html" class="game-card morris">
-                <div class="card-icon">⚪</div>
-                <div class="card-content">
-                    <h2>Mølle</h2>
-                    <p>Tre på række</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <a href="21-fire-paa-stribe/index.html" class="game-card connectfour">
-                <div class="card-icon">🔴</div>
-                <div class="card-content">
-                    <h2>Fire på Stribe</h2>
-                    <p>Fire på række</p>
-                </div>
-                <div class="play-indicator"></div>
-            </a>
-
-            <button class="game-card suggest-card" id="suggest-btn">
-                <div class="card-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                </div>
-                <div class="card-content">
-                    <h2>Foreslå Spil</h2>
-                    <p>Del din idé</p>
-                </div>
-            </button>
-        </div>
-
-        <div class="footer">
-            <a href="https://github.com/mbundgaard/Puzzles" class="footer-link" target="_blank" rel="noopener">
-                <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        <div class="header-actions">
+            <button class="icon-btn" id="leaderboard-btn" aria-label="Rangliste">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                    <path d="M4 22h16"/>
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
                 </svg>
-                Se mere på GitHub
-            </a>
-            <!-- Full URL so AI tools can fetch the data (relative URLs are restricted) -->
-            <a href="https://mbundgaard.github.io/Puzzles/site-index.json" class="footer-link"> </a>
-            <p class="last-updated" id="last-updated"></p>
+            </button>
+            <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu">⋮</button>
+
+            <!-- Overflow Menu -->
+            <div class="overflow-menu" id="overflow-menu">
+                <div class="menu-item" id="menu-changelog">
+                    <span class="menu-icon">📋</span>
+                    <span>Nyheder</span>
+                    <span class="menu-badge" id="changelog-badge" style="display: none;">NY</span>
+                </div>
+                <div class="menu-item" id="menu-info">
+                    <span class="menu-icon">ℹ️</span>
+                    <span>Om appen</span>
+                </div>
+                <div class="menu-divider"></div>
+                <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="menu-item" id="menu-share-sms">
+                    <span class="menu-icon">📱</span>
+                    <span>Del via SMS</span>
+                </a>
+                <div class="menu-item" id="menu-share-qr">
+                    <span class="menu-icon">🔗</span>
+                    <span>Del via QR</span>
+                </div>
+                <div class="menu-divider"></div>
+                <a href="https://github.com/mbundgaard/Puzzles" target="_blank" rel="noopener" class="menu-item" id="menu-github">
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </span>
+                    <span>GitHub</span>
+                </a>
+                <div class="menu-item" id="menu-refresh">
+                    <span class="menu-icon">🔄</span>
+                    <span>Opdater</span>
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
+
+    <!-- ========== CONTENT ========== -->
+    <main class="content">
+        <div class="content-inner">
+            <!-- Install Banner -->
+            <div class="install-banner" id="install-banner">
+                <button class="install-banner-close" id="install-banner-close">×</button>
+                <div class="install-banner-content">
+                    <p class="install-banner-text">Installer <strong>Hjernespil</strong> som app</p>
+                    <button class="install-btn" id="install-btn" style="display: none;">Installer App</button>
+                    <div class="ios-instructions" id="ios-instructions" style="display: none;">
+                        <span>Tryk</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                            <polyline points="16 6 12 2 8 6"/>
+                            <line x1="12" y1="2" x2="12" y2="15"/>
+                        </svg>
+                        <span>→ <strong>"Føj til hjemmeskærm"</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game List -->
+            <div class="game-list">
+                <a href="25-saenke-slagskibe/index.html" class="game-card battleship">
+                    <div class="game-badge">NY</div>
+                    <div class="game-icon">🚢</div>
+                    <div class="game-info">
+                        <div class="game-name">Sænke Slagskibe</div>
+                        <div class="game-desc">Sænk fjendens flåde</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="24-tangram/index.html" class="game-card dissection">
+                    <div class="game-badge">NY</div>
+                    <div class="game-icon">🧩</div>
+                    <div class="game-info">
+                        <div class="game-name">Tangram</div>
+                        <div class="game-desc">Dæk figuren med brikker</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="23-slange/index.html" class="game-card snake">
+                    <div class="game-badge">NY</div>
+                    <div class="game-icon">🐍</div>
+                    <div class="game-info">
+                        <div class="game-name">Slange</div>
+                        <div class="game-desc">Spis og voks</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="22-hanoi/index.html" class="game-card hanoi">
+                    <div class="game-badge">NY</div>
+                    <div class="game-icon">🗼</div>
+                    <div class="game-info">
+                        <div class="game-name">Tårnet i Hanoi</div>
+                        <div class="game-desc">Flyt alle skiver</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="12-roerfoering/index.html" class="game-card pipes">
+                    <div class="game-badge updated">OPDATERET</div>
+                    <div class="game-icon">🔧</div>
+                    <div class="game-info">
+                        <div class="game-name">Rørføring</div>
+                        <div class="game-desc">Placer rørene rigtigt</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="10-ordleg/index.html" class="game-card ordleg">
+                    <div class="game-badge updated">OPDATERET</div>
+                    <div class="game-icon">📝</div>
+                    <div class="game-info">
+                        <div class="game-name">Ordleg</div>
+                        <div class="game-desc">Gæt dagens ord</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="01-reversi/index.html" class="game-card reversi">
+                    <div class="game-icon">⚫</div>
+                    <div class="game-info">
+                        <div class="game-name">Reversi</div>
+                        <div class="game-desc">Erobr brikkerne</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="06-minesweeper/index.html" class="game-card minesweeper">
+                    <div class="game-icon">💣</div>
+                    <div class="game-info">
+                        <div class="game-name">Minestryger</div>
+                        <div class="game-desc">Undgå minerne</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="07-memory/index.html" class="game-card memory">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-info">
+                        <div class="game-name">Hukommelse</div>
+                        <div class="game-desc">Find alle par</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="08-solitaire/index.html" class="game-card solitaire">
+                    <div class="game-icon">🌸</div>
+                    <div class="game-info">
+                        <div class="game-name">Kabale</div>
+                        <div class="game-desc">Klassisk kortspil</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="09-kalaha/index.html" class="game-card kalaha">
+                    <div class="game-icon">🥜</div>
+                    <div class="game-info">
+                        <div class="game-name">Kalaha</div>
+                        <div class="game-desc">Saml flest sten</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="11-kryds-og-bolle/index.html" class="game-card tictactoe">
+                    <div class="game-icon">❌</div>
+                    <div class="game-info">
+                        <div class="game-name">Kryds og Bolle</div>
+                        <div class="game-desc">Tre på stribe</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="13-femten-puslespil/index.html" class="game-card fifteen">
+                    <div class="game-icon">🔢</div>
+                    <div class="game-info">
+                        <div class="game-name">15-Puslespil</div>
+                        <div class="game-desc">Flyt fliserne</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="14-kodeknaekker/index.html" class="game-card mastermind">
+                    <div class="game-icon">🔮</div>
+                    <div class="game-info">
+                        <div class="game-name">Mastermind</div>
+                        <div class="game-desc">Knæk farvekoden</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="17-pind/index.html" class="game-card pegsolitaire">
+                    <div class="game-icon">🎯</div>
+                    <div class="game-info">
+                        <div class="game-name">Pind</div>
+                        <div class="game-desc">Efterlad kun én</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="18-dam/index.html" class="game-card checkers">
+                    <div class="game-icon">⚫</div>
+                    <div class="game-info">
+                        <div class="game-name">Dam</div>
+                        <div class="game-desc">Spring over modstanderen</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="19-moelle/index.html" class="game-card morris">
+                    <div class="game-icon">⚪</div>
+                    <div class="game-info">
+                        <div class="game-name">Mølle</div>
+                        <div class="game-desc">Tre på række</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
+                <a href="21-fire-paa-stribe/index.html" class="game-card connectfour">
+                    <div class="game-icon">🔴</div>
+                    <div class="game-info">
+                        <div class="game-name">Fire på Stribe</div>
+                        <div class="game-desc">Fire på række</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========== STICKY FOOTER ========== -->
+    <footer class="sticky-footer">
+        <div class="sticky-footer-inner">
+            <button class="idea-btn" id="suggest-btn">💬 Feedback / Ny Spil Idé</button>
+        </div>
+        <!-- Full URL so AI tools can fetch the data -->
+        <a href="https://mbundgaard.github.io/Puzzles/site-index.json" style="display:none;"> </a>
+    </footer>
+
+    <!-- ========== MODALS ========== -->
 
     <!-- QR Modal -->
     <div class="modal-overlay" id="qr-modal">
@@ -1185,45 +1166,123 @@
 
                 <h4>Feedback</h4>
                 <ul>
-                    <li>Foreslå nye spil via kortet på forsiden</li>
+                    <li>Foreslå nye spil via knappen i bunden</li>
                     <li>Tryk på ⭐ i et spil for at give feedback</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Suggest Game Modal -->
-    <div class="modal-overlay" id="suggest-modal">
-        <div class="modal suggest-modal">
-            <span class="modal-close" id="suggest-close">×</span>
-            <div class="modal-emoji">💡</div>
-            <h3>Foreslå et spil</h3>
-            <p class="suggest-description">Har du en idé til et nyt spil? Del den med os!</p>
-            <textarea class="suggest-input" id="suggest-input" placeholder="Beskriv dit spilforslag..." rows="4"></textarea>
-            <p class="suggest-language-hint">Skriv på dit foretrukne sprog</p>
-            <input type="text" class="suggest-nickname" id="suggest-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
-            <button class="suggest-submit" id="suggest-submit">Send forslag</button>
+    <!-- Unified Feedback Modal -->
+    <div class="modal-overlay" id="feedback-modal">
+        <div class="modal feedback-modal">
+            <span class="modal-close" id="feedback-close">×</span>
+            <div class="modal-emoji">💬</div>
+            <h3>Feedback</h3>
+            <select class="feedback-select" id="feedback-game">
+                <option value="">Vælg spil...</option>
+                <option value="13">15-Puslespil</option>
+                <option value="18">Dam</option>
+                <option value="21">Fire på Stribe</option>
+                <option value="07">Hukommelse</option>
+                <option value="08">Kabale</option>
+                <option value="09">Kalaha</option>
+                <option value="11">Kryds og Bolle</option>
+                <option value="14">Mastermind</option>
+                <option value="06">Minestryger</option>
+                <option value="19">Mølle</option>
+                <option value="10">Ordleg</option>
+                <option value="17">Pind</option>
+                <option value="01">Reversi</option>
+                <option value="12">Rørføring</option>
+                <option value="23">Slange</option>
+                <option value="25">Sænke Slagskibe</option>
+                <option value="24">Tangram</option>
+                <option value="22">Tårnet i Hanoi</option>
+                <option disabled>──────────</option>
+                <option value="00">Generelt / Foreslå spil</option>
+            </select>
+            <textarea class="feedback-input" id="feedback-input" placeholder="Skriv din besked her (brug det sprog du foretrækker)..." rows="4"></textarea>
+            <input type="text" class="feedback-nickname" id="feedback-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
+            <button class="feedback-submit" id="feedback-submit">Send</button>
         </div>
     </div>
 
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767189381;
+        const APP_VERSION = 1767192622;
 
-        // Render footer timestamp in Danish local time
-        document.getElementById('last-updated').textContent =
-            'Sidst opdateret: ' + new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
-                day: 'numeric', month: 'long', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
-            });
+        // ========== OVERFLOW MENU ==========
+        (() => {
+            const menuBtn = document.getElementById('menu-btn');
+            const menu = document.getElementById('overflow-menu');
+            const backdrop = document.getElementById('menu-backdrop');
 
-        const shareBtn = document.getElementById('share-btn');
-        const modal = document.getElementById('qr-modal');
-        const closeBtn = document.getElementById('qr-close');
-        const refreshBtn = document.getElementById('refresh-btn');
+            function openMenu() {
+                menu.classList.add('open');
+                backdrop.classList.add('open');
+            }
 
-        // Shared toast function
+            function closeMenu() {
+                menu.classList.remove('open');
+                backdrop.classList.remove('open');
+            }
+
+            menuBtn.onclick = () => {
+                if (menu.classList.contains('open')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            };
+
+            backdrop.onclick = closeMenu;
+
+            // Menu item handlers
+            document.getElementById('menu-share-sms').onclick = () => closeMenu();
+            document.getElementById('menu-github').onclick = () => closeMenu();
+
+            document.getElementById('menu-share-qr').onclick = () => {
+                closeMenu();
+                document.getElementById('qr-modal').classList.add('active');
+            };
+
+            document.getElementById('menu-changelog').onclick = () => {
+                closeMenu();
+                // Trigger changelog modal (handled by changelog.js)
+                if (window.HjernespilChangelog) {
+                    window.HjernespilChangelog.open();
+                }
+            };
+
+            document.getElementById('menu-info').onclick = () => {
+                closeMenu();
+                document.getElementById('info-modal').classList.add('active');
+            };
+
+            document.getElementById('menu-refresh').onclick = async () => {
+                closeMenu();
+                try {
+                    const response = await fetch('https://puzzlesapi.azurewebsites.net/api/version', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ version: APP_VERSION })
+                    });
+                    const data = await response.json();
+                    if (data.newVersionExists) {
+                        sessionStorage.setItem('versionUpdated', 'true');
+                        location.reload();
+                    } else {
+                        showToast('Allerede opdateret ✓');
+                    }
+                } catch (e) {
+                    location.reload(true);
+                }
+            };
+        })();
+
+        // ========== TOAST ==========
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'version-toast';
@@ -1238,33 +1297,15 @@
             });
         }
 
-        shareBtn.onclick = () => modal.classList.add('active');
-        closeBtn.onclick = () => modal.classList.remove('active');
-        modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+        // ========== QR MODAL ==========
+        (() => {
+            const modal = document.getElementById('qr-modal');
+            const closeBtn = document.getElementById('qr-close');
+            closeBtn.onclick = () => modal.classList.remove('active');
+            modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+        })();
 
-        refreshBtn.onclick = async () => {
-            refreshBtn.classList.add('spinning');
-            try {
-                const response = await fetch('https://puzzlesapi.azurewebsites.net/api/version', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ version: APP_VERSION })
-                });
-                const data = await response.json();
-                if (data.newVersionExists) {
-                    sessionStorage.setItem('versionUpdated', 'true');
-                    location.reload();
-                } else {
-                    refreshBtn.classList.remove('spinning');
-                    showToast('Allerede opdateret ✓');
-                }
-            } catch (e) {
-                // API failed, just reload normally
-                location.reload(true);
-            }
-        };
-
-        // Leaderboard Modal
+        // ========== LEADERBOARD MODAL ==========
         (() => {
             const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
             const leaderboardBtn = document.getElementById('leaderboard-btn');
@@ -1274,16 +1315,13 @@
 
             async function loadLeaderboard() {
                 leaderboardList.innerHTML = '<p class="loading">Indlæser...</p>';
-
                 try {
                     const response = await fetch(`${API_BASE}/leaderboard?game=all&top=10`);
                     const data = await response.json();
-
                     if (!data.entries || data.entries.length === 0) {
                         leaderboardList.innerHTML = '<p class="loading">Ingen point endnu</p>';
                         return;
                     }
-
                     leaderboardList.innerHTML = data.entries.map((entry, i) => `
                         <div class="leaderboard-entry">
                             <span class="leaderboard-rank">${i + 1}.</span>
@@ -1313,10 +1351,9 @@
             };
         })();
 
-        // Info Modal
+        // ========== INFO MODAL ==========
         (() => {
             const INFO_SHOWN_KEY = 'hjernespil_info_shown';
-            const infoBtn = document.getElementById('info-btn');
             const infoModal = document.getElementById('info-modal');
             const infoClose = document.getElementById('info-close');
 
@@ -1325,85 +1362,99 @@
                 localStorage.setItem(INFO_SHOWN_KEY, 'true');
             }
 
-            infoBtn.onclick = () => infoModal.classList.add('active');
             infoClose.onclick = closeInfo;
             infoModal.onclick = (e) => {
                 if (e.target === infoModal) closeInfo();
             };
 
-            // Show info modal on first visit
+            // Show on first visit
             if (!localStorage.getItem(INFO_SHOWN_KEY)) {
                 infoModal.classList.add('active');
             }
         })();
 
-        // Suggest Game Modal
+        // ========== FEEDBACK MODAL ==========
         (() => {
             const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
             const NICKNAME_KEY = 'hjernespil_nickname';
 
-            const suggestBtn = document.getElementById('suggest-btn');
-            const suggestModal = document.getElementById('suggest-modal');
-            const suggestClose = document.getElementById('suggest-close');
-            const suggestInput = document.getElementById('suggest-input');
-            const suggestNickname = document.getElementById('suggest-nickname');
-            const suggestSubmit = document.getElementById('suggest-submit');
+            const feedbackModal = document.getElementById('feedback-modal');
+            const feedbackClose = document.getElementById('feedback-close');
+            const feedbackGame = document.getElementById('feedback-game');
+            const feedbackInput = document.getElementById('feedback-input');
+            const feedbackNickname = document.getElementById('feedback-nickname');
+            const feedbackSubmit = document.getElementById('feedback-submit');
 
-            function openModal() {
-                suggestModal.classList.add('active');
-                suggestInput.value = '';
-                suggestNickname.value = localStorage.getItem(NICKNAME_KEY) || '';
-                suggestInput.focus();
+            function resetModal() {
+                feedbackGame.value = '';
+                feedbackInput.value = '';
+                feedbackNickname.value = localStorage.getItem(NICKNAME_KEY) || '';
+                feedbackSubmit.disabled = false;
+                feedbackSubmit.textContent = 'Send';
+            }
+
+            function openModal(preselectedGame = '') {
+                resetModal();
+                feedbackGame.value = preselectedGame;
+                feedbackModal.classList.add('active');
             }
 
             function closeModal() {
-                suggestModal.classList.remove('active');
+                feedbackModal.classList.remove('active');
             }
 
-            async function submitSuggestion() {
-                const text = suggestInput.value.trim();
-                if (!text) return;
+            async function submitFeedback() {
+                const game = feedbackGame.value;
+                const text = feedbackInput.value.trim();
 
-                const nickname = suggestNickname.value.trim();
+                if (!game) {
+                    feedbackGame.focus();
+                    return;
+                }
+
+                if (!text) {
+                    feedbackInput.focus();
+                    return;
+                }
+
+                const nickname = feedbackNickname.value.trim();
                 if (nickname) {
                     localStorage.setItem(NICKNAME_KEY, nickname);
                 }
 
-                suggestSubmit.disabled = true;
-                suggestSubmit.textContent = 'Sender...';
+                feedbackSubmit.disabled = true;
+                feedbackSubmit.textContent = 'Sender...';
 
                 try {
                     await fetch(`${API_BASE}/feedback`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            game: '00',
+                            game: game,
                             rating: 5,
                             text: text,
                             nickname: nickname || undefined
                         })
                     });
-                    suggestSubmit.textContent = 'Tak for dit forslag!';
-                    setTimeout(closeModal, 1500);
+                    feedbackSubmit.textContent = 'Tak!';
+                    setTimeout(closeModal, 1200);
                 } catch (error) {
-                    suggestSubmit.textContent = 'Fejl - prøv igen';
-                } finally {
-                    setTimeout(() => {
-                        suggestSubmit.disabled = false;
-                        suggestSubmit.textContent = 'Send forslag';
-                    }, 2000);
+                    feedbackSubmit.textContent = 'Prøv igen';
+                    feedbackSubmit.disabled = false;
                 }
             }
 
-            suggestBtn.onclick = openModal;
-            suggestClose.onclick = closeModal;
-            suggestModal.onclick = (e) => {
-                if (e.target === suggestModal) closeModal();
+            // Footer button - pre-select "Foreslå nyt spil"
+            document.getElementById('suggest-btn').onclick = () => openModal('00');
+
+            feedbackClose.onclick = closeModal;
+            feedbackModal.onclick = (e) => {
+                if (e.target === feedbackModal) closeModal();
             };
-            suggestSubmit.onclick = submitSuggestion;
+            feedbackSubmit.onclick = submitFeedback;
         })();
 
-        // Nickname Modal - Ask once before first game
+        // ========== NICKNAME MODAL ==========
         (() => {
             const NICKNAME_KEY = 'hjernespil_nickname';
             const nicknameModal = document.getElementById('nickname-modal');
@@ -1414,13 +1465,11 @@
 
             let pendingGameUrl = null;
 
-            // Check if nickname already exists
             function hasNickname() {
                 const nickname = localStorage.getItem(NICKNAME_KEY);
                 return nickname && nickname.trim().length >= 2;
             }
 
-            // Save nickname and navigate
             function saveAndNavigate(nickname) {
                 if (nickname && nickname.trim().length >= 2 && nickname.trim().length <= 20) {
                     localStorage.setItem(NICKNAME_KEY, nickname.trim());
@@ -1431,15 +1480,9 @@
                 }
             }
 
-            // Intercept game card clicks
             gameCards.forEach(card => {
                 card.addEventListener('click', (e) => {
-                    if (hasNickname()) {
-                        // Already have nickname, allow navigation
-                        return;
-                    }
-
-                    // No nickname yet, show modal
+                    if (hasNickname()) return;
                     e.preventDefault();
                     pendingGameUrl = card.href;
                     nicknameInput.value = '';
@@ -1448,27 +1491,16 @@
                 });
             });
 
-            // Save button
-            nicknameSave.onclick = () => {
-                saveAndNavigate(nicknameInput.value);
-            };
-
-            // Skip button
+            nicknameSave.onclick = () => saveAndNavigate(nicknameInput.value);
             nicknameSkip.onclick = () => {
                 nicknameModal.classList.remove('active');
-                if (pendingGameUrl) {
-                    window.location.href = pendingGameUrl;
-                }
+                if (pendingGameUrl) window.location.href = pendingGameUrl;
             };
 
-            // Enter key to submit
             nicknameInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    saveAndNavigate(nicknameInput.value);
-                }
+                if (e.key === 'Enter') saveAndNavigate(nicknameInput.value);
             });
 
-            // Close on overlay click
             nicknameModal.onclick = (e) => {
                 if (e.target === nicknameModal) {
                     nicknameModal.classList.remove('active');
@@ -1477,7 +1509,7 @@
             };
         })();
 
-        // PWA Install Banner
+        // ========== PWA INSTALL BANNER ==========
         (() => {
             const banner = document.getElementById('install-banner');
             const bannerClose = document.getElementById('install-banner-close');
@@ -1487,24 +1519,18 @@
             const DISMISSED_KEY = 'pwa-banner-dismissed';
             let deferredPrompt = null;
 
-            // Check if already installed (standalone mode)
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches
                 || window.navigator.standalone === true;
 
-            // Check if dismissed recently (7 days)
             const dismissedAt = localStorage.getItem(DISMISSED_KEY);
             const isDismissed = dismissedAt && (Date.now() - parseInt(dismissedAt)) < 7 * 24 * 60 * 60 * 1000;
 
-            if (isStandalone || isDismissed) {
-                return; // Don't show banner
-            }
+            if (isStandalone || isDismissed) return;
 
-            // Detect iOS Safari
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
             const isIOSSafari = isIOS && isSafari;
 
-            // Android/Chrome: Listen for install prompt
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
@@ -1512,48 +1538,40 @@
                 banner.classList.add('show');
             });
 
-            // iOS Safari: Show instructions
             if (isIOSSafari) {
                 iosInstructions.style.display = 'flex';
                 banner.classList.add('show');
             }
 
-            // Install button click (Android/Chrome)
             installBtn.onclick = async () => {
                 if (!deferredPrompt) return;
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    banner.classList.remove('show');
-                }
+                if (outcome === 'accepted') banner.classList.remove('show');
                 deferredPrompt = null;
             };
 
-            // Close banner
             bannerClose.onclick = () => {
                 banner.classList.remove('show');
                 localStorage.setItem(DISMISSED_KEY, Date.now().toString());
             };
 
-            // Hide banner if app gets installed
             window.addEventListener('appinstalled', () => {
                 banner.classList.remove('show');
                 deferredPrompt = null;
             });
         })();
 
-        // Version check and auto-reload
+        // ========== VERSION CHECK ==========
         (() => {
             const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
 
-            // Show toast if we just reloaded for a new version
             if (sessionStorage.getItem('versionUpdated')) {
                 sessionStorage.removeItem('versionUpdated');
                 showToast('Opdateret til nyeste version ✓');
             }
 
             async function checkVersion() {
-                // Prevent reload loop
                 if (sessionStorage.getItem('versionChecked')) return;
                 sessionStorage.setItem('versionChecked', 'true');
 
@@ -1570,22 +1588,66 @@
                         sessionStorage.removeItem('versionChecked');
                         location.reload();
                     }
-                } catch (e) {
-                    // Silently fail - version check is not critical
-                }
+                } catch (e) {}
             }
 
-            // Check after returning from a game
             window.addEventListener('pageshow', () => {
-                if (document.referrer?.match(/\/\d{2}-[^/]+\//)) {
-                    checkVersion();
+                if (document.referrer?.match(/\/\d{2}-[^/]+\//)) checkVersion();
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') checkVersion();
+            });
+        })();
+
+        // ========== AUTO-HIDE HEADER/FOOTER ON SCROLL ==========
+        (() => {
+            const header = document.querySelector('.header');
+            const footer = document.querySelector('.sticky-footer');
+            const content = document.querySelector('.content');
+            const menu = document.getElementById('overflow-menu');
+
+            let lastScrollTop = 0;
+            let ticking = false;
+            const scrollThreshold = 10;
+
+            content.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const scrollTop = content.scrollTop;
+                        const scrollDelta = scrollTop - lastScrollTop;
+
+                        // Don't hide if menu is open
+                        if (menu.classList.contains('open')) {
+                            ticking = false;
+                            return;
+                        }
+
+                        // Only trigger after threshold to avoid jitter
+                        if (Math.abs(scrollDelta) > scrollThreshold) {
+                            if (scrollDelta > 0 && scrollTop > 60) {
+                                // Scrolling down - hide
+                                header.classList.add('hidden');
+                                footer.classList.add('hidden');
+                            } else if (scrollDelta < 0) {
+                                // Scrolling up - show
+                                header.classList.remove('hidden');
+                                footer.classList.remove('hidden');
+                            }
+                            lastScrollTop = scrollTop;
+                        }
+
+                        ticking = false;
+                    });
+                    ticking = true;
                 }
             });
 
-            // Check when PWA resumes from background
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
-                    checkVersion();
+            // Always show when at top
+            content.addEventListener('scroll', () => {
+                if (content.scrollTop < 10) {
+                    header.classList.remove('hidden');
+                    footer.classList.remove('hidden');
                 }
             });
         })();
