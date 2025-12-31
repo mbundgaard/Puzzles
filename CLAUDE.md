@@ -293,13 +293,14 @@ When closing an issue, add a new entry at the **TOP** of the `CHANGELOG_ENTRIES`
 ```javascript
 const CHANGELOG_ENTRIES = [
     // Add new entries here (sorted by closedAt descending)
-    { issue: 35, closedAt: '2025-12-31T14:30:00Z', text: 'Added notification dot to changelog' },
+    { issue: 37, closedAt: '2025-12-31T14:30:00Z', submitter: 'Martin', text: 'Added GitHub link to changelog entries' },
     // ... existing entries
 ];
 ```
 
-- **issue**: GitHub issue number
+- **issue**: GitHub issue number (links to GitHub issue via icon)
 - **closedAt**: ISO timestamp from GitHub's `closed_at` field (e.g., `2025-12-31T14:30:00Z`)
+- **submitter**: Name of person who submitted the feedback/suggestion
 - **text**: Short English description of what was fixed/added
 
 The display date (e.g., "Dec 31") is derived automatically from the timestamp.
