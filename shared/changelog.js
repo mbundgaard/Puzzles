@@ -12,6 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 43, closedAt: '2025-12-31T19:37:02Z', submitter: 'Martin', text: 'Converted Battleships to single-player puzzle mode' },
         { issue: 42, closedAt: '2025-12-31T16:21:42Z', submitter: 'Vera', text: 'Added player name to overflow menu' },
         { issue: 40, closedAt: '2025-12-31T15:00:33Z', submitter: 'Martin', text: 'Redesigned main page with overflow menu' },
         { issue: 37, closedAt: '2025-12-31T14:30:00Z', submitter: 'Martin', text: 'Added GitHub link and submitter to changelog entries' },

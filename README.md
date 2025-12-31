@@ -32,7 +32,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | 2025-12-30 | | Move all disks to the rightmost peg |
 | 23 | [Slange](23-slange/) | 2/3/4 | 2025-12-30 | | Classic snake game with win condition |
 | 24 | [Tangram](24-tangram/) | 1/3/5 | 2025-12-30 | | Drag and rotate pieces to cover the shape |
-| 25 | [Sænke Slagskibe](25-saenke-slagskibe/) | 1/2/3 | 2025-12-31 | | Single-player battleships with AI opponent |
+| 25 | [Sænke Slagskibe](25-saenke-slagskibe/) | 2 | 2025-12-31 | 2025-12-31 | Find hidden ships on the grid - like a newspaper puzzle |
 
 ## Features
 
