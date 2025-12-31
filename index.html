@@ -433,7 +433,7 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            max-width: 320px;
+            max-width: 340px;
             width: 100%;
             position: relative;
             animation: modalPop 0.3s ease;
@@ -468,6 +468,12 @@
         .modal-emoji {
             font-size: 3rem;
             margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
         }
 
         /* Nickname Modal */
@@ -587,17 +593,6 @@
         }
 
         /* Info Modal */
-        .info-modal {
-            max-width: 340px;
-        }
-
-        .info-app-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 14px;
-            margin-bottom: 10px;
-        }
-
         .info-content {
             text-align: left;
             margin-top: 16px;
@@ -631,10 +626,6 @@
         }
 
         /* Feedback Modal */
-        .feedback-modal {
-            max-width: 340px;
-        }
-
         .feedback-select {
             width: 100%;
             padding: 12px;
@@ -1123,7 +1114,9 @@
     <div class="modal-overlay" id="qr-modal">
         <div class="modal">
             <span class="modal-close" id="qr-close">×</span>
+            <div class="modal-emoji">🔗</div>
             <h3>Del med venner</h3>
+            <p class="modal-subtitle">Scan for at dele</p>
             <div class="qr-code">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR" width="140" height="140">
             </div>
@@ -1157,9 +1150,9 @@
 
     <!-- Info Modal -->
     <div class="modal-overlay" id="info-modal">
-        <div class="modal info-modal">
+        <div class="modal">
             <span class="modal-close" id="info-close">×</span>
-            <img src="icons/Ampeross-Qetto-2-Games.64.png" alt="Hjernespil" class="info-app-icon">
+            <div class="modal-emoji">ℹ️</div>
             <h3>Om Hjernespil</h3>
             <div class="info-content">
                 <p>Hjernespil er en samling af klassiske puslespil og hjernetrim, som du kan spille direkte på din telefon.</p>
@@ -1217,7 +1210,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767193029;
+        const APP_VERSION = 1767193625;
 
         // ========== OVERFLOW MENU ==========
         (() => {

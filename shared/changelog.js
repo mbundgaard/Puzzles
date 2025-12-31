@@ -68,7 +68,7 @@
     const style = document.createElement('style');
     style.textContent = `
         .changelog-modal {
-            max-width: 360px;
+            max-width: 340px;
         }
 
         .changelog-list {
