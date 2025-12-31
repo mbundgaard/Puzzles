@@ -76,7 +76,7 @@ All puzzles MUST work on mobile devices with touch-only input (no mouse, no keyb
 8. Add `HjernespilAPI.trackComplete('XX')` on victory
 9. Add `HjernespilUI.showWinModal(points)` after trackComplete (points: 1-5)
 10. Add entry to root index.html
-11. Update README.md puzzle table (include Points column)
+11. Update README.md puzzle table (include Points column, set Created date to today)
 12. Update site-index.json with new game entry
 13. Ensure touch-only gameplay works
 14. All text in Danish
@@ -149,12 +149,7 @@ The main page uses a modern gaming/app design with:
    - Glassmorphism background with colored accent line on tap
    - Play indicator appears on active state
    - Unique accent color per game
-   - **Badges**: Games can have badges to highlight them:
-     - `<div class="card-badge">NY</div>` - Green badge for new games (created within 7 days)
-     - `<div class="card-badge updated">OPDATERET</div>` - Orange badge for updated games (updated within 7 days, not new)
-     - Badged games should be placed at the top of the grid
-     - Badge dates are tracked in README.md (Created/Updated columns)
-     - Remove badge when game is older than 7 days
+   - **Badges**: Games can have badges to highlight them (see Badge System section below)
    - "Foreslå Spil" card at end (+ icon, dashed border) - submits to feedback API with game "00"
 4. **Footer**: GitHub link and last updated timestamp
 5. **Animated background**: Pulsing gradient orbs in purple/magenta/cyan
@@ -168,6 +163,79 @@ The main page uses a modern gaming/app design with:
    - `apple-mobile-web-app-title`
    - `apple-touch-icon` (180x180 PNG)
    - `theme-color` (#0f0f23)
+
+## README Game Tracking
+
+The README.md contains a games table with these columns:
+
+| Column | Description |
+|--------|-------------|
+| # | Game folder number (01-99) |
+| Game | Link to game folder |
+| Points | Points awarded for winning (e.g., "3" or "1/2/3" for difficulty levels) |
+| Created | Date game was first added (YYYY-MM-DD format) |
+| Updated | Date game was last significantly updated (YYYY-MM-DD format, empty if never updated) |
+| Description | Brief description of the game |
+
+### When to update dates
+
+**IMPORTANT**: The README is the source of truth for badge automation. Always update these dates when making changes.
+
+- **Created**: Set to today's date when adding a new game
+- **Updated**: Set to today's date when making significant changes to an existing game:
+  - Bug fixes that affect gameplay
+  - New features or difficulty levels
+  - UI/UX improvements
+  - Do NOT update for minor fixes (typos, small style tweaks)
+
+### Workflow for updating a game
+
+When updating an existing game:
+1. Make your changes to the game files
+2. Update the **Updated** column in README.md to today's date
+3. Add/update the badge in index.html if within 7 days
+4. Commit all changes together
+
+## Badge System
+
+Badges highlight new or recently updated games on the main page. **Badges are derived from README.md dates** - keep README updated to ensure correct badges.
+
+### Badge types
+
+| Badge | CSS Class | Color | Condition |
+|-------|-----------|-------|-----------|
+| NY | `card-badge` | Green | Game created within 7 days |
+| OPDATERET | `card-badge updated` | Orange | Game updated within 7 days (and not new) |
+
+### Badge HTML
+
+```html
+<!-- New game badge -->
+<div class="card-badge">NY</div>
+
+<!-- Updated game badge -->
+<div class="card-badge updated">OPDATERET</div>
+```
+
+### Badge logic
+
+1. Check the **Created** date in README.md
+2. If created within 7 days → add `NY` badge
+3. If created more than 7 days ago, check **Updated** date
+4. If updated within 7 days → add `OPDATERET` badge
+5. If neither condition met → no badge
+
+### Badge placement
+
+- Add badge as first child inside the game card's `<a>` element
+- Games with badges should be placed at the **top** of the game grid
+- Order: NY badges first, then OPDATERET badges, then regular games
+
+### Badge maintenance
+
+- When a game's Created date exceeds 7 days, remove the NY badge
+- When a game's Updated date exceeds 7 days, remove the OPDATERET badge
+- Check badge dates when making changes to the main page
 
 ## Backend API
 
