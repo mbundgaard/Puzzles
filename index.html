@@ -722,12 +722,6 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .share-url {
-            margin-top: 15px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.75rem;
-            word-break: break-all;
-        }
 
         /* Version update toast */
         .version-toast {
@@ -871,24 +865,48 @@
             <!-- Overflow Menu -->
             <div class="overflow-menu" id="overflow-menu">
                 <div class="menu-item" id="menu-changelog">
-                    <span class="menu-icon">📋</span>
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </span>
                     <span>Nyheder</span>
                     <span class="menu-badge" id="changelog-badge" style="display: none;">NY</span>
                 </div>
                 <div class="menu-item" id="menu-info">
-                    <span class="menu-icon">ℹ️</span>
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
+                        </svg>
+                    </span>
                     <span>Om appen</span>
                 </div>
                 <div class="menu-divider"></div>
                 <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="menu-item" id="menu-share-sms">
-                    <span class="menu-icon">📱</span>
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </span>
                     <span>Del via SMS</span>
                 </a>
                 <div class="menu-item" id="menu-share-qr">
-                    <span class="menu-icon">🔗</span>
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3m3-3v6h-6"/>
+                        </svg>
+                    </span>
                     <span>Del via QR</span>
                 </div>
                 <div class="menu-divider"></div>
+                <div class="menu-item" id="menu-refresh">
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
+                        </svg>
+                    </span>
+                    <span>Opdater</span>
+                </div>
                 <a href="https://github.com/mbundgaard/Puzzles" target="_blank" rel="noopener" class="menu-item" id="menu-github">
                     <span class="menu-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -897,10 +915,6 @@
                     </span>
                     <span>GitHub</span>
                 </a>
-                <div class="menu-item" id="menu-refresh">
-                    <span class="menu-icon">🔄</span>
-                    <span>Opdater</span>
-                </div>
             </div>
         </div>
     </header>
@@ -1120,7 +1134,6 @@
             <div class="qr-code">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR" width="140" height="140">
             </div>
-            <p class="share-url">mbundgaard.github.io/Puzzles</p>
         </div>
     </div>
 
@@ -1210,7 +1223,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767196627;
+        const APP_VERSION = 1767197251;
 
         // ========== OVERFLOW MENU ==========
         (() => {
