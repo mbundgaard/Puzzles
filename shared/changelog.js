@@ -153,8 +153,8 @@
                     <div class="changelog-left">
                         <a href="${GITHUB_ISSUES_URL}${entry.issue}" target="_blank" rel="noopener" class="changelog-github-link" title="View issue #${entry.issue}">
                             ${GITHUB_ICON}
+                            <span class="changelog-date">${formatDate(entry.closedAt)}</span>
                         </a>
-                        <span class="changelog-date">${formatDate(entry.closedAt)}</span>
                     </div>
                     <span class="changelog-submitter">${entry.submitter}</span>
                 </div>

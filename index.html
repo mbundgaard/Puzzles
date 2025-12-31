@@ -873,6 +873,14 @@
 
             <!-- Overflow Menu -->
             <div class="overflow-menu" id="overflow-menu">
+                <div class="menu-item" id="menu-player">
+                    <span class="menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+                        </svg>
+                    </span>
+                    <span id="menu-player-name">Player 1</span>
+                </div>
                 <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="menu-item" id="menu-share-sms">
                     <span class="menu-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1221,7 +1229,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767197674;
+        const APP_VERSION = 1767198068;
 
         // ========== OVERFLOW MENU ==========
         (() => {
@@ -1263,6 +1271,16 @@
                 if (window.HjernespilChangelog) {
                     window.HjernespilChangelog.open();
                 }
+            };
+
+            document.getElementById('menu-player').onclick = () => {
+                closeMenu();
+                // Open nickname modal for editing
+                const nicknameInput = document.getElementById('nickname-input');
+                const nickname = localStorage.getItem('hjernespil_nickname') || '';
+                nicknameInput.value = nickname;
+                document.getElementById('nickname-modal').classList.add('active');
+                setTimeout(() => nicknameInput.focus(), 100);
             };
 
             document.getElementById('menu-info').onclick = () => {
@@ -1470,9 +1488,18 @@
             const nicknameInput = document.getElementById('nickname-input');
             const nicknameSave = document.getElementById('nickname-save');
             const nicknameSkip = document.getElementById('nickname-skip');
+            const menuPlayerName = document.getElementById('menu-player-name');
             const gameCards = document.querySelectorAll('.game-card');
 
             let pendingGameUrl = null;
+
+            function updateMenuPlayerName() {
+                const nickname = localStorage.getItem(NICKNAME_KEY);
+                menuPlayerName.textContent = nickname && nickname.trim() ? nickname.trim() : 'Player 1';
+            }
+
+            // Update on page load
+            updateMenuPlayerName();
 
             function hasNickname() {
                 const nickname = localStorage.getItem(NICKNAME_KEY);
@@ -1483,10 +1510,12 @@
                 if (nickname && nickname.trim().length >= 2 && nickname.trim().length <= 20) {
                     localStorage.setItem(NICKNAME_KEY, nickname.trim());
                 }
+                updateMenuPlayerName();
                 nicknameModal.classList.remove('active');
                 if (pendingGameUrl) {
                     window.location.href = pendingGameUrl;
                 }
+                pendingGameUrl = null;
             }
 
             gameCards.forEach(card => {
