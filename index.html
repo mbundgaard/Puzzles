@@ -581,12 +581,27 @@
             font-family: inherit;
             font-size: 0.95rem;
             resize: none;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .suggest-input::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
 
         .suggest-input:focus {
             outline: none;
             border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .suggest-language-hint {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 12px;
+            font-style: italic;
         }
 
         .suggest-nickname {
@@ -1174,7 +1189,8 @@
             <div class="modal-emoji">💡</div>
             <h3>Foreslå et spil</h3>
             <p class="suggest-description">Har du en idé til et nyt spil? Del den med os!</p>
-            <textarea class="suggest-input" id="suggest-input" placeholder="Beskriv dit spilforslag..." rows="4" maxlength="500"></textarea>
+            <textarea class="suggest-input" id="suggest-input" placeholder="Beskriv dit spilforslag..." rows="4"></textarea>
+            <p class="suggest-language-hint">Skriv på dit foretrukne sprog</p>
             <input type="text" class="suggest-nickname" id="suggest-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
             <button class="suggest-submit" id="suggest-submit">Send forslag</button>
         </div>
@@ -1182,7 +1198,7 @@
 
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767175241;
+        const APP_VERSION = 1767175667;
 
         // Render footer timestamp in Danish local time
         document.getElementById('last-updated').textContent =

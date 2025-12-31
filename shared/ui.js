@@ -140,6 +140,7 @@ const HjernespilUI = (() => {
             .hjernespil-textarea {
                 width: 100%;
                 min-height: 80px;
+                max-height: 150px;
                 padding: 12px;
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 12px;
@@ -148,7 +149,21 @@ const HjernespilUI = (() => {
                 font-family: 'Poppins', sans-serif;
                 font-size: 0.9rem;
                 resize: none;
+                margin-bottom: 8px;
+                overflow-y: auto;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE/Edge */
+            }
+
+            .hjernespil-textarea::-webkit-scrollbar {
+                display: none; /* Chrome/Safari */
+            }
+
+            .hjernespil-language-hint {
+                font-size: 0.75rem;
+                color: rgba(255, 255, 255, 0.4);
                 margin-bottom: 12px;
+                font-style: italic;
             }
 
             .hjernespil-textarea::placeholder {
@@ -366,7 +381,8 @@ const HjernespilUI = (() => {
                         <span class="hjernespil-star" data-rating="4">⭐</span>
                         <span class="hjernespil-star" data-rating="5">⭐</span>
                     </div>
-                    <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..." maxlength="500"></textarea>
+                    <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..."></textarea>
+                    <p class="hjernespil-language-hint">Skriv på dit foretrukne sprog</p>
                     <input type="text" class="hjernespil-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
                     <button class="hjernespil-submit-btn">Send feedback</button>
                 </div>
@@ -402,7 +418,8 @@ const HjernespilUI = (() => {
                             <span class="hjernespil-star" data-rating="4">⭐</span>
                             <span class="hjernespil-star" data-rating="5">⭐</span>
                         </div>
-                        <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..." maxlength="500"></textarea>
+                        <textarea class="hjernespil-textarea" placeholder="Kommentar (valgfrit)..."></textarea>
+                        <p class="hjernespil-language-hint">Skriv på dit foretrukne sprog</p>
                         <input type="text" class="hjernespil-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
                         <button class="hjernespil-submit-btn">Send feedback</button>
                     `;
