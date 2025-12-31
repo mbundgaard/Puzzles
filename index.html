@@ -155,6 +155,21 @@
             letter-spacing: 2px;
         }
 
+        /* Header badge (notification dot) */
+        .icon-btn {
+            position: relative;
+        }
+
+        .header-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
         /* ========== OVERFLOW MENU ========== */
         .overflow-menu {
             position: absolute;
@@ -209,19 +224,6 @@
             height: 1px;
             background: rgba(255, 255, 255, 0.1);
             margin: 4px 0;
-        }
-
-        /* Badge for changelog */
-        .menu-item .menu-badge {
-            margin-left: auto;
-            background: #ef4444;
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 8px;
-            min-width: 18px;
-            text-align: center;
         }
 
         /* ========== BACKDROP ========== */
@@ -860,19 +862,16 @@
                     <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
                 </svg>
             </button>
+            <button class="icon-btn" id="changelog-btn" aria-label="Nyheder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
+                </svg>
+                <span class="header-badge" id="changelog-badge" style="display: none;"></span>
+            </button>
             <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu">⋮</button>
 
             <!-- Overflow Menu -->
             <div class="overflow-menu" id="overflow-menu">
-                <div class="menu-item" id="menu-changelog">
-                    <span class="menu-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </span>
-                    <span>Nyheder</span>
-                    <span class="menu-badge" id="changelog-badge" style="display: none;">NY</span>
-                </div>
                 <div class="menu-item" id="menu-info">
                     <span class="menu-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -881,7 +880,6 @@
                     </span>
                     <span>Om appen</span>
                 </div>
-                <div class="menu-divider"></div>
                 <a href="sms:?body=Spil%20Hjernespil%20https%3A%2F%2Fmbundgaard.github.io%2FPuzzles%2F" class="menu-item" id="menu-share-sms">
                     <span class="menu-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -898,7 +896,6 @@
                     </span>
                     <span>Del via QR</span>
                 </div>
-                <div class="menu-divider"></div>
                 <div class="menu-item" id="menu-refresh">
                     <span class="menu-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1223,7 +1220,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767197251;
+        const APP_VERSION = 1767197484;
 
         // ========== OVERFLOW MENU ==========
         (() => {
@@ -1260,8 +1257,7 @@
                 document.getElementById('qr-modal').classList.add('active');
             };
 
-            document.getElementById('menu-changelog').onclick = () => {
-                closeMenu();
+            document.getElementById('changelog-btn').onclick = () => {
                 // Trigger changelog modal (handled by changelog.js)
                 if (window.HjernespilChangelog) {
                     window.HjernespilChangelog.open();
