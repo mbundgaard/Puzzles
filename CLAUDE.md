@@ -266,18 +266,43 @@ Issues appear at: https://github.com/mbundgaard/Puzzles/issues
 
 ### Closing Issues
 
-When fixing an issue, **do NOT use `Fixes #X` in commit messages**. Instead, after pushing the fix:
+When fixing an issue, **do NOT use `Fixes #X` in commit messages**. Follow this workflow:
 
-1. Call the API to close the issue with a descriptive comment (supports Markdown):
+1. **Fix the issue** in the code
+2. **Add changelog entry** to `shared/changelog.js` (see Changelog section below)
+3. **Commit and push** all changes
+4. **Call the API** to close the issue with a descriptive comment:
 ```bash
 curl -X POST https://puzzlesapi.azurewebsites.net/api/issue/close \
   -H "Content-Type: application/json" \
   -d '{"issueNumber": 9, "comment": "**Fixed:** Renamed game from Kodeknækker to Mastermind.\n\n- Updated title in game page\n- Updated main index.html\n- Updated README.md"}'
 ```
 
-2. Or use Bash with curl to call the API.
+The comment supports full GitHub Markdown (bold, lists, code blocks, etc.).
 
-The comment supports full GitHub Markdown (bold, lists, code blocks, etc.). This ensures the issue has a clear explanation of what was done.
+### Changelog
+
+The changelog is displayed in a modal on the main page. Entries are stored in `shared/changelog.js`.
+
+#### Adding a changelog entry
+
+When closing an issue, add a new entry at the **TOP** of the `CHANGELOG_ENTRIES` array:
+
+```javascript
+const CHANGELOG_ENTRIES = [
+    // Add new entries here (newest first)
+    { issue: 34, date: 'Jan 1', text: 'Added changelog modal to main page' },
+    // ... existing entries
+];
+```
+
+- **issue**: GitHub issue number
+- **date**: Close date in format "Mon DD" (e.g., "Dec 31", "Jan 1")
+- **text**: Short English description of what was fixed/added
+
+#### Comparing with GitHub
+
+To find missing changelog entries, compare `data-issue` values in `shared/changelog.js` with closed issues on GitHub.
 
 ### Game numbers
 
