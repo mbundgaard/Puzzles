@@ -217,6 +217,7 @@
         .game-card.hanoi { --card-accent: linear-gradient(90deg, #8b5cf6, #a855f7); }
         .game-card.snake { --card-accent: linear-gradient(90deg, #4ade80, #22c55e); }
         .game-card.dissection { --card-accent: linear-gradient(90deg, #a855f7, #ec4899); }
+        .game-card.battleship { --card-accent: linear-gradient(90deg, #0ea5e9, #0284c7); }
 
         .game-card.suggest-card {
             --card-accent: linear-gradient(90deg, #a855f7, #ec4899);
@@ -904,8 +905,17 @@
         </div>
 
         <div class="game-grid">
-            <a href="24-tangram/index.html" class="game-card dissection">
+            <a href="25-saenke-slagskibe/index.html" class="game-card battleship">
                 <div class="card-badge">NY</div>
+                <div class="card-icon">🚢</div>
+                <div class="card-content">
+                    <h2>Sænke Slagskibe</h2>
+                    <p>Sænk fjendens flåde</p>
+                </div>
+                <div class="play-indicator"></div>
+            </a>
+
+            <a href="24-tangram/index.html" class="game-card dissection">
                 <div class="card-icon">
                     <svg viewBox="0 0 40 40" width="40" height="40">
                         <polygon points="0,0 20,0 20,20" fill="#ef4444"/>
@@ -1172,7 +1182,7 @@
 
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767138161;
+        const APP_VERSION = 1767171604;
 
         // Render footer timestamp in Danish local time
         document.getElementById('last-updated').textContent =

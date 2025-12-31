@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Sænke Slagskibe - Hjernespil</title>
+    <link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+
+        <h1>Sænke Slagskibe</h1>
+
+        <!-- Difficulty Selection -->
+        <div class="difficulty-select" id="difficulty-select">
+            <h2>Vælg sværhedsgrad</h2>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn" data-difficulty="easy" data-points="1">
+                    <span class="diff-name">Let</span>
+                    <span class="diff-points">1 point</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="medium" data-points="2">
+                    <span class="diff-name">Normal</span>
+                    <span class="diff-points">2 point</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="hard" data-points="3">
+                    <span class="diff-name">Svær</span>
+                    <span class="diff-points">3 point</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Ship Placement Phase -->
+        <div class="placement-phase" id="placement-phase" style="display: none;">
+            <h2>Placer dine skibe</h2>
+            <p class="placement-instruction" id="placement-instruction">Placer dit skib (5 felter)</p>
+
+            <div class="placement-controls">
+                <button class="rotate-btn" id="rotate-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                    Roter
+                </button>
+            </div>
+
+            <div class="grid-container single">
+                <div class="grid-label">Dit hav</div>
+                <div class="grid player-grid" id="player-grid"></div>
+            </div>
+
+            <div class="ship-list" id="ship-list">
+                <div class="ship-item" data-size="5">Hangarskib (5)</div>
+                <div class="ship-item" data-size="4">Slagskib (4)</div>
+                <div class="ship-item" data-size="3">Krydser (3)</div>
+                <div class="ship-item" data-size="3">Ubåd (3)</div>
+                <div class="ship-item" data-size="2">Destroyer (2)</div>
+            </div>
+        </div>
+
+        <!-- Battle Phase -->
+        <div class="battle-phase" id="battle-phase" style="display: none;">
+            <div class="status-bar">
+                <div class="turn-indicator" id="turn-indicator">Din tur</div>
+                <div class="ships-remaining">
+                    <span>Dine skibe: <span id="player-ships">5</span></span>
+                    <span>Fjendens skibe: <span id="enemy-ships">5</span></span>
+                </div>
+            </div>
+
+            <div class="grids-wrapper">
+                <div class="grid-container">
+                    <div class="grid-label">Fjendens hav</div>
+                    <div class="grid enemy-grid" id="enemy-grid"></div>
+                </div>
+                <div class="grid-container">
+                    <div class="grid-label">Dit hav</div>
+                    <div class="grid player-grid-battle" id="player-grid-battle"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over -->
+        <div class="game-over" id="game-over" style="display: none;">
+            <h2 id="game-over-title">Spillet er slut</h2>
+            <p id="game-over-message"></p>
+            <button class="new-game-btn" id="new-game-btn">Nyt Spil</button>
+        </div>
+
+        <!-- Rules -->
+        <details class="rules">
+            <summary>Regler</summary>
+            <div class="rules-content">
+                <p><strong>Mål:</strong> Sænk alle fjendens skibe før fjenden sænker dine.</p>
+                <p><strong>Placering:</strong> Placer dine 5 skibe på dit hav. Tryk på roter-knappen for at ændre retning.</p>
+                <p><strong>Kamp:</strong> Tryk på fjendens hav for at skyde. Blå = forbi, rød = ramt.</p>
+                <p><strong>Skibe:</strong> Hangarskib (5), Slagskib (4), Krydser (3), Ubåd (3), Destroyer (2)</p>
+                <p><strong>Sværhedsgrad:</strong></p>
+                <ul>
+                    <li><strong>Let:</strong> Fjenden skyder tilfældigt</li>
+                    <li><strong>Normal:</strong> Fjenden jager efter et hit</li>
+                    <li><strong>Svær:</strong> Fjenden bruger avanceret strategi</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
