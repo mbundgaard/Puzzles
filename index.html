@@ -530,21 +530,6 @@
             cursor: not-allowed;
         }
 
-        .nickname-skip {
-            margin-top: 12px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .nickname-skip:active {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
         /* Leaderboard Modal */
         .leaderboard-list {
             background: rgba(255, 255, 255, 0.05);
@@ -1150,8 +1135,7 @@
             <h3>Hvad hedder du?</h3>
             <p>Dit navn bruges til ranglisten</p>
             <input type="text" class="nickname-input" id="nickname-input" placeholder="Dit navn" maxlength="20" autocomplete="off">
-            <button class="nickname-btn" id="nickname-save">Start spil</button>
-            <button class="nickname-skip" id="nickname-skip">Spring over</button>
+            <button class="nickname-btn" id="nickname-save">Gem</button>
         </div>
     </div>
 
@@ -1229,7 +1213,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767198068;
+        const APP_VERSION = 1767198207;
 
         // ========== OVERFLOW MENU ==========
         (() => {
@@ -1487,7 +1471,6 @@
             const nicknameModal = document.getElementById('nickname-modal');
             const nicknameInput = document.getElementById('nickname-input');
             const nicknameSave = document.getElementById('nickname-save');
-            const nicknameSkip = document.getElementById('nickname-skip');
             const menuPlayerName = document.getElementById('menu-player-name');
             const gameCards = document.querySelectorAll('.game-card');
 
@@ -1530,10 +1513,6 @@
             });
 
             nicknameSave.onclick = () => saveAndNavigate(nicknameInput.value);
-            nicknameSkip.onclick = () => {
-                nicknameModal.classList.remove('active');
-                if (pendingGameUrl) window.location.href = pendingGameUrl;
-            };
 
             nicknameInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') saveAndNavigate(nicknameInput.value);

@@ -12,6 +12,8 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 42, closedAt: '2025-12-31T16:21:42Z', submitter: 'Vera', text: 'Added player name to overflow menu' },
+        { issue: 40, closedAt: '2025-12-31T15:00:33Z', submitter: 'Martin', text: 'Redesigned main page with overflow menu' },
         { issue: 37, closedAt: '2025-12-31T14:30:00Z', submitter: 'Martin', text: 'Added GitHub link and submitter to changelog entries' },
         { issue: 35, closedAt: '2025-12-31T13:45:00Z', submitter: 'Martin', text: 'Added notification dot to changelog button' },
         { issue: 34, closedAt: '2025-12-31T11:27:29Z', submitter: 'Martin', text: 'Added changelog modal to main page' },
