@@ -82,7 +82,10 @@
 
         /* ========== HEADER ========== */
         .header {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 50;
             display: flex;
             align-items: center;
@@ -241,7 +244,7 @@
         .content {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 80px 16px 100px 16px; /* top accounts for fixed header, bottom for fixed footer */
             position: relative;
             z-index: 1;
         }
@@ -355,7 +358,10 @@
 
         /* ========== STICKY FOOTER ========== */
         .sticky-footer {
-            position: relative;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 10;
             padding: 16px;
             background: rgba(26, 26, 46, 0.95);
@@ -1211,7 +1217,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767192622;
+        const APP_VERSION = 1767193029;
 
         // ========== OVERFLOW MENU ==========
         (() => {
