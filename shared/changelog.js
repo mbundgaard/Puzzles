@@ -44,7 +44,7 @@
         const lastViewed = localStorage.getItem(STORAGE_KEY);
         const newest = getNewestTimestamp();
         if (!newest) return false;
-        if (!lastViewed) return false; // First visit, don't show dot
+        if (!lastViewed) return true; // First visit, show dot
         return newest > lastViewed;
     }
 
