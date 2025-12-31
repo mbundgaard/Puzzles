@@ -11,24 +11,26 @@ const EXCLUDED_WORDS = new Set([
     'armen', 'banen', 'bilen', 'faren', 'gaven', 'halen', 'hønen', 'pigen',
     'risen', 'ræven', 'stuen', 'vejen', 'visen', 'ungen', 'pælen', 'filen',
     'rosen', 'basen', 'bøgen', 'dosen', 'enden', 'foden', 'haven', 'huden',
-    'køen', 'luen', 'muren', 'nålen', 'posen', 'ruden', 'solen', 'timen',
+    'luen', 'muren', 'nålen', 'posen', 'ruden', 'solen', 'timen', 'legen',
+    'puden', 'figen',
     // Animal definite forms
     'haren', 'løven', 'musen', 'ørnen', 'selen', 'ulven', 'viben', 'geden',
     'hanen', 'gåsen', 'anden', 'mågen', 'uglen',
     // Definite forms (-et suffix = neuter gender "the")
     'dyret', 'hadet', 'havet', 'huset', 'livet', 'lynet', 'mødet', 'toget',
     'træet', 'higet', 'øjet', 'året', 'arket', 'bedet', 'benet', 'buret',
-    'dunet', 'egnet', 'emnet', 'fadet', 'gulvet', 'hjulet', 'hornet',
+    'dunet', 'egnet', 'emnet', 'fadet', 'kødet',
     // Common plurals (-e suffix)
     'blade', 'borde', 'breve', 'fugle', 'heste', 'hunde', 'kampe', 'lande',
     'skibe', 'skove', 'stene', 'telte', 'træer', 'ugler', 'biler', 'bøger',
-    'katte', 'lamme', 'fluer', 'myrer', 'øgler', 'hvale',
+    'katte', 'lamme', 'fluer', 'myrer', 'øgler', 'hvale', 'bolde', 'pinde',
+    'senge', 'stole', 'piger',
     // Common plurals (-er suffix)
     'damer', 'gader', 'huler', 'ideer', 'kager', 'noter', 'roser', 'sider',
-    'skyer', 'toner', 'typer', 'unger', 'urter', 'haver', 'haner', 'haser',
-    'hajer', 'ilder',
+    'skyer', 'toner', 'typer', 'unger', 'urter', 'haver', 'haser', 'hajer',
+    'ilder', 'æbler', 'ærter', 'pærer', 'olier', 'rejer',
     // Past participles and other declined forms
-    'brugt', 'glemt', 'klemt', 'svedt'
+    'brugt', 'glemt', 'klemt', 'svedt', 'kogte'
 ]);
 
 // Check if a word looks like a definite or plural form
