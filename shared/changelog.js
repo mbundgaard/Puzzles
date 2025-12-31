@@ -71,6 +71,10 @@
             max-width: 340px;
         }
 
+        .changelog-modal .highlight {
+            color: #a855f7;
+        }
+
         .changelog-list {
             text-align: left;
             margin-top: 16px;
@@ -165,7 +169,7 @@
             <div class="modal changelog-modal">
                 <span class="modal-close" id="changelog-close">×</span>
                 <div class="modal-emoji">📋</div>
-                <h3>Nyheder</h3>
+                <h3>Nyheder i Hjerne<span class="highlight">spil</span></h3>
                 <div class="changelog-list">
                     ${generateEntriesHTML()}
                 </div>

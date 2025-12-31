@@ -108,7 +108,8 @@
             letter-spacing: -0.5px;
         }
 
-        .logo .highlight {
+        .logo .highlight,
+        .modal h3 .highlight {
             color: #a855f7;
         }
 
@@ -1115,7 +1116,7 @@
         <div class="modal">
             <span class="modal-close" id="qr-close">×</span>
             <div class="modal-emoji">🔗</div>
-            <h3>Del med venner</h3>
+            <h3>Del Hjerne<span class="highlight">spil</span> med venner</h3>
             <p class="modal-subtitle">Scan for at dele</p>
             <div class="qr-code">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mbundgaard.github.io/Puzzles/index.html" alt="QR" width="140" height="140">
@@ -1153,7 +1154,7 @@
         <div class="modal">
             <span class="modal-close" id="info-close">×</span>
             <div class="modal-emoji">ℹ️</div>
-            <h3>Om Hjernespil</h3>
+            <h3>Om Hjerne<span class="highlight">spil</span></h3>
             <div class="info-content">
                 <p>Hjernespil er en samling af klassiske puslespil og hjernetrim, som du kan spille direkte på din telefon.</p>
 
@@ -1210,7 +1211,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767193625;
+        const APP_VERSION = 1767196520;
 
         // ========== OVERFLOW MENU ==========
         (() => {
