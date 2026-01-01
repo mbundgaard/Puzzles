@@ -6,10 +6,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: #0f0f23;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
