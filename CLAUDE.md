@@ -316,7 +316,7 @@ const CHANGELOG_ENTRIES = [
 
 - **issue**: GitHub issue number (links to GitHub issue via icon)
 - **closedAt**: ISO timestamp from GitHub's `closed_at` field (e.g., `2025-12-31T14:30:00Z`)
-- **submitter**: Name of person who submitted the feedback/suggestion
+- **submitter**: Name of person who submitted the feedback/suggestion (check the GitHub issue - do NOT assume it's Martin)
 - **text**: Short English description of what was fixed/added
 
 The display date (e.g., "Dec 31") is derived automatically from the timestamp.
