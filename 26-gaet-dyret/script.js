@@ -56,6 +56,11 @@ class AnimalGuessingGame {
         this.categoryBtns = document.querySelectorAll('.category-btn');
 
         this.init();
+
+        // Prevent page scroll on mobile
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
     }
 
     init() {
