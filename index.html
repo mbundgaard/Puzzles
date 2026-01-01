@@ -1194,8 +1194,8 @@
                 <option value="24">Tangram</option>
                 <option value="22">Tårnet i Hanoi</option>
                 <option disabled>──────────</option>
-                <option value="suggestion">Foreslå nyt spil</option>
-                <option value="feedback">Generel feedback</option>
+                <option value="00">Foreslå nyt spil</option>
+                <option value="">Generel feedback</option>
             </select>
             <textarea class="feedback-input" id="feedback-input" placeholder="Skriv din besked her (brug det sprog du foretrækker)..." rows="4"></textarea>
             <input type="text" class="feedback-nickname" id="feedback-nickname" placeholder="Dit navn (valgfrit)" maxlength="20">
@@ -1206,7 +1206,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767270914;
+        const APP_VERSION = 1767271591;
         window.APP_VERSION = APP_VERSION;  // Expose for api.js session tracking
 
         // ========== OVERFLOW MENU ==========
@@ -1409,29 +1409,12 @@
             }
 
             async function submitFeedback() {
-                const rawValue = feedbackGame.value;
+                const game = feedbackGame.value;  // "" = general, "00" = new game, other = game-specific
                 const text = feedbackInput.value.trim();
-
-                if (!rawValue) {
-                    feedbackGame.focus();
-                    return;
-                }
 
                 if (!text) {
                     feedbackInput.focus();
                     return;
-                }
-
-                // Parse game and type from dropdown value
-                // "suggestion" or "feedback" → game "00" with type
-                // numeric values → game-specific feedback
-                let game, type;
-                if (rawValue === 'suggestion' || rawValue === 'feedback') {
-                    game = '00';
-                    type = rawValue;
-                } else {
-                    game = rawValue;
-                    type = undefined;
                 }
 
                 const nickname = feedbackNickname.value.trim();
@@ -1447,11 +1430,10 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            game: game,
+                            game: game || undefined,  // Send undefined if empty
                             rating: 5,
                             text: text,
-                            nickname: nickname || undefined,
-                            type: type
+                            nickname: nickname || undefined
                         })
                     });
                     feedbackSubmit.textContent = 'Tak!';
@@ -1463,7 +1445,7 @@
             }
 
             // Footer button - pre-select "Foreslå nyt spil"
-            document.getElementById('suggest-btn').onclick = () => openModal('suggestion');
+            document.getElementById('suggest-btn').onclick = () => openModal('00');
 
             feedbackModal.onclick = (e) => {
                 if (e.target === feedbackModal) closeModal();

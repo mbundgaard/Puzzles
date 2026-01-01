@@ -36,8 +36,8 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname,
-        string? aiTitle = null, string? aiTranslation = null, string? feedbackType = null)
+    public async Task<bool> CreateFeedbackIssueAsync(string? game, int? rating, string? text, string? nickname,
+        string? aiTitle = null, string? aiTranslation = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -47,8 +47,9 @@ public class GitHubService : IGitHubService
 
         try
         {
-            var isGameSuggestion = game == "00" && feedbackType == "suggestion";
-            var isGeneralFeedback = game == "00" && feedbackType == "feedback";
+            // null/empty = general feedback, "00" = new game suggestion, other = game-specific
+            var isGameSuggestion = game == "00";
+            var isGeneralFeedback = string.IsNullOrEmpty(game);
             var gameName = GameValidator.GetGameName(game);
 
             // Build title - use AI-generated title if available

@@ -8,16 +8,15 @@ public interface IGitHubService
     /// <summary>
     /// Creates a GitHub issue for feedback.
     /// </summary>
-    /// <param name="game">Game number (e.g., "01", "00" for general/suggestions)</param>
+    /// <param name="game">Game number: "00" = new game suggestion, "01"-"99" = game-specific, null = general feedback</param>
     /// <param name="rating">Optional rating 1-5</param>
     /// <param name="text">Optional feedback text (original)</param>
     /// <param name="nickname">Optional nickname</param>
     /// <param name="aiTitle">Optional AI-generated title</param>
     /// <param name="aiTranslation">Optional AI-translated text (English)</param>
-    /// <param name="feedbackType">For game "00": "suggestion" (new game) or "feedback" (general)</param>
     /// <returns>True if issue was created successfully</returns>
-    Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname,
-        string? aiTitle = null, string? aiTranslation = null, string? feedbackType = null);
+    Task<bool> CreateFeedbackIssueAsync(string? game, int? rating, string? text, string? nickname,
+        string? aiTitle = null, string? aiTranslation = null);
 
     /// <summary>
     /// Closes a GitHub issue with a comment explaining the resolution.

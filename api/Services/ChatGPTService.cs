@@ -30,7 +30,7 @@ public class ChatGPTService : IChatGPTService
         _deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
     }
 
-    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string game, string? feedbackType)
+    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string? game)
     {
         if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
         {
@@ -45,14 +45,15 @@ public class ChatGPTService : IChatGPTService
 
         try
         {
-            // Determine the appropriate prompt based on game and feedback type
+            // Determine the appropriate prompt based on game value
+            // null/empty = general feedback, "00" = new game suggestion, other = game-specific
             string systemPrompt;
-            if (game == "00" && feedbackType == "suggestion")
+            if (game == "00")
             {
                 // New game suggestion
                 systemPrompt = "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'.";
             }
-            else if (game == "00" && feedbackType == "feedback")
+            else if (string.IsNullOrEmpty(game))
             {
                 // General site feedback (not about a specific game)
                 systemPrompt = "You process general feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. This is about the website/app itself, not a specific game. Title examples: 'Add dark mode option', 'Improve loading speed', 'Request for notifications'.";
