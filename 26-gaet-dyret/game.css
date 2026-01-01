@@ -6,22 +6,19 @@
     box-sizing: border-box;
 }
 
-html, body {
+html {
     height: 100%;
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    touch-action: none;
-    overscroll-behavior: none;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background: #0f0f23;
+    min-height: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 15px;
+    overflow: hidden;
 }
 
 .game-container {
@@ -180,7 +177,6 @@ h1 {
     border-radius: 12px;
     color: white;
     outline: none;
-    touch-action: manipulation;
 }
 
 .input-row input::placeholder {
