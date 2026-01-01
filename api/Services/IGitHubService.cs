@@ -10,10 +10,13 @@ public interface IGitHubService
     /// </summary>
     /// <param name="game">Game number (e.g., "01", "00" for suggestions)</param>
     /// <param name="rating">Optional rating 1-5</param>
-    /// <param name="text">Optional feedback text</param>
+    /// <param name="text">Optional feedback text (original)</param>
     /// <param name="nickname">Optional nickname</param>
+    /// <param name="aiTitle">Optional AI-generated title</param>
+    /// <param name="aiTranslation">Optional AI-translated text (English)</param>
     /// <returns>True if issue was created successfully</returns>
-    Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname);
+    Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname,
+        string? aiTitle = null, string? aiTranslation = null);
 
     /// <summary>
     /// Closes a GitHub issue with a comment explaining the resolution.

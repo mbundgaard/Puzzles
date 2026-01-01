@@ -13,11 +13,13 @@ public class FeedbackFunction
 {
     private readonly ILogger<FeedbackFunction> _logger;
     private readonly IGitHubService _gitHubService;
+    private readonly IChatGPTService _chatGPTService;
 
-    public FeedbackFunction(ILogger<FeedbackFunction> logger, IGitHubService gitHubService)
+    public FeedbackFunction(ILogger<FeedbackFunction> logger, IGitHubService gitHubService, IChatGPTService chatGPTService)
     {
         _logger = logger;
         _gitHubService = gitHubService;
+        _chatGPTService = chatGPTService;
     }
 
     [Function("SubmitFeedback")]
@@ -70,10 +72,26 @@ public class FeedbackFunction
             nickname = null; // Ignore invalid nickname
         }
 
-        // Create GitHub issue (fire-and-forget, don't block response)
-        _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname);
+        // Process feedback with ChatGPT (translate and generate title)
+        string? aiTitle = null;
+        string? aiTranslation = null;
 
-        _logger.LogInformation("Feedback submitted: game={Game}, rating={Rating}", game, feedbackRequest.Rating?.ToString() ?? "none");
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            var isGameSuggestion = game == "00";
+            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, isGameSuggestion);
+            if (aiResult != null)
+            {
+                aiTitle = aiResult.Title;
+                aiTranslation = aiResult.TranslatedText;
+            }
+        }
+
+        // Create GitHub issue (fire-and-forget, don't block response)
+        _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname, aiTitle, aiTranslation);
+
+        _logger.LogInformation("Feedback submitted: game={Game}, rating={Rating}, aiProcessed={AiProcessed}",
+            game, feedbackRequest.Rating?.ToString() ?? "none", aiTitle != null);
 
         return new OkObjectResult(new { success = true, message = "Tak for din feedback!" });
     }

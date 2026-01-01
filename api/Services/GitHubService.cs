@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Puzzles.Models;
 
 namespace Puzzles.Services;
 
@@ -35,7 +36,8 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname)
+    public async Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname,
+        string? aiTitle = null, string? aiTranslation = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -46,16 +48,32 @@ public class GitHubService : IGitHubService
         try
         {
             var isGameSuggestion = game == "00";
+            var gameName = GameValidator.GetGameName(game);
 
-            // Build title
+            // Build title - use AI-generated title if available
             string title;
-            if (isGameSuggestion)
+            if (!string.IsNullOrEmpty(aiTitle))
+            {
+                if (isGameSuggestion)
+                {
+                    title = $"New Game: {aiTitle}";
+                }
+                else if (gameName != null)
+                {
+                    title = $"{gameName}: {aiTitle}";
+                }
+                else
+                {
+                    title = aiTitle;
+                }
+            }
+            else if (isGameSuggestion)
             {
                 title = "New Game Suggestion";
             }
             else
             {
-                title = $"Feedback: Game {game}";
+                title = gameName != null ? $"Feedback: {gameName}" : $"Feedback: Game {game}";
             }
 
             // Build body
@@ -64,26 +82,46 @@ public class GitHubService : IGitHubService
             if (isGameSuggestion)
             {
                 body.AppendLine("## Game Suggestion");
-                body.AppendLine();
-                body.AppendLine(text ?? "(No description)");
             }
             else
             {
                 body.AppendLine($"## Feedback for Game {game}");
+            }
+            body.AppendLine();
+
+            // Show rating if provided (for regular feedback)
+            if (!isGameSuggestion && rating.HasValue)
+            {
+                body.AppendLine($"**Rating:** {new string('⭐', rating.Value)} ({rating.Value}/5)");
+                body.AppendLine();
+            }
+
+            // Show AI translation if available, otherwise original text
+            if (!string.IsNullOrWhiteSpace(aiTranslation))
+            {
+                body.AppendLine(aiTranslation);
                 body.AppendLine();
 
-                if (rating.HasValue)
+                // Also include original text for reference
+                if (!string.IsNullOrWhiteSpace(text) && text != aiTranslation)
                 {
-                    body.AppendLine($"**Rating:** {new string('⭐', rating.Value)} ({rating.Value}/5)");
+                    body.AppendLine("<details>");
+                    body.AppendLine("<summary>Original (Danish)</summary>");
                     body.AppendLine();
-                }
-
-                if (!string.IsNullOrWhiteSpace(text))
-                {
-                    body.AppendLine("**Comment:**");
                     body.AppendLine(text);
+                    body.AppendLine("</details>");
                     body.AppendLine();
                 }
+            }
+            else if (!string.IsNullOrWhiteSpace(text))
+            {
+                body.AppendLine(text);
+                body.AppendLine();
+            }
+            else if (isGameSuggestion)
+            {
+                body.AppendLine("(No description)");
+                body.AppendLine();
             }
 
             if (!string.IsNullOrWhiteSpace(nickname))

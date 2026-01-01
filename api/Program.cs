@@ -25,4 +25,7 @@ builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(conn
 // Register GitHub service for feedback issues
 builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 
+// Register Azure OpenAI (ChatGPT) service for feedback processing
+builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
+
 builder.Build().Run();

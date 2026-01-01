@@ -7,6 +7,43 @@ namespace Puzzles.Models;
 public static class GameValidator
 {
     /// <summary>
+    /// Game names by number. Keep in sync with site-index.json.
+    /// </summary>
+    private static readonly Dictionary<string, string> GameNames = new()
+    {
+        ["00"] = "Game Suggestion",
+        ["01"] = "Reversi",
+        ["05"] = "2048",
+        ["06"] = "Minestryger",
+        ["07"] = "Hukommelse",
+        ["08"] = "Kabale",
+        ["09"] = "Kalaha",
+        ["10"] = "Ordleg",
+        ["11"] = "Kryds og Bolle",
+        ["12"] = "Rørføring",
+        ["13"] = "15-Puslespil",
+        ["14"] = "Mastermind",
+        ["17"] = "Pind",
+        ["18"] = "Dam",
+        ["19"] = "Mølle",
+        ["20"] = "Slitherlink",
+        ["21"] = "Fire på Stribe",
+        ["22"] = "Tårnet i Hanoi",
+        ["23"] = "Slange",
+        ["24"] = "Tangram",
+        ["25"] = "Sænke Slagskibe"
+    };
+
+    /// <summary>
+    /// Gets the game name for a normalized game number.
+    /// </summary>
+    public static string? GetGameName(string? normalizedGame)
+    {
+        if (normalizedGame == null) return null;
+        return GameNames.TryGetValue(normalizedGame, out var name) ? name : null;
+    }
+
+    /// <summary>
     /// Validates and normalizes a game number.
     /// Accepts "1", "01", "  01  " etc. Returns normalized "01" format or null if invalid.
     /// Accepts any number 0-99.
