@@ -50,13 +50,14 @@ const HjernespilAPI = (() => {
         _sessionGame = game;
 
         try {
+            const appVersion = window.APP_VERSION || parseInt(localStorage.getItem('app_version')) || null;
             await fetch(`${API_BASE}/session/${game}/${_sessionId}/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nickname: getNickname(),
                     device: getDeviceInfo(),
-                    appVersion: window.APP_VERSION || null
+                    appVersion: appVersion
                 })
             });
         } catch (error) {
