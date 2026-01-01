@@ -145,6 +145,21 @@ h1 {
     align-items: center;
 }
 
+.game-stats {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.points-indicator {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 .category-label {
     background: rgba(245, 158, 11, 0.2);
     color: #f59e0b;

@@ -21,6 +21,7 @@ class AnimalGuessingGame {
         this.gameScreen = document.getElementById('game-screen');
         this.categoryLabel = document.getElementById('category-label');
         this.guessCounter = document.getElementById('guess-counter');
+        this.pointsIndicator = document.getElementById('points-indicator');
         this.answerHistory = document.getElementById('answer-history');
         this.questionInput = document.getElementById('question-input');
         this.guessInput = document.getElementById('guess-input');
@@ -226,7 +227,9 @@ class AnimalGuessingGame {
     }
 
     updateCounter() {
-        this.guessCounter.textContent = `Forsøg: ${this.guessCount}/${this.MAX_GUESSES}`;
+        this.guessCounter.textContent = `${this.guessCount}/${this.MAX_GUESSES}`;
+        const points = this.calculatePoints();
+        this.pointsIndicator.textContent = `${points} point`;
     }
 
     renderHistory() {
