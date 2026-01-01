@@ -62,10 +62,14 @@ class AnimalGuessingGame {
             e.preventDefault();
         }, { passive: false });
 
-        // Lock body height to visual viewport (handles keyboard)
+        // Lock body and container height to visual viewport (handles keyboard)
         if (window.visualViewport) {
+            const container = document.querySelector('.game-container');
             const resizeHandler = () => {
-                document.body.style.height = `${window.visualViewport.height}px`;
+                const vh = window.visualViewport.height;
+                document.body.style.height = `${vh}px`;
+                // Container height = viewport - body padding (15px * 2)
+                container.style.maxHeight = `${vh - 30}px`;
             };
             window.visualViewport.addEventListener('resize', resizeHandler);
             resizeHandler();
