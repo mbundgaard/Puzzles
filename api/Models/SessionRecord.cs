@@ -34,6 +34,7 @@ public class SessionStartRequest
     public string? Game { get; set; }
     public string? Nickname { get; set; }
     public DeviceInfo? Device { get; set; }
+    public long? AppVersion { get; set; }
 }
 
 /// <summary>
@@ -64,6 +65,7 @@ public class SessionRecord
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public DeviceInfo? Device { get; set; }
+    public DateTime? AppVersion { get; set; }
     public List<SessionEvent> Events { get; set; } = new();
 
     // Azure Table Storage keys

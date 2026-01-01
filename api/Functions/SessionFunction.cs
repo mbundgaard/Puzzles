@@ -58,13 +58,21 @@ public class SessionFunction
             }
         }
 
+        // Convert Unix timestamp to DateTime if provided
+        DateTime? appVersion = null;
+        if (request?.AppVersion != null && request.AppVersion > 0 && request.AppVersion < 1800000000)
+        {
+            appVersion = DateTimeOffset.FromUnixTimeSeconds(request.AppVersion.Value).UtcDateTime;
+        }
+
         var session = new SessionRecord
         {
             SessionId = sessionId,
             Game = normalizedGame,
             Nickname = nickname,
             StartTime = DateTime.UtcNow,
-            Device = request?.Device
+            Device = request?.Device,
+            AppVersion = appVersion
         };
 
         try

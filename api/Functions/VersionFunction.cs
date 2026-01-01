@@ -36,9 +36,12 @@ public class VersionFunction
             return new BadRequestObjectResult(new { error = "Invalid JSON" });
         }
 
-        if (versionRequest == null || versionRequest.Version <= 0)
+        // Force update for invalid or corrupted versions
+        if (versionRequest == null || versionRequest.Version <= 0 || versionRequest.Version >= 1800000000)
         {
-            return new BadRequestObjectResult(new { error = "Valid version number required" });
+            _logger.LogInformation("Version check: client={ClientVersion}, forcing update (invalid/corrupted version)",
+                versionRequest?.Version ?? 0);
+            return new OkObjectResult(new { newVersionExists = true });
         }
 
         var newVersionExists = await _storage.CheckAndUpdateVersionAsync(versionRequest.Version);

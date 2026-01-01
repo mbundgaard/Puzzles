@@ -55,7 +55,8 @@ const HjernespilAPI = (() => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nickname: getNickname(),
-                    device: getDeviceInfo()
+                    device: getDeviceInfo(),
+                    appVersion: window.APP_VERSION || null
                 })
             });
         } catch (error) {

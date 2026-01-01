@@ -19,6 +19,7 @@ public class SessionEntity : ITableEntity
     public string? Nickname { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
+    public DateTime? AppVersion { get; set; }  // App version as DateTime
     public string? DeviceJson { get; set; }   // JSON serialized DeviceInfo
     public string EventsJson { get; set; } = "[]";  // JSON serialized List<SessionEvent>
 }
@@ -51,6 +52,7 @@ public class AzureTableSessionStorage : ISessionStorage
             Game = session.Game,
             Nickname = session.Nickname,
             StartTime = session.StartTime,
+            AppVersion = session.AppVersion,
             DeviceJson = session.Device != null
                 ? JsonSerializer.Serialize(session.Device, JsonOptions)
                 : null,
@@ -105,6 +107,7 @@ public class AzureTableSessionStorage : ISessionStorage
                 Nickname = entity.Nickname,
                 StartTime = entity.StartTime,
                 EndTime = entity.EndTime,
+                AppVersion = entity.AppVersion,
                 Device = !string.IsNullOrEmpty(entity.DeviceJson)
                     ? JsonSerializer.Deserialize<DeviceInfo>(entity.DeviceJson, JsonOptions)
                     : null,

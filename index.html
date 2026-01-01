@@ -598,6 +598,15 @@
             margin-bottom: 4px;
         }
 
+        .modal-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+
         /* Feedback Modal */
         .feedback-select {
             width: 100%;
@@ -1155,6 +1164,7 @@
                     <li>Tryk på ⭐ i et spil for at give feedback</li>
                 </ul>
             </div>
+            <div class="modal-footer" id="info-modal-footer"></div>
         </div>
     </div>
 
@@ -1195,7 +1205,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1800000001;
+        const APP_VERSION = 1767265962;
 
         // ========== OVERFLOW MENU ==========
         (() => {
@@ -1358,6 +1368,13 @@
             if (!localStorage.getItem(INFO_SHOWN_KEY)) {
                 infoModal.classList.add('active');
             }
+
+            // Populate footer with timestamp
+            document.getElementById('info-modal-footer').textContent =
+                'Opdateret ' + new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
+                    day: 'numeric', month: 'short', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
         })();
 
         // ========== FEEDBACK MODAL ==========
