@@ -46,8 +46,9 @@ public class AnimalGameFunction
         }
 
         var category = pickRequest?.Category?.Trim();
+        var difficulty = pickRequest?.Difficulty?.Trim();
 
-        var result = await _chatGPTService.PickAnimalAsync(category);
+        var result = await _chatGPTService.PickAnimalAsync(category, difficulty);
         if (result == null)
         {
             return new ObjectResult(new { error = "Kunne ikke vælge et dyr. Prøv igen." })
@@ -56,7 +57,7 @@ public class AnimalGameFunction
             };
         }
 
-        _logger.LogInformation("Animal picked: {Animal} ({Category})", result.Animal, result.Category);
+        _logger.LogInformation("Animal picked: {Animal} ({Category}, {Difficulty})", result.Animal, result.Category, difficulty ?? "hard");
 
         return new OkObjectResult(new AnimalPickResponse
         {

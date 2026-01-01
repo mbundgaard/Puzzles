@@ -112,7 +112,7 @@ public class ChatGPTService : IChatGPTService
         }
     }
 
-    public async Task<AnimalPickResult?> PickAnimalAsync(string? category)
+    public async Task<AnimalPickResult?> PickAnimalAsync(string? category, string? difficulty = "hard")
     {
         if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
         {
@@ -120,18 +120,30 @@ public class ChatGPTService : IChatGPTService
             return null;
         }
 
+        // Default to hard if not specified
+        var diff = string.IsNullOrWhiteSpace(difficulty) ? "hard" : difficulty.ToLower();
+
         try
         {
             var categoryPrompt = string.IsNullOrWhiteSpace(category)
                 ? "Vælg en tilfældig kategori (f.eks. havdyr, fugle, pattedyr, insekter, krybdyr) og et dyr fra den kategori."
                 : $"Vælg et tilfældigt dyr fra kategorien: {category}";
 
+            var difficultyPrompt = diff switch
+            {
+                "easy" => "Vælg et MEGET ALMINDELIGT dyr som alle børn kender, f.eks. hund, kat, ko, hest, elefant, løve, giraf, zebra, kanin, and, høne, gris.",
+                "medium" => "Vælg et dyr som de fleste kender, men undgå de mest oplagte som hund, kat, ko. Vælg f.eks. delfin, pingvin, flamingo, bæver, vaskebjørn, papegøje.",
+                _ => "Vælg et MINDRE KENDT eller UVENTET dyr. Undgå almindelige dyr som hund, kat, ko, hest, elefant. Vælg f.eks. næbdyr, tapir, okapien, axolotl, capybara, fennekræv, pangolin, manati."
+            };
+
             var systemPrompt = $@"Du hjælper med et gættespil om dyr. {categoryPrompt}
+
+{difficultyPrompt}
 
 Svar med JSON i dette format:
 {{""animal"": ""navnet på dyret"", ""category"": ""kategorien""}}
 
-Vælg dyr som de fleste kender. Dyrenavnet skal være på dansk og i ental (f.eks. ""delfin"" ikke ""delfiner"").";
+Dyrenavnet skal være på dansk og i ental (f.eks. ""delfin"" ikke ""delfiner"").";
 
             var requestBody = new
             {
@@ -154,7 +166,7 @@ Vælg dyr som de fleste kender. Dyrenavnet skal være på dansk og i ental (f.ek
                 return null;
             }
 
-            _logger.LogInformation("Animal picked: {Animal} ({Category})", result.Animal, result.Category);
+            _logger.LogInformation("Animal picked: {Animal} ({Category}, difficulty: {Difficulty})", result.Animal, result.Category, diff);
             return result;
         }
         catch (Exception ex)

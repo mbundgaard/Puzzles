@@ -2,16 +2,39 @@ class AnimalGuessingGame {
     constructor() {
         this.API_BASE = 'https://puzzlesapi.azurewebsites.net/api/game/26';
         this.MAX_GUESSES = 20;
-        this.POINTS_INTERVALS = [
-            { max: 4, points: 5 },
-            { max: 8, points: 4 },
-            { max: 12, points: 3 },
-            { max: 16, points: 2 },
-            { max: 20, points: 1 }
-        ];
+
+        // Points intervals per difficulty (max points scales with difficulty)
+        this.DIFFICULTY_CONFIG = {
+            easy: {
+                maxPoints: 2,
+                intervals: [
+                    { max: 10, points: 2 },
+                    { max: 20, points: 1 }
+                ]
+            },
+            medium: {
+                maxPoints: 3,
+                intervals: [
+                    { max: 6, points: 3 },
+                    { max: 13, points: 2 },
+                    { max: 20, points: 1 }
+                ]
+            },
+            hard: {
+                maxPoints: 5,
+                intervals: [
+                    { max: 4, points: 5 },
+                    { max: 8, points: 4 },
+                    { max: 12, points: 3 },
+                    { max: 16, points: 2 },
+                    { max: 20, points: 1 }
+                ]
+            }
+        };
 
         this.animal = null;
         this.category = null;
+        this.difficulty = null;
         this.guessCount = 0;
         this.history = [];
         this.isLoading = false;
@@ -19,6 +42,8 @@ class AnimalGuessingGame {
         // Elements
         this.startScreen = document.getElementById('start-screen');
         this.gameScreen = document.getElementById('game-screen');
+        this.categoryStep = document.getElementById('category-step');
+        this.difficultyStep = document.getElementById('difficulty-step');
         this.categoryLabel = document.getElementById('category-label');
         this.guessCounter = document.getElementById('guess-counter');
         this.pointsIndicator = document.getElementById('points-indicator');
@@ -30,16 +55,31 @@ class AnimalGuessingGame {
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
         this.categoryBtns = document.querySelectorAll('.category-btn');
+        this.difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        this.backToCategoryBtn = document.getElementById('back-to-category');
 
         this.init();
     }
 
     init() {
-        // Category buttons
+        // Category buttons - show difficulty selection
         this.categoryBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                this.startGame(btn.dataset.category);
+                this.category = btn.dataset.category;
+                this.showDifficultyStep();
             });
+        });
+
+        // Difficulty buttons - start game
+        this.difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.startGame(btn.dataset.difficulty);
+            });
+        });
+
+        // Back to category
+        this.backToCategoryBtn.addEventListener('click', () => {
+            this.showCategoryStep();
         });
 
         // Ask button
@@ -55,23 +95,39 @@ class AnimalGuessingGame {
         });
     }
 
+    showCategoryStep() {
+        this.categoryStep.classList.remove('hidden');
+        this.difficultyStep.classList.add('hidden');
+    }
+
+    showDifficultyStep() {
+        this.categoryStep.classList.add('hidden');
+        this.difficultyStep.classList.remove('hidden');
+    }
+
     showStartScreen() {
         this.startScreen.classList.remove('hidden');
         this.gameScreen.classList.add('hidden');
+        this.showCategoryStep();
         this.animal = null;
         this.category = null;
+        this.difficulty = null;
         this.guessCount = 0;
         this.history = [];
     }
 
-    async startGame(category) {
+    async startGame(difficulty) {
+        this.difficulty = difficulty;
         this.setLoading(true);
 
         try {
             const response = await fetch(`${this.API_BASE}/pick`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ category })
+                body: JSON.stringify({
+                    category: this.category,
+                    difficulty: this.difficulty
+                })
             });
 
             if (!response.ok) {
@@ -80,7 +136,6 @@ class AnimalGuessingGame {
 
             const data = await response.json();
             this.animal = data.animal.toLowerCase();
-            this.category = data.category;
             this.guessCount = 0;
             this.history = [];
 
@@ -196,7 +251,8 @@ class AnimalGuessingGame {
     }
 
     calculatePoints() {
-        for (const interval of this.POINTS_INTERVALS) {
+        const config = this.DIFFICULTY_CONFIG[this.difficulty];
+        for (const interval of config.intervals) {
             if (this.guessCount <= interval.max) {
                 return interval.points;
             }

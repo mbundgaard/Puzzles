@@ -10,6 +10,12 @@ public class AnimalPickRequest
     /// If null, a random category/animal is chosen.
     /// </summary>
     public string? Category { get; set; }
+
+    /// <summary>
+    /// Difficulty level: "easy", "medium", or "hard".
+    /// Defaults to "hard" if not specified.
+    /// </summary>
+    public string? Difficulty { get; set; }
 }
 
 /// <summary>

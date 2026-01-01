@@ -44,8 +44,9 @@ public interface IChatGPTService
     /// Picks a random animal for the guessing game.
     /// </summary>
     /// <param name="category">Optional category (e.g., "havdyr", "fugle")</param>
+    /// <param name="difficulty">Difficulty level: "easy", "medium", or "hard" (defaults to "hard")</param>
     /// <returns>Animal name and category</returns>
-    Task<AnimalPickResult?> PickAnimalAsync(string? category);
+    Task<AnimalPickResult?> PickAnimalAsync(string? category, string? difficulty = "hard");
 
     /// <summary>
     /// Answers a yes/no question about an animal.
