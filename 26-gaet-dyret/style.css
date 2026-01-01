@@ -9,11 +9,11 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: #0f0f23;
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     padding: 15px;
 }
 
@@ -23,8 +23,6 @@ body {
     gap: 12px;
     max-width: 450px;
     width: 100%;
-    height: calc(100vh - 30px);
-    height: calc(100dvh - 30px);
 }
 
 .game-container {
@@ -163,6 +161,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .game-stats {
