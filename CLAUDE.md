@@ -8,6 +8,11 @@ https://api.github.com/repos/mbundgaard/Puzzles/issues?state=open
 
 These are user feedback and bug reports waiting to be addressed.
 
+**When listing issues, group them by type in this order:**
+1. **General Feedback** - site/app feedback (game = null/empty)
+2. **Game Suggestions** - new game ideas (game = "00")
+3. **Game Feedback** - feedback about specific games (game = "01"-"99")
+
 ---
 
 > **Note:** Also read `README.md` and `index.html` for project overview and game list.
