@@ -20,6 +20,7 @@ var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage")
 builder.Services.AddSingleton<IWinStorage>(new AzureTableWinStorage(connectionString));
 builder.Services.AddSingleton<IEventStorage>(new AzureTableEventStorage(connectionString));
 builder.Services.AddSingleton<IVersionStorage>(new AzureTableVersionStorage(connectionString));
+builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(connectionString));
 
 // Register GitHub service for feedback issues
 builder.Services.AddHttpClient<IGitHubService, GitHubService>();
