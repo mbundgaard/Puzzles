@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Puzzles.Models;
 
 namespace Puzzles.Services;
 
@@ -30,7 +31,7 @@ public class ChatGPTService : IChatGPTService
         _deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
     }
 
-    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string? game)
+    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, FeedbackType feedbackType)
     {
         if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
         {
@@ -45,24 +46,15 @@ public class ChatGPTService : IChatGPTService
 
         try
         {
-            // Determine the appropriate prompt based on game value
-            // null/empty = general feedback, "00" = new game suggestion, other = game-specific
-            string systemPrompt;
-            if (game == "00")
+            var systemPrompt = feedbackType switch
             {
-                // New game suggestion
-                systemPrompt = "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'.";
-            }
-            else if (string.IsNullOrEmpty(game))
-            {
-                // General site feedback (not about a specific game)
-                systemPrompt = "You process general feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. This is about the website/app itself, not a specific game. Title examples: 'Add dark mode option', 'Improve loading speed', 'Request for notifications'.";
-            }
-            else
-            {
-                // Game-specific feedback
-                systemPrompt = "You process user feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. The title should capture the main point, like 'Request for movable pieces' or 'Bug: Timer not resetting'.";
-            }
+                FeedbackType.NewGameSuggestion =>
+                    "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'.",
+                FeedbackType.GeneralFeedback =>
+                    "You process general feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. This is about the website/app itself, not a specific game. Title examples: 'Add dark mode option', 'Improve loading speed', 'Request for notifications'.",
+                _ =>
+                    "You process user feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. The title should capture the main point, like 'Request for movable pieces' or 'Bug: Timer not resetting'."
+            };
 
             var requestBody = new
             {

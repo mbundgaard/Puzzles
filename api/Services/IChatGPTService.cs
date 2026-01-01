@@ -1,3 +1,5 @@
+using Puzzles.Models;
+
 namespace Puzzles.Services;
 
 /// <summary>
@@ -25,7 +27,7 @@ public interface IChatGPTService
     /// Processes feedback text: translates to English and generates a concise title.
     /// </summary>
     /// <param name="text">Original feedback text (possibly in Danish)</param>
-    /// <param name="game">Game number: "00" = new game suggestion, "01"-"99" = game-specific, null = general feedback</param>
+    /// <param name="feedbackType">The type of feedback being processed</param>
     /// <returns>Processed result with title and translation, or null if processing failed</returns>
-    Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string? game);
+    Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, FeedbackType feedbackType);
 }

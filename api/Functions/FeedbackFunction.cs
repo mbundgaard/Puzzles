@@ -73,13 +73,21 @@ public class FeedbackFunction
             nickname = null; // Ignore invalid nickname
         }
 
+        // Determine feedback type based on game value
+        var feedbackType = game switch
+        {
+            "00" => FeedbackType.NewGameSuggestion,
+            null => FeedbackType.GeneralFeedback,
+            _ => FeedbackType.GameSpecific
+        };
+
         // Process feedback with ChatGPT (translate and generate title)
         string? aiTitle = null;
         string? aiTranslation = null;
 
         if (!string.IsNullOrWhiteSpace(text))
         {
-            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, game);
+            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, feedbackType);
             if (aiResult != null)
             {
                 aiTitle = aiResult.Title;
