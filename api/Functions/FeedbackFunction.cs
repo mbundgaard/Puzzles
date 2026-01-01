@@ -72,14 +72,21 @@ public class FeedbackFunction
             nickname = null; // Ignore invalid nickname
         }
 
+        // Normalize feedback type (only relevant for game "00")
+        // "suggestion" = new game idea, "feedback" = general site feedback
+        var feedbackType = feedbackRequest.Type?.Trim().ToLowerInvariant();
+        if (feedbackType != "suggestion" && feedbackType != "feedback")
+        {
+            feedbackType = null;
+        }
+
         // Process feedback with ChatGPT (translate and generate title)
         string? aiTitle = null;
         string? aiTranslation = null;
 
         if (!string.IsNullOrWhiteSpace(text))
         {
-            var isGameSuggestion = game == "00";
-            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, isGameSuggestion);
+            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, game, feedbackType);
             if (aiResult != null)
             {
                 aiTitle = aiResult.Title;
@@ -88,7 +95,7 @@ public class FeedbackFunction
         }
 
         // Create GitHub issue (fire-and-forget, don't block response)
-        _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname, aiTitle, aiTranslation);
+        _ = _gitHubService.CreateFeedbackIssueAsync(game, feedbackRequest.Rating, text, nickname, aiTitle, aiTranslation, feedbackType);
 
         _logger.LogInformation("Feedback submitted: game={Game}, rating={Rating}, aiProcessed={AiProcessed}",
             game, feedbackRequest.Rating?.ToString() ?? "none", aiTitle != null);

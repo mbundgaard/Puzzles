@@ -30,7 +30,7 @@ public class ChatGPTService : IChatGPTService
         _deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
     }
 
-    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, bool isGameSuggestion)
+    public async Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string game, string? feedbackType)
     {
         if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
         {
@@ -45,9 +45,23 @@ public class ChatGPTService : IChatGPTService
 
         try
         {
-            var systemPrompt = isGameSuggestion
-                ? "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'."
-                : "You process user feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. The title should capture the main point, like 'Request for movable pieces' or 'Bug: Timer not resetting'.";
+            // Determine the appropriate prompt based on game and feedback type
+            string systemPrompt;
+            if (game == "00" && feedbackType == "suggestion")
+            {
+                // New game suggestion
+                systemPrompt = "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'.";
+            }
+            else if (game == "00" && feedbackType == "feedback")
+            {
+                // General site feedback (not about a specific game)
+                systemPrompt = "You process general feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. This is about the website/app itself, not a specific game. Title examples: 'Add dark mode option', 'Improve loading speed', 'Request for notifications'.";
+            }
+            else
+            {
+                // Game-specific feedback
+                systemPrompt = "You process user feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. The title should capture the main point, like 'Request for movable pieces' or 'Bug: Timer not resetting'.";
+            }
 
             var requestBody = new
             {

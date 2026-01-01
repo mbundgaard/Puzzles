@@ -25,7 +25,8 @@ public interface IChatGPTService
     /// Processes feedback text: translates to English and generates a concise title.
     /// </summary>
     /// <param name="text">Original feedback text (possibly in Danish)</param>
-    /// <param name="isGameSuggestion">True if this is a new game suggestion (game 00)</param>
+    /// <param name="game">Game number ("00" for general, "01"-"99" for specific games)</param>
+    /// <param name="feedbackType">For game "00": "suggestion" (new game) or "feedback" (general site feedback)</param>
     /// <returns>Processed result with title and translation, or null if processing failed</returns>
-    Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, bool isGameSuggestion);
+    Task<FeedbackProcessingResult?> ProcessFeedbackAsync(string text, string game, string? feedbackType);
 }

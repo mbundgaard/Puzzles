@@ -37,7 +37,7 @@ public class GitHubService : IGitHubService
     }
 
     public async Task<bool> CreateFeedbackIssueAsync(string game, int? rating, string? text, string? nickname,
-        string? aiTitle = null, string? aiTranslation = null)
+        string? aiTitle = null, string? aiTranslation = null, string? feedbackType = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -47,7 +47,8 @@ public class GitHubService : IGitHubService
 
         try
         {
-            var isGameSuggestion = game == "00";
+            var isGameSuggestion = game == "00" && feedbackType == "suggestion";
+            var isGeneralFeedback = game == "00" && feedbackType == "feedback";
             var gameName = GameValidator.GetGameName(game);
 
             // Build title - use AI-generated title if available
@@ -57,6 +58,10 @@ public class GitHubService : IGitHubService
                 if (isGameSuggestion)
                 {
                     title = $"New Game: {aiTitle}";
+                }
+                else if (isGeneralFeedback)
+                {
+                    title = $"Feedback: {aiTitle}";
                 }
                 else if (gameName != null)
                 {
@@ -71,6 +76,10 @@ public class GitHubService : IGitHubService
             {
                 title = "New Game Suggestion";
             }
+            else if (isGeneralFeedback)
+            {
+                title = "General Feedback";
+            }
             else
             {
                 title = gameName != null ? $"Feedback: {gameName}" : $"Feedback: Game {game}";
@@ -83,14 +92,18 @@ public class GitHubService : IGitHubService
             {
                 body.AppendLine("## Game Suggestion");
             }
+            else if (isGeneralFeedback)
+            {
+                body.AppendLine("## General Feedback");
+            }
             else
             {
                 body.AppendLine($"## Feedback for Game {game}");
             }
             body.AppendLine();
 
-            // Show rating if provided (for regular feedback)
-            if (!isGameSuggestion && rating.HasValue)
+            // Show rating if provided (for game-specific feedback only)
+            if (!isGameSuggestion && !isGeneralFeedback && rating.HasValue)
             {
                 body.AppendLine($"**Rating:** {new string('⭐', rating.Value)} ({rating.Value}/5)");
                 body.AppendLine();
@@ -118,7 +131,7 @@ public class GitHubService : IGitHubService
                 body.AppendLine(text);
                 body.AppendLine();
             }
-            else if (isGameSuggestion)
+            else if (isGameSuggestion || isGeneralFeedback)
             {
                 body.AppendLine("(No description)");
                 body.AppendLine();
