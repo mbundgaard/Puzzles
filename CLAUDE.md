@@ -251,7 +251,7 @@ Badges highlight new or recently updated games on the main page. **Badges are de
 | Method | Route | Description |
 |--------|-------|-------------|
 | POST | `/api/win` | Record a win `{nickname, game, points}` (points: 1-5) |
-| GET | `/api/leaderboard?game=all&top=10` | Get top players (all-time points) |
+| GET | `/api/leaderboard?game=all&top=10` | Get top players (current month) |
 | GET | `/api/stats` | Get total points (all-time) |
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
 | GET | `/api/usage?game=all` | Get usage stats this month |
@@ -420,7 +420,7 @@ async function showLeaderboard() {
 | `trackComplete(game)` | Track game completion (fire-and-forget) | void |
 | `trackEvent(game, event)` | Track custom event ("start" or "complete") | void |
 | `recordWin(game, nickname, points)` | Record win to leaderboard (points: 1-5) | `Promise<{success, message?, error?}>` |
-| `getLeaderboard(game?, top?)` | Get top players (all-time) | `Promise<{period, entries[], totalPoints}>` |
+| `getLeaderboard(game?, top?)` | Get top players (current month) | `Promise<{period, entries[], totalPoints}>` |
 | `getTodayStats()` | Get today's activity | `Promise<{date, starts, completions}>` |
 | `getUsageStats(game?)` | Get monthly usage stats | `Promise<{period, totalStarts, totalCompletions, perGame[]}>` |
 | `getStats()` | Get total points (all-time) | `Promise<{period, totalPoints}>` |
