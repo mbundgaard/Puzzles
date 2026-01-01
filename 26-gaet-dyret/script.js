@@ -15,7 +15,6 @@ class AnimalGuessingGame {
         this.guessCount = 0;
         this.history = [];
         this.isLoading = false;
-        this.inputText = '';
 
         // Elements
         this.startScreen = document.getElementById('start-screen');
@@ -31,7 +30,6 @@ class AnimalGuessingGame {
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
         this.categoryBtns = document.querySelectorAll('.category-btn');
-        this.keyboard = document.getElementById('keyboard');
 
         this.init();
     }
@@ -50,13 +48,6 @@ class AnimalGuessingGame {
         // Guess button
         this.guessBtn.addEventListener('click', () => this.makeGuess());
 
-        // Keyboard
-        this.keyboard.addEventListener('click', (e) => {
-            const key = e.target.closest('.key');
-            if (!key || this.isLoading) return;
-            this.handleKeyPress(key.dataset.key);
-        });
-
         // Play again
         this.playAgainBtn.addEventListener('click', () => {
             this.loseOverlay.classList.remove('show');
@@ -64,41 +55,13 @@ class AnimalGuessingGame {
         });
     }
 
-    handleKeyPress(key) {
-        if (key === 'backspace') {
-            this.inputText = this.inputText.slice(0, -1);
-        } else {
-            this.inputText += key;
-        }
-        this.updateInputDisplay();
-    }
-
-    updateInputDisplay() {
-        if (this.inputText) {
-            this.gameInput.innerHTML = this.escapeHtml(this.inputText);
-        } else {
-            this.gameInput.innerHTML = '<span class="placeholder">Skriv spørgsmål eller gæt...</span>';
-        }
-    }
-
-    getInputValue() {
-        return this.inputText.trim();
-    }
-
-    clearInput() {
-        this.inputText = '';
-        this.updateInputDisplay();
-    }
-
     showStartScreen() {
         this.startScreen.classList.remove('hidden');
         this.gameScreen.classList.add('hidden');
-        this.keyboard.classList.remove('visible');
         this.animal = null;
         this.category = null;
         this.guessCount = 0;
         this.history = [];
-        this.inputText = '';
     }
 
     async startGame(category) {
@@ -123,12 +86,12 @@ class AnimalGuessingGame {
 
             this.startScreen.classList.add('hidden');
             this.gameScreen.classList.remove('hidden');
-            this.keyboard.classList.add('visible');
 
             this.categoryLabel.textContent = this.capitalizeFirst(this.category);
             this.updateCounter();
             this.renderHistory();
-            this.clearInput();
+            this.gameInput.value = '';
+            this.gameInput.focus();
 
             HjernespilAPI.sessionEvent('newGame');
         } catch (error) {
@@ -140,7 +103,7 @@ class AnimalGuessingGame {
     }
 
     async askQuestion() {
-        const question = this.getInputValue();
+        const question = this.gameInput.value.trim();
         if (!question || this.isLoading || this.guessCount >= this.MAX_GUESSES) return;
 
         this.setLoading(true);
@@ -166,7 +129,7 @@ class AnimalGuessingGame {
             });
 
             this.renderHistory();
-            this.clearInput();
+            this.gameInput.value = '';
 
             if (this.guessCount >= this.MAX_GUESSES) {
                 this.showLoss();
@@ -182,7 +145,7 @@ class AnimalGuessingGame {
     }
 
     makeGuess() {
-        const guess = this.getInputValue().toLowerCase();
+        const guess = this.gameInput.value.trim().toLowerCase();
         if (!guess || this.isLoading || this.guessCount >= this.MAX_GUESSES) return;
 
         this.guessCount++;
@@ -197,7 +160,7 @@ class AnimalGuessingGame {
         });
 
         this.renderHistory();
-        this.clearInput();
+        this.gameInput.value = '';
 
         if (isCorrect) {
             this.showWin();
@@ -284,6 +247,7 @@ class AnimalGuessingGame {
         this.isLoading = loading;
         this.askBtn.disabled = loading;
         this.guessBtn.disabled = loading;
+        this.gameInput.disabled = loading;
 
         if (loading) {
             this.gameScreen.classList.add('loading');

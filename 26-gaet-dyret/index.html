@@ -8,104 +8,60 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="page-container">
-        <div class="game-container">
-            <a href="../index.html" class="close-btn" aria-label="Luk">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-            </a>
-            <header>
-                <h1>Gæt Dyret</h1>
-            </header>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+        <header>
+            <h1>Gæt Dyret</h1>
+        </header>
 
-            <div class="game-wrapper">
-                <div class="start-screen" id="start-screen">
-                    <h2>Vælg kategori</h2>
-                    <div class="category-buttons">
-                        <button class="category-btn" data-category="havdyr">Havdyr</button>
-                        <button class="category-btn" data-category="fugle">Fugle</button>
-                        <button class="category-btn" data-category="pattedyr">Pattedyr</button>
-                        <button class="category-btn" data-category="bondegårdsdyr">Bondegårdsdyr</button>
-                        <button class="category-btn" data-category="vilde dyr">Vilde dyr</button>
-                        <button class="category-btn" data-category="danske dyr">Danske dyr</button>
-                    </div>
+        <div class="game-wrapper">
+            <div class="start-screen" id="start-screen">
+                <h2>Vælg kategori</h2>
+                <div class="category-buttons">
+                    <button class="category-btn" data-category="havdyr">Havdyr</button>
+                    <button class="category-btn" data-category="fugle">Fugle</button>
+                    <button class="category-btn" data-category="pattedyr">Pattedyr</button>
+                    <button class="category-btn" data-category="bondegårdsdyr">Bondegårdsdyr</button>
+                    <button class="category-btn" data-category="vilde dyr">Vilde dyr</button>
+                    <button class="category-btn" data-category="danske dyr">Danske dyr</button>
+                </div>
 
-                    <div class="rules">
-                        <h3>Sådan spiller du</h3>
-                        <ul>
-                            <li>Stil ja/nej spørgsmål om dyret</li>
-                            <li>Brug svarene til at gætte dyret</li>
-                            <li>Du har 20 forsøg i alt</li>
-                            <li>Jo færre forsøg, jo flere point</li>
-                        </ul>
+                <div class="rules">
+                    <h3>Sådan spiller du</h3>
+                    <ul>
+                        <li>Stil ja/nej spørgsmål om dyret</li>
+                        <li>Brug svarene til at gætte dyret</li>
+                        <li>Du har 20 forsøg i alt</li>
+                        <li>Jo færre forsøg, jo flere point</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="game-screen hidden" id="game-screen">
+                <div class="game-header">
+                    <span class="category-label" id="category-label"></span>
+                    <div class="game-stats">
+                        <span class="points-indicator" id="points-indicator">5 point</span>
+                        <span class="guess-counter" id="guess-counter">0/20</span>
                     </div>
                 </div>
 
-                <div class="game-screen hidden" id="game-screen">
-                    <div class="game-header">
-                        <span class="category-label" id="category-label"></span>
-                        <div class="game-stats">
-                            <span class="points-indicator" id="points-indicator">5 point</span>
-                            <span class="guess-counter" id="guess-counter">0/20</span>
-                        </div>
+                <div class="answer-history" id="answer-history"></div>
+
+                <div class="input-section">
+                    <div class="input-row">
+                        <input type="text" id="game-input" placeholder="Skriv spørgsmål eller gæt..." autocomplete="off">
                     </div>
-
-                    <div class="answer-history" id="answer-history"></div>
-
-                    <div class="input-section">
-                        <div class="input-row">
-                            <div class="text-display" id="game-input"><span class="placeholder">Skriv spørgsmål eller gæt...</span></div>
-                        </div>
-                        <div class="button-row">
-                            <button id="ask-btn" class="action-btn">Spørg</button>
-                            <button id="guess-btn" class="action-btn guess">Gæt</button>
-                        </div>
+                    <div class="button-row">
+                        <button id="ask-btn" class="action-btn">Spørg</button>
+                        <button id="guess-btn" class="action-btn guess">Gæt</button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="keyboard" id="keyboard">
-            <div class="keyboard-row">
-                <button class="key" data-key="q">Q</button>
-                <button class="key" data-key="w">W</button>
-                <button class="key" data-key="e">E</button>
-                <button class="key" data-key="r">R</button>
-                <button class="key" data-key="t">T</button>
-                <button class="key" data-key="y">Y</button>
-                <button class="key" data-key="u">U</button>
-                <button class="key" data-key="i">I</button>
-                <button class="key" data-key="o">O</button>
-                <button class="key" data-key="p">P</button>
-                <button class="key" data-key="å">Å</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key" data-key="a">A</button>
-                <button class="key" data-key="s">S</button>
-                <button class="key" data-key="d">D</button>
-                <button class="key" data-key="f">F</button>
-                <button class="key" data-key="g">G</button>
-                <button class="key" data-key="h">H</button>
-                <button class="key" data-key="j">J</button>
-                <button class="key" data-key="k">K</button>
-                <button class="key" data-key="l">L</button>
-                <button class="key" data-key="æ">Æ</button>
-                <button class="key" data-key="ø">Ø</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key" data-key="z">Z</button>
-                <button class="key" data-key="x">X</button>
-                <button class="key" data-key="c">C</button>
-                <button class="key" data-key="v">V</button>
-                <button class="key" data-key="b">B</button>
-                <button class="key" data-key="n">N</button>
-                <button class="key" data-key="m">M</button>
-                <button class="key key-backspace" data-key="backspace">⌫</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key key-space" data-key=" ">MELLEMRUM</button>
             </div>
         </div>
     </div>
