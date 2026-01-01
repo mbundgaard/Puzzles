@@ -120,7 +120,6 @@ class AnimalGuessingGame {
             this.updateCounter();
             this.renderHistory();
             this.gameInput.value = '';
-            this.gameInput.focus();
 
             HjernespilAPI.sessionEvent('newGame');
         } catch (error) {
@@ -128,6 +127,10 @@ class AnimalGuessingGame {
             alert('Kunne ikke starte spillet. Prøv igen.');
         } finally {
             this.setLoading(false);
+            // Focus after loading is done so input is enabled
+            if (this.gameScreen.classList.contains('hidden') === false) {
+                this.gameInput.focus();
+            }
         }
     }
 
@@ -253,7 +256,7 @@ class AnimalGuessingGame {
 
     renderHistory() {
         if (this.history.length === 0) {
-            this.answerHistory.innerHTML = '<div class="empty-history">Stil et spørgsmål eller gæt dyret</div>';
+            this.answerHistory.innerHTML = '';
             return;
         }
 
