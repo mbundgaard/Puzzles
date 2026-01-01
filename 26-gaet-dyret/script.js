@@ -67,9 +67,12 @@ class AnimalGuessingGame {
             const container = document.querySelector('.game-container');
             const resizeHandler = () => {
                 const vh = window.visualViewport.height;
+                const offset = window.visualViewport.offsetTop;
                 document.body.style.height = `${vh}px`;
-                // Container height = viewport - body padding (15px * 2)
-                container.style.maxHeight = `${vh - 30}px`;
+                document.body.style.paddingTop = `${Math.max(15 - offset, 5)}px`;
+                document.body.style.paddingBottom = '5px';
+                // Container height = viewport - reduced padding
+                container.style.maxHeight = `${vh - 10}px`;
             };
             window.visualViewport.addEventListener('resize', resizeHandler);
             resizeHandler();
