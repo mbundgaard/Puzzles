@@ -566,4 +566,12 @@ new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
 
 - Push to `claude/main` branch (allows Claude to push directly without PR)
 - Clear, descriptive commit messages
-- **Update APP_VERSION BEFORE each commit**: Update the `APP_VERSION` constant in index.html with current Unix timestamp (UTC). Use `date +%s` to get the timestamp. This is used for version checking and renders the footer timestamp in Danish local time.
+- **Update version on commits that change index.html or shared files**:
+  1. Update `APP_VERSION` constant in index.html with current Unix timestamp (UTC). Use `date +%s` to get the timestamp.
+  2. After pushing, call the API to set the server version:
+     ```bash
+     curl -X POST https://puzzlesapi.azurewebsites.net/api/version/set \
+       -H "Content-Type: application/json" \
+       -d '{"version": <TIMESTAMP>}'
+     ```
+  This ensures all clients will be notified of the new version and auto-reload.
