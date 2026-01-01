@@ -12,4 +12,9 @@ public interface IVersionStorage
     /// Returns true if a newer version already exists (client should update).
     /// </summary>
     Task<bool> CheckAndUpdateVersionAsync(int clientVersion);
+
+    /// <summary>
+    /// Sets the version directly (for deployment use).
+    /// </summary>
+    Task SetVersionAsync(int version);
 }

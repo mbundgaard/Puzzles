@@ -78,4 +78,15 @@ public class AzureTableVersionStorage : IVersionStorage
             return false;
         }
     }
+
+    public async Task SetVersionAsync(int version)
+    {
+        var entity = new VersionEntity
+        {
+            PartitionKey = PartitionKey,
+            RowKey = RowKey,
+            Version = version
+        };
+        await _tableClient.UpsertEntityAsync(entity, TableUpdateMode.Replace);
+    }
 }

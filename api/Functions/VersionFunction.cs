@@ -51,4 +51,30 @@ public class VersionFunction
 
         return new OkObjectResult(new { newVersionExists });
     }
+
+    [Function("SetVersion")]
+    public async Task<IActionResult> SetVersion(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "version/set")] HttpRequest req)
+    {
+        VersionRequest? versionRequest;
+        try
+        {
+            versionRequest = await req.ReadFromJsonAsync<VersionRequest>();
+        }
+        catch
+        {
+            return new BadRequestObjectResult(new { error = "Invalid JSON" });
+        }
+
+        if (versionRequest == null || versionRequest.Version <= 0)
+        {
+            return new BadRequestObjectResult(new { error = "Valid version number required" });
+        }
+
+        await _storage.SetVersionAsync(versionRequest.Version);
+
+        _logger.LogInformation("Version set to {Version}", versionRequest.Version);
+
+        return new OkObjectResult(new { success = true, version = versionRequest.Version });
+    }
 }
