@@ -12,7 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
-        { issue: 16, closedAt: '2026-01-01T18:32:00Z', submitter: 'Vera', text: 'Added Gæt Dyret - AI animal guessing game' },
+        { issue: 16, closedAt: '2026-01-01T18:32:00Z', submitter: 'Vera', text: 'Added Gæt Dyret - AI-powered animal guessing game' },
         { issue: 51, closedAt: '2026-01-01T16:07:00Z', submitter: 'Martin', text: 'Added AI section to about page' },
         { issue: 47, closedAt: '2026-01-01T15:15:00Z', submitter: 'Martin', text: 'Fixed app version display in session tracking' },
         { issue: 43, closedAt: '2025-12-31T19:37:02Z', submitter: 'Martin', text: 'Converted Battleships to single-player puzzle mode' },
