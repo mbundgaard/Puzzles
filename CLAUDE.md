@@ -256,16 +256,27 @@ Badges highlight new or recently updated games on the main page. **Badges are de
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
-| POST | `/api/feedback` | Submit feedback `{game, rating, text?, nickname?}` → creates GitHub issue |
+| POST | `/api/feedback` | Submit feedback `{game?, rating, text?, nickname?}` → creates GitHub issue |
 | POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
 | POST | `/api/version` | Check version `{version}` → `{newVersionExists: bool}` |
+| POST | `/api/session/{game}/{sessionId}/start` | Start session `{nickname?, device?, appVersion?}` |
+| POST | `/api/session/{game}/{sessionId}/update` | Add event `{event}` (newGame, win, lose) |
+| POST | `/api/session/{game}/{sessionId}/end` | End session |
+| GET | `/api/session/{game}/{sessionId}` | Get session details |
 
 ### Feedback System
 
-User feedback is submitted via the API and automatically creates GitHub issues:
+User feedback is submitted via the API and automatically creates GitHub issues. Feedback text is processed by Azure OpenAI (ChatGPT) to generate English titles and translations.
 
-- **Regular feedback** (games 01-99): Creates issue titled `Feedback: Game XX`
-- **Game suggestions** (game 00): Creates issue titled `New Game Suggestion`
+**Feedback types (determined by `game` value):**
+
+| Game Value | Type | Issue Title |
+|------------|------|-------------|
+| `null` / `""` | General Feedback | `Feedback: {AI title}` |
+| `"00"` | New Game Suggestion | `New Game: {AI title}` |
+| `"01"`-`"99"` | Game-Specific | `{GameName}: {AI title}` |
+
+If feedback contains Danish text, the AI translates it to English and includes the original in a collapsible section.
 
 Issues appear at: https://github.com/mbundgaard/Puzzles/issues
 
@@ -316,10 +327,11 @@ To find missing changelog entries, compare `data-issue` values in `shared/change
 
 ### Game numbers
 
-Games are identified by their folder number (e.g., "01", "02"). The API accepts any game number from 00-99 (normalized to 2-digit format).
+Games are identified by their folder number (e.g., "01", "02"). The feedback API uses the game value to determine feedback type:
 
-- **"00"**: Reserved for game suggestions (via "Foreslå Spil" on main page)
-- **"01"-"99"**: Game folders
+- **null / empty**: General site feedback (not about a specific game)
+- **"00"**: New game suggestions (via "Foreslå Spil" on main page)
+- **"01"-"99"**: Game-specific feedback
 
 See `README.md` for the complete list of games with their numbers and point values.
 
