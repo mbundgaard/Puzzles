@@ -11,6 +11,7 @@ body {
     background: #0f0f23;
     height: 100vh;
     height: 100dvh;
+    height: var(--viewport-height, 100dvh);
     display: flex;
     justify-content: center;
     align-items: stretch;
