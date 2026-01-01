@@ -131,7 +131,6 @@ class DissectionPuzzle {
         this.updateCoverage();
 
         HjernespilAPI.trackStart('24');
-        HjernespilAPI.sessionEvent('newGame');
     }
 
     setupSVG() {
@@ -418,7 +417,6 @@ class DissectionPuzzle {
             this.markWonToday(this.currentPuzzle.id);
             setTimeout(() => {
                 HjernespilAPI.trackComplete('24');
-                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(this.currentPuzzle.points);
             }, 300);
         }
