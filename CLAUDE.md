@@ -566,7 +566,7 @@ new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
 
 - Push to `claude/main` branch (allows Claude to push directly without PR)
 - Clear, descriptive commit messages
-- **Update version on commits that change index.html or shared files**:
+- **Update version before ANY commit**:
   1. Update `APP_VERSION` constant in index.html with current Unix timestamp (UTC). Use `date +%s` to get the timestamp.
   2. After pushing, call the API to set the server version:
      ```bash
