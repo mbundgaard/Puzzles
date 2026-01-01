@@ -112,6 +112,138 @@ public class ChatGPTService : IChatGPTService
         }
     }
 
+    public async Task<AnimalPickResult?> PickAnimalAsync(string? category)
+    {
+        if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
+        {
+            _logger.LogWarning("Azure OpenAI not configured, cannot pick animal");
+            return null;
+        }
+
+        try
+        {
+            var categoryPrompt = string.IsNullOrWhiteSpace(category)
+                ? "Vælg en tilfældig kategori (f.eks. havdyr, fugle, pattedyr, insekter, krybdyr) og et dyr fra den kategori."
+                : $"Vælg et tilfældigt dyr fra kategorien: {category}";
+
+            var systemPrompt = $@"Du hjælper med et gættespil om dyr. {categoryPrompt}
+
+Svar med JSON i dette format:
+{{""animal"": ""navnet på dyret"", ""category"": ""kategorien""}}
+
+Vælg dyr som de fleste kender. Dyrenavnet skal være på dansk og i ental (f.eks. ""delfin"" ikke ""delfiner"").";
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = "Vælg et dyr" }
+                },
+                temperature = 0.9,
+                response_format = new { type = "json_object" }
+            };
+
+            var response = await SendChatRequestAsync(requestBody);
+            if (response == null) return null;
+
+            var result = JsonSerializer.Deserialize<AnimalPickResult>(response, JsonOptions);
+            if (result == null || string.IsNullOrEmpty(result.Animal))
+            {
+                _logger.LogWarning("Failed to parse animal pick response: {Content}", response);
+                return null;
+            }
+
+            _logger.LogInformation("Animal picked: {Animal} ({Category})", result.Animal, result.Category);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error picking animal with Azure OpenAI");
+            return null;
+        }
+    }
+
+    public async Task<string?> AskAboutAnimalAsync(string animal, string question)
+    {
+        if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
+        {
+            _logger.LogWarning("Azure OpenAI not configured, cannot answer question");
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(animal) || string.IsNullOrWhiteSpace(question))
+        {
+            return null;
+        }
+
+        try
+        {
+            var systemPrompt = $@"Du spiller et gættespil. Dyret der skal gættes er: {animal}
+
+Besvar brugerens ja/nej spørgsmål ærligt om dette dyr.
+Svar KUN med JSON i dette format:
+{{""answer"": ""Ja""}} eller {{""answer"": ""Nej""}} eller {{""answer"": ""Måske""}}
+
+Svar ""Måske"" hvis spørgsmålet er uklart, tvetydigt, eller ikke kan besvares entydigt.";
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = question }
+                },
+                temperature = 0.1,
+                response_format = new { type = "json_object" }
+            };
+
+            var response = await SendChatRequestAsync(requestBody);
+            if (response == null) return null;
+
+            var result = JsonSerializer.Deserialize<AnimalAnswerResult>(response, JsonOptions);
+            if (result == null || string.IsNullOrEmpty(result.Answer))
+            {
+                _logger.LogWarning("Failed to parse animal answer response: {Content}", response);
+                return null;
+            }
+
+            _logger.LogInformation("Animal question answered: {Question} -> {Answer}", question, result.Answer);
+            return result.Answer;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error answering animal question with Azure OpenAI");
+            return null;
+        }
+    }
+
+    private async Task<string?> SendChatRequestAsync(object requestBody)
+    {
+        var json = JsonSerializer.Serialize(requestBody, JsonOptions);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var url = $"{_endpoint!.TrimEnd('/')}/openai/deployments/{_deploymentName}/chat/completions?api-version=2025-01-01-preview";
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Content = content;
+        request.Headers.Add("api-key", _apiKey);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Azure OpenAI request failed: {Status} - {Body}", response.StatusCode, errorBody);
+            return null;
+        }
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var chatResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseBody, JsonOptions);
+
+        return chatResponse?.Choices?.FirstOrDefault()?.Message?.Content;
+    }
+
     // Response models for Azure OpenAI
     private class ChatCompletionResponse
     {
@@ -126,5 +258,10 @@ public class ChatGPTService : IChatGPTService
     private class ChatMessage
     {
         public string? Content { get; set; }
+    }
+
+    private class AnimalAnswerResult
+    {
+        public string? Answer { get; set; }
     }
 }

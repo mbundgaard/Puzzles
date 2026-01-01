@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gæt Dyret - Hjernespil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+        <header>
+            <h1>Gæt Dyret</h1>
+        </header>
+
+        <div class="game-wrapper">
+            <div class="start-screen" id="start-screen">
+                <h2>Vælg kategori</h2>
+                <div class="category-buttons">
+                    <button class="category-btn" data-category="havdyr">Havdyr</button>
+                    <button class="category-btn" data-category="fugle">Fugle</button>
+                    <button class="category-btn" data-category="pattedyr">Pattedyr</button>
+                    <button class="category-btn" data-category="bondegårdsdyr">Bondegårdsdyr</button>
+                    <button class="category-btn" data-category="vilde dyr">Vilde dyr</button>
+                    <button class="category-btn" data-category="danske dyr">Danske dyr</button>
+                </div>
+
+                <div class="rules">
+                    <h3>Sådan spiller du</h3>
+                    <ul>
+                        <li>Stil ja/nej spørgsmål om dyret</li>
+                        <li>Brug svarene til at gætte dyret</li>
+                        <li>Du har 20 forsøg i alt</li>
+                        <li>Jo færre forsøg, jo flere point</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="game-screen hidden" id="game-screen">
+                <div class="game-header">
+                    <span class="category-label" id="category-label"></span>
+                    <span class="guess-counter" id="guess-counter">Forsøg: 0/20</span>
+                </div>
+
+                <div class="answer-history" id="answer-history"></div>
+
+                <div class="input-section">
+                    <div class="input-row">
+                        <input type="text" id="question-input" placeholder="Stil et ja/nej spørgsmål..." autocomplete="off">
+                        <button id="ask-btn" class="action-btn">Spørg</button>
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="guess-input" placeholder="Gæt dyret..." autocomplete="off">
+                        <button id="guess-btn" class="action-btn guess">Gæt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="lose-overlay">
+        <div class="overlay-content lose">
+            <h2>Ingen flere forsøg!</h2>
+            <p>Dyret var: <strong id="reveal-animal"></strong></p>
+            <button id="play-again-btn">Prøv Igen</button>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
