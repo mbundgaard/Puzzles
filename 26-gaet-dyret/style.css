@@ -23,8 +23,8 @@ body {
     gap: 12px;
     max-width: 450px;
     width: 100%;
-    max-height: calc(100vh - 30px);
-    max-height: calc(100dvh - 30px);
+    height: calc(100vh - 30px);
+    height: calc(100dvh - 30px);
 }
 
 .game-container {
