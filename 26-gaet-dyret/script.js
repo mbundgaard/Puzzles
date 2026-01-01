@@ -42,8 +42,7 @@ class AnimalGuessingGame {
         // Elements
         this.startScreen = document.getElementById('start-screen');
         this.gameScreen = document.getElementById('game-screen');
-        this.categoryStep = document.getElementById('category-step');
-        this.difficultyStep = document.getElementById('difficulty-step');
+        this.difficultySelect = document.getElementById('difficulty');
         this.categoryLabel = document.getElementById('category-label');
         this.guessCounter = document.getElementById('guess-counter');
         this.pointsIndicator = document.getElementById('points-indicator');
@@ -55,31 +54,17 @@ class AnimalGuessingGame {
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
         this.categoryBtns = document.querySelectorAll('.category-btn');
-        this.difficultyBtns = document.querySelectorAll('.difficulty-btn');
-        this.backToCategoryBtn = document.getElementById('back-to-category');
 
         this.init();
     }
 
     init() {
-        // Category buttons - show difficulty selection
+        // Category buttons - start game with selected difficulty
         this.categoryBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.category = btn.dataset.category;
-                this.showDifficultyStep();
+                this.startGame(this.difficultySelect.value);
             });
-        });
-
-        // Difficulty buttons - start game
-        this.difficultyBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.startGame(btn.dataset.difficulty);
-            });
-        });
-
-        // Back to category
-        this.backToCategoryBtn.addEventListener('click', () => {
-            this.showCategoryStep();
         });
 
         // Ask button
@@ -95,20 +80,9 @@ class AnimalGuessingGame {
         });
     }
 
-    showCategoryStep() {
-        this.categoryStep.classList.remove('hidden');
-        this.difficultyStep.classList.add('hidden');
-    }
-
-    showDifficultyStep() {
-        this.categoryStep.classList.add('hidden');
-        this.difficultyStep.classList.remove('hidden');
-    }
-
     showStartScreen() {
         this.startScreen.classList.remove('hidden');
         this.gameScreen.classList.add('hidden');
-        this.showCategoryStep();
         this.animal = null;
         this.category = null;
         this.difficulty = null;

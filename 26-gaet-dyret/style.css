@@ -105,74 +105,49 @@ h1 {
 .category-btn:nth-child(5) { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
 .category-btn:nth-child(6) { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
 
-/* Difficulty Selection */
-.category-step.hidden,
-.difficulty-step.hidden {
-    display: none;
-}
-
-.difficulty-buttons {
+/* Difficulty Dropdown */
+.difficulty-select {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 12px;
     width: 100%;
-}
-
-.difficulty-btn {
-    padding: 16px 20px;
-    font-family: 'Poppins', sans-serif;
-    border: none;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-.difficulty-btn:active {
-    transform: scale(0.98);
-}
-
-.diff-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-}
-
-.diff-points {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.difficulty-btn.easy {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-}
-
-.difficulty-btn.medium {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
-.difficulty-btn.hard {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-.back-btn {
-    margin-top: 16px;
-    padding: 10px 16px;
+.difficulty-select label {
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.9rem;
-    font-family: 'Poppins', sans-serif;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    transition: all 0.2s ease;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
-.back-btn:active {
+.difficulty-select select {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
     background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.difficulty-select select:focus {
+    border-color: rgba(245, 158, 11, 0.5);
+}
+
+.difficulty-select select option {
+    background: #1e1e3f;
+    color: white;
 }
 
 .rules {
