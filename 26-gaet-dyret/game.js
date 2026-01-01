@@ -1,9 +1,8 @@
-class AnimalGuessingGame {
+class AnimalGame {
     constructor() {
         this.API_BASE = 'https://puzzlesapi.azurewebsites.net/api/game/26';
         this.MAX_GUESSES = 20;
 
-        // Points intervals per difficulty (max points scales with difficulty)
         this.DIFFICULTY_CONFIG = {
             easy: {
                 maxPoints: 2,
@@ -33,16 +32,16 @@ class AnimalGuessingGame {
         };
 
         this.animal = null;
-        this.category = null;
-        this.difficulty = null;
         this.guessCount = 0;
         this.history = [];
         this.isLoading = false;
 
+        // Get params from URL
+        const params = new URLSearchParams(window.location.search);
+        this.category = params.get('category') || 'pattedyr';
+        this.difficulty = params.get('difficulty') || 'hard';
+
         // Elements
-        this.startScreen = document.getElementById('start-screen');
-        this.gameScreen = document.getElementById('game-screen');
-        this.difficultySelect = document.getElementById('difficulty');
         this.categoryLabel = document.getElementById('category-label');
         this.guessCounter = document.getElementById('guess-counter');
         this.pointsIndicator = document.getElementById('points-indicator');
@@ -53,66 +52,21 @@ class AnimalGuessingGame {
         this.loseOverlay = document.getElementById('lose-overlay');
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
-        this.categoryBtns = document.querySelectorAll('.category-btn');
 
         this.init();
-
-        // Prevent page scroll on mobile
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-
-        // Lock body and container height to visual viewport (handles keyboard)
-        if (window.visualViewport) {
-            const container = document.querySelector('.game-container');
-            const resizeHandler = () => {
-                const vh = window.visualViewport.height;
-                const offset = window.visualViewport.offsetTop;
-                document.body.style.height = `${vh}px`;
-                document.body.style.paddingTop = `${Math.max(15 - offset, 5)}px`;
-                document.body.style.paddingBottom = '5px';
-                // Container height = viewport - reduced padding
-                container.style.maxHeight = `${vh - 10}px`;
-            };
-            window.visualViewport.addEventListener('resize', resizeHandler);
-            resizeHandler();
-        }
     }
 
     init() {
-        // Category buttons - start game with selected difficulty
-        this.categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.category = btn.dataset.category;
-                this.startGame(this.difficultySelect.value);
-            });
-        });
-
-        // Ask button
         this.askBtn.addEventListener('click', () => this.askQuestion());
-
-        // Guess button
         this.guessBtn.addEventListener('click', () => this.makeGuess());
-
-        // Play again
         this.playAgainBtn.addEventListener('click', () => {
-            this.loseOverlay.classList.remove('show');
-            this.showStartScreen();
+            window.location.href = 'index.html';
         });
+
+        this.startGame();
     }
 
-    showStartScreen() {
-        this.startScreen.classList.remove('hidden');
-        this.gameScreen.classList.add('hidden');
-        this.animal = null;
-        this.category = null;
-        this.difficulty = null;
-        this.guessCount = 0;
-        this.history = [];
-    }
-
-    async startGame(difficulty) {
-        this.difficulty = difficulty;
+    async startGame() {
         this.setLoading(true);
 
         try {
@@ -125,33 +79,25 @@ class AnimalGuessingGame {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to pick animal');
-            }
+            if (!response.ok) throw new Error('Failed to pick animal');
 
             const data = await response.json();
             this.animal = data.animal.toLowerCase();
             this.guessCount = 0;
             this.history = [];
 
-            this.startScreen.classList.add('hidden');
-            this.gameScreen.classList.remove('hidden');
-
             this.categoryLabel.textContent = this.capitalizeFirst(this.category);
             this.updateCounter();
             this.renderHistory();
-            this.gameInput.value = '';
 
             HjernespilAPI.sessionEvent('newGame');
         } catch (error) {
             console.error('Error starting game:', error);
             alert('Kunne ikke starte spillet. Prøv igen.');
+            window.location.href = 'index.html';
         } finally {
             this.setLoading(false);
-            // Focus after loading is done so input is enabled
-            if (this.gameScreen.classList.contains('hidden') === false) {
-                this.gameInput.focus();
-            }
+            this.gameInput.focus();
         }
     }
 
@@ -170,9 +116,7 @@ class AnimalGuessingGame {
                 body: JSON.stringify({ animal: this.animal, question })
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to ask question');
-            }
+            if (!response.ok) throw new Error('Failed to ask question');
 
             const data = await response.json();
             this.history.push({
@@ -189,7 +133,7 @@ class AnimalGuessingGame {
             }
         } catch (error) {
             console.error('Error asking question:', error);
-            this.guessCount--; // Revert count on error
+            this.guessCount--;
             this.updateCounter();
             alert('Kunne ikke stille spørgsmål. Prøv igen.');
         } finally {
@@ -223,17 +167,12 @@ class AnimalGuessingGame {
     }
 
     checkGuess(guess) {
-        // Normalize both strings for comparison
         const normalizedGuess = this.normalizeString(guess);
         const normalizedAnimal = this.normalizeString(this.animal);
 
-        // Direct match
         if (normalizedGuess === normalizedAnimal) return true;
 
-        // Check if guess contains the animal or vice versa
-        // This handles cases like "en delfin" vs "delfin"
         if (normalizedGuess.includes(normalizedAnimal) || normalizedAnimal.includes(normalizedGuess)) {
-            // Only if the shorter one is at least 3 characters
             const shorter = normalizedGuess.length < normalizedAnimal.length ? normalizedGuess : normalizedAnimal;
             if (shorter.length >= 3) return true;
         }
@@ -242,10 +181,7 @@ class AnimalGuessingGame {
     }
 
     normalizeString(str) {
-        return str
-            .toLowerCase()
-            .replace(/^(en |et |the |a )/, '') // Remove articles
-            .trim();
+        return str.toLowerCase().replace(/^(en |et |the |a )/, '').trim();
     }
 
     calculatePoints() {
@@ -281,7 +217,6 @@ class AnimalGuessingGame {
             return;
         }
 
-        // Only show the last item
         const item = this.history[this.history.length - 1];
         const isGuess = item.type === 'guess';
         const answerClass = item.answer.toLowerCase().replace('!', '');
@@ -301,9 +236,9 @@ class AnimalGuessingGame {
         this.gameInput.disabled = loading;
 
         if (loading) {
-            this.gameScreen.classList.add('loading');
+            document.querySelector('.game-screen').classList.add('loading');
         } else {
-            this.gameScreen.classList.remove('loading');
+            document.querySelector('.game-screen').classList.remove('loading');
         }
     }
 
@@ -318,4 +253,4 @@ class AnimalGuessingGame {
     }
 }
 
-new AnimalGuessingGame();
+new AnimalGame();
