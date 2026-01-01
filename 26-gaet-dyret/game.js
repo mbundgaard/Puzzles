@@ -54,6 +54,21 @@ class AnimalGame {
         this.playAgainBtn = document.getElementById('play-again-btn');
 
         this.init();
+
+        // Prevent page scroll
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        // Fix body height to visual viewport
+        if (window.visualViewport) {
+            const resize = () => {
+                document.body.style.height = `${window.visualViewport.height}px`;
+                window.scrollTo(0, 0);
+            };
+            window.visualViewport.addEventListener('resize', resize);
+            resize();
+        }
     }
 
     init() {

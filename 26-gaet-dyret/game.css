@@ -11,6 +11,8 @@ html, body {
     overflow: hidden;
     position: fixed;
     width: 100%;
+    touch-action: none;
+    overscroll-behavior: none;
 }
 
 body {
@@ -178,6 +180,7 @@ h1 {
     border-radius: 12px;
     color: white;
     outline: none;
+    touch-action: manipulation;
 }
 
 .input-row input::placeholder {
