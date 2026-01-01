@@ -3,9 +3,6 @@ class AnimalGuessingGame {
         this.API_BASE = 'https://puzzlesapi.azurewebsites.net/api/game/26';
         this.MAX_GUESSES = 20;
 
-        // Handle mobile keyboard viewport changes
-        this.setupViewportHandler();
-
         // Points intervals per difficulty (max points scales with difficulty)
         this.DIFFICULTY_CONFIG = {
             easy: {
@@ -260,20 +257,17 @@ class AnimalGuessingGame {
             return;
         }
 
-        this.answerHistory.innerHTML = this.history.map(item => {
-            const isGuess = item.type === 'guess';
-            const answerClass = item.answer.toLowerCase().replace('!', '');
+        // Only show the last item
+        const item = this.history[this.history.length - 1];
+        const isGuess = item.type === 'guess';
+        const answerClass = item.answer.toLowerCase().replace('!', '');
 
-            return `
-                <div class="history-item${isGuess ? ' guess' : ''}">
-                    <span class="history-question">${isGuess ? 'Gæt: ' : ''}${this.escapeHtml(item.text)}</span>
-                    <span class="history-answer ${answerClass}">${item.answer}</span>
-                </div>
-            `;
-        }).join('');
-
-        // Scroll to bottom
-        this.answerHistory.scrollTop = this.answerHistory.scrollHeight;
+        this.answerHistory.innerHTML = `
+            <div class="history-item${isGuess ? ' guess' : ''}">
+                <span class="history-question">${isGuess ? 'Gæt: ' : ''}${this.escapeHtml(item.text)}</span>
+                <span class="history-answer ${answerClass}">${item.answer}</span>
+            </div>
+        `;
     }
 
     setLoading(loading) {
@@ -297,20 +291,6 @@ class AnimalGuessingGame {
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
-    }
-
-    setupViewportHandler() {
-        // Use visualViewport API to handle mobile keyboard
-        if (window.visualViewport) {
-            const updateViewportHeight = () => {
-                const vh = window.visualViewport.height;
-                document.documentElement.style.setProperty('--viewport-height', `${vh}px`);
-            };
-
-            window.visualViewport.addEventListener('resize', updateViewportHeight);
-            window.visualViewport.addEventListener('scroll', updateViewportHeight);
-            updateViewportHeight();
-        }
     }
 }
 
