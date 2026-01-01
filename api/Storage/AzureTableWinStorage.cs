@@ -53,11 +53,13 @@ public class AzureTableWinStorage : IWinStorage
 
     public async Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int top = 10)
     {
-        // Query all wins (no partition key filter - get all time)
-        string? filter = null;
+        // Filter by current month (partition key is yyyy-MM)
+        var currentMonth = DateTime.UtcNow.ToString("yyyy-MM");
+        var filter = $"PartitionKey eq '{currentMonth}'";
+
         if (!string.IsNullOrEmpty(game))
         {
-            filter = $"Game eq '{game}'";
+            filter += $" and Game eq '{game}'";
         }
 
         var wins = new List<WinEntity>();
@@ -86,7 +88,7 @@ public class AzureTableWinStorage : IWinStorage
 
         return new LeaderboardResponse
         {
-            Period = "all-time",
+            Period = currentMonth,
             Game = game,
             TotalPoints = wins.Sum(w => w.Points > 0 ? w.Points : 1),
             Entries = grouped

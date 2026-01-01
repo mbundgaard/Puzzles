@@ -12,6 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 52, closedAt: '2026-01-01T19:46:00Z', submitter: 'Martin', text: 'Leaderboard now shows current month only' },
         { issue: 16, closedAt: '2026-01-01T18:32:00Z', submitter: 'Vera', text: 'Added Gæt Dyret - AI-powered animal guessing game' },
         { issue: 51, closedAt: '2026-01-01T16:07:00Z', submitter: 'Martin', text: 'Added AI section to about page' },
         { issue: 47, closedAt: '2026-01-01T15:15:00Z', submitter: 'Martin', text: 'Fixed app version display in session tracking' },

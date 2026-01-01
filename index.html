@@ -543,6 +543,12 @@
         }
 
         /* Leaderboard Modal */
+        .leaderboard-period {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
         .leaderboard-list {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -1206,6 +1212,7 @@
         <div class="modal leaderboard-modal">
                         <div class="modal-emoji">🏆</div>
             <h3>Rangliste</h3>
+            <p class="leaderboard-period" id="leaderboard-period"></p>
             <div class="leaderboard-list" id="leaderboard-list">
                 <p class="loading">Indlæser...</p>
             </div>
@@ -1271,7 +1278,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767291727;
+        const APP_VERSION = 1767294380;
         window.APP_VERSION = APP_VERSION;
         localStorage.setItem('app_version', APP_VERSION);  // Store for game pages
 
@@ -1444,12 +1451,25 @@
             const leaderboardBtn = document.getElementById('leaderboard-btn');
             const leaderboardModal = document.getElementById('leaderboard-modal');
             const leaderboardList = document.getElementById('leaderboard-list');
+            const leaderboardPeriod = document.getElementById('leaderboard-period');
+
+            function formatPeriod(period) {
+                // period is "yyyy-MM" format, convert to Danish month name
+                const [year, month] = period.split('-');
+                const months = ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni',
+                               'Juli', 'August', 'September', 'Oktober', 'November', 'December'];
+                return `${months[parseInt(month, 10) - 1]} ${year}`;
+            }
 
             async function loadLeaderboard() {
                 leaderboardList.innerHTML = '<p class="loading">Indlæser...</p>';
+                leaderboardPeriod.textContent = '';
                 try {
                     const response = await fetch(`${API_BASE}/leaderboard?game=all&top=10`);
                     const data = await response.json();
+                    if (data.period) {
+                        leaderboardPeriod.textContent = formatPeriod(data.period);
+                    }
                     if (!data.entries || data.entries.length === 0) {
                         leaderboardList.innerHTML = '<p class="loading">Ingen point endnu</p>';
                         return;
