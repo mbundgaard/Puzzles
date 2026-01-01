@@ -61,6 +61,15 @@ class AnimalGuessingGame {
         document.addEventListener('touchmove', (e) => {
             e.preventDefault();
         }, { passive: false });
+
+        // Lock body height to visual viewport (handles keyboard)
+        if (window.visualViewport) {
+            const resizeHandler = () => {
+                document.body.style.height = `${window.visualViewport.height}px`;
+            };
+            window.visualViewport.addEventListener('resize', resizeHandler);
+            resizeHandler();
+        }
     }
 
     init() {
