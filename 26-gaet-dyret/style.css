@@ -10,26 +10,41 @@ body {
     font-family: 'Poppins', sans-serif;
     background: #0f0f23;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 450px;
+    width: 100%;
+    max-height: calc(100vh - 30px);
+    max-height: calc(100dvh - 30px);
 }
 
 .game-container {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    padding: 25px;
+    padding: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    max-width: 450px;
-    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     position: relative;
 }
 
 header {
     text-align: center;
     margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
 h1 {
@@ -43,7 +58,10 @@ h1 {
 
 .game-wrapper {
     position: relative;
-    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
 /* Start Screen */
@@ -132,7 +150,9 @@ h1 {
 .game-screen {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
 }
 
 .game-screen.hidden {
@@ -182,9 +202,9 @@ h1 {
 .answer-history {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
-    padding: 15px;
-    min-height: 200px;
-    max-height: 280px;
+    padding: 12px;
+    flex: 1;
+    min-height: 120px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -268,7 +288,8 @@ h1 {
 .input-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .input-row {
@@ -276,26 +297,25 @@ h1 {
     gap: 10px;
 }
 
-.input-row input {
+.text-display {
     flex: 1;
-    padding: 14px 16px;
+    min-width: 0;
+    padding: 12px 14px;
     font-size: 1rem;
     font-family: 'Poppins', sans-serif;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     color: white;
-    outline: none;
-    transition: all 0.2s ease;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    word-break: break-word;
 }
 
-.input-row input::placeholder {
+.text-display .placeholder {
     color: rgba(255, 255, 255, 0.4);
-}
-
-.input-row input:focus {
-    border-color: rgba(245, 158, 11, 0.5);
-    background: rgba(255, 255, 255, 0.15);
 }
 
 .action-btn {
@@ -323,6 +343,15 @@ h1 {
 
 .action-btn.guess {
     background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+}
+
+.button-row .action-btn {
+    flex: 1;
 }
 
 /* Overlay */
@@ -414,6 +443,64 @@ h1 {
     background: rgba(0, 0, 0, 0.2);
 }
 
+/* Keyboard */
+.keyboard {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.keyboard.visible {
+    display: flex;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.key {
+    flex: 1;
+    max-width: 38px;
+    height: 46px;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.key:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.key-backspace {
+    max-width: 56px;
+    font-size: 1.3rem;
+}
+
+.key-space {
+    max-width: none;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
 /* Loading state */
 .loading {
     opacity: 0.7;
@@ -435,7 +522,28 @@ h1 {
     }
 
     .answer-history {
-        min-height: 180px;
-        max-height: 220px;
+        min-height: 80px;
+    }
+
+    .key {
+        height: 42px;
+        font-size: 0.9rem;
+    }
+
+    .key-backspace {
+        font-size: 1.1rem;
+    }
+
+    .key-space {
+        font-size: 0.65rem;
+    }
+
+    .keyboard {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    .keyboard-row {
+        gap: 4px;
     }
 }

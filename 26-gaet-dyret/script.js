@@ -15,6 +15,7 @@ class AnimalGuessingGame {
         this.guessCount = 0;
         this.history = [];
         this.isLoading = false;
+        this.inputText = '';
 
         // Elements
         this.startScreen = document.getElementById('start-screen');
@@ -23,14 +24,14 @@ class AnimalGuessingGame {
         this.guessCounter = document.getElementById('guess-counter');
         this.pointsIndicator = document.getElementById('points-indicator');
         this.answerHistory = document.getElementById('answer-history');
-        this.questionInput = document.getElementById('question-input');
-        this.guessInput = document.getElementById('guess-input');
+        this.gameInput = document.getElementById('game-input');
         this.askBtn = document.getElementById('ask-btn');
         this.guessBtn = document.getElementById('guess-btn');
         this.loseOverlay = document.getElementById('lose-overlay');
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
         this.categoryBtns = document.querySelectorAll('.category-btn');
+        this.keyboard = document.getElementById('keyboard');
 
         this.init();
     }
@@ -45,14 +46,15 @@ class AnimalGuessingGame {
 
         // Ask button
         this.askBtn.addEventListener('click', () => this.askQuestion());
-        this.questionInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.askQuestion();
-        });
 
         // Guess button
         this.guessBtn.addEventListener('click', () => this.makeGuess());
-        this.guessInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.makeGuess();
+
+        // Keyboard
+        this.keyboard.addEventListener('click', (e) => {
+            const key = e.target.closest('.key');
+            if (!key || this.isLoading) return;
+            this.handleKeyPress(key.dataset.key);
         });
 
         // Play again
@@ -62,13 +64,41 @@ class AnimalGuessingGame {
         });
     }
 
+    handleKeyPress(key) {
+        if (key === 'backspace') {
+            this.inputText = this.inputText.slice(0, -1);
+        } else {
+            this.inputText += key;
+        }
+        this.updateInputDisplay();
+    }
+
+    updateInputDisplay() {
+        if (this.inputText) {
+            this.gameInput.innerHTML = this.escapeHtml(this.inputText);
+        } else {
+            this.gameInput.innerHTML = '<span class="placeholder">Skriv spørgsmål eller gæt...</span>';
+        }
+    }
+
+    getInputValue() {
+        return this.inputText.trim();
+    }
+
+    clearInput() {
+        this.inputText = '';
+        this.updateInputDisplay();
+    }
+
     showStartScreen() {
         this.startScreen.classList.remove('hidden');
         this.gameScreen.classList.add('hidden');
+        this.keyboard.classList.remove('visible');
         this.animal = null;
         this.category = null;
         this.guessCount = 0;
         this.history = [];
+        this.inputText = '';
     }
 
     async startGame(category) {
@@ -93,13 +123,12 @@ class AnimalGuessingGame {
 
             this.startScreen.classList.add('hidden');
             this.gameScreen.classList.remove('hidden');
+            this.keyboard.classList.add('visible');
 
             this.categoryLabel.textContent = this.capitalizeFirst(this.category);
             this.updateCounter();
             this.renderHistory();
-            this.questionInput.value = '';
-            this.guessInput.value = '';
-            this.questionInput.focus();
+            this.clearInput();
 
             HjernespilAPI.sessionEvent('newGame');
         } catch (error) {
@@ -111,7 +140,7 @@ class AnimalGuessingGame {
     }
 
     async askQuestion() {
-        const question = this.questionInput.value.trim();
+        const question = this.getInputValue();
         if (!question || this.isLoading || this.guessCount >= this.MAX_GUESSES) return;
 
         this.setLoading(true);
@@ -137,7 +166,7 @@ class AnimalGuessingGame {
             });
 
             this.renderHistory();
-            this.questionInput.value = '';
+            this.clearInput();
 
             if (this.guessCount >= this.MAX_GUESSES) {
                 this.showLoss();
@@ -149,12 +178,11 @@ class AnimalGuessingGame {
             alert('Kunne ikke stille spørgsmål. Prøv igen.');
         } finally {
             this.setLoading(false);
-            this.questionInput.focus();
         }
     }
 
     makeGuess() {
-        const guess = this.guessInput.value.trim().toLowerCase();
+        const guess = this.getInputValue().toLowerCase();
         if (!guess || this.isLoading || this.guessCount >= this.MAX_GUESSES) return;
 
         this.guessCount++;
@@ -169,14 +197,12 @@ class AnimalGuessingGame {
         });
 
         this.renderHistory();
-        this.guessInput.value = '';
+        this.clearInput();
 
         if (isCorrect) {
             this.showWin();
         } else if (this.guessCount >= this.MAX_GUESSES) {
             this.showLoss();
-        } else {
-            this.questionInput.focus();
         }
     }
 
@@ -258,8 +284,6 @@ class AnimalGuessingGame {
         this.isLoading = loading;
         this.askBtn.disabled = loading;
         this.guessBtn.disabled = loading;
-        this.questionInput.disabled = loading;
-        this.guessInput.disabled = loading;
 
         if (loading) {
             this.gameScreen.classList.add('loading');
