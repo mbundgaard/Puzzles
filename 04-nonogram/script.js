@@ -48,7 +48,7 @@ class Nonogram {
         this.rowHints = this.calculateHints(this.solution);
         this.colHints = this.calculateHints(this.transpose(this.solution));
         this.render();
-        HjernespilAPI.trackStart('04');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generatePuzzle() {
@@ -155,7 +155,7 @@ class Nonogram {
 
     showVictory() {
         this.victoryOverlay.classList.add('show');
-        HjernespilAPI.trackComplete('04');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
     }
 }

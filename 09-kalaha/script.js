@@ -82,7 +82,7 @@ class Kalaha {
         this.gameOver = false;
         this.updateStatus('Din tur');
         this.render();
-        HjernespilAPI.trackStart('09');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     makeMove(pitIndex) {
@@ -292,7 +292,7 @@ class Kalaha {
         if (playerScore > aiScore) {
             this.resultTitle.textContent = 'Du vandt! 🎉';
             this.resultTitle.className = 'win';
-            HjernespilAPI.trackComplete('09');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(3);
         } else if (aiScore > playerScore) {
             this.resultTitle.textContent = 'AI vandt!';

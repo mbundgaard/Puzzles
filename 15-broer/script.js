@@ -51,7 +51,7 @@ class Bridges {
         this.bridges = [];
         this.selectedIsland = null;
         this.render();
-        HjernespilAPI.trackStart('15');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generatePuzzle() {
@@ -328,7 +328,7 @@ class Bridges {
         if (this.checkVictory()) {
             setTimeout(() => {
                 this.victoryOverlay.classList.add('show');
-                HjernespilAPI.trackComplete('15');
+                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(3);
             }, 300);
         }

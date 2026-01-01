@@ -78,7 +78,7 @@ class PegSolitaire {
         this.history = [];
         this.updateStats();
         this.render();
-        HjernespilAPI.trackStart('17');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     updateStats() {
@@ -214,13 +214,13 @@ class PegSolitaire {
                 this.victoryTitle.textContent = 'Perfekt!';
                 this.victoryTitle.className = '';
                 this.victoryMessage.textContent = 'Du efterlod kun én pind i midten!';
-                HjernespilAPI.trackComplete('17');
+                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(3);
             } else {
                 this.victoryTitle.textContent = 'Næsten!';
                 this.victoryTitle.className = 'near-win';
                 this.victoryMessage.textContent = 'Kun én pind tilbage, men ikke i midten.';
-                HjernespilAPI.trackComplete('17');
+                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(3);
             }
 

@@ -65,7 +65,7 @@ class Mastermind {
         btns.forEach(btn => btn.classList.remove('selected'));
 
         this.render();
-        HjernespilAPI.trackStart('14');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     render() {
@@ -207,7 +207,7 @@ class Mastermind {
             this.status.className = 'status winner';
             this.guessBtn.disabled = true;
             this.clearBtn.disabled = true;
-            HjernespilAPI.trackComplete('14');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(3);
             this.render();
             return;

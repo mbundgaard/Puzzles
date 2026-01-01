@@ -211,7 +211,7 @@ class Ordleg {
         // Display hints
         this.updateHintDisplay();
 
-        HjernespilAPI.trackStart('10');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     updateHintDisplay() {
@@ -330,7 +330,7 @@ class Ordleg {
                 const messages = ['Genialt!', 'Fantastisk!', 'Flot!', 'Godt gået!', 'Fint!', 'Puh!'];
                 this.showMessage(messages[this.currentRow], 'success');
                 // gameOver already set before animation
-                HjernespilAPI.trackComplete('10');
+                HjernespilAPI.sessionEvent('win');
                 const points = { easy: 1, medium: 3, hard: 5 }[this.difficultySelect.value] || 3;
                 HjernespilUI.showWinModal(points);
             } else if (this.currentRow >= this.maxGuesses - 1) {

@@ -62,7 +62,7 @@ class TowerOfHanoi {
         this.updateDisplay();
         this.clearSelection();
 
-        HjernespilAPI.trackStart('22');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     handlePegClick(pegIndex) {
@@ -177,7 +177,7 @@ class TowerOfHanoi {
                 document.querySelector('.game-area').classList.remove('won');
             }, 3000);
 
-            HjernespilAPI.trackComplete('22');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(this.points);
         }
     }

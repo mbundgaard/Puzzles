@@ -302,7 +302,7 @@ class GameUI {
         this.renderBoard();
         this.updateStatus();
         this.updateScores();
-        HjernespilAPI.trackStart('01');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     renderBoard() {
@@ -440,7 +440,7 @@ class GameUI {
             let message;
             if (pieces.black > pieces.white) {
                 message = `Du vandt! ${pieces.black} - ${pieces.white}`;
-                HjernespilAPI.trackComplete('01');
+                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(3);
             } else if (pieces.white > pieces.black) {
                 message = `AI vandt! ${pieces.white} - ${pieces.black}`;

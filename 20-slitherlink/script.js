@@ -52,7 +52,7 @@ class Slitherlink {
         this.generatePuzzle();
         this.render();
 
-        HjernespilAPI.trackStart('20');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     initializeEdges() {
@@ -384,7 +384,7 @@ class Slitherlink {
         this.message.textContent = 'Tillykke! Du løste puslespillet!';
         this.message.className = 'message victory';
 
-        HjernespilAPI.trackComplete('20');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
 
         return true;

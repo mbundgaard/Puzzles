@@ -41,7 +41,7 @@ class FifteenPuzzle {
         this.shuffle(100);
 
         this.render();
-        HjernespilAPI.trackStart('13');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     shuffle(moves) {
@@ -145,7 +145,7 @@ class FifteenPuzzle {
         this.gameOver = true;
         this.stopTimer();
         this.boardEl.classList.add('won');
-        HjernespilAPI.trackComplete('13');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
 
         setTimeout(() => {

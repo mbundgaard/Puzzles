@@ -120,7 +120,7 @@ class NineMensMorris {
         this.render();
         this.setStatus('Din tur - placer en brik');
         this.updatePhase();
-        HjernespilAPI.trackStart('19');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     updateStats() {
@@ -404,7 +404,7 @@ class NineMensMorris {
             this.victoryTitle.className = '';
             this.victoryMessage.textContent = 'Du vandt over computeren!';
             this.setStatus('Du vandt!', 'winner');
-            HjernespilAPI.trackComplete('19');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(3);
         } else {
             this.victoryTitle.textContent = 'Spil slut';

@@ -43,7 +43,7 @@ class ConnectFour {
         this.updateStatus();
         this.render();
 
-        HjernespilAPI.trackStart('21');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     updateStatus() {
@@ -134,7 +134,7 @@ class ConnectFour {
                 this.statusEl.textContent = 'Du vandt!';
                 this.statusEl.className = 'status player-turn';
 
-                HjernespilAPI.trackComplete('21');
+                HjernespilAPI.sessionEvent('win');
                 setTimeout(() => HjernespilUI.showWinModal(3), 500);
             } else {
                 this.messageEl.textContent = 'Computeren vandt!';

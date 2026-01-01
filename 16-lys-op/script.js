@@ -55,7 +55,7 @@ class LightUp {
 
         this.generatePuzzle();
         this.render();
-        HjernespilAPI.trackStart('16');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generatePuzzle() {
@@ -136,7 +136,7 @@ class LightUp {
         if (this.checkVictory()) {
             setTimeout(() => {
                 this.victoryOverlay.classList.add('show');
-                HjernespilAPI.trackComplete('16');
+                HjernespilAPI.sessionEvent('win');
                 HjernespilUI.showWinModal(3);
             }, 300);
         }

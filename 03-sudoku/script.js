@@ -42,7 +42,7 @@ class Sudoku {
         this.given = this.board.map(row => row.map(cell => cell !== 0));
         this.selectedCell = null;
         this.render();
-        HjernespilAPI.trackStart('03');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generateSolution() {
@@ -185,7 +185,7 @@ class Sudoku {
 
     showVictory() {
         this.victoryOverlay.classList.add('show');
-        HjernespilAPI.trackComplete('03');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
     }
 }

@@ -55,7 +55,7 @@ class TentsAndTrees {
         this.generatePuzzle();
         this.render();
         this.updateStatus('Placér telte ved siden af træer');
-        HjernespilAPI.trackStart('02');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generatePuzzle() {
@@ -418,7 +418,7 @@ class TentsAndTrees {
         this.gameWon = true;
         this.updateStatus('Tillykke! Puslespillet er løst!');
         this.statusElement.classList.add('victory');
-        HjernespilAPI.trackComplete('02');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
     }
 

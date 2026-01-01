@@ -47,7 +47,7 @@ class Memory {
 
         this.updateStats();
         this.render();
-        HjernespilAPI.trackStart('07');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     shuffle(array) {
@@ -132,7 +132,7 @@ class Memory {
     showVictory() {
         this.finalMovesEl.textContent = this.moves;
         this.victoryOverlay.classList.add('show');
-        HjernespilAPI.trackComplete('07');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
     }
 }

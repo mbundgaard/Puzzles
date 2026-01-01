@@ -52,7 +52,7 @@ class Battleship {
         this.renderGrid();
         this.updateUI();
 
-        HjernespilAPI.trackStart('25');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     getShipCells(row, col, size, horizontal) {
@@ -196,7 +196,7 @@ class Battleship {
 
         document.getElementById('final-shots').textContent = this.shots;
 
-        HjernespilAPI.trackComplete('25');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(2);
     }
 }

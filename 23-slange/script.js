@@ -90,7 +90,7 @@ class SnakeGame {
         this.gameRunning = true;
         this.gameLoop = setInterval(() => this.update(), this.speed);
 
-        HjernespilAPI.trackStart('23');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     renderBoard() {
@@ -260,7 +260,7 @@ class SnakeGame {
         this.gameRunning = false;
         clearInterval(this.gameLoop);
 
-        HjernespilAPI.trackComplete('23');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(this.points);
     }
 }

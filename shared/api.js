@@ -92,6 +92,10 @@ const HjernespilAPI = (() => {
             `${API_BASE}/session/${_sessionGame}/${_sessionId}/end`,
             new Blob(['{}'], { type: 'application/json' })
         );
+
+        // Clear session to prevent duplicate calls
+        _sessionId = null;
+        _sessionGame = null;
     }
 
     /**
@@ -298,7 +302,14 @@ const HjernespilAPI = (() => {
         startSession(_autoGame);
 
         // Auto-end session when page unloads
+        // Use multiple events for better mobile/PWA support
+        window.addEventListener('pagehide', endSession);
         window.addEventListener('beforeunload', endSession);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                endSession();
+            }
+        });
     }
 
     // ============ Public API ============

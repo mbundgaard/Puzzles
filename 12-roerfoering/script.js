@@ -107,7 +107,7 @@ class PipePuzzle {
         this.tray = [];
         this.generatePuzzle();
         this.render();
-        HjernespilAPI.trackStart('12');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     generatePuzzle() {
@@ -433,7 +433,7 @@ class PipePuzzle {
             this.markWonToday(this.difficulty);
             this.updateDifficultyButtons();
 
-            HjernespilAPI.trackComplete('12');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(points);
         }
     }

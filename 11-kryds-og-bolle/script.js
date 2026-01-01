@@ -50,7 +50,7 @@ class TicTacToe {
 
         this.status.textContent = 'Din tur (X)';
         this.status.className = 'status';
-        HjernespilAPI.trackStart('11');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     handleClick(cell) {
@@ -201,7 +201,7 @@ class TicTacToe {
             this.status.className = 'status winner';
             this.scores.player++;
             this.playerScoreEl.textContent = this.scores.player;
-            HjernespilAPI.trackComplete('11');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(1);
         } else if (result === 'O') {
             this.status.textContent = 'AI vandt!';

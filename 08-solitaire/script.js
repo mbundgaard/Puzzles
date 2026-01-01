@@ -89,7 +89,7 @@ class Solitaire {
         this.stock = deck.slice(cardIndex);
 
         this.render();
-        HjernespilAPI.trackStart('08');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     drawFromStock() {
@@ -284,7 +284,7 @@ class Solitaire {
     showVictory() {
         this.finalMovesEl.textContent = this.moves;
         this.victoryOverlay.classList.add('show');
-        HjernespilAPI.trackComplete('08');
+        HjernespilAPI.sessionEvent('win');
         HjernespilUI.showWinModal(3);
     }
 

@@ -73,7 +73,7 @@ class Checkers {
         this.updateStats();
         this.render();
         this.setStatus('Din tur');
-        HjernespilAPI.trackStart('18');
+        HjernespilAPI.sessionEvent('newGame');
     }
 
     isPlayerPiece(piece) {
@@ -326,7 +326,7 @@ class Checkers {
             this.victoryTitle.className = '';
             this.victoryMessage.textContent = 'Du vandt over computeren!';
             this.setStatus('Du vandt!', 'winner');
-            HjernespilAPI.trackComplete('18');
+            HjernespilAPI.sessionEvent('win');
             HjernespilUI.showWinModal(3);
         } else {
             this.victoryTitle.textContent = 'Spil slut';
