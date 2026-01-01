@@ -11,7 +11,6 @@ public class SessionFunction
 {
     private readonly ILogger<SessionFunction> _logger;
     private readonly ISessionStorage _storage;
-    private static readonly HashSet<string> ValidEvents = new() { "newgame", "win", "lose" };
 
     public SessionFunction(ILogger<SessionFunction> logger, ISessionStorage storage)
     {
@@ -21,8 +20,23 @@ public class SessionFunction
 
     [Function("SessionStart")]
     public async Task<IActionResult> Start(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/start")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/{game}/{sessionId}/start")] HttpRequest req,
+        string game,
+        string sessionId)
     {
+        // Validate game number
+        var normalizedGame = GameValidator.NormalizeGame(game);
+        if (normalizedGame == null)
+        {
+            return new BadRequestObjectResult(new { error = "Invalid game number" });
+        }
+
+        // Validate session ID (must be a valid GUID)
+        if (!Guid.TryParse(sessionId, out _))
+        {
+            return new BadRequestObjectResult(new { error = "Invalid sessionId (must be GUID)" });
+        }
+
         SessionStartRequest? request;
         try
         {
@@ -33,27 +47,9 @@ public class SessionFunction
             return new BadRequestObjectResult(new { error = "Invalid JSON" });
         }
 
-        if (request == null)
-        {
-            return new BadRequestObjectResult(new { error = "Request body required" });
-        }
-
-        // Validate session ID (must be a valid GUID)
-        if (string.IsNullOrWhiteSpace(request.SessionId) || !Guid.TryParse(request.SessionId, out _))
-        {
-            return new BadRequestObjectResult(new { error = "Valid sessionId (GUID) required" });
-        }
-
-        // Validate game number
-        var game = GameValidator.NormalizeGame(request.Game);
-        if (game == null)
-        {
-            return new BadRequestObjectResult(new { error = "Invalid game number" });
-        }
-
         // Validate nickname if provided
         string? nickname = null;
-        if (!string.IsNullOrWhiteSpace(request.Nickname))
+        if (!string.IsNullOrWhiteSpace(request?.Nickname))
         {
             nickname = request.Nickname.Trim();
             if (nickname.Length < 2 || nickname.Length > 20)
@@ -64,11 +60,11 @@ public class SessionFunction
 
         var session = new SessionRecord
         {
-            SessionId = request.SessionId,
-            Game = game,
+            SessionId = sessionId,
+            Game = normalizedGame,
             Nickname = nickname,
             StartTime = DateTime.UtcNow,
-            Device = request.Device
+            Device = request?.Device
         };
 
         try
@@ -77,79 +73,21 @@ public class SessionFunction
         }
         catch (Azure.RequestFailedException ex) when (ex.Status == 409)
         {
-            // Session already exists - that's OK, client may be retrying
-            _logger.LogWarning("Session {SessionId} already exists", request.SessionId);
+            _logger.LogWarning("Session {SessionId} already exists", sessionId);
             return new OkObjectResult(new { success = true, message = "Session already exists" });
         }
 
-        _logger.LogInformation("Session started: {SessionId} for game {Game}", request.SessionId, game);
+        _logger.LogInformation("Session started: {SessionId} for game {Game}", sessionId, normalizedGame);
 
         return new OkObjectResult(new { success = true });
     }
 
     [Function("SessionUpdate")]
     public async Task<IActionResult> Update(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/update")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/{game}/{sessionId}/update")] HttpRequest req,
+        string game,
+        string sessionId)
     {
-        SessionUpdateRequest? request;
-        try
-        {
-            request = await req.ReadFromJsonAsync<SessionUpdateRequest>();
-        }
-        catch
-        {
-            return new BadRequestObjectResult(new { error = "Invalid JSON" });
-        }
-
-        if (request == null)
-        {
-            return new BadRequestObjectResult(new { error = "Request body required" });
-        }
-
-        // Validate session ID
-        if (string.IsNullOrWhiteSpace(request.SessionId) || !Guid.TryParse(request.SessionId, out _))
-        {
-            return new BadRequestObjectResult(new { error = "Valid sessionId (GUID) required" });
-        }
-
-        // Validate event type
-        var eventType = request.Event?.Trim().ToLowerInvariant();
-        if (string.IsNullOrEmpty(eventType) || !ValidEvents.Contains(eventType))
-        {
-            return new BadRequestObjectResult(new { error = "Event must be 'newGame', 'win', or 'lose'" });
-        }
-
-        // We need to find the session to get the game (partition key)
-        // For now, we'll require game in the request or iterate partitions
-        // Let's add game to the update request for efficiency
-
-        // Actually, let's search for the session across all games
-        // This is inefficient but works for now - could add game to request later
-
-        // For efficiency, let's require game in the request
-        return new BadRequestObjectResult(new { error = "Game number required - please include 'game' in request" });
-    }
-
-    [Function("SessionUpdateWithGame")]
-    public async Task<IActionResult> UpdateWithGame(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/{game}/update")] HttpRequest req,
-        string game)
-    {
-        SessionUpdateRequest? request;
-        try
-        {
-            request = await req.ReadFromJsonAsync<SessionUpdateRequest>();
-        }
-        catch
-        {
-            return new BadRequestObjectResult(new { error = "Invalid JSON" });
-        }
-
-        if (request == null)
-        {
-            return new BadRequestObjectResult(new { error = "Request body required" });
-        }
-
         // Validate game number
         var normalizedGame = GameValidator.NormalizeGame(game);
         if (normalizedGame == null)
@@ -158,16 +96,31 @@ public class SessionFunction
         }
 
         // Validate session ID
-        if (string.IsNullOrWhiteSpace(request.SessionId) || !Guid.TryParse(request.SessionId, out _))
+        if (!Guid.TryParse(sessionId, out _))
         {
-            return new BadRequestObjectResult(new { error = "Valid sessionId (GUID) required" });
+            return new BadRequestObjectResult(new { error = "Invalid sessionId (must be GUID)" });
         }
 
-        // Validate event type
-        var eventType = request.Event?.Trim().ToLowerInvariant();
-        if (string.IsNullOrEmpty(eventType) || !ValidEvents.Contains(eventType))
+        SessionUpdateRequest? request;
+        try
         {
-            return new BadRequestObjectResult(new { error = "Event must be 'newGame', 'win', or 'lose'" });
+            request = await req.ReadFromJsonAsync<SessionUpdateRequest>();
+        }
+        catch
+        {
+            return new BadRequestObjectResult(new { error = "Invalid JSON" });
+        }
+
+        if (request == null)
+        {
+            return new BadRequestObjectResult(new { error = "Request body required" });
+        }
+
+        // Normalize event type
+        var eventType = request.Event?.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(eventType))
+        {
+            return new BadRequestObjectResult(new { error = "Event is required" });
         }
 
         var sessionEvent = new SessionEvent
@@ -178,38 +131,24 @@ public class SessionFunction
 
         try
         {
-            await _storage.AddEventAsync(normalizedGame, request.SessionId, sessionEvent);
+            await _storage.AddEventAsync(normalizedGame, sessionId, sessionEvent);
         }
         catch (Azure.RequestFailedException ex) when (ex.Status == 404)
         {
             return new NotFoundObjectResult(new { error = "Session not found" });
         }
 
-        _logger.LogInformation("Event {Event} added to session {SessionId}", eventType, request.SessionId);
+        _logger.LogInformation("Event {Event} added to session {SessionId}", eventType, sessionId);
 
         return new OkObjectResult(new { success = true });
     }
 
     [Function("SessionEnd")]
     public async Task<IActionResult> End(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/{game}/end")] HttpRequest req,
-        string game)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "session/{game}/{sessionId}/end")] HttpRequest req,
+        string game,
+        string sessionId)
     {
-        SessionEndRequest? request;
-        try
-        {
-            request = await req.ReadFromJsonAsync<SessionEndRequest>();
-        }
-        catch
-        {
-            return new BadRequestObjectResult(new { error = "Invalid JSON" });
-        }
-
-        if (request == null)
-        {
-            return new BadRequestObjectResult(new { error = "Request body required" });
-        }
-
         // Validate game number
         var normalizedGame = GameValidator.NormalizeGame(game);
         if (normalizedGame == null)
@@ -218,22 +157,53 @@ public class SessionFunction
         }
 
         // Validate session ID
-        if (string.IsNullOrWhiteSpace(request.SessionId) || !Guid.TryParse(request.SessionId, out _))
+        if (!Guid.TryParse(sessionId, out _))
         {
-            return new BadRequestObjectResult(new { error = "Valid sessionId (GUID) required" });
+            return new BadRequestObjectResult(new { error = "Invalid sessionId (must be GUID)" });
         }
 
         try
         {
-            await _storage.EndSessionAsync(normalizedGame, request.SessionId, DateTime.UtcNow);
+            await _storage.EndSessionAsync(normalizedGame, sessionId, DateTime.UtcNow);
         }
         catch (Azure.RequestFailedException ex) when (ex.Status == 404)
         {
             return new NotFoundObjectResult(new { error = "Session not found" });
         }
 
-        _logger.LogInformation("Session {SessionId} ended", request.SessionId);
+        _logger.LogInformation("Session {SessionId} ended", sessionId);
 
         return new OkObjectResult(new { success = true });
+    }
+
+    [Function("SessionGet")]
+    public async Task<IActionResult> Get(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "session/{game}/{sessionId}")] HttpRequest req,
+        string game,
+        string sessionId)
+    {
+        // Validate game number
+        var normalizedGame = GameValidator.NormalizeGame(game);
+        if (normalizedGame == null)
+        {
+            return new BadRequestObjectResult(new { error = "Invalid game number" });
+        }
+
+        // Validate session ID
+        if (!Guid.TryParse(sessionId, out _))
+        {
+            return new BadRequestObjectResult(new { error = "Invalid sessionId (must be GUID)" });
+        }
+
+        var session = await _storage.GetSessionAsync(normalizedGame, sessionId);
+
+        if (session == null)
+        {
+            return new NotFoundObjectResult(new { error = "Session not found" });
+        }
+
+        _logger.LogInformation("Session {SessionId} retrieved", sessionId);
+
+        return new OkObjectResult(session);
     }
 }

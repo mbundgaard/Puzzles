@@ -7,6 +7,101 @@ const HjernespilAPI = (() => {
     const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
     const NICKNAME_KEY = 'hjernespil_nickname';
 
+    // ============ Session Tracking ============
+
+    let _sessionId = null;
+    let _sessionGame = null;
+
+    /**
+     * Get device information for session tracking.
+     * @returns {Object} Device info
+     */
+    function getDeviceInfo() {
+        return {
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            screen: `${screen.width}x${screen.height}`,
+            pixelRatio: window.devicePixelRatio,
+            pwa: window.matchMedia('(display-mode: standalone)').matches,
+            cores: navigator.hardwareConcurrency,
+            memory: navigator.deviceMemory,
+            touch: 'ontouchstart' in window
+        };
+    }
+
+    /**
+     * Get the current game number from URL path.
+     * @returns {string|null} Game number (e.g., "01", "02") or null
+     */
+    function getGameNumber() {
+        const match = window.location.pathname.match(/\/(\d{2})-/);
+        return match ? match[1] : null;
+    }
+
+    /**
+     * Start a new session. Called automatically when script loads.
+     * @param {string} game - Game number
+     */
+    async function startSession(game) {
+        if (!game) return;
+
+        _sessionId = crypto.randomUUID();
+        _sessionGame = game;
+
+        try {
+            await fetch(`${API_BASE}/session/${game}/${_sessionId}/start`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nickname: getNickname(),
+                    device: getDeviceInfo()
+                })
+            });
+        } catch (error) {
+            // Silently fail - don't disrupt gameplay
+        }
+    }
+
+    /**
+     * Add an event to the current session.
+     * @param {string} event - Event type (e.g., "newGame", "win", "lose")
+     */
+    async function sessionEvent(event) {
+        if (!_sessionId || !_sessionGame) return;
+
+        try {
+            await fetch(`${API_BASE}/session/${_sessionGame}/${_sessionId}/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event })
+            });
+        } catch (error) {
+            // Silently fail - don't disrupt gameplay
+        }
+    }
+
+    /**
+     * End the current session. Called automatically on page unload.
+     */
+    function endSession() {
+        if (!_sessionId || !_sessionGame) return;
+
+        // Use sendBeacon for reliable delivery on page close
+        navigator.sendBeacon(
+            `${API_BASE}/session/${_sessionGame}/${_sessionId}/end`,
+            new Blob(['{}'], { type: 'application/json' })
+        );
+    }
+
+    /**
+     * Get the current session ID.
+     * @returns {string|null}
+     */
+    function getSessionId() {
+        return _sessionId;
+    }
+
     // ============ Event Tracking ============
 
     /**
@@ -195,10 +290,29 @@ const HjernespilAPI = (() => {
         return nickname && nickname.trim().length >= 2 && nickname.trim().length <= 20;
     }
 
+    // ============ Auto-initialization ============
+
+    // Auto-start session when script loads (for game pages)
+    const _autoGame = getGameNumber();
+    if (_autoGame) {
+        startSession(_autoGame);
+
+        // Auto-end session when page unloads
+        window.addEventListener('beforeunload', endSession);
+    }
+
     // ============ Public API ============
 
     return {
-        // Event tracking
+        // Session tracking
+        startSession,
+        sessionEvent,
+        endSession,
+        getSessionId,
+        getGameNumber,
+        getDeviceInfo,
+
+        // Event tracking (legacy)
         trackStart,
         trackComplete,
         trackEvent,

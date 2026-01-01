@@ -62,33 +62,33 @@ public class AzureTableSessionStorage : ISessionStorage
 
     public async Task AddEventAsync(string game, string sessionId, SessionEvent sessionEvent)
     {
-        // Get existing entity
+        // Get existing entity to read current events
         var response = await _tableClient.GetEntityAsync<SessionEntity>(game, sessionId);
-        var entity = response.Value;
+        var existingEntity = response.Value;
 
-        // Parse existing events
-        var events = JsonSerializer.Deserialize<List<SessionEvent>>(entity.EventsJson, JsonOptions)
+        // Parse existing events and add new one
+        var events = JsonSerializer.Deserialize<List<SessionEvent>>(existingEntity.EventsJson, JsonOptions)
             ?? new List<SessionEvent>();
-
-        // Add new event
         events.Add(sessionEvent);
 
-        // Update entity
-        entity.EventsJson = JsonSerializer.Serialize(events, JsonOptions);
+        // Merge only the EventsJson property using dictionary-based entity
+        var updateEntity = new TableEntity(game, sessionId)
+        {
+            { "EventsJson", JsonSerializer.Serialize(events, JsonOptions) }
+        };
 
-        await _tableClient.UpdateEntityAsync(entity, ETag.All, TableUpdateMode.Replace);
+        await _tableClient.UpdateEntityAsync(updateEntity, ETag.All, TableUpdateMode.Merge);
     }
 
     public async Task EndSessionAsync(string game, string sessionId, DateTime endTime)
     {
-        // Get existing entity
-        var response = await _tableClient.GetEntityAsync<SessionEntity>(game, sessionId);
-        var entity = response.Value;
+        // Merge only the EndTime property using dictionary-based entity
+        var updateEntity = new TableEntity(game, sessionId)
+        {
+            { "EndTime", endTime }
+        };
 
-        // Set end time
-        entity.EndTime = endTime;
-
-        await _tableClient.UpdateEntityAsync(entity, ETag.All, TableUpdateMode.Replace);
+        await _tableClient.UpdateEntityAsync(updateEntity, ETag.All, TableUpdateMode.Merge);
     }
 
     public async Task<SessionRecord?> GetSessionAsync(string game, string sessionId)
