@@ -11,14 +11,10 @@ class WordSearchGame {
         this.gameStarted = false;
 
         this.directions = [
-            { dx: 1, dy: 0 },   // right
-            { dx: -1, dy: 0 },  // left
-            { dx: 0, dy: 1 },   // down
-            { dx: 0, dy: -1 },  // up
+            { dx: 1, dy: 0 },   // right (horizontal)
+            { dx: 0, dy: 1 },   // down (vertical)
             { dx: 1, dy: 1 },   // diagonal down-right
-            { dx: -1, dy: -1 }, // diagonal up-left
-            { dx: 1, dy: -1 },  // diagonal up-right
-            { dx: -1, dy: 1 }   // diagonal down-left
+            { dx: 1, dy: -1 }   // diagonal up-right
         ];
 
         this.danishLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
@@ -251,20 +247,15 @@ class WordSearchGame {
     }
 
     checkSelection(x1, y1, x2, y2) {
-        const selectedWord = this.getWordFromSelection(x1, y1, x2, y2);
-
-        // Check if this matches any word (forward or backward)
+        // Check if this matches any word (forward direction only: left to right)
         for (const wordPos of this.wordPositions) {
             if (this.foundWords.has(wordPos.word)) continue;
 
             const matchesForward =
                 (x1 === wordPos.startX && y1 === wordPos.startY &&
                  x2 === wordPos.endX && y2 === wordPos.endY);
-            const matchesBackward =
-                (x2 === wordPos.startX && y2 === wordPos.startY &&
-                 x1 === wordPos.endX && y1 === wordPos.endY);
 
-            if (matchesForward || matchesBackward) {
+            if (matchesForward) {
                 this.markWordFound(wordPos, x1, y1, x2, y2);
                 return;
             }
