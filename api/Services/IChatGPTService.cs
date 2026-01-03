@@ -28,6 +28,14 @@ public class AnimalPickResult
 }
 
 /// <summary>
+/// Result from generating a word search puzzle.
+/// </summary>
+public class WordSearchResult
+{
+    public List<string> Words { get; set; } = new();
+}
+
+/// <summary>
 /// Service for processing text with Azure OpenAI (ChatGPT).
 /// </summary>
 public interface IChatGPTService
@@ -55,4 +63,11 @@ public interface IChatGPTService
     /// <param name="question">The user's question</param>
     /// <returns>"Ja", "Nej", or "Måske"</returns>
     Task<string?> AskAboutAnimalAsync(string animal, string question);
+
+    /// <summary>
+    /// Generates words for a word search puzzle.
+    /// </summary>
+    /// <param name="difficulty">Difficulty level: "easy", "medium", or "hard"</param>
+    /// <returns>List of 8 Danish words appropriate for the difficulty</returns>
+    Task<WordSearchResult?> GenerateWordSearchAsync(string difficulty);
 }

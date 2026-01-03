@@ -276,4 +276,71 @@ Svar ""Måske"" hvis spørgsmålet er uklart, tvetydigt, eller ikke kan besvares
     {
         public string? Answer { get; set; }
     }
+
+    public async Task<WordSearchResult?> GenerateWordSearchAsync(string difficulty)
+    {
+        if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
+        {
+            _logger.LogWarning("Azure OpenAI not configured, cannot generate word search");
+            return null;
+        }
+
+        var diff = string.IsNullOrWhiteSpace(difficulty) ? "medium" : difficulty.ToLower();
+
+        try
+        {
+            var difficultyPrompt = diff switch
+            {
+                "easy" => "Vælg 8 MEGET NEMME danske ord. Ordene skal være simple og almindelige, som børn kender. Eksempler: hund, kat, sol, mad, bil, hus, bold, træ. Ordene skal være 3-5 bogstaver lange.",
+                "medium" => "Vælg 8 MELLEM-SVÆRE danske ord. Ordene skal være almindelige men lidt længere eller mere specifikke. Eksempler: banan, skole, sommer, musik, familie, blomst. Ordene skal være 4-7 bogstaver lange.",
+                _ => "Vælg 8 SVÆRE danske ord. Ordene skal være længere eller mere ualmindelige. Eksempler: bibliotek, sommerfugl, eventyr, astronaut, dinosaur. Ordene skal være 6-10 bogstaver lange."
+            };
+
+            var systemPrompt = $@"Du genererer ord til et ordsøgningsspil (word search) på dansk.
+
+{difficultyPrompt}
+
+Krav:
+- Præcis 8 ord
+- Kun danske ord med bogstaverne A-Z og Æ, Ø, Å
+- Ingen gentagelser
+- Blandede kategorier (dyr, mad, natur, ting, etc.)
+- Alle ord skal være i STORE BOGSTAVER
+
+Svar med JSON i dette format:
+{{""words"": [""ORD1"", ""ORD2"", ""ORD3"", ""ORD4"", ""ORD5"", ""ORD6"", ""ORD7"", ""ORD8""]}}";
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = "Generér 8 ord til ordsøgning" }
+                },
+                temperature = 0.9,
+                response_format = new { type = "json_object" }
+            };
+
+            var response = await SendChatRequestAsync(requestBody);
+            if (response == null) return null;
+
+            var result = JsonSerializer.Deserialize<WordSearchResult>(response, JsonOptions);
+            if (result == null || result.Words == null || result.Words.Count != 8)
+            {
+                _logger.LogWarning("Failed to parse word search response or wrong word count: {Content}", response);
+                return null;
+            }
+
+            // Ensure all words are uppercase
+            result.Words = result.Words.Select(w => w.ToUpper()).ToList();
+
+            _logger.LogInformation("Word search generated: {Words} (difficulty: {Difficulty})", string.Join(", ", result.Words), diff);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating word search with Azure OpenAI");
+            return null;
+        }
+    }
 }

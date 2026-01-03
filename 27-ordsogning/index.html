@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ordsøgning - Hjernespil</title>
+    <link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+
+        <h1>Ordsøgning</h1>
+
+        <!-- Difficulty Selection -->
+        <div class="difficulty-select" id="difficulty-select">
+            <p class="difficulty-label">Vælg sværhedsgrad:</p>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn" data-difficulty="easy" data-points="1">
+                    <span class="diff-name">Nem</span>
+                    <span class="diff-points">1 point</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="medium" data-points="3">
+                    <span class="diff-name">Mellem</span>
+                    <span class="diff-points">3 point</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="hard" data-points="5">
+                    <span class="diff-name">Svær</span>
+                    <span class="diff-points">5 point</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Genererer puslespil...</p>
+        </div>
+
+        <!-- Game Phase -->
+        <div class="game-phase" id="game-phase" style="display: none;">
+            <div class="status-bar">
+                <div class="stats">
+                    <span class="stat">Fundet: <span id="words-found">0</span>/<span id="words-total">8</span></span>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid" id="puzzle-grid"></div>
+                <svg class="selection-overlay" id="selection-overlay"></svg>
+            </div>
+
+            <div class="word-list" id="word-list"></div>
+
+            <button class="new-game-btn" id="new-game-btn">Nyt Spil</button>
+        </div>
+
+        <!-- Rules -->
+        <details class="rules">
+            <summary>Regler</summary>
+            <div class="rules-content">
+                <p><strong>Mål:</strong> Find alle 8 skjulte ord i gitteret.</p>
+                <p><strong>Spil:</strong> Tryk på det første bogstav i et ord, derefter på det sidste bogstav for at markere det.</p>
+                <p><strong>Retninger:</strong> Ord kan gå vandret, lodret eller diagonalt - både forlæns og baglæns.</p>
+                <p><strong>Sværhedsgrad:</strong> Nem (korte ord), Mellem (mellemlange ord), Svær (lange ord).</p>
+            </div>
+        </details>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
