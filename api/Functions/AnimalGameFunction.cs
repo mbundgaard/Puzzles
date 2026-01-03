@@ -112,4 +112,48 @@ public class AnimalGameFunction
             Answer = answer
         });
     }
+
+    [Function("AnimalHint")]
+    public async Task<IActionResult> Hint(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "game/26/hint")] HttpRequest req)
+    {
+        AnimalHintRequest? hintRequest;
+
+        try
+        {
+            using var reader = new StreamReader(req.Body, Encoding.UTF8);
+            var body = await reader.ReadToEndAsync();
+            hintRequest = JsonSerializer.Deserialize<AnimalHintRequest>(body, JsonOptions);
+        }
+        catch
+        {
+            return new BadRequestObjectResult(new { error = "Invalid JSON" });
+        }
+
+        if (hintRequest == null)
+        {
+            return new BadRequestObjectResult(new { error = "Request body required" });
+        }
+
+        if (string.IsNullOrWhiteSpace(hintRequest.Animal))
+        {
+            return new BadRequestObjectResult(new { error = "Animal is required" });
+        }
+
+        var hint = await _chatGPTService.GetHintAboutAnimalAsync(hintRequest.Animal, hintRequest.PreviousHints);
+        if (hint == null)
+        {
+            return new ObjectResult(new { error = "Kunne ikke generere hint. Prøv igen." })
+            {
+                StatusCode = 503
+            };
+        }
+
+        _logger.LogInformation("Hint generated for {Animal}", hintRequest.Animal);
+
+        return new OkObjectResult(new AnimalHintResponse
+        {
+            Hint = hint
+        });
+    }
 }

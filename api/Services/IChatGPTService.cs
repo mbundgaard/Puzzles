@@ -70,4 +70,12 @@ public interface IChatGPTService
     /// <param name="difficulty">Difficulty level: "easy", "medium", or "hard"</param>
     /// <returns>List of 8 Danish words appropriate for the difficulty</returns>
     Task<WordSearchResult?> GenerateWordSearchAsync(string difficulty);
+
+    /// <summary>
+    /// Generates a hint about an animal for the guessing game.
+    /// </summary>
+    /// <param name="animal">The animal to give a hint about</param>
+    /// <param name="previousHints">Previously given hints to avoid repetition</param>
+    /// <returns>A helpful hint in Danish</returns>
+    Task<string?> GetHintAboutAnimalAsync(string animal, List<string>? previousHints = null);
 }

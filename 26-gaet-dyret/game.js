@@ -34,7 +34,9 @@ class AnimalGame {
         this.animal = null;
         this.guessCount = 0;
         this.history = [];
+        this.hints = [];
         this.isLoading = false;
+        this.HINT_COST = 5;
 
         // Get params from URL
         const params = new URLSearchParams(window.location.search);
@@ -52,6 +54,8 @@ class AnimalGame {
         this.loseOverlay = document.getElementById('lose-overlay');
         this.revealAnimal = document.getElementById('reveal-animal');
         this.playAgainBtn = document.getElementById('play-again-btn');
+        this.hintBtn = document.getElementById('hint-btn');
+        this.hintsSection = document.getElementById('hints-section');
 
         this.init();
     }
@@ -59,6 +63,7 @@ class AnimalGame {
     init() {
         this.askBtn.addEventListener('click', () => this.askQuestion());
         this.guessBtn.addEventListener('click', () => this.makeGuess());
+        this.hintBtn.addEventListener('click', () => this.getHint());
         this.playAgainBtn.addEventListener('click', () => {
             window.location.href = 'index.html';
         });
@@ -85,10 +90,13 @@ class AnimalGame {
             this.animal = data.animal.toLowerCase();
             this.guessCount = 0;
             this.history = [];
+            this.hints = [];
 
             this.categoryLabel.textContent = this.capitalizeFirst(this.category);
             this.updateCounter();
             this.renderHistory();
+            this.renderHints();
+            this.updateHintButton();
 
             HjernespilAPI.sessionEvent('newGame');
         } catch (error) {
@@ -127,6 +135,7 @@ class AnimalGame {
 
             this.renderHistory();
             this.gameInput.value = '';
+            this.updateHintButton();
 
             if (this.guessCount >= this.MAX_GUESSES) {
                 this.showLoss();
@@ -135,6 +144,7 @@ class AnimalGame {
             console.error('Error asking question:', error);
             this.guessCount--;
             this.updateCounter();
+            this.updateHintButton();
             alert('Kunne ikke stille spørgsmål. Prøv igen.');
         } finally {
             this.setLoading(false);
@@ -158,6 +168,7 @@ class AnimalGame {
 
         this.renderHistory();
         this.gameInput.value = '';
+        this.updateHintButton();
 
         if (isCorrect) {
             this.showWin();
@@ -234,6 +245,7 @@ class AnimalGame {
         this.askBtn.disabled = loading;
         this.guessBtn.disabled = loading;
         this.gameInput.disabled = loading;
+        this.updateHintButton();
 
         if (loading) {
             document.querySelector('.game-screen').classList.add('loading');
@@ -250,6 +262,76 @@ class AnimalGame {
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    async getHint() {
+        if (this.isLoading || !this.canGetHint()) return;
+
+        this.setLoading(true);
+        this.guessCount += this.HINT_COST;
+        this.updateCounter();
+
+        try {
+            const response = await fetch(`${this.API_BASE}/hint`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    animal: this.animal,
+                    previousHints: this.hints
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to get hint');
+
+            const data = await response.json();
+            this.hints.push(data.hint);
+            this.renderHints();
+            this.updateHintButton();
+
+            if (this.guessCount >= this.MAX_GUESSES) {
+                this.showLoss();
+            }
+        } catch (error) {
+            console.error('Error getting hint:', error);
+            this.guessCount -= this.HINT_COST;
+            this.updateCounter();
+            alert('Kunne ikke hente hint. Prøv igen.');
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    canGetHint() {
+        const remaining = this.MAX_GUESSES - this.guessCount;
+        return remaining > this.HINT_COST;
+    }
+
+    renderHints() {
+        if (this.hints.length === 0) {
+            this.hintsSection.classList.remove('has-hints');
+            this.hintsSection.innerHTML = '';
+            return;
+        }
+
+        this.hintsSection.classList.add('has-hints');
+        this.hintsSection.innerHTML = this.hints.map(hint => `
+            <div class="hint-item">
+                <span class="hint-icon">💡</span>
+                <span>${this.escapeHtml(hint)}</span>
+            </div>
+        `).join('');
+    }
+
+    updateHintButton() {
+        const canHint = this.canGetHint();
+        this.hintBtn.disabled = !canHint || this.isLoading;
+
+        const remaining = this.MAX_GUESSES - this.guessCount;
+        if (remaining <= this.HINT_COST) {
+            this.hintBtn.querySelector('.hint-text').textContent = 'Ikke nok forsøg';
+        } else {
+            this.hintBtn.querySelector('.hint-text').textContent = `Få hint (-${this.HINT_COST} forsøg)`;
+        }
     }
 }
 

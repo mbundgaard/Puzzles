@@ -379,4 +379,71 @@ Svar med JSON i dette format:
             return null;
         }
     }
+
+    public async Task<string?> GetHintAboutAnimalAsync(string animal, List<string>? previousHints = null)
+    {
+        if (string.IsNullOrEmpty(_endpoint) || string.IsNullOrEmpty(_apiKey))
+        {
+            _logger.LogWarning("Azure OpenAI not configured, cannot generate hint");
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(animal))
+        {
+            return null;
+        }
+
+        try
+        {
+            var previousHintsText = previousHints != null && previousHints.Count > 0
+                ? $"\n\nTidligere hints (giv IKKE disse igen):\n- {string.Join("\n- ", previousHints)}"
+                : "";
+
+            var systemPrompt = $@"Du hjælper med et gættespil om dyr. Dyret der skal gættes er: {animal}
+
+Giv ET kort, hjælpsomt hint om dyret på dansk. Hintet skal:
+- Være 1 sætning (max 15 ord)
+- Give nyttig information der kan hjælpe med at gætte dyret
+- IKKE nævne dyrets navn eller dele af navnet
+- Være faktuelt korrekt
+{previousHintsText}
+
+Svar KUN med JSON i dette format:
+{{""hint"": ""Dit hint her""}}";
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = "Giv et hint" }
+                },
+                temperature = 0.7,
+                response_format = new { type = "json_object" }
+            };
+
+            var response = await SendChatRequestAsync(requestBody);
+            if (response == null) return null;
+
+            var result = JsonSerializer.Deserialize<HintResult>(response, JsonOptions);
+            if (result == null || string.IsNullOrEmpty(result.Hint))
+            {
+                _logger.LogWarning("Failed to parse hint response: {Content}", response);
+                return null;
+            }
+
+            _logger.LogInformation("Hint generated for {Animal}: {Hint}", animal, result.Hint);
+            return result.Hint;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating hint with Azure OpenAI");
+            return null;
+        }
+    }
+
+    private class HintResult
+    {
+        public string? Hint { get; set; }
+    }
 }

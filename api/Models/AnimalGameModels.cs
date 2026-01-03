@@ -46,3 +46,23 @@ public class AnimalAskResponse
     /// </summary>
     public required string Answer { get; set; }
 }
+
+/// <summary>
+/// Request model for getting a hint about an animal.
+/// </summary>
+public class AnimalHintRequest
+{
+    public required string Animal { get; set; }
+    /// <summary>
+    /// Previously given hints to avoid repetition.
+    /// </summary>
+    public List<string>? PreviousHints { get; set; }
+}
+
+/// <summary>
+/// Response model for animal hint.
+/// </summary>
+public class AnimalHintResponse
+{
+    public required string Hint { get; set; }
+}
