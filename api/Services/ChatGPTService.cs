@@ -291,21 +291,41 @@ Svar ""Måske"" hvis spørgsmålet er uklart, tvetydigt, eller ikke kan besvares
         {
             var difficultyPrompt = diff switch
             {
-                "easy" => "Vælg 8 MEGET NEMME danske ord. Ordene skal være simple og almindelige, som børn kender. Eksempler: hund, kat, sol, mad, bil, hus, bold, træ. Ordene skal være 3-5 bogstaver lange.",
-                "medium" => "Vælg 8 MELLEM-SVÆRE danske ord. Ordene skal være almindelige men lidt længere eller mere specifikke. Eksempler: banan, skole, sommer, musik, familie, blomst. Ordene skal være 4-7 bogstaver lange.",
-                _ => "Vælg 8 SVÆRE danske ord. Ordene skal være længere eller mere ualmindelige. Eksempler: bibliotek, sommerfugl, eventyr, astronaut, dinosaur. Ordene skal være 6-10 bogstaver lange."
+                "easy" => @"Vælg 8 MEGET NEMME danske ord (3-5 bogstaver).
+Vælg KUN fra disse kategorier med RIGTIGE ord:
+- Dyr: HUND, KAT, FUGL, FISK, RÆVE, BJØRN, ØRNE, UGLE, REJE, KRAB
+- Mad: ÆBLE, PÆRE, BROD, KAGE, SUPPE, MÆLK, SMØR, PØLSE
+- Natur: SOL, MÅNE, SKOV, HAVE, REGN, VIND, SNES, ROSE
+- Ting: BIL, HUS, BOLD, STOL, BORD, LAMPE, DUKKE, KLODS",
+                "medium" => @"Vælg 8 MELLEM-SVÆRE danske ord (4-7 bogstaver).
+Vælg KUN fra disse kategorier med RIGTIGE ord:
+- Dyr: HESTE, GRISE, ROTTER, SLANGE, HAJER, HVALER, PINDSVIN, FRØER
+- Mad: BANAN, CITRON, TOMAT, SALAT, BROCCOLI, RUGBRØD, YOGHURT
+- Natur: SOMMER, VINTER, BLOMST, STRAND, BJERGE, FLODER, SKYER
+- Ting: CYKEL, GUITAR, KAMERA, MOBIL, COMPUTER, SPEJL, VINDUE",
+                _ => @"Vælg 8 SVÆRE danske ord (6-10 bogstaver).
+Vælg KUN fra disse kategorier med RIGTIGE ord:
+- Dyr: ELEFANT, GIRAF, PINGVIN, FLODHEST, NÆSEHORN, KROKODILLE, PAPEGØJE
+- Mad: JORDBÆR, APPELSIN, KARTOFFEL, CHOKOLADE, PANDEKAGE, MORGENMAD
+- Natur: REGNBUE, VULKAN, SOLSKIN, TORDENVEJR, NORDLYS, VANDLØB
+- Ting: BIBLIOTEK, GUITAR, HELICOPTER, TASTATUR, FJERNSYN, HÅNDKLÆDE"
             };
 
             var systemPrompt = $@"Du genererer ord til et ordsøgningsspil (word search) på dansk.
 
 {difficultyPrompt}
 
-Krav:
+VIGTIGT - STRENGE KRAV:
 - Præcis 8 ord
-- Kun danske ord med bogstaverne A-Z og Æ, Ø, Å
+- ALLE ord SKAL være RIGTIGE danske ord der findes i ordbogen
+- Brug NAVNEORD i ental eller flertal (aldrig bøjede verber eller adjektiver)
+- INGEN forkortede eller opdigtede ord
+- Kun bogstaverne A-Z og Æ, Ø, Å
 - Ingen gentagelser
-- Blandede kategorier (dyr, mad, natur, ting, etc.)
 - Alle ord skal være i STORE BOGSTAVER
+
+Eksempler på FORKERTE ord (brug IKKE): blader (hedder blade), æbletr (ufuldstændigt), løben (bøjet verbum)
+Eksempler på KORREKTE ord: BLADE, ÆBLER, LØBER
 
 Svar med JSON i dette format:
 {{""words"": [""ORD1"", ""ORD2"", ""ORD3"", ""ORD4"", ""ORD5"", ""ORD6"", ""ORD7"", ""ORD8""]}}";
@@ -317,7 +337,7 @@ Svar med JSON i dette format:
                     new { role = "system", content = systemPrompt },
                     new { role = "user", content = "Generér 8 ord til ordsøgning" }
                 },
-                temperature = 0.9,
+                temperature = 0.7,
                 response_format = new { type = "json_object" }
             };
 
@@ -331,8 +351,24 @@ Svar med JSON i dette format:
                 return null;
             }
 
-            // Ensure all words are uppercase
-            result.Words = result.Words.Select(w => w.ToUpper()).ToList();
+            // Ensure all words are uppercase and validate
+            result.Words = result.Words.Select(w => w.ToUpper().Trim()).ToList();
+
+            // Validate words: must be 3-12 chars, only valid Danish letters, no truncated words
+            var validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ";
+            foreach (var word in result.Words)
+            {
+                if (word.Length < 3 || word.Length > 12)
+                {
+                    _logger.LogWarning("Word '{Word}' has invalid length", word);
+                    return null;
+                }
+                if (word.Any(c => !validLetters.Contains(c)))
+                {
+                    _logger.LogWarning("Word '{Word}' contains invalid characters", word);
+                    return null;
+                }
+            }
 
             _logger.LogInformation("Word search generated: {Words} (difficulty: {Difficulty})", string.Join(", ", result.Words), diff);
             return result;
