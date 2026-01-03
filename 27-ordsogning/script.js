@@ -1,7 +1,6 @@
 class WordSearchGame {
     constructor() {
         this.gridSize = 12;
-        this.words = [];
         this.grid = [];
         this.wordPositions = [];
         this.foundWords = new Set();
@@ -9,15 +8,6 @@ class WordSearchGame {
         this.points = 0;
         this.startCell = null;
         this.gameStarted = false;
-
-        this.directions = [
-            { dx: 1, dy: 0 },   // right (horizontal)
-            { dx: 0, dy: 1 },   // down (vertical)
-            { dx: 1, dy: 1 },   // diagonal down-right
-            { dx: 1, dy: -1 }   // diagonal up-right
-        ];
-
-        this.danishLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
 
         this.init();
     }
@@ -57,9 +47,13 @@ class WordSearchGame {
             if (!response.ok) throw new Error('API error');
 
             const data = await response.json();
-            this.words = data.words;
 
-            this.generateGrid();
+            // Use pre-generated board from API
+            this.grid = data.grid;
+            this.wordPositions = data.words;
+            this.foundWords = new Set();
+            this.startCell = null;
+
             this.renderGame();
 
             HjernespilAPI.trackStart('27');
@@ -70,92 +64,6 @@ class WordSearchGame {
             alert('Kunne ikke starte spillet. Prøv igen.');
             this.showDifficultySelect();
         }
-    }
-
-    generateGrid() {
-        // Initialize empty grid
-        this.grid = Array(this.gridSize).fill(null).map(() =>
-            Array(this.gridSize).fill('')
-        );
-        this.wordPositions = [];
-        this.foundWords = new Set();
-        this.startCell = null;
-
-        // Sort words by length (longest first for better placement)
-        const sortedWords = [...this.words].sort((a, b) => b.length - a.length);
-
-        // Place each word
-        for (const word of sortedWords) {
-            const placed = this.placeWord(word);
-            if (!placed) {
-                console.warn(`Could not place word: ${word}`);
-            }
-        }
-
-        // Fill empty cells with random letters
-        for (let y = 0; y < this.gridSize; y++) {
-            for (let x = 0; x < this.gridSize; x++) {
-                if (this.grid[y][x] === '') {
-                    this.grid[y][x] = this.danishLetters[Math.floor(Math.random() * this.danishLetters.length)];
-                }
-            }
-        }
-    }
-
-    placeWord(word) {
-        const maxAttempts = 100;
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            const dir = this.directions[Math.floor(Math.random() * this.directions.length)];
-
-            // Calculate valid starting positions
-            let minX = 0, maxX = this.gridSize - 1;
-            let minY = 0, maxY = this.gridSize - 1;
-
-            if (dir.dx > 0) maxX = this.gridSize - word.length;
-            if (dir.dx < 0) minX = word.length - 1;
-            if (dir.dy > 0) maxY = this.gridSize - word.length;
-            if (dir.dy < 0) minY = word.length - 1;
-
-            if (minX > maxX || minY > maxY) continue;
-
-            const startX = minX + Math.floor(Math.random() * (maxX - minX + 1));
-            const startY = minY + Math.floor(Math.random() * (maxY - minY + 1));
-
-            // Check if word fits
-            let canPlace = true;
-            const positions = [];
-
-            for (let i = 0; i < word.length; i++) {
-                const x = startX + i * dir.dx;
-                const y = startY + i * dir.dy;
-                const letter = word[i];
-
-                if (this.grid[y][x] !== '' && this.grid[y][x] !== letter) {
-                    canPlace = false;
-                    break;
-                }
-                positions.push({ x, y, letter });
-            }
-
-            if (canPlace) {
-                // Place the word
-                for (const pos of positions) {
-                    this.grid[pos.y][pos.x] = pos.letter;
-                }
-                this.wordPositions.push({
-                    word,
-                    positions,
-                    startX,
-                    startY,
-                    endX: startX + (word.length - 1) * dir.dx,
-                    endY: startY + (word.length - 1) * dir.dy
-                });
-                return true;
-            }
-        }
-
-        return false;
     }
 
     renderGame() {
@@ -192,18 +100,18 @@ class WordSearchGame {
         const wordListEl = document.getElementById('word-list');
         wordListEl.innerHTML = '';
 
-        for (const word of this.words) {
+        for (const wordPos of this.wordPositions) {
             const wordEl = document.createElement('div');
             wordEl.className = 'word-item';
-            wordEl.textContent = word;
-            wordEl.id = `word-${word}`;
+            wordEl.textContent = wordPos.word;
+            wordEl.id = `word-${wordPos.word}`;
             wordListEl.appendChild(wordEl);
         }
     }
 
     updateStats() {
         document.getElementById('words-found').textContent = this.foundWords.size;
-        document.getElementById('words-total').textContent = this.words.length;
+        document.getElementById('words-total').textContent = this.wordPositions.length;
     }
 
     handleCellClick(x, y) {
@@ -211,7 +119,6 @@ class WordSearchGame {
             // First tap - select start
             this.startCell = { x, y };
             this.highlightCell(x, y, 'start');
-            this.updatePreviewLine(x, y, x, y);
         } else {
             // Second tap - check selection
             const startX = this.startCell.x;
@@ -234,20 +141,20 @@ class WordSearchGame {
         // Same cell
         if (dx === 0 && dy === 0) return true;
 
-        // Horizontal
-        if (dy === 0) return true;
+        // Horizontal (left to right only)
+        if (dy === 0 && dx > 0) return true;
 
-        // Vertical
-        if (dx === 0) return true;
+        // Vertical (top to bottom only)
+        if (dx === 0 && dy > 0) return true;
 
-        // Diagonal (must be 45 degrees)
-        if (Math.abs(dx) === Math.abs(dy)) return true;
+        // Diagonal down-right or up-right (must start from left)
+        if (dx > 0 && Math.abs(dx) === Math.abs(dy)) return true;
 
         return false;
     }
 
     checkSelection(x1, y1, x2, y2) {
-        // Check if this matches any word (forward direction only: left to right)
+        // Check if this matches any word (forward direction only)
         for (const wordPos of this.wordPositions) {
             if (this.foundWords.has(wordPos.word)) continue;
 
@@ -262,26 +169,19 @@ class WordSearchGame {
         }
     }
 
-    getWordFromSelection(x1, y1, x2, y2) {
+    markWordFound(wordPos, x1, y1, x2, y2) {
+        this.foundWords.add(wordPos.word);
+
+        // Calculate direction
         const dx = Math.sign(x2 - x1);
         const dy = Math.sign(y2 - y1);
         const length = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)) + 1;
 
-        let word = '';
+        // Mark cells as found
         for (let i = 0; i < length; i++) {
             const x = x1 + i * dx;
             const y = y1 + i * dy;
-            word += this.grid[y][x];
-        }
-        return word;
-    }
-
-    markWordFound(wordPos, x1, y1, x2, y2) {
-        this.foundWords.add(wordPos.word);
-
-        // Mark cells as found
-        for (const pos of wordPos.positions) {
-            const cell = document.querySelector(`.cell[data-x="${pos.x}"][data-y="${pos.y}"]`);
+            const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
             if (cell) cell.classList.add('found');
         }
 
@@ -295,7 +195,7 @@ class WordSearchGame {
         this.updateStats();
 
         // Check for win
-        if (this.foundWords.size === this.words.length) {
+        if (this.foundWords.size === this.wordPositions.length) {
             this.handleWin();
         }
     }
@@ -311,27 +211,6 @@ class WordSearchGame {
             if (cell) cell.classList.remove('start');
         }
         this.startCell = null;
-
-        // Remove preview line
-        const preview = document.querySelector('.selection-line.preview');
-        if (preview) preview.remove();
-    }
-
-    updatePreviewLine(x1, y1, x2, y2) {
-        const svg = document.getElementById('selection-overlay');
-        let preview = svg.querySelector('.selection-line.preview');
-
-        if (!preview) {
-            preview = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            preview.classList.add('selection-line', 'preview');
-            svg.appendChild(preview);
-        }
-
-        const coords = this.getCellCenter(x1, y1, x2, y2);
-        preview.setAttribute('x1', coords.x1);
-        preview.setAttribute('y1', coords.y1);
-        preview.setAttribute('x2', coords.x2);
-        preview.setAttribute('y2', coords.y2);
     }
 
     drawFoundLine(x1, y1, x2, y2) {
@@ -350,8 +229,8 @@ class WordSearchGame {
 
     getCellCenter(x1, y1, x2, y2) {
         const gridContainer = document.querySelector('.grid-container');
-        const cellSize = (gridContainer.offsetWidth - 8) / this.gridSize; // Account for padding and gaps
-        const offset = 4; // Grid padding
+        const cellSize = (gridContainer.offsetWidth - 8) / this.gridSize;
+        const offset = 4;
 
         return {
             x1: offset + x1 * cellSize + cellSize / 2,
