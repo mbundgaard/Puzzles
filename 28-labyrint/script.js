@@ -179,21 +179,22 @@ class MazeGame {
                 // Calculate distance from player for fog of war
                 const distance = this.getDistance(x, y, this.player.x, this.player.y);
 
-                if (distance > this.visibilityRadius) {
+                // Exit is always visible (as a beacon)
+                const isExit = x === this.exit.x && y === this.exit.y;
+
+                if (distance > this.visibilityRadius && !isExit) {
                     cell.classList.add('fog');
-                } else if (distance === this.visibilityRadius) {
+                } else if (distance === this.visibilityRadius && !isExit) {
                     cell.classList.add('dim');
                 }
 
-                // Mark special cells (only if visible)
-                if (distance <= this.visibilityRadius) {
-                    if (x === this.player.x && y === this.player.y) {
-                        cell.classList.add('player');
-                    } else if (x === this.exit.x && y === this.exit.y) {
-                        cell.classList.add('exit');
-                    } else if (x === 1 && y === 1) {
-                        cell.classList.add('start');
-                    }
+                // Mark special cells
+                if (x === this.player.x && y === this.player.y) {
+                    cell.classList.add('player');
+                } else if (isExit) {
+                    cell.classList.add('exit');
+                } else if (x === 1 && y === 1 && distance <= this.visibilityRadius) {
+                    cell.classList.add('start');
                 }
 
                 this.boardEl.appendChild(cell);
