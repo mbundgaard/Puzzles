@@ -8,8 +8,6 @@ class MazeGame {
         this.boardEl = document.getElementById('board');
         this.movesEl = document.getElementById('moves');
         this.newGameBtn = document.getElementById('new-game');
-        this.exitArrowEl = document.getElementById('exit-arrow');
-        this.exitDirectionEl = document.getElementById('exit-direction');
 
         this.maze = [];
         this.player = { x: 1, y: 1 };
@@ -41,39 +39,8 @@ class MazeGame {
 
         this.generateMaze();
         this.render();
-        this.updateExitArrow();
 
         HjernespilAPI.trackStart('28');
-    }
-
-    updateExitArrow() {
-        const dx = this.exit.x - this.player.x;
-        const dy = this.exit.y - this.player.y;
-
-        // Check if player is at exit
-        if (dx === 0 && dy === 0) {
-            this.exitArrowEl.textContent = '✓';
-            this.exitDirectionEl.classList.add('found');
-            return;
-        }
-
-        this.exitDirectionEl.classList.remove('found');
-
-        // Calculate angle and pick appropriate arrow
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-        // 8 directions
-        let arrow;
-        if (angle >= -22.5 && angle < 22.5) arrow = '→';
-        else if (angle >= 22.5 && angle < 67.5) arrow = '↘';
-        else if (angle >= 67.5 && angle < 112.5) arrow = '↓';
-        else if (angle >= 112.5 && angle < 157.5) arrow = '↙';
-        else if (angle >= 157.5 || angle < -157.5) arrow = '←';
-        else if (angle >= -157.5 && angle < -112.5) arrow = '↖';
-        else if (angle >= -112.5 && angle < -67.5) arrow = '↑';
-        else arrow = '↗';
-
-        this.exitArrowEl.textContent = arrow;
     }
 
     generateMaze() {
@@ -170,11 +137,11 @@ class MazeGame {
 
                 const mazeCell = this.maze[y][x];
 
-                // Add wall classes (skip outer walls)
-                if (mazeCell.walls.top && y > 0) cell.classList.add('wall-top');
-                if (mazeCell.walls.right && x < this.cols - 1) cell.classList.add('wall-right');
-                if (mazeCell.walls.bottom && y < this.rows - 1) cell.classList.add('wall-bottom');
-                if (mazeCell.walls.left && x > 0) cell.classList.add('wall-left');
+                // Add wall classes
+                if (mazeCell.walls.top) cell.classList.add('wall-top');
+                if (mazeCell.walls.right) cell.classList.add('wall-right');
+                if (mazeCell.walls.bottom) cell.classList.add('wall-bottom');
+                if (mazeCell.walls.left) cell.classList.add('wall-left');
 
                 // Calculate distance from player for fog of war
                 const distance = this.getDistance(x, y, this.player.x, this.player.y);
@@ -233,7 +200,6 @@ class MazeGame {
         this.movesEl.textContent = this.moves;
 
         this.render();
-        this.updateExitArrow();
 
         // Check for victory
         if (this.player.x === this.exit.x && this.player.y === this.exit.y) {
