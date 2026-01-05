@@ -3,7 +3,7 @@ class MazeGame {
         // Maze size (must be odd for proper maze generation)
         this.cols = 15;
         this.rows = 15;
-        this.visibilityRadius = 2; // How many cells the player can see around them
+        this.visibilityRadius = 3; // How many cells the player can see around them (7x7 area)
 
         this.boardEl = document.getElementById('board');
         this.movesEl = document.getElementById('moves');

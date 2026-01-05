@@ -98,13 +98,14 @@ h1 {
 .cell.wall-left { border-left: 2px solid #06b6d4; }
 .cell.wall-right { border-right: 2px solid #06b6d4; }
 
-/* Fog of war */
+/* Fog of war - completely hide fogged cells */
 .cell.fog {
-    background: rgba(0, 0, 0, 0.95);
+    background: #0a0a15 !important;
+    border-color: #0a0a15 !important;
 }
 
 .cell.dim {
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 /* Player */
