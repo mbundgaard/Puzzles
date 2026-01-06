@@ -12,6 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin', text: 'Added snap-to-grid in Tangram (5-unit intervals)' },
         { issue: 48, closedAt: '2026-01-05T10:30:00Z', submitter: 'TestUser', text: 'Added Labyrint - maze game with fog of war' },
         { issue: 53, closedAt: '2026-01-03T17:20:00Z', submitter: 'Martin', text: 'Added hints to Gæt Dyret - costs 5 guesses each' },
         { issue: 56, closedAt: '2026-01-03T16:30:00Z', submitter: 'User', text: 'Fixed Ordsøgning generating nonexistent Danish words' },

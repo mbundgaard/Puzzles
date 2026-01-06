@@ -25,6 +25,9 @@ class DissectionPuzzle {
         this.canvasScale = 4; // Pixels per SVG unit for coverage calculation
         this.hasWon = false;
 
+        // Snap to grid (5-unit intervals on 200x200 board)
+        this.SNAP_INTERVAL = 5;
+
         this.init();
     }
 
@@ -301,10 +304,17 @@ class DissectionPuzzle {
             this.dragState.moved = true;
         }
 
-        this.dragState.piece.x = this.dragState.pieceStartX + dx;
-        this.dragState.piece.y = this.dragState.pieceStartY + dy;
+        // Snap to grid while dragging
+        const rawX = this.dragState.pieceStartX + dx;
+        const rawY = this.dragState.pieceStartY + dy;
+        this.dragState.piece.x = this.snap(rawX);
+        this.dragState.piece.y = this.snap(rawY);
 
         this.updatePieceTransform(this.dragState.piece);
+    }
+
+    snap(value) {
+        return Math.round(value / this.SNAP_INTERVAL) * this.SNAP_INTERVAL;
     }
 
     handleDragEnd = (e) => {
@@ -430,9 +440,9 @@ class DissectionPuzzle {
         const centerY = target.height / 2;
 
         for (const piece of this.pieces) {
-            // Offset from piece's center to target center
-            piece.x = centerX - piece.center.x;
-            piece.y = centerY - piece.center.y;
+            // Offset from piece's center to target center, snapped to grid
+            piece.x = this.snap(centerX - piece.center.x);
+            piece.y = this.snap(centerY - piece.center.y);
 
             // Random rotation
             piece.rotation = Math.floor(Math.random() * 8) * 45;
