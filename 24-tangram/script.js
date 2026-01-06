@@ -304,11 +304,9 @@ class DissectionPuzzle {
             this.dragState.moved = true;
         }
 
-        // Snap to grid while dragging
-        const rawX = this.dragState.pieceStartX + dx;
-        const rawY = this.dragState.pieceStartY + dy;
-        this.dragState.piece.x = this.snap(rawX);
-        this.dragState.piece.y = this.snap(rawY);
+        // Free movement while dragging
+        this.dragState.piece.x = this.dragState.pieceStartX + dx;
+        this.dragState.piece.y = this.dragState.pieceStartY + dy;
 
         this.updatePieceTransform(this.dragState.piece);
     }
@@ -335,6 +333,11 @@ class DissectionPuzzle {
         if (!moved) {
             // It was a tap/click - rotate the piece
             this.rotatePiece(piece);
+        } else {
+            // Snap to grid on release
+            piece.x = this.snap(piece.x);
+            piece.y = this.snap(piece.y);
+            this.updatePieceTransform(piece);
         }
 
         // Update coverage after any interaction
