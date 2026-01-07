@@ -198,49 +198,87 @@ The README.md contains a games table with these columns:
 When updating an existing game:
 1. Make your changes to the game files
 2. Update the **Updated** column in README.md to today's date
-3. Add/update the badge in index.html if within 7 days
+3. Update the `updated` field in `GAME_DATES` constant in index.html to today's date
 4. Commit all changes together
+
+**Note:** Badges are automatically calculated - no manual badge HTML needed!
 
 ## Badge System
 
-Badges highlight new or recently updated games on the main page. **Badges are derived from README.md dates** - keep README updated to ensure correct badges.
+Badges highlight new or recently updated games on the main page. **Badges are now dynamically calculated** via JavaScript based on game dates - no manual badge maintenance required!
 
 ### Badge types
 
 | Badge | CSS Class | Color | Condition |
 |-------|-----------|-------|-----------|
-| NY | `card-badge` | Green | Game created within 7 days |
-| OPDATERET | `card-badge updated` | Orange | Game updated within 7 days (and not new) |
+| NY | `game-badge` | Green | Game created within 7 days |
+| OPDATERET | `game-badge updated` | Orange | Game updated within 7 days (and not new) |
 
-### Badge HTML
+### How dynamic badges work
+
+1. Each game card has a `data-game` attribute with the game number (e.g., `data-game="28"`)
+2. The `GAME_DATES` constant in index.html stores created/updated dates for each game
+3. On page load, JavaScript calculates which badges to show based on current date
+4. Badges are automatically injected as the first child of each qualifying game card
+
+### Game card HTML structure
 
 ```html
-<!-- New game badge -->
-<div class="card-badge">NY</div>
-
-<!-- Updated game badge -->
-<div class="card-badge updated">OPDATERET</div>
+<a href="28-labyrint/index.html" class="game-card maze" data-game="28">
+    <!-- Badge injected here dynamically if applicable -->
+    <div class="game-icon">🌀</div>
+    <div class="game-info">
+        <div class="game-name">Labyrint</div>
+        <div class="game-desc">Find vej gennem tågen</div>
+    </div>
+    <div class="game-arrow">›</div>
+</a>
 ```
 
-### Badge logic
+### GAME_DATES constant
 
-1. Check the **Created** date in README.md
-2. If created within 7 days → add `NY` badge
-3. If created more than 7 days ago, check **Updated** date
-4. If updated within 7 days → add `OPDATERET` badge
-5. If neither condition met → no badge
+Located in index.html script section. Update when adding/updating games:
+
+```javascript
+const GAME_DATES = {
+    '01': { created: '2025-12-28' },
+    '10': { created: '2025-12-28', updated: '2025-12-31' },
+    '24': { created: '2025-12-30', updated: '2026-01-06' },
+    '28': { created: '2026-01-05' }
+    // ... add new games here
+};
+```
+
+### Badge logic (automated)
+
+1. Check if game's **Created** date is within 7 days → show `NY` badge
+2. If created more than 7 days ago, check **Updated** date
+3. If **Updated** date is within 7 days → show `OPDATERET` badge
+4. If neither condition met → no badge
+
+### Adding a new game (badge-related steps)
+
+1. Add `data-game="XX"` attribute to the game card in index.html
+2. Add entry to `GAME_DATES` with today's date as created:
+   ```javascript
+   'XX': { created: '2026-01-07' }
+   ```
+3. Badge will automatically appear for 7 days
+
+### Updating an existing game (badge-related steps)
+
+1. Add/update the `updated` field in `GAME_DATES`:
+   ```javascript
+   'XX': { created: '2025-12-30', updated: '2026-01-07' }
+   ```
+2. Update the **Updated** column in README.md to match
+3. OPDATERET badge will automatically appear for 7 days (if game is older than 7 days)
 
 ### Badge placement
 
-- Add badge as first child inside the game card's `<a>` element
 - Games with badges should be placed at the **top** of the game grid
 - Order: NY badges first, then OPDATERET badges, then regular games
-
-### Badge maintenance
-
-- When a game's Created date exceeds 7 days, remove the NY badge
-- When a game's Updated date exceeds 7 days, remove the OPDATERET badge
-- Check badge dates when making changes to the main page
+- Badge positioning is handled by CSS (absolute positioning in top-right of card)
 
 ## Backend API
 
