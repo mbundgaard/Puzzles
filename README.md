@@ -78,6 +78,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ### Backend
 - **Azure Functions** - Serverless API endpoints
 - **Azure Table Storage** - Simple, scalable database
+- **Azure OpenAI** - AI-generated content for some games (10, 26, 27)
 - **C# .NET 8** - Modern, type-safe code
 
 ### Hosting
@@ -91,14 +92,18 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ├── manifest.json           # PWA manifest
 ├── shared/
 │   ├── api.js              # Shared API client (HjernespilAPI)
-│   └── ui.js               # Shared UI components (feedback button)
+│   ├── ui.js               # Shared UI components (feedback button, win modal)
+│   └── changelog.js        # Changelog entries for the changelog modal
 ├── api/                    # Azure Functions backend
-│   ├── Functions/          # HTTP endpoints
+│   ├── Functions/
+│   │   ├── Core/           # Core endpoints (feedback, leaderboard, etc.)
+│   │   └── Games/          # Game-specific endpoints (AI-powered games)
 │   ├── Models/             # Data models
+│   ├── Services/           # Services (IAIService, IGitHubService, etc.)
 │   ├── Storage/            # Azure Table Storage implementations
 │   └── Program.cs          # DI and startup
-├── icons/                  # App icons (16px to 512px)
-└── XX-game-name/           # Game folders (01-22)
+├── icons/                  # App icons and AI badge icon
+└── XX-game-name/           # Game folders (01-28)
     ├── index.html          # Game page
     ├── style.css           # Game-specific styles
     └── script.js           # Game logic

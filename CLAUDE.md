@@ -280,6 +280,47 @@ const GAME_DATES = {
 - Order: NY badges first, then OPDATERET badges, then regular games
 - Badge positioning is handled by CSS (absolute positioning in top-right of card)
 
+## AI-Powered Games
+
+Some games use Azure OpenAI to generate content dynamically. These games display an AI badge on the main page.
+
+### Games using AI
+
+| Game | Endpoints | What AI Does |
+|------|-----------|--------------|
+| 10 - Ordleg | `/api/game/10/word` | Generates Danish words by category/difficulty |
+| 26 - Gæt Dyret | `/api/game/26/pick`, `/ask`, `/hint` | Picks animals, answers yes/no questions, generates hints |
+| 27 - Ordsøgning | `/api/game/27/generate` | Creates word search grids with hidden words |
+
+### AI Badge
+
+AI-powered games show a small badge icon on the main page (top-right of the game icon).
+
+```html
+<div class="game-icon">📝<span class="ai-indicator"><img src="icons/icons_433019.svg" alt="AI"></span></div>
+```
+
+The badge uses `icons/icons_433019.svg` (white "AI" icon on dark background).
+
+### Adding a new AI-powered game
+
+1. Create the game function in `api/Functions/Games/GameXXFunction.cs`
+2. Inject `IAIService` via constructor
+3. Use `_aiService.GenerateAsync()` for AI responses
+4. Add the AI badge to the game card in index.html
+
+### IAIService Interface
+
+The backend uses a generic `IAIService` interface (`api/Services/IAIService.cs`) with `AzureOpenAIService` implementation. This allows easy provider swapping if needed.
+
+```csharp
+public interface IAIService
+{
+    bool IsConfigured { get; }
+    Task<string?> GenerateAsync(string systemPrompt, IEnumerable<AIMessage> messages, AIRequestOptions? options = null);
+}
+```
+
 ## Backend API
 
 **Base URL:** `https://puzzlesapi.azurewebsites.net`
@@ -301,6 +342,11 @@ const GAME_DATES = {
 | POST | `/api/session/{game}/{sessionId}/update` | Add event `{event}` (newGame, win, lose) |
 | POST | `/api/session/{game}/{sessionId}/end` | End session |
 | GET | `/api/session/{game}/{sessionId}` | Get session details |
+| POST | `/api/game/10/word` | Get word for Ordleg `{length, difficulty, category}` |
+| POST | `/api/game/26/pick` | Pick animal `{category?, difficulty?}` |
+| POST | `/api/game/26/ask` | Ask about animal `{animal, question}` → yes/no/maybe |
+| POST | `/api/game/26/hint` | Get hint `{animal, previousHints?}` |
+| POST | `/api/game/27/generate` | Generate word search `{difficulty}` → grid + words |
 
 ### Feedback System
 
