@@ -362,6 +362,16 @@
             background: linear-gradient(135deg, #f59e0b, #d97706);
         }
 
+        /* Game number (subtle, right side) */
+        .game-number {
+            position: absolute;
+            top: 32px;
+            right: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
         /* AI indicator (top-left corner of game icon) */
         .game-icon {
             position: relative;
@@ -1294,7 +1304,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767803736;
+        const APP_VERSION = 1767904181;
         window.APP_VERSION = APP_VERSION;
         localStorage.setItem('app_version', APP_VERSION);  // Store for game pages
 
@@ -1332,6 +1342,13 @@
 
             document.querySelectorAll('.game-card[data-game]').forEach(card => {
                 const gameId = card.dataset.game;
+
+                // Add game number to all cards
+                const gameNumber = document.createElement('div');
+                gameNumber.className = 'game-number';
+                gameNumber.textContent = '#' + gameId;
+                card.appendChild(gameNumber);
+
                 const dates = GAME_DATES[gameId];
                 if (!dates) return;
 
