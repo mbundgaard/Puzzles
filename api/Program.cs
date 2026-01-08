@@ -1,5 +1,5 @@
 // Azure Functions API for Hjernespil
-// Auto-deployed via GitHub Actions
+// Auto-deployed via GitHub Actions (CI/CD test)
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
