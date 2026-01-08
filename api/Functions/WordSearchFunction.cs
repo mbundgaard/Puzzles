@@ -11,7 +11,7 @@ namespace Puzzles.Functions;
 public class WordSearchFunction
 {
     private readonly ILogger<WordSearchFunction> _logger;
-    private readonly IChatGPTService _chatGPTService;
+    private readonly IDanishWordService _wordService;
     private static readonly Random Random = new();
     private const int GridSize = 12;
     private const string DanishLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ";
@@ -30,22 +30,22 @@ public class WordSearchFunction
         PropertyNameCaseInsensitive = true
     };
 
-    public WordSearchFunction(ILogger<WordSearchFunction> logger, IChatGPTService chatGPTService)
+    public WordSearchFunction(ILogger<WordSearchFunction> logger, IDanishWordService wordService)
     {
         _logger = logger;
-        _chatGPTService = chatGPTService;
+        _wordService = wordService;
     }
 
     [Function("WordSearchGenerate")]
-    public async Task<IActionResult> Generate(
+    public IActionResult Generate(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "game/27/generate")] HttpRequest req)
     {
         WordSearchRequest? request = null;
 
         try
         {
-            using var reader = new StreamReader(req.Body, Encoding.UTF8);
-            var body = await reader.ReadToEndAsync();
+            using var reader = new StreamReader(req.Body);
+            var body = reader.ReadToEnd();
             if (!string.IsNullOrWhiteSpace(body))
             {
                 request = JsonSerializer.Deserialize<WordSearchRequest>(body, JsonOptions);
@@ -61,13 +61,15 @@ public class WordSearchFunction
         // Try up to 3 times to generate a valid board
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var wordResult = await _chatGPTService.GenerateWordSearchAsync(difficulty);
-            if (wordResult == null)
+            // Get validated Danish words from the word service
+            var words = _wordService.GetRandomWords(8, difficulty);
+            if (words.Count < 8)
             {
+                _logger.LogWarning("Not enough words available for difficulty {Difficulty}", difficulty);
                 continue;
             }
 
-            var boardResult = GenerateBoard(wordResult.Words);
+            var boardResult = GenerateBoard(words);
             if (boardResult != null)
             {
                 _logger.LogInformation("Word search board generated with {Count} words (difficulty: {Difficulty})",

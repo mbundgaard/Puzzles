@@ -28,4 +28,7 @@ builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 // Register Azure OpenAI (ChatGPT) service for feedback processing
 builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
 
+// Register Danish word validation service
+builder.Services.AddSingleton<IDanishWordService, DanishWordService>();
+
 builder.Build().Run();
