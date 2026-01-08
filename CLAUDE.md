@@ -598,6 +598,33 @@ new Date(APP_VERSION * 1000).toLocaleString('da-DK', {
 });
 ```
 
+## Building the Azure Functions API
+
+The `api/` folder contains a C# Azure Functions project (.NET 8.0, isolated worker model).
+
+### First-time session setup
+
+Install the .NET 8.0 SDK:
+
+```bash
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
+export PATH="$HOME/.dotnet:$PATH"
+```
+
+### Building the project
+
+```bash
+rm -rf api/obj && dotnet build api/Puzzles.csproj -c Release
+```
+
+The `rm -rf api/obj` ensures a clean build and avoids stale generated project issues.
+
+### Notes
+
+- NuGet packages are committed to `api/packages/` for offline restore (nuget.org is not accessible from this environment)
+- The `api/nuget.config` is configured to use only the local package cache
+- Build warnings about version mismatches (NU1603) are expected and harmless
+
 ## Git Workflow
 
 **IMPORTANT: Commit messages must be in English.**
