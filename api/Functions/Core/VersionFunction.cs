@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Storage;
 
-namespace Puzzles.Functions;
+namespace Puzzles.Functions.Core;
 
 public class VersionFunction
 {

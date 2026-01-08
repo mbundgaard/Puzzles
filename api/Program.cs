@@ -4,7 +4,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Puzzles.Services;
+using Puzzles.Services.Core;
+using Puzzles.Services.Games;
 using Puzzles.Storage;
 
 var builder = FunctionsApplication.CreateBuilder(args);

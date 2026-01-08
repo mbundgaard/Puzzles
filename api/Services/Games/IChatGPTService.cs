@@ -1,6 +1,6 @@
 using Puzzles.Models;
 
-namespace Puzzles.Services;
+namespace Puzzles.Services.Games;
 
 /// <summary>
 /// Result from processing feedback with ChatGPT.

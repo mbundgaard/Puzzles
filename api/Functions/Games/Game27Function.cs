@@ -1,16 +1,20 @@
+// ============================================================================
+// Game 27: Ordsøgning (Word Search)
+// ============================================================================
+
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Puzzles.Services;
+using Puzzles.Services.Games;
 
-namespace Puzzles.Functions;
+namespace Puzzles.Functions.Games;
 
-public class WordSearchFunction
+public class Game27Function
 {
-    private readonly ILogger<WordSearchFunction> _logger;
+    private readonly ILogger<Game27Function> _logger;
     private readonly IDanishWordService _wordService;
     private static readonly Random Random = new();
     private const int GridSize = 12;
@@ -30,7 +34,7 @@ public class WordSearchFunction
         PropertyNameCaseInsensitive = true
     };
 
-    public WordSearchFunction(ILogger<WordSearchFunction> logger, IDanishWordService wordService)
+    public Game27Function(ILogger<Game27Function> logger, IDanishWordService wordService)
     {
         _logger = logger;
         _wordService = wordService;

@@ -1,4 +1,4 @@
-namespace Puzzles.Services;
+namespace Puzzles.Services.Games;
 
 /// <summary>
 /// Service for validating Danish words.

@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
-using Puzzles.Services;
+using Puzzles.Services.Core;
+using Puzzles.Services.Games;
 
-namespace Puzzles.Functions;
+namespace Puzzles.Functions.Core;
 
 public class FeedbackFunction
 {

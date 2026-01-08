@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Puzzles.Services;
+namespace Puzzles.Services.Games;
 
 /// <summary>
 /// Service for validating Danish words using a curated word list.

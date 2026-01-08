@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Puzzles.Models;
 using Puzzles.Storage;
 
-namespace Puzzles.Functions;
+namespace Puzzles.Functions.Core;
 
 public class SessionFunction
 {

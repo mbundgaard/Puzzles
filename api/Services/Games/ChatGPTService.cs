@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
 
-namespace Puzzles.Services;
+namespace Puzzles.Services.Games;
 
 /// <summary>
 /// Azure OpenAI (ChatGPT) service for processing feedback text.

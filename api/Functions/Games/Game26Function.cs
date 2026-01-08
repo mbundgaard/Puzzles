@@ -1,17 +1,20 @@
+// ============================================================================
+// Game 26: Gæt Dyret (Guess the Animal)
+// ============================================================================
+
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Puzzles.Models;
-using Puzzles.Services;
+using Puzzles.Services.Games;
 
-namespace Puzzles.Functions;
+namespace Puzzles.Functions.Games;
 
-public class AnimalGameFunction
+public class Game26Function
 {
-    private readonly ILogger<AnimalGameFunction> _logger;
+    private readonly ILogger<Game26Function> _logger;
     private readonly IChatGPTService _chatGPTService;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -19,7 +22,7 @@ public class AnimalGameFunction
         PropertyNameCaseInsensitive = true
     };
 
-    public AnimalGameFunction(ILogger<AnimalGameFunction> logger, IChatGPTService chatGPTService)
+    public Game26Function(ILogger<Game26Function> logger, IChatGPTService chatGPTService)
     {
         _logger = logger;
         _chatGPTService = chatGPTService;
@@ -155,5 +158,40 @@ public class AnimalGameFunction
         {
             Hint = hint
         });
+    }
+
+    // Request/Response models for Game 26
+    private class AnimalPickRequest
+    {
+        public string? Category { get; set; }
+        public string? Difficulty { get; set; }
+    }
+
+    private class AnimalPickResponse
+    {
+        public required string Animal { get; set; }
+        public required string Category { get; set; }
+    }
+
+    private class AnimalAskRequest
+    {
+        public required string Animal { get; set; }
+        public required string Question { get; set; }
+    }
+
+    private class AnimalAskResponse
+    {
+        public required string Answer { get; set; }
+    }
+
+    private class AnimalHintRequest
+    {
+        public required string Animal { get; set; }
+        public List<string>? PreviousHints { get; set; }
+    }
+
+    private class AnimalHintResponse
+    {
+        public required string Hint { get; set; }
     }
 }
