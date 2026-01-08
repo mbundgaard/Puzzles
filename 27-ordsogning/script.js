@@ -2,12 +2,21 @@ class WordSearchGame {
     constructor() {
         this.gridSize = 12;
         this.grid = [];
-        this.wordPositions = [];
+        this.words = [];           // List of words to find
+        this.wordPositions = [];   // Calculated positions of words in grid
         this.foundWords = new Set();
         this.difficulty = null;
         this.points = 0;
         this.startCell = null;
         this.gameStarted = false;
+
+        // Valid directions: right, down, diagonal down-right, diagonal up-right
+        this.directions = [
+            { dx: 1, dy: 0 },   // right (horizontal)
+            { dx: 0, dy: 1 },   // down (vertical)
+            { dx: 1, dy: 1 },   // diagonal down-right
+            { dx: 1, dy: -1 }   // diagonal up-right
+        ];
 
         this.init();
     }
@@ -48,9 +57,13 @@ class WordSearchGame {
 
             const data = await response.json();
 
-            // Use pre-generated board from API
+            // Store grid and words from API
             this.grid = data.grid;
-            this.wordPositions = data.words;
+            this.words = data.words;
+
+            // Find positions of all words in the grid
+            this.wordPositions = this.findAllWordPositions();
+
             this.foundWords = new Set();
             this.startCell = null;
 
@@ -64,6 +77,57 @@ class WordSearchGame {
             alert('Kunne ikke starte spillet. Prøv igen.');
             this.showDifficultySelect();
         }
+    }
+
+    findAllWordPositions() {
+        const positions = [];
+        for (const word of this.words) {
+            const pos = this.findWordInGrid(word);
+            if (pos) {
+                positions.push(pos);
+            } else {
+                console.warn(`Word "${word}" not found in grid`);
+            }
+        }
+        return positions;
+    }
+
+    findWordInGrid(word) {
+        for (let y = 0; y < this.gridSize; y++) {
+            for (let x = 0; x < this.gridSize; x++) {
+                for (const dir of this.directions) {
+                    if (this.checkWordAt(word, x, y, dir.dx, dir.dy)) {
+                        return {
+                            word: word,
+                            startX: x,
+                            startY: y,
+                            endX: x + (word.length - 1) * dir.dx,
+                            endY: y + (word.length - 1) * dir.dy
+                        };
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    checkWordAt(word, startX, startY, dx, dy) {
+        const endX = startX + (word.length - 1) * dx;
+        const endY = startY + (word.length - 1) * dy;
+
+        // Check bounds
+        if (endX < 0 || endX >= this.gridSize || endY < 0 || endY >= this.gridSize) {
+            return false;
+        }
+
+        for (let i = 0; i < word.length; i++) {
+            const x = startX + i * dx;
+            const y = startY + i * dy;
+            if (this.grid[y][x] !== word[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     renderGame() {

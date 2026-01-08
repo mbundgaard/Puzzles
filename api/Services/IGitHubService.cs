@@ -1,4 +1,4 @@
-namespace Puzzles.Services.Core;
+namespace Puzzles.Services;
 
 /// <summary>
 /// Service for managing GitHub issues.

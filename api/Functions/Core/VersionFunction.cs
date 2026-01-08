@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Puzzles.Models;
 using Puzzles.Storage;
 
 namespace Puzzles.Functions.Core;
@@ -15,11 +16,6 @@ public class VersionFunction
     {
         _logger = logger;
         _storage = storage;
-    }
-
-    public class VersionRequest
-    {
-        public int Version { get; set; }
     }
 
     [Function("CheckVersion")]

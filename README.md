@@ -17,7 +17,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 07 | [Hukommelse](07-memory/) | 3 | 2025-12-28 | | Match pairs of cards by remembering their positions |
 | 08 | [Kabale](08-solitaire/) | 3 | 2025-12-28 | | Classic card game - move all cards to the foundations |
 | 09 | [Kalaha](09-kalaha/) | 3 | 2025-12-28 | | Ancient strategy game - capture more stones than the AI |
-| 10 | [Ordleg](10-ordleg/) | 1/3/5 | 2025-12-28 | 2025-12-31 | Guess the 5-letter Danish word in 6 tries |
+| 10 | [Ordleg](10-ordleg/) | 1/3/5 | 2025-12-28 | 2026-01-08 | Guess the 5-letter Danish word in 6 tries |
 | 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | 2025-12-28 | | Tic-tac-toe against an AI opponent |
 | 12 | [Rørføring](12-roerfoering/) | 1/2/3 | 2025-12-28 | 2025-12-30 | Place pipes to connect start to end |
 | 13 | [15-Puslespil](13-femten-puslespil/) | 3 | 2025-12-28 | | Slide tiles to arrange numbers 1-15 in order |

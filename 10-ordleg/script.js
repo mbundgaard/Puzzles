@@ -1,81 +1,41 @@
-// Word categories will be loaded from JSON files
-const WORD_CATEGORIES = {};
-
 // Valid Danish letters
 const DANISH_LETTERS = 'abcdefghijklmnopqrstuvwxyzæøå';
 
-// Words that are definite forms or plurals - should be excluded
-// These are words where players might be confused because they expect base forms
-const EXCLUDED_WORDS = new Set([
-    // Definite forms (-en suffix = common gender "the")
-    'armen', 'banen', 'bilen', 'faren', 'gaven', 'halen', 'hønen', 'pigen',
-    'risen', 'ræven', 'stuen', 'vejen', 'visen', 'ungen', 'pælen', 'filen',
-    'rosen', 'basen', 'bøgen', 'dosen', 'enden', 'foden', 'haven', 'huden',
-    'luen', 'muren', 'nålen', 'posen', 'ruden', 'solen', 'timen', 'legen',
-    'puden', 'figen',
-    // Animal definite forms
-    'haren', 'løven', 'musen', 'ørnen', 'selen', 'ulven', 'viben', 'geden',
-    'hanen', 'gåsen', 'anden', 'mågen', 'uglen',
-    // Definite forms (-et suffix = neuter gender "the")
-    'dyret', 'hadet', 'havet', 'huset', 'livet', 'lynet', 'mødet', 'toget',
-    'træet', 'higet', 'øjet', 'året', 'arket', 'bedet', 'benet', 'buret',
-    'dunet', 'egnet', 'emnet', 'fadet', 'kødet',
-    // Common plurals (-e suffix)
-    'blade', 'borde', 'breve', 'fugle', 'heste', 'hunde', 'kampe', 'lande',
-    'skibe', 'skove', 'stene', 'telte', 'træer', 'ugler', 'biler', 'bøger',
-    'katte', 'lamme', 'fluer', 'myrer', 'øgler', 'hvale', 'bolde', 'pinde',
-    'senge', 'stole', 'piger',
-    // Common plurals (-er suffix)
-    'damer', 'gader', 'huler', 'ideer', 'kager', 'noter', 'roser', 'sider',
-    'skyer', 'toner', 'typer', 'unger', 'urter', 'haver', 'haser', 'hajer',
-    'ilder', 'æbler', 'ærter', 'pærer', 'olier', 'rejer',
-    // Past participles and other declined forms
-    'brugt', 'glemt', 'klemt', 'svedt', 'kogte'
-]);
+// API base URL
+const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
 
-// Check if a word looks like a definite or plural form
-function isLikelyDeclinedForm(word) {
-    word = word.toLowerCase();
+// Category mapping from frontend values to API values
+const CATEGORY_MAP = {
+    'kids-general': 'børn',
+    'kids-slang': 'slang',
+    'animals': 'dyr',
+    'food': 'mad',
+    'mixed': 'blandet'
+};
 
-    // Check explicit exclusion list first
-    if (EXCLUDED_WORDS.has(word)) return true;
-
-    // Skip words that are known valid base forms (whitelist common exceptions)
-    const validBaseWords = new Set([
-        'under', 'efter', 'moden', 'nøgen', 'åben', 'egen', 'given', 'maven',
-        'oven', 'inden', 'siden', 'ballet', 'buffet', 'hotel', 'motel',
-        'internet', 'budget', 'toilet', 'piget', 'riget', 'skabet',
-        'penge', 'mange', 'længe', 'hygge', 'sange', 'tunge', 'nogle',
-        'andre', 'begge', 'femte', 'halve', 'første', 'sidste', 'bedre'
-    ]);
-    if (validBaseWords.has(word)) return false;
-
-    return false;
-}
-
-// Load word list from JSON file
-async function loadWordCategory(category) {
+// Fetch a random 5-letter word from the API
+async function fetchWord(category, difficulty) {
     try {
-        const response = await fetch(`words/${category}.json`);
-        const words = await response.json();
-        WORD_CATEGORIES[category] = words
-            .filter(word => word.length === 5)
-            .filter(word => !isLikelyDeclinedForm(word));
-    } catch (error) {
-        console.error(`Failed to load ${category} words:`, error);
-        WORD_CATEGORIES[category] = [];
-    }
-}
+        const response = await fetch(`${API_BASE}/game/10/word`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                length: 5,
+                difficulty: difficulty,
+                category: CATEGORY_MAP[category]
+            })
+        });
 
-// Load all word categories
-async function loadAllWords() {
-    await Promise.all([
-        loadWordCategory('kids-general'),
-        loadWordCategory('kids-slang'),
-        loadWordCategory('animals'),
-        loadWordCategory('food'),
-        loadWordCategory('mixed')
-    ]);
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.word?.toLowerCase();
+    } catch (error) {
+        console.error('Failed to fetch word:', error);
+        return null;
+    }
 }
 
 class Ordleg {
@@ -87,9 +47,8 @@ class Ordleg {
         this.currentGuess = '';
         this.targetWord = '';
         this.gameOver = false;
+        this.isLoading = false;
         this.keyStates = {};
-        this.revealedPositions = [];
-        this.wordsLoaded = false;
 
         this.board = document.getElementById('board');
         this.keyboard = document.getElementById('keyboard');
@@ -108,14 +67,6 @@ class Ordleg {
 
         this.createBoard();
         this.createKeyboard();
-        this.init();
-    }
-
-    async init() {
-        this.showMessage('Indlæser ord...', '');
-        await loadAllWords();
-        this.wordsLoaded = true;
-        this.message.textContent = '';
         this.newGame();
     }
 
@@ -156,24 +107,29 @@ class Ordleg {
         });
     }
 
-    newGame() {
-        if (!this.wordsLoaded) return;
+    async newGame() {
+        if (this.isLoading) return;
 
-        // Get words for selected category
+        this.isLoading = true;
+        this.showMessage('Henter ord...', '');
+
+        // Fetch word from API
         const category = this.categorySelect.value;
-        const wordList = WORD_CATEGORIES[category] || [];
+        const difficulty = this.difficultySelect.value;
+        const word = await fetchWord(category, difficulty);
 
-        if (wordList.length === 0) {
-            this.showMessage('Ingen ord fundet for denne kategori', 'error');
+        if (!word) {
+            this.showMessage('Kunne ikke hente ord. Prøv igen.', 'error');
+            this.isLoading = false;
             return;
         }
 
-        this.targetWord = wordList[Math.floor(Math.random() * wordList.length)].toLowerCase();
-
+        this.targetWord = word;
         this.currentRow = 0;
         this.currentTile = 0;
         this.currentGuess = '';
         this.gameOver = false;
+        this.isLoading = false;
         this.keyStates = {};
         this.hints = [];
         this.message.textContent = '';
@@ -193,7 +149,6 @@ class Ordleg {
         });
 
         // Set hints based on difficulty (shown separately, user still types all 5)
-        const difficulty = this.difficultySelect.value;
         if (difficulty === 'easy') {
             // Show positions 2 and 5
             this.hints = [
@@ -233,7 +188,7 @@ class Ordleg {
     }
 
     handleKeydown(e) {
-        if (this.gameOver || !this.wordsLoaded) return;
+        if (this.gameOver || this.isLoading) return;
 
         if (e.key === 'Enter') {
             this.handleKey('enter');
@@ -245,7 +200,7 @@ class Ordleg {
     }
 
     handleKey(key) {
-        if (this.gameOver || !this.wordsLoaded) return;
+        if (this.gameOver || this.isLoading) return;
 
         if (key === 'enter') {
             this.submitGuess();

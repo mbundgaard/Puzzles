@@ -4,8 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Puzzles.Services.Core;
-using Puzzles.Services.Games;
+using Puzzles.Services;
 using Puzzles.Storage;
 
 var builder = FunctionsApplication.CreateBuilder(args);
@@ -28,10 +27,7 @@ builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(conn
 // Register GitHub service for feedback issues
 builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 
-// Register Azure OpenAI (ChatGPT) service for feedback processing
-builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
-
-// Register Danish word validation service
-builder.Services.AddSingleton<IDanishWordService, DanishWordService>();
+// Register AI service (Azure OpenAI)
+builder.Services.AddHttpClient<IAIService, AzureOpenAIService>();
 
 builder.Build().Run();

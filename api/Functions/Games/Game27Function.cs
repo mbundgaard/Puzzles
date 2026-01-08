@@ -2,46 +2,33 @@
 // Game 27: Ordsøgning (Word Search)
 // ============================================================================
 
-using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Puzzles.Services.Games;
+using Puzzles.Services;
 
 namespace Puzzles.Functions.Games;
 
 public class Game27Function
 {
     private readonly ILogger<Game27Function> _logger;
-    private readonly IDanishWordService _wordService;
-    private static readonly Random Random = new();
-    private const int GridSize = 12;
-    private const string DanishLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ";
-
-    // Valid directions: right, down, diagonal down-right, diagonal up-right
-    private static readonly (int dx, int dy)[] Directions = new[]
-    {
-        (1, 0),   // right (horizontal)
-        (0, 1),   // down (vertical)
-        (1, 1),   // diagonal down-right
-        (1, -1)   // diagonal up-right
-    };
+    private readonly IAIService _aiService;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
-    public Game27Function(ILogger<Game27Function> logger, IDanishWordService wordService)
+    public Game27Function(ILogger<Game27Function> logger, IAIService aiService)
     {
         _logger = logger;
-        _wordService = wordService;
+        _aiService = aiService;
     }
 
     [Function("WordSearchGenerate")]
-    public IActionResult Generate(
+    public async Task<IActionResult> Generate(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "game/27/generate")] HttpRequest req)
     {
         WordSearchRequest? request = null;
@@ -49,7 +36,7 @@ public class Game27Function
         try
         {
             using var reader = new StreamReader(req.Body);
-            var body = reader.ReadToEnd();
+            var body = await reader.ReadToEndAsync();
             if (!string.IsNullOrWhiteSpace(body))
             {
                 request = JsonSerializer.Deserialize<WordSearchRequest>(body, JsonOptions);
@@ -60,29 +47,26 @@ public class Game27Function
             return new BadRequestObjectResult(new { error = "Invalid JSON" });
         }
 
+        if (!_aiService.IsConfigured)
+        {
+            return new ObjectResult(new { error = "AI service not configured" }) { StatusCode = 503 };
+        }
+
         var difficulty = request?.Difficulty?.Trim() ?? "medium";
 
         // Try up to 3 times to generate a valid board
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            // Get validated Danish words from the word service
-            var words = _wordService.GetRandomWords(8, difficulty);
-            if (words.Count < 8)
-            {
-                _logger.LogWarning("Not enough words available for difficulty {Difficulty}", difficulty);
-                continue;
-            }
-
-            var boardResult = GenerateBoard(words);
-            if (boardResult != null)
+            var result = await GenerateWordSearchBoardAsync(difficulty);
+            if (result != null)
             {
                 _logger.LogInformation("Word search board generated with {Count} words (difficulty: {Difficulty})",
-                    boardResult.Words.Count, difficulty);
+                    result.Words.Count, difficulty);
 
-                return new OkObjectResult(boardResult);
+                return new OkObjectResult(result);
             }
 
-            _logger.LogWarning("Failed to place all words, retrying... (attempt {Attempt})", attempt + 1);
+            _logger.LogWarning("Failed to generate word search board, retrying... (attempt {Attempt})", attempt + 1);
         }
 
         return new ObjectResult(new { error = "Kunne ikke generere ordsøgning. Prøv igen." })
@@ -91,144 +75,102 @@ public class Game27Function
         };
     }
 
-    private WordSearchResponse? GenerateBoard(List<string> words)
+    private async Task<WordSearchBoardResult?> GenerateWordSearchBoardAsync(string difficulty)
     {
-        var grid = new string[GridSize, GridSize];
-        var wordPositions = new List<WordPosition>();
+        var diff = string.IsNullOrWhiteSpace(difficulty) ? "medium" : difficulty.ToLower();
 
-        // Initialize empty grid
-        for (int y = 0; y < GridSize; y++)
+        var difficultyPrompt = diff switch
         {
-            for (int x = 0; x < GridSize; x++)
-            {
-                grid[x, y] = "";
-            }
-        }
-
-        // Sort words by length (longest first for better placement)
-        var sortedWords = words.OrderByDescending(w => w.Length).ToList();
-
-        // Place each word
-        foreach (var word in sortedWords)
-        {
-            var placed = PlaceWord(grid, word, wordPositions);
-            if (!placed)
-            {
-                _logger.LogWarning("Could not place word: {Word}", word);
-                return null; // Failed to place all words
-            }
-        }
-
-        // Fill empty cells with random letters
-        for (int y = 0; y < GridSize; y++)
-        {
-            for (int x = 0; x < GridSize; x++)
-            {
-                if (string.IsNullOrEmpty(grid[x, y]))
-                {
-                    grid[x, y] = DanishLetters[Random.Next(DanishLetters.Length)].ToString();
-                }
-            }
-        }
-
-        // Convert grid to 2D array for JSON
-        var gridArray = new string[GridSize][];
-        for (int y = 0; y < GridSize; y++)
-        {
-            gridArray[y] = new string[GridSize];
-            for (int x = 0; x < GridSize; x++)
-            {
-                gridArray[y][x] = grid[x, y];
-            }
-        }
-
-        return new WordSearchResponse
-        {
-            Grid = gridArray,
-            Words = wordPositions
+            "easy" => "Brug 8 NEMME danske ord (3-5 bogstaver) som alle kender, f.eks. HUND, KAT, SOL, BIL, HUS.",
+            "medium" => "Brug 8 MELLEM-SVÆRE danske ord (4-7 bogstaver), f.eks. CYKEL, SOMMER, STRAND, GUITAR.",
+            _ => "Brug 8 SVÆRE danske ord (6-10 bogstaver), f.eks. ELEFANT, BIBLIOTEK, CHOKOLADE, REGNBUE."
         };
-    }
 
-    private bool PlaceWord(string[,] grid, string word, List<WordPosition> wordPositions)
-    {
-        const int maxAttempts = 100;
+        var systemPrompt = $@"Du genererer et ordsøgningsspil (word search) på dansk.
 
-        for (int attempt = 0; attempt < maxAttempts; attempt++)
+{difficultyPrompt}
+
+Regler:
+- Gitteret skal være præcis 12x12 bogstaver
+- Placer præcis 8 RIGTIGE danske ord i gitteret
+- Ord kan placeres: vandret (venstre→højre), lodret (top→bund), diagonalt (↘ eller ↗)
+- Det er OK hvis ord overlapper (deler bogstaver) - det gør spillet mere interessant!
+- Fyld tomme felter med tilfældige danske bogstaver (A-Z, Æ, Ø, Å)
+- ALLE ord SKAL være RIGTIGE danske navneord
+- Alle bogstaver skal være STORE BOGSTAVER
+
+Svar med JSON i dette format:
+{{
+  ""grid"": [
+    [""A"",""B"",""C"",""D"",""E"",""F"",""G"",""H"",""I"",""J"",""K"",""L""],
+    ... (12 rækker med 12 bogstaver hver)
+  ],
+  ""words"": [""ORD1"", ""ORD2"", ""ORD3"", ""ORD4"", ""ORD5"", ""ORD6"", ""ORD7"", ""ORD8""]
+}}";
+
+        var response = await _aiService.GenerateAsync(
+            systemPrompt,
+            new[] { new AIMessage { Role = "user", Content = "Generér et ordsøgningsspil" } },
+            new AIRequestOptions { Temperature = 0.8 }
+        );
+
+        if (string.IsNullOrEmpty(response)) return null;
+
+        try
         {
-            var (dx, dy) = Directions[Random.Next(Directions.Length)];
-
-            // Calculate valid starting positions
-            int minX = 0, maxX = GridSize - 1;
-            int minY = 0, maxY = GridSize - 1;
-
-            if (dx > 0) maxX = GridSize - word.Length;
-            if (dy > 0) maxY = GridSize - word.Length;
-            if (dy < 0) minY = word.Length - 1;
-
-            if (minX > maxX || minY > maxY) continue;
-
-            int startX = minX + Random.Next(maxX - minX + 1);
-            int startY = minY + Random.Next(maxY - minY + 1);
-
-            // Check if word fits
-            bool canPlace = true;
-            var positions = new List<(int x, int y, char letter)>();
-
-            for (int i = 0; i < word.Length; i++)
+            var result = JsonSerializer.Deserialize<WordSearchBoardResult>(response, JsonOptions);
+            if (result == null || result.Grid == null || result.Words == null)
             {
-                int x = startX + i * dx;
-                int y = startY + i * dy;
-                char letter = word[i];
-
-                if (!string.IsNullOrEmpty(grid[x, y]) && grid[x, y][0] != letter)
-                {
-                    canPlace = false;
-                    break;
-                }
-                positions.Add((x, y, letter));
+                _logger.LogWarning("Failed to parse word search board response: {Content}", response);
+                return null;
             }
 
-            if (canPlace)
+            // Validate grid size
+            if (result.Grid.Length != 12 || result.Grid.Any(row => row.Length != 12))
             {
-                // Place the word
-                foreach (var (x, y, letter) in positions)
-                {
-                    grid[x, y] = letter.ToString();
-                }
-
-                wordPositions.Add(new WordPosition
-                {
-                    Word = word,
-                    StartX = startX,
-                    StartY = startY,
-                    EndX = startX + (word.Length - 1) * dx,
-                    EndY = startY + (word.Length - 1) * dy
-                });
-
-                return true;
+                _logger.LogWarning("Invalid grid size in word search board");
+                return null;
             }
+
+            // Validate word count
+            if (result.Words.Count != 8)
+            {
+                _logger.LogWarning("Invalid word count: {Count}, expected 8", result.Words.Count);
+                return null;
+            }
+
+            // Ensure all letters are uppercase
+            for (int y = 0; y < 12; y++)
+            {
+                for (int x = 0; x < 12; x++)
+                {
+                    result.Grid[y][x] = result.Grid[y][x].ToUpper();
+                }
+            }
+
+            result.Words = result.Words.Select(w => w.ToUpper()).ToList();
+
+            _logger.LogInformation("Word search board generated with words: {Words} (difficulty: {Difficulty})",
+                string.Join(", ", result.Words), diff);
+            return result;
         }
-
-        return false;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error parsing word search board response");
+            return null;
+        }
     }
+
+    // Request/Response models
 
     private class WordSearchRequest
     {
         public string? Difficulty { get; set; }
     }
 
-    private class WordSearchResponse
+    private class WordSearchBoardResult
     {
         public string[][] Grid { get; set; } = Array.Empty<string[]>();
-        public List<WordPosition> Words { get; set; } = new();
-    }
-
-    private class WordPosition
-    {
-        public string Word { get; set; } = "";
-        public int StartX { get; set; }
-        public int StartY { get; set; }
-        public int EndX { get; set; }
-        public int EndY { get; set; }
+        public List<string> Words { get; set; } = new();
     }
 }

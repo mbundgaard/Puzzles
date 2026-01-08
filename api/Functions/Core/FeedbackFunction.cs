@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
-using Puzzles.Services.Core;
-using Puzzles.Services.Games;
+using Puzzles.Services;
 
 namespace Puzzles.Functions.Core;
 
@@ -14,13 +13,18 @@ public class FeedbackFunction
 {
     private readonly ILogger<FeedbackFunction> _logger;
     private readonly IGitHubService _gitHubService;
-    private readonly IChatGPTService _chatGPTService;
+    private readonly IAIService _aiService;
 
-    public FeedbackFunction(ILogger<FeedbackFunction> logger, IGitHubService gitHubService, IChatGPTService chatGPTService)
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    public FeedbackFunction(ILogger<FeedbackFunction> logger, IGitHubService gitHubService, IAIService aiService)
     {
         _logger = logger;
         _gitHubService = gitHubService;
-        _chatGPTService = chatGPTService;
+        _aiService = aiService;
     }
 
     [Function("SubmitFeedback")]
@@ -33,8 +37,7 @@ public class FeedbackFunction
             // Explicitly read as UTF-8 to handle Danish characters (æøå)
             using var reader = new StreamReader(req.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            feedbackRequest = JsonSerializer.Deserialize<FeedbackRequest>(body, options);
+            feedbackRequest = JsonSerializer.Deserialize<FeedbackRequest>(body, JsonOptions);
         }
         catch
         {
@@ -82,17 +85,17 @@ public class FeedbackFunction
             _ => FeedbackType.GameSpecific
         };
 
-        // Process feedback with ChatGPT (translate and generate title)
+        // Process feedback with AI (translate and generate title)
         string? aiTitle = null;
         string? aiTranslation = null;
 
-        if (!string.IsNullOrWhiteSpace(text))
+        if (!string.IsNullOrWhiteSpace(text) && _aiService.IsConfigured)
         {
-            var aiResult = await _chatGPTService.ProcessFeedbackAsync(text, feedbackType);
-            if (aiResult != null)
+            var result = await ProcessFeedbackWithAIAsync(text, feedbackType);
+            if (result != null)
             {
-                aiTitle = aiResult.Title;
-                aiTranslation = aiResult.TranslatedText;
+                aiTitle = result.Title;
+                aiTranslation = result.TranslatedText;
             }
         }
 
@@ -104,4 +107,49 @@ public class FeedbackFunction
 
         return new OkObjectResult(new { success = true, message = "Tak for din feedback!" });
     }
+
+    // AI methods with prompts
+    
+    private async Task<FeedbackProcessingResult?> ProcessFeedbackWithAIAsync(string text, FeedbackType feedbackType)
+    {
+        var systemPrompt = feedbackType switch
+        {
+            FeedbackType.NewGameSuggestion =>
+                "You process game suggestions for a puzzle games website. Given user feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) describing the suggested game, 2) 'translatedText': the full feedback translated to English. Keep the title descriptive but brief, like 'Maze game with fog of war' or 'Multiplayer word guessing game'.",
+            FeedbackType.GeneralFeedback =>
+                "You process general feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. This is about the website/app itself, not a specific game. Title examples: 'Add dark mode option', 'Improve loading speed', 'Request for notifications'.",
+            _ =>
+                "You process user feedback for a puzzle games website. Given feedback (possibly in Danish), respond with JSON containing: 1) 'title': a concise English title (max 50 chars) summarizing the feedback, 2) 'translatedText': the full feedback translated to English. The title should capture the main point, like 'Request for movable pieces' or 'Bug: Timer not resetting'."
+        };
+
+        var response = await _aiService.GenerateAsync(
+            systemPrompt,
+            new[] { new AIMessage { Role = "user", Content = text } },
+            new AIRequestOptions { Temperature = 0.3 }
+        );
+
+        if (string.IsNullOrEmpty(response))
+        {
+            return null;
+        }
+
+        try
+        {
+            var result = JsonSerializer.Deserialize<FeedbackProcessingResult>(response, JsonOptions);
+            if (result == null || string.IsNullOrEmpty(result.Title))
+            {
+                _logger.LogWarning("Failed to parse AI response: {Content}", response);
+                return null;
+            }
+
+            _logger.LogInformation("Feedback processed: '{Title}'", result.Title);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error parsing AI response");
+            return null;
+        }
+    }
+
 }

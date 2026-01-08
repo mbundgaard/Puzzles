@@ -4,7 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
 
-namespace Puzzles.Services.Core;
+namespace Puzzles.Services;
 
 /// <summary>
 /// GitHub API service for creating issues from feedback.
