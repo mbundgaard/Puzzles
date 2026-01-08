@@ -336,7 +336,10 @@ public interface IAIService
 | GET | `/api/usage?game=all` | Get usage stats this month |
 | GET | `/api/today` | Get today's starts and completions |
 | POST | `/api/feedback` | Submit feedback `{game?, rating, text?, nickname?}` → creates GitHub issue |
+| POST | `/api/issue/create` | Create issue `{title, body}` → `{issueNumber}` |
+| POST | `/api/issue/edit` | Edit issue `{issueNumber, title?, body?, state?}` |
 | POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
+| POST | `/api/issue/delete` | Delete issue `{issueNumber}` (requires admin) |
 | POST | `/api/version` | Check version `{version}` → `{newVersionExists: bool}` |
 | POST | `/api/session/{game}/{sessionId}/start` | Start session `{nickname?, device?, appVersion?}` |
 | POST | `/api/session/{game}/{sessionId}/update` | Add event `{event}` (newGame, win, lose) |

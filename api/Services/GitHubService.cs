@@ -173,6 +173,120 @@ public class GitHubService : IGitHubService
         }
     }
 
+    public async Task<int?> CreateIssueAsync(string title, string body)
+    {
+        if (string.IsNullOrEmpty(_token))
+        {
+            _logger.LogWarning("GitHub token not configured, skipping issue creation");
+            return null;
+        }
+
+        try
+        {
+            var payload = new { title, body };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = $"https://api.github.com/repos/{_owner}/{_repo}/issues";
+            var response = await _httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(responseBody);
+                var issueNumber = doc.RootElement.GetProperty("number").GetInt32();
+                _logger.LogInformation("GitHub issue {Issue} created: {Title}", issueNumber, title);
+                return issueNumber;
+            }
+
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to create GitHub issue: {Status} - {Body}",
+                response.StatusCode, errorBody);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating GitHub issue");
+            return null;
+        }
+    }
+
+    public async Task<bool> EditIssueAsync(int issueNumber, string? title, string? body, string? state = null)
+    {
+        if (string.IsNullOrEmpty(_token))
+        {
+            _logger.LogWarning("GitHub token not configured, skipping issue edit");
+            return false;
+        }
+
+        if (title == null && body == null && state == null)
+        {
+            _logger.LogWarning("No changes provided for issue {Issue}", issueNumber);
+            return false;
+        }
+
+        try
+        {
+            var payload = new Dictionary<string, string>();
+            if (title != null) payload["title"] = title;
+            if (body != null) payload["body"] = body;
+            if (state != null) payload["state"] = state;
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = $"https://api.github.com/repos/{_owner}/{_repo}/issues/{issueNumber}";
+            var response = await _httpClient.PatchAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("GitHub issue {Issue} edited", issueNumber);
+                return true;
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to edit issue {Issue}: {Status} - {Body}",
+                issueNumber, response.StatusCode, responseBody);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error editing GitHub issue {Issue}", issueNumber);
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteIssueAsync(int issueNumber)
+    {
+        if (string.IsNullOrEmpty(_token))
+        {
+            _logger.LogWarning("GitHub token not configured, skipping issue delete");
+            return false;
+        }
+
+        try
+        {
+            var url = $"https://api.github.com/repos/{_owner}/{_repo}/issues/{issueNumber}";
+            var response = await _httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("GitHub issue {Issue} deleted", issueNumber);
+                return true;
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to delete issue {Issue}: {Status} - {Body}",
+                issueNumber, response.StatusCode, responseBody);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting GitHub issue {Issue}", issueNumber);
+            return false;
+        }
+    }
+
     public async Task<bool> CloseIssueAsync(int issueNumber, string comment)
     {
         if (string.IsNullOrEmpty(_token))
