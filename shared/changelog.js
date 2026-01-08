@@ -12,7 +12,6 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
-        { issue: 62, closedAt: '2026-01-08T12:00:00Z', submitter: 'Sara', text: 'Backend fix: Use AI validation for Ordsøgning word generation' },
         { issue: 61, closedAt: '2026-01-07T12:00:00Z', submitter: 'Martin', text: 'Made game badges dynamic (NY/OPDATERET auto-calculated from dates)' },
         { issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin', text: 'Added snap-to-grid in Tangram (5-unit intervals)' },
         { issue: 48, closedAt: '2026-01-05T10:30:00Z', submitter: 'TestUser', text: 'Added Labyrint - maze game with fog of war' },
