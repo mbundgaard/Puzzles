@@ -11,7 +11,7 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: '/Puzzles/app'
+			base: '/Puzzles'
 		}
 	}
 };

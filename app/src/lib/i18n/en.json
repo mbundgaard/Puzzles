@@ -71,6 +71,12 @@
 		},
 		"madeBy": "Made with ❤️ in Denmark"
 	},
+	"notMigrated": {
+		"title": "Coming soon!",
+		"message": "This game hasn't been migrated to the new app yet.",
+		"hint": "We're working as fast as we can - send snacks!",
+		"back": "Back to home"
+	},
 	"leaderboard": {
 		"title": "Leaderboard",
 		"loading": "Loading...",

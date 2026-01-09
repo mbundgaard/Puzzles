@@ -71,6 +71,12 @@
 		},
 		"madeBy": "Fait avec ❤️ au Danemark"
 	},
+	"notMigrated": {
+		"title": "Bientôt disponible !",
+		"message": "Ce jeu n'a pas encore été migré vers la nouvelle app.",
+		"hint": "On travaille à fond - envoyez des snacks !",
+		"back": "Retour à l'accueil"
+	},
 	"leaderboard": {
 		"title": "Classement",
 		"loading": "Chargement...",

@@ -17,7 +17,7 @@
 		return translate(translations, key);
 	}
 
-	const appUrl = 'https://mbundgaard.github.io/Puzzles/app/';
+	const appUrl = 'https://mbundgaard.github.io/Puzzles/';
 
 	// Generate QR code URL using QR Server API
 	function getQRCodeUrl(): string {

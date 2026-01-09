@@ -34,7 +34,7 @@
 	let showShareQR = $state(false);
 
 	// Share via SMS
-	const appUrl = 'https://mbundgaard.github.io/Puzzles/app/';
+	const appUrl = 'https://mbundgaard.github.io/Puzzles/';
 
 	function shareViaSMS() {
 		const message = `Prøv Hjernespil - sjove hjernespil: ${appUrl}`;

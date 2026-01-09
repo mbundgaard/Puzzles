@@ -42,26 +42,12 @@ jobs:
           # Create deployment directory
           mkdir -p deploy
 
-          # Copy classic site (entire app_classic folder)
-          cp -r app_classic/* deploy/
+          # Copy built SvelteKit app to root
+          cp -r app/build/* deploy/
 
-          # Copy built SvelteKit app to /app/ subfolder
-          mkdir -p deploy/app
-          cp -r app/build/* deploy/app/
-
-          # Create root redirect to app_classic (same as current behavior)
-          cat > deploy/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta http-equiv="refresh" content="0; url=app_classic/">
-            <link rel="canonical" href="app_classic/">
-          </head>
-          <body>
-            <p>Redirecting to <a href="app_classic/">app_classic/</a></p>
-          </body>
-          </html>
-          EOF
+          # Keep classic site at /app_classic/ for backwards compatibility
+          mkdir -p deploy/app_classic
+          cp -r app_classic/* deploy/app_classic/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

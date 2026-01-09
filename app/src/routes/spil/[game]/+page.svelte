@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { getGame } from '$lib/games/registry';
-	import { language, loadGameTranslations, type Translations } from '$lib/i18n';
+	import { language, loadGameTranslations, t, translate, type Translations } from '$lib/i18n';
 	import GameShell from '$lib/components/GameShell.svelte';
 	import type { ComponentType } from 'svelte';
 
@@ -11,11 +11,20 @@
 
 	let GameComponent = $state<ComponentType | null>(null);
 	let gameTranslations = $state<Translations>({});
+	let appTranslations = $state<Translations>({});
 	let currentLang = $state<string>('da');
 
 	language.subscribe((value) => {
 		currentLang = value;
 	});
+
+	t.subscribe((value) => {
+		appTranslations = value;
+	});
+
+	function tr(key: string): string {
+		return translate(appTranslations, key);
+	}
 
 	onMount(async () => {
 		if (gameInfo) {
@@ -44,10 +53,12 @@
 		<GameComponent translations={gameTranslations} />
 	</GameShell>
 {:else if !gameInfo}
-	<div class="not-found">
-		<h1>Spil ikke fundet</h1>
-		<p>Spillet "{gameId}" findes ikke.</p>
-		<a href="/Puzzles/app/">Tilbage til forsiden</a>
+	<div class="not-migrated">
+		<div class="icon">🚧</div>
+		<h1>{tr('notMigrated.title')}</h1>
+		<p>{tr('notMigrated.message')}</p>
+		<p class="hint">{tr('notMigrated.hint')}</p>
+		<a href="/Puzzles/" class="back-btn">← {tr('notMigrated.back')}</a>
 	</div>
 {:else}
 	<div class="loading">
@@ -56,7 +67,7 @@
 {/if}
 
 <style>
-	.not-found {
+	.not-migrated {
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
@@ -64,15 +75,49 @@
 		justify-content: center;
 		text-align: center;
 		padding: 20px;
+		gap: 8px;
 	}
 
-	.not-found h1 {
-		margin-bottom: 10px;
+	.not-migrated .icon {
+		font-size: 4rem;
+		margin-bottom: 8px;
 	}
 
-	.not-found a {
-		margin-top: 20px;
-		color: #ec4899;
+	.not-migrated h1 {
+		font-size: 1.8rem;
+		margin: 0;
+		background: linear-gradient(135deg, #ec4899, #8b5cf6);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.not-migrated p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 1rem;
+	}
+
+	.not-migrated .hint {
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.not-migrated .back-btn {
+		margin-top: 24px;
+		padding: 12px 24px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 12px;
+		color: white;
+		text-decoration: none;
+		font-weight: 500;
+		transition: all 0.2s ease;
+	}
+
+	.not-migrated .back-btn:active {
+		transform: scale(0.98);
+		background: rgba(255, 255, 255, 0.15);
 	}
 
 	.loading {

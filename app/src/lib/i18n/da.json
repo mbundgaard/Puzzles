@@ -71,6 +71,12 @@
 		},
 		"madeBy": "Lavet med ❤️ i Danmark"
 	},
+	"notMigrated": {
+		"title": "Kommer snart!",
+		"message": "Dette spil er ikke blevet migreret til den nye app endnu.",
+		"hint": "Vi arbejder på højtryk - send snacks!",
+		"back": "Tilbage til forsiden"
+	},
 	"leaderboard": {
 		"title": "Rangliste",
 		"loading": "Indlæser...",
