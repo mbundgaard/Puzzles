@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
 
+	declare const __BUILD_TIME__: string;
+
 	interface Props {
 		isOpen: boolean;
 		onClose: () => void;
@@ -39,6 +41,20 @@
 		return new Date(isoString).toLocaleDateString('en', { month: 'short', day: 'numeric' });
 	}
 
+	function formatBuildTime(): string {
+		const date = new Date(__BUILD_TIME__);
+		const options: Intl.DateTimeFormatOptions = {
+			timeZone: 'Europe/Copenhagen',
+			day: 'numeric',
+			month: 'short',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false
+		};
+		return date.toLocaleString('da-DK', options);
+	}
+
 	function handleOverlayClick(e: MouseEvent) {
 		if (e.target === e.currentTarget) {
 			onClose();
@@ -72,7 +88,7 @@
 			</div>
 
 			<div class="version">
-				{tr('about.version')} 2.0.0
+				{formatBuildTime()}
 			</div>
 		</div>
 	</div>
