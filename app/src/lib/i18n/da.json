@@ -3,15 +3,72 @@
 		"title": "Hjernespil",
 		"subtitle": "Træn din hjerne med sjove udfordringer",
 		"back": "Tilbage",
-		"settings": "Indstillinger",
-		"language": "Sprog",
 		"newGame": "Nyt Spil",
 		"classicVersion": "Klassisk version"
+	},
+	"tabs": {
+		"games": "Spil"
 	},
 	"languages": {
 		"da": "Dansk",
 		"en": "English",
 		"fr": "Français"
+	},
+	"settings": {
+		"title": "Indstillinger",
+		"subtitle": "Tilpas din oplevelse",
+		"language": "Sprog",
+		"feedback": "Feedback",
+		"info": "Info",
+		"changelog": "Nyheder",
+		"about": "Om Hjernespil"
+	},
+	"feedback": {
+		"title": "Feedback",
+		"subtitle": "Fortæl os hvad du synes",
+		"category": "Kategori",
+		"categories": {
+			"general": "Generel feedback",
+			"game": "Feedback om spil",
+			"newGame": "Foreslå nyt spil"
+		},
+		"selectGame": "Vælg spil",
+		"descriptionRequired": "Beskriv venligst din idé",
+		"comment": "Kommentar",
+		"commentPlaceholder": "Skriv din feedback her... (alle sprog velkommen, links OK)",
+		"suggestionPlaceholder": "Beskriv dit spilidé... (alle sprog velkommen, links OK)",
+		"send": "Send",
+		"sending": "Sender...",
+		"sent": "Tak for din feedback!",
+		"sendAnother": "Send mere feedback",
+		"error": "Kunne ikke sende feedback"
+	},
+	"share": {
+		"title": "Del",
+		"scanQR": "Scan QR-koden for at åbne appen",
+		"copy": "Kopiér",
+		"sms": "Del via SMS",
+		"qr": "QR-kode"
+	},
+	"about": {
+		"title": "Om Hjernespil",
+		"description": "En samling af klassiske puslespil og hjernetrim, som du kan spille direkte i din browser.",
+		"version": "Version",
+		"sections": {
+			"points": {
+				"title": "Point",
+				"text": "Når du løser et spil, optjener du point. Indtast dit navn for at komme på ranglisten."
+			},
+			"feedback": {
+				"title": "Feedback",
+				"text": "Brug feedback-siden til at foreslå nye spil eller give os din mening."
+			},
+			"ai": {
+				"title": "AI",
+				"text": "Denne app er udviklet med Claude Code. Nogle spil bruger ChatGPT."
+			}
+		},
+		"madeBy": "Lavet med ❤️ i Danmark"
 	},
 	"leaderboard": {
 		"title": "Rangliste",
@@ -34,9 +91,93 @@
 		"saveError": "Kunne ikke gemme score"
 	},
 	"games": {
+		"01-reversi": {
+			"title": "Reversi",
+			"description": "Erobr brikkerne"
+		},
+		"06-minestryger": {
+			"title": "Minestryger",
+			"description": "Undgå minerne"
+		},
+		"07-hukommelse": {
+			"title": "Hukommelse",
+			"description": "Find alle par"
+		},
+		"08-kabale": {
+			"title": "Kabale",
+			"description": "Klassisk kortspil"
+		},
+		"09-kalaha": {
+			"title": "Kalaha",
+			"description": "Saml flest sten"
+		},
+		"10-ordleg": {
+			"title": "Ordleg",
+			"description": "Gæt dagens ord"
+		},
 		"11-tictactoe": {
 			"title": "Kryds og Bolle",
-			"description": "Klassisk strategi mod AI"
+			"description": "Tre på stribe"
+		},
+		"12-roerfoering": {
+			"title": "Rørføring",
+			"description": "Placer rørene rigtigt"
+		},
+		"13-skubbepuslespil": {
+			"title": "Skubbepuslespil",
+			"description": "Flyt fliserne"
+		},
+		"14-mastermind": {
+			"title": "Mastermind",
+			"description": "Knæk farvekoden"
+		},
+		"17-pind": {
+			"title": "Pind",
+			"description": "Efterlad kun én"
+		},
+		"18-dam": {
+			"title": "Dam",
+			"description": "Spring over modstanderen"
+		},
+		"19-moelle": {
+			"title": "Mølle",
+			"description": "Tre på række"
+		},
+		"21-fire-paa-stribe": {
+			"title": "Fire på Stribe",
+			"description": "Fire på række"
+		},
+		"22-hanoi": {
+			"title": "Tårnet i Hanoi",
+			"description": "Flyt alle skiver"
+		},
+		"23-slange": {
+			"title": "Slange",
+			"description": "Spis og voks"
+		},
+		"24-tangram": {
+			"title": "Tangram",
+			"description": "Dæk figuren med brikker"
+		},
+		"25-saenke-slagskibe": {
+			"title": "Sænke Slagskibe",
+			"description": "Sænk fjendens flåde"
+		},
+		"26-gaet-dyret": {
+			"title": "Gæt Dyret",
+			"description": "Hvilket dyr tænker jeg på?"
+		},
+		"27-ordsogning": {
+			"title": "Ordsøgning",
+			"description": "Find de skjulte ord"
+		},
+		"28-labyrint": {
+			"title": "Labyrint",
+			"description": "Find vej gennem tågen"
+		},
+		"29-maskevaerk": {
+			"title": "Maskeværk",
+			"description": "Strik efter opskriften"
 		}
 	}
 }

@@ -841,15 +841,24 @@ When migrating each game:
     - Added API client (api.ts) with leaderboard and win recording functions
     - Added Leaderboard component with full i18n support
     - Added WinModal component with full i18n support
-11. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
-12. ⬜ Continue game migrations (paused - only game 11 requested)
-13. ✅ Add cross-link between classic and new app
-    - Footer link in new app points to /Puzzles/app_classic/
+11. ✅ Build complete UI with 4-tab navigation
+    - Bottom tab bar: Games, Leaderboard, Feedback, Settings
+    - Animated background with gradient orbs (shared across all pages)
+    - Gradient titles on all pages
+    - Settings page with sections: Language, Share, Info
+    - Feedback page with categories: General, Suggest new game, Game feedback
+    - About modal with sections: Points, Feedback, AI
+    - Changelog modal with GitHub issue links (matching classic version)
+    - Share functionality: QR code modal, SMS sharing
+12. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
+13. ⬜ Continue game migrations (paused - only game 11 requested)
+14. ✅ Add cross-link between classic and new app
+    - Settings page GitHub link points to repo
 
 ### Cutover Phase (When Ready)
 
-14. ⬜ Move new app to root, archive classic to `/classic/`
-15. ⬜ Update SvelteKit base path to `/Puzzles`
-16. ⬜ Update GitHub Action to deploy new app at root
-17. ⬜ Add "Classic version" link in new app footer
-18. ⬜ Announce migration to users
+15. ⬜ Move new app to root, archive classic to `/classic/`
+16. ⬜ Update SvelteKit base path to `/Puzzles`
+17. ⬜ Update GitHub Action to deploy new app at root
+18. ⬜ Add "Classic version" link in new app footer
+19. ⬜ Announce migration to users

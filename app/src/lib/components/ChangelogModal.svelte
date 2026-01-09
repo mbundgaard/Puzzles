@@ -1,0 +1,221 @@
+<script lang="ts">
+	import { t, translate, type Translations } from '$lib/i18n';
+
+	interface Props {
+		isOpen: boolean;
+		onClose: () => void;
+	}
+
+	let { isOpen, onClose }: Props = $props();
+
+	let translations = $state<Translations>({});
+	t.subscribe((value) => {
+		translations = value;
+	});
+
+	function tr(key: string): string {
+		return translate(translations, key);
+	}
+
+	const GITHUB_ISSUES_URL = 'https://github.com/mbundgaard/Puzzles/issues/';
+
+	// Changelog entries - sorted by closedAt descending (newest first)
+	// Add new entries at the TOP of this array
+	const changelogEntries = [
+		{ issue: 66, closedAt: '2026-01-09T11:55:00Z', submitter: 'Sara', text: 'Games now auto-sorted by most recent activity' },
+		{ issue: 17, closedAt: '2026-01-09T10:00:00Z', submitter: 'Sara', text: 'Added Strikkespil - rotate yarn tiles to connect all loose ends' },
+		{ issue: 63, closedAt: '2026-01-09T09:30:00Z', submitter: 'Sara', text: 'Redesigned Sænke Slagskibe as newspaper-style logic puzzle' },
+		{ issue: 64, closedAt: '2026-01-09T07:08:00Z', submitter: 'Sara', text: 'Renamed 15-Puslespil to Skubbepuslespil' },
+		{ issue: 65, closedAt: '2026-01-09T07:02:00Z', submitter: 'Sara', text: 'Fixed missing OPDATERET badge on Ordleg' },
+		{ issue: 61, closedAt: '2026-01-07T12:00:00Z', submitter: 'Martin', text: 'Made game badges dynamic (auto-calculated from dates)' },
+		{ issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin', text: 'Added snap-to-grid in Tangram' },
+		{ issue: 48, closedAt: '2026-01-05T10:30:00Z', submitter: 'TestUser', text: 'Added Labyrint - maze game with fog of war' },
+		{ issue: 53, closedAt: '2026-01-03T17:20:00Z', submitter: 'Martin', text: 'Added hints to Gæt Dyret' },
+		{ issue: 56, closedAt: '2026-01-03T16:30:00Z', submitter: 'User', text: 'Fixed Ordsøgning generating nonexistent words' },
+		{ issue: 24, closedAt: '2026-01-03T15:01:00Z', submitter: 'User', text: 'Added Ordsøgning - find hidden words' },
+	];
+
+	function formatDate(isoString: string): string {
+		return new Date(isoString).toLocaleDateString('en', { month: 'short', day: 'numeric' });
+	}
+
+	function handleOverlayClick(e: MouseEvent) {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
+	}
+</script>
+
+{#if isOpen}
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_interactive_supports_focus -->
+	<div class="overlay" onclick={handleOverlayClick} role="dialog" aria-modal="true">
+		<div class="modal">
+			<button class="close-btn" onclick={onClose} aria-label={tr('leaderboard.close')}>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<line x1="18" y1="6" x2="6" y2="18"/>
+					<line x1="6" y1="6" x2="18" y2="18"/>
+				</svg>
+			</button>
+
+			<div class="header">
+				<span class="icon">📋</span>
+				<h2>{tr('settings.changelog')}</h2>
+			</div>
+
+			<div class="entries">
+				{#each changelogEntries as entry}
+					<div class="entry">
+						<div class="entry-header">
+							<a href="{GITHUB_ISSUES_URL}{entry.issue}" target="_blank" rel="noopener noreferrer" class="github-link" title="Issue #{entry.issue}">
+								<svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+								</svg>
+								<span class="date">{formatDate(entry.closedAt)}</span>
+							</a>
+							<span class="submitter">{entry.submitter}</span>
+						</div>
+						<p class="entry-text">{entry.text}</p>
+					</div>
+				{/each}
+			</div>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.8);
+		z-index: 1000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+		animation: fadeIn 0.2s ease;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	.modal {
+		background: linear-gradient(145deg, #1e1e3f 0%, #0f0f23 100%);
+		border-radius: 20px;
+		padding: 25px;
+		max-width: 400px;
+		width: 100%;
+		max-height: 80vh;
+		overflow-y: auto;
+		animation: slideUp 0.3s ease;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		position: relative;
+	}
+
+	@keyframes slideUp {
+		from { transform: translateY(20px); opacity: 0; }
+		to { transform: translateY(0); opacity: 1; }
+	}
+
+	.close-btn {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.1);
+		border: none;
+		border-radius: 50%;
+		color: rgba(255, 255, 255, 0.6);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.close-btn:active {
+		transform: scale(0.9);
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	.header {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	.icon {
+		font-size: 2.5rem;
+		display: block;
+		margin-bottom: 8px;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: white;
+		margin: 0;
+	}
+
+	.entries {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		max-height: 400px;
+		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.entries::-webkit-scrollbar {
+		display: none;
+	}
+
+	.entry {
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 10px;
+		padding: 12px 14px;
+	}
+
+	.entry-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.github-link {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: rgba(255, 255, 255, 0.5);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.github-link:active {
+		color: #a5b4fc;
+	}
+
+	.github-icon {
+		width: 14px;
+		height: 14px;
+	}
+
+	.date {
+		font-size: 0.8rem;
+	}
+
+	.submitter {
+		font-size: 0.8rem;
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.entry-text {
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.85);
+		line-height: 1.4;
+		margin: 0;
+	}
+</style>

@@ -98,6 +98,40 @@ export function trackComplete(game: string): void {
 	trackEvent(game, 'complete');
 }
 
+// ============ Feedback ============
+
+export interface FeedbackOptions {
+	rating: number;
+	text?: string;
+	nickname?: string;
+}
+
+export interface FeedbackResponse {
+	success: boolean;
+	message?: string;
+	error?: string;
+}
+
+export async function submitFeedback(game: string | null, options: FeedbackOptions): Promise<FeedbackResponse> {
+	try {
+		const nickname = options.nickname || getNickname();
+		const response = await fetch(`${API_BASE}/feedback`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				game: game || undefined,
+				rating: options.rating,
+				text: options.text || undefined,
+				nickname: nickname || undefined
+			})
+		});
+		return await response.json();
+	} catch (error) {
+		console.warn('Failed to submit feedback:', error);
+		return { success: false, error: 'Netværksfejl' };
+	}
+}
+
 // ============ Helpers ============
 
 export function formatPeriod(period: string): string {

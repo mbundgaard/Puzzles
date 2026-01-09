@@ -3,15 +3,72 @@
 		"title": "Brain Games",
 		"subtitle": "Train your brain with fun challenges",
 		"back": "Back",
-		"settings": "Settings",
-		"language": "Language",
 		"newGame": "New Game",
 		"classicVersion": "Classic version"
+	},
+	"tabs": {
+		"games": "Games"
 	},
 	"languages": {
 		"da": "Dansk",
 		"en": "English",
 		"fr": "Français"
+	},
+	"settings": {
+		"title": "Settings",
+		"subtitle": "Customize your experience",
+		"language": "Language",
+		"feedback": "Feedback",
+		"info": "Info",
+		"changelog": "What's New",
+		"about": "About"
+	},
+	"feedback": {
+		"title": "Feedback",
+		"subtitle": "Tell us what you think",
+		"category": "Category",
+		"categories": {
+			"general": "General feedback",
+			"game": "Game feedback",
+			"newGame": "Suggest new game"
+		},
+		"selectGame": "Select game",
+		"descriptionRequired": "Please describe your idea",
+		"comment": "Comment",
+		"commentPlaceholder": "Write your feedback here... (any language welcome, links OK)",
+		"suggestionPlaceholder": "Describe your game idea... (any language welcome, links OK)",
+		"send": "Send",
+		"sending": "Sending...",
+		"sent": "Thanks for your feedback!",
+		"sendAnother": "Send more feedback",
+		"error": "Could not send feedback"
+	},
+	"share": {
+		"title": "Share",
+		"scanQR": "Scan the QR code to open the app",
+		"copy": "Copy",
+		"sms": "Share via SMS",
+		"qr": "QR Code"
+	},
+	"about": {
+		"title": "About Brain Games",
+		"description": "A collection of classic puzzles and brain teasers you can play directly in your browser.",
+		"version": "Version",
+		"sections": {
+			"points": {
+				"title": "Points",
+				"text": "When you solve a game, you earn points. Enter your name to appear on the leaderboard."
+			},
+			"feedback": {
+				"title": "Feedback",
+				"text": "Use the feedback page to suggest new games or share your thoughts."
+			},
+			"ai": {
+				"title": "AI",
+				"text": "This app is developed with Claude Code. Some games use ChatGPT."
+			}
+		},
+		"madeBy": "Made with ❤️ in Denmark"
 	},
 	"leaderboard": {
 		"title": "Leaderboard",
@@ -34,9 +91,93 @@
 		"saveError": "Could not save score"
 	},
 	"games": {
+		"01-reversi": {
+			"title": "Reversi",
+			"description": "Capture the pieces"
+		},
+		"06-minestryger": {
+			"title": "Minesweeper",
+			"description": "Avoid the mines"
+		},
+		"07-hukommelse": {
+			"title": "Memory",
+			"description": "Find all pairs"
+		},
+		"08-kabale": {
+			"title": "Solitaire",
+			"description": "Classic card game"
+		},
+		"09-kalaha": {
+			"title": "Mancala",
+			"description": "Collect the most stones"
+		},
+		"10-ordleg": {
+			"title": "Word Game",
+			"description": "Guess today's word"
+		},
 		"11-tictactoe": {
 			"title": "Tic-Tac-Toe",
-			"description": "Classic strategy vs AI"
+			"description": "Three in a row"
+		},
+		"12-roerfoering": {
+			"title": "Pipe Flow",
+			"description": "Place the pipes correctly"
+		},
+		"13-skubbepuslespil": {
+			"title": "Sliding Puzzle",
+			"description": "Move the tiles"
+		},
+		"14-mastermind": {
+			"title": "Mastermind",
+			"description": "Crack the color code"
+		},
+		"17-pind": {
+			"title": "Peg Solitaire",
+			"description": "Leave only one"
+		},
+		"18-dam": {
+			"title": "Checkers",
+			"description": "Jump over the opponent"
+		},
+		"19-moelle": {
+			"title": "Nine Men's Morris",
+			"description": "Three in a row"
+		},
+		"21-fire-paa-stribe": {
+			"title": "Connect Four",
+			"description": "Four in a row"
+		},
+		"22-hanoi": {
+			"title": "Tower of Hanoi",
+			"description": "Move all discs"
+		},
+		"23-slange": {
+			"title": "Snake",
+			"description": "Eat and grow"
+		},
+		"24-tangram": {
+			"title": "Tangram",
+			"description": "Cover the shape with pieces"
+		},
+		"25-saenke-slagskibe": {
+			"title": "Battleship",
+			"description": "Sink the enemy fleet"
+		},
+		"26-gaet-dyret": {
+			"title": "Guess the Animal",
+			"description": "What animal am I thinking of?"
+		},
+		"27-ordsogning": {
+			"title": "Word Search",
+			"description": "Find the hidden words"
+		},
+		"28-labyrint": {
+			"title": "Maze",
+			"description": "Find your way through the fog"
+		},
+		"29-maskevaerk": {
+			"title": "Knitting",
+			"description": "Follow the pattern"
 		}
 	}
 }

@@ -3,15 +3,72 @@
 		"title": "Jeux Cérébraux",
 		"subtitle": "Entraînez votre cerveau avec des défis amusants",
 		"back": "Retour",
-		"settings": "Paramètres",
-		"language": "Langue",
 		"newGame": "Nouveau Jeu",
 		"classicVersion": "Version classique"
+	},
+	"tabs": {
+		"games": "Jeux"
 	},
 	"languages": {
 		"da": "Dansk",
 		"en": "English",
 		"fr": "Français"
+	},
+	"settings": {
+		"title": "Paramètres",
+		"subtitle": "Personnalisez votre expérience",
+		"language": "Langue",
+		"feedback": "Commentaires",
+		"info": "Info",
+		"changelog": "Nouveautés",
+		"about": "À propos"
+	},
+	"feedback": {
+		"title": "Commentaires",
+		"subtitle": "Dites-nous ce que vous pensez",
+		"category": "Catégorie",
+		"categories": {
+			"general": "Commentaires généraux",
+			"game": "Commentaires sur un jeu",
+			"newGame": "Suggérer un jeu"
+		},
+		"selectGame": "Choisir un jeu",
+		"descriptionRequired": "Veuillez décrire votre idée",
+		"comment": "Commentaire",
+		"commentPlaceholder": "Écrivez vos commentaires ici... (toutes langues bienvenues, liens OK)",
+		"suggestionPlaceholder": "Décrivez votre idée de jeu... (toutes langues bienvenues, liens OK)",
+		"send": "Envoyer",
+		"sending": "Envoi...",
+		"sent": "Merci pour vos commentaires!",
+		"sendAnother": "Envoyer plus de commentaires",
+		"error": "Impossible d'envoyer"
+	},
+	"share": {
+		"title": "Partager",
+		"scanQR": "Scannez le code QR pour ouvrir l'app",
+		"copy": "Copier",
+		"sms": "Partager par SMS",
+		"qr": "Code QR"
+	},
+	"about": {
+		"title": "À propos",
+		"description": "Une collection de puzzles classiques et de casse-têtes que vous pouvez jouer directement dans votre navigateur.",
+		"version": "Version",
+		"sections": {
+			"points": {
+				"title": "Points",
+				"text": "Lorsque vous résolvez un jeu, vous gagnez des points. Entrez votre nom pour apparaître dans le classement."
+			},
+			"feedback": {
+				"title": "Commentaires",
+				"text": "Utilisez la page de commentaires pour suggérer de nouveaux jeux ou partager vos idées."
+			},
+			"ai": {
+				"title": "IA",
+				"text": "Cette application est développée avec Claude Code. Certains jeux utilisent ChatGPT."
+			}
+		},
+		"madeBy": "Fait avec ❤️ au Danemark"
 	},
 	"leaderboard": {
 		"title": "Classement",
@@ -34,9 +91,93 @@
 		"saveError": "Impossible d'enregistrer le score"
 	},
 	"games": {
+		"01-reversi": {
+			"title": "Reversi",
+			"description": "Capturez les pièces"
+		},
+		"06-minestryger": {
+			"title": "Démineur",
+			"description": "Évitez les mines"
+		},
+		"07-hukommelse": {
+			"title": "Memory",
+			"description": "Trouvez toutes les paires"
+		},
+		"08-kabale": {
+			"title": "Solitaire",
+			"description": "Jeu de cartes classique"
+		},
+		"09-kalaha": {
+			"title": "Mancala",
+			"description": "Collectez le plus de pierres"
+		},
+		"10-ordleg": {
+			"title": "Jeu de Mots",
+			"description": "Devinez le mot du jour"
+		},
 		"11-tictactoe": {
 			"title": "Morpion",
-			"description": "Stratégie classique contre l'IA"
+			"description": "Trois à la suite"
+		},
+		"12-roerfoering": {
+			"title": "Tuyauterie",
+			"description": "Placez les tuyaux correctement"
+		},
+		"13-skubbepuslespil": {
+			"title": "Taquin",
+			"description": "Déplacez les tuiles"
+		},
+		"14-mastermind": {
+			"title": "Mastermind",
+			"description": "Craquez le code couleur"
+		},
+		"17-pind": {
+			"title": "Solitaire à Pions",
+			"description": "N'en laissez qu'un"
+		},
+		"18-dam": {
+			"title": "Dames",
+			"description": "Sautez par-dessus l'adversaire"
+		},
+		"19-moelle": {
+			"title": "Moulin",
+			"description": "Trois à la suite"
+		},
+		"21-fire-paa-stribe": {
+			"title": "Puissance 4",
+			"description": "Quatre à la suite"
+		},
+		"22-hanoi": {
+			"title": "Tour de Hanoï",
+			"description": "Déplacez tous les disques"
+		},
+		"23-slange": {
+			"title": "Serpent",
+			"description": "Mangez et grandissez"
+		},
+		"24-tangram": {
+			"title": "Tangram",
+			"description": "Couvrez la forme avec les pièces"
+		},
+		"25-saenke-slagskibe": {
+			"title": "Bataille Navale",
+			"description": "Coulez la flotte ennemie"
+		},
+		"26-gaet-dyret": {
+			"title": "Devinez l'Animal",
+			"description": "À quel animal je pense?"
+		},
+		"27-ordsogning": {
+			"title": "Mots Cachés",
+			"description": "Trouvez les mots cachés"
+		},
+		"28-labyrint": {
+			"title": "Labyrinthe",
+			"description": "Trouvez votre chemin dans le brouillard"
+		},
+		"29-maskevaerk": {
+			"title": "Tricot",
+			"description": "Suivez le modèle"
 		}
 	}
 }
