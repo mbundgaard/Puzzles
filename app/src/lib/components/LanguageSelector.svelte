@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { language, availableLanguages, type Language } from '$lib/i18n';
 
-	let isOpen = $state(false);
 	let currentLang = $state<Language>('da');
 
 	language.subscribe((value) => {
@@ -10,113 +9,84 @@
 
 	function selectLanguage(code: Language) {
 		language.set(code);
-		isOpen = false;
 	}
 
-	function toggleDropdown() {
-		isOpen = !isOpen;
-	}
-
-	function handleClickOutside(event: MouseEvent) {
-		const target = event.target as HTMLElement;
-		if (!target.closest('.language-selector')) {
-			isOpen = false;
-		}
+	function getSelectedIndex(): number {
+		return availableLanguages.findIndex(l => l.code === currentLang);
 	}
 </script>
 
-<svelte:window onclick={handleClickOutside} />
+<div class="language-selector" role="radiogroup" aria-label="Select language">
+	<!-- Sliding indicator -->
+	<div
+		class="indicator"
+		style="transform: translateX({getSelectedIndex() * 100}%)"
+	></div>
 
-<div class="language-selector">
-	<button class="language-btn" onclick={toggleDropdown} aria-label="Select language">
-		<span class="flag">{availableLanguages.find(l => l.code === currentLang)?.flag}</span>
-		<span class="arrow">{isOpen ? '▲' : '▼'}</span>
-	</button>
-
-	{#if isOpen}
-		<div class="dropdown">
-			{#each availableLanguages as lang}
-				<button
-					class="dropdown-item"
-					class:active={currentLang === lang.code}
-					onclick={() => selectLanguage(lang.code)}
-				>
-					<span class="flag">{lang.flag}</span>
-					<span class="name">{lang.name}</span>
-				</button>
-			{/each}
-		</div>
-	{/if}
+	{#each availableLanguages as lang}
+		<button
+			class="lang-btn"
+			class:active={currentLang === lang.code}
+			onclick={() => selectLanguage(lang.code)}
+			role="radio"
+			aria-checked={currentLang === lang.code}
+			aria-label={lang.name}
+		>
+			<span class="flag">{lang.flag}</span>
+		</button>
+	{/each}
 </div>
 
 <style>
 	.language-selector {
-		position: relative;
-	}
-
-	.language-btn {
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		padding: 8px 12px;
-		background: rgba(128, 128, 128, 0.3);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 20px;
-		color: white;
-		font-size: 1rem;
-		cursor: pointer;
-		transition: all 0.2s ease;
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 12px;
+		padding: 4px;
+		position: relative;
+		gap: 0;
 	}
 
-	.language-btn:active {
-		transform: scale(0.95);
+	.indicator {
+		position: absolute;
+		left: 4px;
+		top: 4px;
+		bottom: 4px;
+		width: calc((100% - 8px) / 3);
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 8px;
+		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+		pointer-events: none;
+	}
+
+	.lang-btn {
+		position: relative;
+		z-index: 1;
+		width: 44px;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		transition: transform 0.15s ease;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.lang-btn:active {
+		transform: scale(0.92);
 	}
 
 	.flag {
-		font-size: 1.2rem;
+		font-size: 1.3rem;
+		opacity: 0.5;
+		transition: opacity 0.2s ease, transform 0.2s ease;
 	}
 
-	.arrow {
-		font-size: 0.6rem;
-		opacity: 0.7;
-	}
-
-	.dropdown {
-		position: absolute;
-		top: calc(100% + 8px);
-		right: 0;
-		background: rgba(30, 30, 50, 0.95);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.15);
-		border-radius: 12px;
-		overflow: hidden;
-		z-index: 100;
-		min-width: 140px;
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-	}
-
-	.dropdown-item {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		width: 100%;
-		padding: 12px 16px;
-		background: transparent;
-		border: none;
-		color: rgba(255, 255, 255, 0.8);
-		font-size: 0.9rem;
-		cursor: pointer;
-		transition: background 0.2s ease;
-		text-align: left;
-	}
-
-	.dropdown-item:active,
-	.dropdown-item.active {
-		background: rgba(236, 72, 153, 0.2);
-		color: white;
-	}
-
-	.dropdown-item .name {
-		font-family: 'Poppins', sans-serif;
+	.lang-btn.active .flag {
+		opacity: 1;
+		transform: scale(1.1);
 	}
 </style>
