@@ -48,8 +48,7 @@
 	const appUrl = 'https://mbundgaard.github.io/Puzzles/';
 
 	function shareViaSMS() {
-		const message = `Prøv Hjernespil - sjove hjernespil: ${appUrl}`;
-		window.location.href = `sms:?body=${encodeURIComponent(message)}`;
+		window.location.href = `sms:?body=${encodeURIComponent(appUrl)}`;
 	}
 
 	// GitHub link
