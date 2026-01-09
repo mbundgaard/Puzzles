@@ -78,7 +78,12 @@
 	},
 	"update": {
 		"done": "Updated!",
-		"alreadyUpdated": "Already up to date ✓"
+		"alreadyUpdated": "Already up to date"
+	},
+	"install": {
+		"title": "Install as App",
+		"iosHint1": "Tap",
+		"iosHint2": "→ \"Add to Home Screen\""
 	},
 	"notMigrated": {
 		"title": "Coming soon!",

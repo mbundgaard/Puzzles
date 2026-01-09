@@ -78,7 +78,12 @@
 	},
 	"update": {
 		"done": "Opdateret!",
-		"alreadyUpdated": "Allerede opdateret ✓"
+		"alreadyUpdated": "Allerede opdateret"
+	},
+	"install": {
+		"title": "Installer som App",
+		"iosHint1": "Tryk",
+		"iosHint2": "→ \"Føj til hjemmeskærm\""
 	},
 	"notMigrated": {
 		"title": "Kommer snart!",

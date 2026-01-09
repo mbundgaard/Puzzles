@@ -78,7 +78,12 @@
 	},
 	"update": {
 		"done": "Mis à jour!",
-		"alreadyUpdated": "Déjà à jour ✓"
+		"alreadyUpdated": "Déjà à jour"
+	},
+	"install": {
+		"title": "Installer comme App",
+		"iosHint1": "Appuyez sur",
+		"iosHint2": "→ \"Sur l'écran d'accueil\""
 	},
 	"notMigrated": {
 		"title": "Bientôt disponible !",

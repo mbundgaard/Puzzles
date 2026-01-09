@@ -75,6 +75,7 @@
 		opacity: 0;
 		transition: all 0.3s ease;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+		white-space: nowrap;
 	}
 
 	.toast.show {

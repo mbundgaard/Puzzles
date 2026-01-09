@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { t, translate, type Translations } from '$lib/i18n';
+	import InstallBanner from '$lib/components/InstallBanner.svelte';
 
 	let translations = $state<Translations>({});
 
@@ -41,6 +42,7 @@
 
 <div class="home">
 	<div class="game-grid">
+			<InstallBanner />
 			{#each games as game}
 				<a
 					href="{base}/spil/{game.id}"
