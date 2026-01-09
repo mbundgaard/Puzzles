@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Maskeværk</title>
+    <link rel="icon" href="../icons/Ampeross-Qetto-2-Games.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="close-btn" aria-label="Luk">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </a>
+
+        <header class="header">
+            <h1 class="title">Maskeværk</h1>
+        </header>
+
+        <section class="recipe-section">
+            <div class="recipe-label">Opskrift</div>
+            <div class="recipe-text" id="recipe-text"></div>
+        </section>
+
+        <section class="board-section">
+            <div class="board-grid" id="board-grid"></div>
+        </section>
+
+        <section class="stitch-picker" id="stitch-picker">
+            <div class="picker-label">Vælg maske:</div>
+            <div class="picker-options" id="picker-options"></div>
+        </section>
+
+        <section class="actions-section">
+            <button class="action-btn check-btn" id="check-btn">Tjek mønster</button>
+            <button class="action-btn new-btn" id="new-btn">Nyt mønster</button>
+        </section>
+
+        <div class="message" id="message"></div>
+
+        <div class="rules-section">
+            <h3>Sådan spiller du</h3>
+            <ul>
+                <li>Læs opskriften og forstå mønsteret</li>
+                <li>Tryk på en celle for at vælge den</li>
+                <li>Vælg den rigtige maske-type nedenfor</li>
+                <li>Udfyld hele brættet og tryk "Tjek mønster"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

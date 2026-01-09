@@ -291,6 +291,7 @@ Some games use Azure OpenAI to generate content dynamically. These games display
 | 10 - Ordleg | `/api/game/10/word` | Generates Danish words by category/difficulty |
 | 26 - Gæt Dyret | `/api/game/26/pick`, `/ask`, `/hint` | Picks animals, answers yes/no questions, generates hints |
 | 27 - Ordsøgning | `/api/game/27/generate` | Creates word search grids with hidden words |
+| 29 - Maskeværk | `/api/game/29/generate` | Generates knitting patterns with descriptions |
 
 ### AI Badge
 
