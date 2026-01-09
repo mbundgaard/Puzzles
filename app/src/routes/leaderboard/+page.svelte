@@ -29,6 +29,14 @@
 		try {
 			const data = await getLeaderboard(null, 10);
 			entries = data.entries || [];
+			// Add 5 test people with 1 point
+			entries = [...entries,
+				{ nickname: 'Anna', points: 1 },
+				{ nickname: 'Mads', points: 1 },
+				{ nickname: 'Sofie', points: 1 },
+				{ nickname: 'Oliver', points: 1 },
+				{ nickname: 'Emma', points: 1 }
+			];
 			period = data.period ? formatPeriod(data.period) : '';
 		} catch {
 			error = true;

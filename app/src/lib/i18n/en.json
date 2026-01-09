@@ -21,7 +21,8 @@
 		"feedback": "Feedback",
 		"info": "Info",
 		"changelog": "What's New",
-		"about": "About"
+		"about": "About the app",
+		"sourceCode": "Source code"
 	},
 	"feedback": {
 		"title": "Feedback",

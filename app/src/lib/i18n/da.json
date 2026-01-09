@@ -21,7 +21,8 @@
 		"feedback": "Feedback",
 		"info": "Info",
 		"changelog": "Nyheder",
-		"about": "Om Hjernespil"
+		"about": "Om appen",
+		"sourceCode": "Kildekode"
 	},
 	"feedback": {
 		"title": "Feedback",

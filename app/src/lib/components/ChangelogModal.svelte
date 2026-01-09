@@ -50,13 +50,6 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y_interactive_supports_focus -->
 	<div class="overlay" onclick={handleOverlayClick} role="dialog" aria-modal="true">
 		<div class="modal">
-			<button class="close-btn" onclick={onClose} aria-label={tr('leaderboard.close')}>
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<line x1="18" y1="6" x2="6" y2="18"/>
-					<line x1="6" y1="6" x2="18" y2="18"/>
-				</svg>
-			</button>
-
 			<div class="header">
 				<span class="icon">📋</span>
 				<h2>{tr('settings.changelog')}</h2>
@@ -110,34 +103,11 @@
 		overflow-y: auto;
 		animation: slideUp 0.3s ease;
 		border: 1px solid rgba(255, 255, 255, 0.1);
-		position: relative;
 	}
 
 	@keyframes slideUp {
 		from { transform: translateY(20px); opacity: 0; }
 		to { transform: translateY(0); opacity: 1; }
-	}
-
-	.close-btn {
-		position: absolute;
-		top: 12px;
-		right: 12px;
-		width: 32px;
-		height: 32px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(255, 255, 255, 0.1);
-		border: none;
-		border-radius: 50%;
-		color: rgba(255, 255, 255, 0.6);
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.close-btn:active {
-		transform: scale(0.9);
-		background: rgba(255, 255, 255, 0.2);
 	}
 
 	.header {

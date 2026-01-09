@@ -1,8 +1,10 @@
-# Hjernespil
+# Brain Games
 
 A collection of browser-based puzzles and brain games. All games are touch-friendly and work great on mobile devices.
 
-This is a family project made just for fun - built 100% with [Claude Code](https://claude.com/product/claude-code)!
+This is a family project made just for fun - built with [Claude Code](https://claude.com/product/claude-code)!
+
+**Play now:** [mbundgaard.github.io/Puzzles/app/](https://mbundgaard.github.io/Puzzles/app/)
 
 ## Games
 
@@ -70,11 +72,14 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ## Technology
 
 ### Frontend
-- **HTML/CSS/JavaScript** - Vanilla, no frameworks
+- **SvelteKit 2** - Modern web framework with static site generation
+- **Svelte 5** - Reactive UI with runes
+- **TypeScript** - Type-safe code
+- **Multi-language** - Danish, English, and French (i18n)
 - **Poppins font** - Modern, readable typography
 - **Dark theme** - Dark background (#0f0f23) with colorful accents
 - **Glassmorphism** - Modern UI with blur and transparency
-- **Responsive design** - Adapts to all screen sizes
+- **Responsive design** - Mobile-first, adapts to all screen sizes
 
 ### Backend
 - **Azure Functions** - Serverless API endpoints
@@ -89,25 +94,28 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 ## Project Structure
 
 ```
-├── index.html              # Main page with game overview
-├── manifest.json           # PWA manifest
-├── shared/
-│   ├── api.js              # Shared API client (HjernespilAPI)
-│   ├── ui.js               # Shared UI components (feedback button, win modal)
-│   └── changelog.js        # Changelog entries for the changelog modal
-├── api/                    # Azure Functions backend
+├── app/                        # SvelteKit frontend
+│   ├── src/
+│   │   ├── routes/             # Pages (home, settings, games, etc.)
+│   │   ├── lib/
+│   │   │   ├── components/     # Shared UI components
+│   │   │   ├── games/          # Game components (each with own i18n/)
+│   │   │   ├── i18n/           # App translations (da, en, fr)
+│   │   │   └── stores/         # Svelte stores
+│   │   ├── app.html            # HTML template
+│   │   └── app.css             # Global styles
+│   ├── static/                 # Static assets (icons, manifest)
+│   ├── svelte.config.js        # SvelteKit config (static adapter)
+│   └── package.json
+├── api/                        # Azure Functions backend
 │   ├── Functions/
-│   │   ├── Core/           # Core endpoints (feedback, leaderboard, etc.)
-│   │   └── Games/          # Game-specific endpoints (AI-powered games)
-│   ├── Models/             # Data models
-│   ├── Services/           # Services (IAIService, IGitHubService, etc.)
-│   ├── Storage/            # Azure Table Storage implementations
-│   └── Program.cs          # DI and startup
-├── icons/                  # App icons and AI badge icon
-└── XX-game-name/           # Game folders (01-29)
-    ├── index.html          # Game page
-    ├── style.css           # Game-specific styles
-    └── script.js           # Game logic
+│   │   ├── Core/               # Core endpoints (feedback, leaderboard, etc.)
+│   │   └── Games/              # Game-specific endpoints (AI-powered games)
+│   ├── Models/                 # Data models
+│   ├── Services/               # Services (IAIService, IGitHubService, etc.)
+│   ├── Storage/                # Azure Table Storage implementations
+│   └── Program.cs              # DI and startup
+└── docs/                       # Documentation
 ```
 
 ## API
@@ -120,19 +128,34 @@ See [CLAUDE.md](CLAUDE.md) for complete API documentation and development guidel
 
 ## Development
 
+### Getting Started
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+### Building for Production
+
+```bash
+npm run build
+npm run preview  # Test the build locally
+```
+
 ### Adding a New Game
 
-1. Create folder `XX-game-name/` with next available number
-2. Implement with `index.html`, `style.css`, `script.js`
-3. Include `shared/api.js` and `shared/ui.js`
-4. Add to main page `index.html`
+1. Create game folder in `app/src/lib/games/[game-name]/`
+2. Add game component and game-specific translations (`i18n/da.json`, etc.)
+3. Add game title/description to app translations (`app/src/lib/i18n/`)
+4. Register game in `app/src/lib/games/registry.ts`
 5. Follow guidelines in [CLAUDE.md](CLAUDE.md)
 
 ## Built with Claude Code
 
-This entire project was built 100% with [Claude Code](https://claude.com/product/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
+This project is built with [Claude Code](https://claude.com/product/claude-code) - Anthropic's AI assistant for software development. Everything from game logic, UI design, API endpoints to deployment was created through conversations with Claude.
 
-**Fun fact:** The concept and first version was built entirely on a mobile phone using the Claude app and the GitHub app. The conversation started with: *"I'm wondering if I can build an app using my phone only"* - and here we are!
+**Fun fact:** The concept and first version was built entirely on a mobile phone using only the Claude app and the GitHub app. The conversation started with: *"I'm wondering if I can build an app using my phone"* - and here we are!
 
 ## License
 

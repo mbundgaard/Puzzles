@@ -21,7 +21,8 @@
 		"feedback": "Commentaires",
 		"info": "Info",
 		"changelog": "Nouveautés",
-		"about": "À propos"
+		"about": "À propos de l'app",
+		"sourceCode": "Code source"
 	},
 	"feedback": {
 		"title": "Commentaires",
