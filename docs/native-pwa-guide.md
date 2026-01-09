@@ -19,18 +19,26 @@ This document outlines how to transform Hjernespil into a more native-feeling Pr
 
 ### Phase 0: Backup Classic Site
 
-Before any changes, archive the current site:
+Before any changes, archive the current site. Keep root clean for config files only:
 
 ```
 /Puzzles
+├── .gitignore                  # Git config
+├── .github/                    # GitHub workflows
+├── CLAUDE.md                   # Claude instructions
+├── README.md                   # Project documentation
+├── LICENSE                     # License file
+│
+├── api/                        # Backend Azure Functions (existing)
 ├── classic/                    # Archived original site
 │   ├── index.html
+│   ├── shared/
+│   ├── icons/
 │   ├── 01-reversi/
-│   ├── 02-tents-and-trees/
 │   └── ... (all 29 games)
 │
 ├── app-src/                    # New SvelteKit source
-└── app/                        # Built output (served at /Puzzles/)
+└── app/                        # Built output (served at /Puzzles/app/)
 ```
 
 The classic site remains accessible at `/Puzzles/classic/` as a fallback.
@@ -337,11 +345,35 @@ Shows language availability:
 
 ```
 /Puzzles
-├── classic/                      # Archived original site
+│
+│ # Root: Config files only
+├── .gitignore
+├── .github/
+│   └── workflows/
+│       ├── build-app.yml         # Build SvelteKit on push
+│       └── deploy-api.yml        # Deploy Azure Functions
+├── CLAUDE.md
+├── README.md
+├── LICENSE
+│
+│ # Backend
+├── api/                          # Azure Functions (C#)
+│   ├── Functions/
+│   ├── Services/
+│   └── Puzzles.csproj
+│
+│ # Classic site (archived)
+├── classic/                      # Original vanilla site
 │   ├── index.html
+│   ├── manifest.json
 │   ├── shared/
+│   │   ├── api.js
+│   │   ├── ui.js
+│   │   └── changelog.js
+│   ├── icons/
 │   └── 01-reversi/ ... 29-*/
 │
+│ # New app
 ├── app-src/                      # SvelteKit source
 │   ├── src/
 │   │   ├── routes/
@@ -375,14 +407,12 @@ Shows language availability:
 │   │           └── ...
 │   │
 │   ├── static/
-│   └── package.json
+│   ├── package.json
+│   └── svelte.config.js
 │
-├── app/                          # Built output (auto-generated)
-│   └── ...
-│
-└── .github/
-    └── workflows/
-        └── build-app.yml         # Auto-build on push
+└── app/                          # Built output (auto-generated)
+    ├── index.html
+    └── ...
 ```
 
 ---
