@@ -430,8 +430,13 @@ on:
     paths: ['app/**']
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -447,18 +452,25 @@ jobs:
       - name: Build
         working-directory: app
         run: npm run build
-        # Outputs to app/build (or www/ depending on config)
 
-      - name: Deploy to Azure Static Web Apps
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_SWA_TOKEN }}
-          action: 'upload'
-          app_location: 'app/build'
-          skip_app_build: true
+          path: app/build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
-**Note:** No build artifacts are committed. GitHub Actions builds fresh and deploys directly to Azure SWA.
+**Note:** No build artifacts are committed. GitHub Actions builds fresh and deploys directly to GitHub Pages.
 
 ---
 
