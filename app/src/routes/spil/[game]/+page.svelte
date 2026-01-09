@@ -54,7 +54,6 @@
 	</GameShell>
 {:else if !gameInfo}
 	<div class="not-migrated">
-		<div class="icon">🚧</div>
 		<h1>{tr('notMigrated.title')}</h1>
 		<p>{tr('notMigrated.message')}</p>
 		<p class="hint">{tr('notMigrated.hint')}</p>
@@ -76,11 +75,6 @@
 		text-align: center;
 		padding: 20px;
 		gap: 8px;
-	}
-
-	.not-migrated .icon {
-		font-size: 4rem;
-		margin-bottom: 8px;
 	}
 
 	.not-migrated h1 {

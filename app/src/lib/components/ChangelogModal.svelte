@@ -51,7 +51,6 @@
 	<div class="overlay" onclick={handleOverlayClick} role="dialog" aria-modal="true">
 		<div class="modal">
 			<div class="header">
-				<span class="icon">📋</span>
 				<h2>{tr('settings.changelog')}</h2>
 			</div>
 
@@ -70,6 +69,10 @@
 						<p class="entry-text">{entry.text}</p>
 					</div>
 				{/each}
+			</div>
+
+			<div class="version">
+				{tr('about.version')} 2.0.0
 			</div>
 		</div>
 	</div>
@@ -96,8 +99,8 @@
 	.modal {
 		background: linear-gradient(145deg, #1e1e3f 0%, #0f0f23 100%);
 		border-radius: 20px;
-		padding: 25px;
-		max-width: 400px;
+		padding: 24px;
+		max-width: 320px;
 		width: 100%;
 		max-height: 80vh;
 		overflow-y: auto;
@@ -112,20 +115,24 @@
 
 	.header {
 		text-align: center;
-		margin-bottom: 20px;
-	}
-
-	.icon {
-		font-size: 2.5rem;
-		display: block;
-		margin-bottom: 8px;
+		margin-bottom: 16px;
 	}
 
 	h2 {
 		font-size: 1.5rem;
-		font-weight: 700;
-		color: white;
-		margin: 0;
+		font-weight: 800;
+		background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #d946ef 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0 0 4px 0;
+	}
+
+	.version {
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.6);
+		text-align: center;
+		margin-top: 16px;
 	}
 
 	.entries {
@@ -188,4 +195,5 @@
 		line-height: 1.4;
 		margin: 0;
 	}
+
 </style>

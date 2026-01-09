@@ -17,8 +17,6 @@
 		return translate(translations, key);
 	}
 
-	const appVersion = '2.0.0';
-
 	function handleOverlayClick(e: MouseEvent) {
 		if (e.target === e.currentTarget) {
 			onClose();
@@ -32,7 +30,6 @@
 		<div class="modal">
 			<div class="content">
 				<h2>{tr('app.title')}</h2>
-				<p class="version">{tr('about.version')} {appVersion}</p>
 
 				<div class="sections">
 					<div class="section">
@@ -101,12 +98,6 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		margin: 0 0 4px 0;
-	}
-
-	.version {
-		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.5);
 		margin: 0 0 16px 0;
 	}
 
