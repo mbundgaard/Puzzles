@@ -12,6 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 17, closedAt: '2026-01-09T10:00:00Z', submitter: 'Sara', text: 'Added Strikkespil - rotate yarn tiles to connect all loose ends' },
         { issue: 63, closedAt: '2026-01-09T09:30:00Z', submitter: 'Sara', text: 'Redesigned Sænke Slagskibe as newspaper-style logic puzzle with row/column clues' },
         { issue: 64, closedAt: '2026-01-09T07:08:00Z', submitter: 'Sara', text: 'Renamed 15-Puslespil to Skubbepuslespil' },
         { issue: 65, closedAt: '2026-01-09T07:02:00Z', submitter: 'Sara', text: 'Fixed missing OPDATERET badge on Ordleg' },
