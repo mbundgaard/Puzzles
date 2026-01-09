@@ -23,7 +23,7 @@ Before any changes, archive the current site. Keep root clean for config files o
 
 ```
 /Puzzles
-├── .gitignore                  # Git config
+├── .gitignore                  # Git config (includes www/)
 ├── .github/                    # GitHub workflows
 ├── CLAUDE.md                   # Claude instructions
 ├── README.md                   # Project documentation
@@ -37,8 +37,8 @@ Before any changes, archive the current site. Keep root clean for config files o
 │   ├── 01-reversi/
 │   └── ... (all 29 games)
 │
-├── app-src/                    # New SvelteKit source
-└── app/                        # Built output (served at /Puzzles/app/)
+├── app/                        # SvelteKit source (committed)
+└── www/                        # Build output (NOT committed, local dev only)
 ```
 
 The classic site remains accessible at `/Puzzles/classic/` as a fallback.
@@ -99,7 +99,7 @@ After core games are migrated:
 Each game has its own translation folder:
 
 ```
-/app-src/src/lib/games/
+/app/src/lib/games/
 ├── memory/
 │   ├── Memory.svelte           # Game component
 │   └── i18n/
@@ -179,7 +179,7 @@ Each game has its own translation folder:
 Common UI elements are in a shared file:
 
 ```
-/app-src/src/lib/i18n/
+/app/src/lib/i18n/
 ├── da.json                     # Shared Danish
 ├── en.json                     # Shared English
 ├── fr.json                     # Shared French
@@ -347,10 +347,10 @@ Shows language availability:
 /Puzzles
 │
 │ # Root: Config files only
-├── .gitignore
+├── .gitignore                    # Includes www/ (build output)
 ├── .github/
 │   └── workflows/
-│       ├── build-app.yml         # Build SvelteKit on push
+│       ├── build-app.yml         # Build & deploy SvelteKit
 │       └── deploy-api.yml        # Deploy Azure Functions
 ├── CLAUDE.md
 ├── README.md
@@ -373,8 +373,8 @@ Shows language availability:
 │   ├── icons/
 │   └── 01-reversi/ ... 29-*/
 │
-│ # New app
-├── app-src/                      # SvelteKit source
+│ # New app source (committed)
+├── app/                          # SvelteKit source
 │   ├── src/
 │   │   ├── routes/
 │   │   │   ├── +layout.svelte    # App shell
@@ -410,26 +410,28 @@ Shows language availability:
 │   ├── package.json
 │   └── svelte.config.js
 │
-└── app/                          # Built output (auto-generated)
-    ├── index.html
-    └── ...
+│ # Build output (NOT committed)
+└── www/                          # Local dev only, built by GitHub Action
+    └── (gitignored)
 ```
+
+**Note:** The `www/` folder is for local development only. GitHub Actions builds and deploys directly - no build artifacts are committed to the repo.
 
 ---
 
 ## GitHub Action
 
 ```yaml
-name: Build SvelteKit App
+name: Build & Deploy SvelteKit App
 
 on:
   push:
     branches: [main]
-    paths: ['app-src/**']
+    paths: ['app/**']
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -438,20 +440,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install & Build
-        working-directory: app-src
-        run: |
-          npm install
-          npm run build
+      - name: Install dependencies
+        working-directory: app
+        run: npm install
 
-      - name: Commit built files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add app
-          git diff --staged --quiet || git commit -m "Build app [skip ci]"
-          git push
+      - name: Build
+        working-directory: app
+        run: npm run build
+        # Outputs to app/build (or www/ depending on config)
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_SWA_TOKEN }}
+          action: 'upload'
+          app_location: 'app/build'
+          skip_app_build: true
 ```
+
+**Note:** No build artifacts are committed. GitHub Actions builds fresh and deploys directly to Azure SWA.
 
 ---
 
@@ -459,7 +466,7 @@ jobs:
 
 When migrating each game:
 
-- [ ] Create game folder in `app-src/src/lib/games/[name]/`
+- [ ] Create game folder in `app/src/lib/games/[name]/`
 - [ ] Create Svelte component with game logic
 - [ ] Create `i18n/da.json` with all Danish strings
 - [ ] Create `i18n/en.json` with English translation
@@ -517,7 +524,7 @@ When migrating each game:
 
 1. ✅ Create this implementation guide
 2. ⬜ Archive classic site to `/classic/`
-3. ⬜ Initialize SvelteKit project in `/app-src/`
+3. ⬜ Initialize SvelteKit project in `/app/`
 4. ⬜ Set up i18n infrastructure
 5. ⬜ Build app shell with language selector
 6. ⬜ Migrate first game (Kryds og Bolle)
