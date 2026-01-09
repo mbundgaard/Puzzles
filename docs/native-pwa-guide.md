@@ -139,6 +139,152 @@ When the new app is ready for production:
 
 ---
 
+## UI/Navigation Design
+
+### Layout Overview
+
+The new app uses a mobile-first design with bottom navigation:
+
+```
+┌─────────────────────────────┐
+│ 🇩🇰 ▼    Hjernespil    🏆   │  ← Header: language selector + title + leaderboard
+├─────────────────────────────┤
+│ ┌─────────────────────────┐ │
+│ │ 🎮 Reversi          ›   │ │
+│ ├─────────────────────────┤ │
+│ │ 🏕️ Telte og Træer   ›   │ │  ← Game list (scrollable)
+│ ├─────────────────────────┤ │
+│ │ 🔢 Sudoku        NY ›   │ │  ← Badges shown inline
+│ └─────────────────────────┘ │
+│        ... scroll ...       │
+├─────────────────────────────┤
+│  🎮      💡       ⚙️        │  ← Bottom navigation
+│ Spil   Foreslå   Indstil.   │
+└─────────────────────────────┘
+```
+
+### Bottom Navigation
+
+Three tabs in the bottom navigation bar:
+
+| Tab | Icon | Label | Content |
+|-----|------|-------|---------|
+| Games | 🎮 | Spil | Game list (home) |
+| Suggest | 💡 | Foreslå | Submit game idea |
+| Settings | ⚙️ | Indstillinger | Language, info, changelog |
+
+### Navigation Visibility
+
+Bottom nav behavior varies by context:
+
+**On home/settings pages**: Hide on scroll down, show on scroll up (like Instagram/Twitter)
+**On game pages**: Always hidden for full-screen gameplay
+
+```
+Home (idle):       Home (scrolling):    Game page:
+┌─────────────┐    ┌─────────────┐      ┌─────────────┐
+│             │    │             │      │             │
+│   Content   │    │   Content   │      │    Game     │
+│             │    │             │      │ (full screen│
+│             │    │   (more     │      │             │
+├─────────────┤    │   space)    │      │       ✕     │
+│ 🎮  💡  ⚙️  │    │             │      │             │
+└─────────────┘    └─────────────┘      └─────────────┘
+     visible):         hidden            always hidden
+```
+
+```svelte
+<!-- Bottom nav with scroll detection -->
+<script>
+  let lastScrollY = 0;
+  let navVisible = true;
+
+  function handleScroll() {
+    const currentY = window.scrollY;
+    navVisible = currentY < lastScrollY || currentY < 50;
+    lastScrollY = currentY;
+  }
+</script>
+
+<svelte:window on:scroll={handleScroll} />
+
+{#if !isGamePage}
+  <nav class="bottom-nav" class:hidden={!navVisible}>
+    <!-- tabs -->
+  </nav>
+{/if}
+```
+
+Games get full viewport height. The existing close button (✕) handles navigation back to the game list.
+
+### Header Design
+
+Simplified header with three elements:
+
+```
+┌─────────────────────────────────────┐
+│  🇩🇰 ▼         Hjernespil        🏆  │
+│  └─ Language    └─ Title    └─ Leaderboard
+└─────────────────────────────────────┘
+```
+
+- **Language dropdown**: Flag + dropdown arrow, opens language selector
+- **Title**: App name, centered
+- **Leaderboard**: Quick access to scores
+
+### Page Transitions
+
+Native-feeling transitions between pages:
+
+| Navigation | Transition |
+|------------|------------|
+| Home → Game | Slide in from right |
+| Game → Home | Slide out to right |
+| Tab switch | Fade/crossfade |
+| Modal open | Slide up from bottom |
+
+```svelte
+<!-- Example using Svelte transitions -->
+<script>
+  import { fly, fade } from 'svelte/transition';
+</script>
+
+{#key currentPage}
+  <div in:fly={{ x: 300, duration: 200 }} out:fly={{ x: -300, duration: 200 }}>
+    <slot />
+  </div>
+{/key}
+```
+
+### Game List vs Grid
+
+Using **list view** instead of grid for the game menu:
+
+| Aspect | Grid (Classic) | List (New) |
+|--------|----------------|------------|
+| Scanning | Slower | Faster |
+| Info density | Icon + title | Icon + title + description |
+| Touch targets | Smaller | Full-width rows |
+| Badges | Corner overlay | Inline |
+
+### Dark Theme
+
+Maintaining the dark theme from classic:
+
+```css
+:root {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-purple: #9333ea;
+  --accent-cyan: #06b6d4;
+  --accent-magenta: #ec4899;
+}
+```
+
+---
+
 ## Internationalization (i18n)
 
 ### Supported Languages
