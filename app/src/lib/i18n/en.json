@@ -13,6 +13,26 @@
 		"en": "English",
 		"fr": "Français"
 	},
+	"leaderboard": {
+		"title": "Leaderboard",
+		"loading": "Loading...",
+		"error": "Could not load",
+		"empty": "No points yet",
+		"points": "points",
+		"close": "Close"
+	},
+	"win": {
+		"title": "Congratulations!",
+		"message": "You did it!",
+		"nameLabel": "Your name for the leaderboard:",
+		"namePlaceholder": "Enter name",
+		"save": "Save Score",
+		"saving": "Saving...",
+		"saved": "Score saved!",
+		"skip": "Skip",
+		"nameError": "Name must be 2-20 characters",
+		"saveError": "Could not save score"
+	},
 	"games": {
 		"11-tictactoe": {
 			"title": "Tic-Tac-Toe",

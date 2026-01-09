@@ -1,11 +1,18 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
+	import { trackStart, trackComplete } from '$lib/api';
+	import WinModal from '$lib/components/WinModal.svelte';
 
 	interface Props {
 		translations: Translations;
 	}
 
 	let { translations }: Props = $props();
+
+	// Win modal state
+	let showWinModal = $state(false);
+	const GAME_NUMBER = '11';
+	const POINTS = 1;
 
 	// Helper to get translation
 	function t(key: string): string {
@@ -58,9 +65,10 @@
 		gameOver = false;
 		winner = null;
 		winningPattern = null;
+		showWinModal = false;
 
 		// Track game start
-		trackEvent('start');
+		trackStart(GAME_NUMBER);
 	}
 
 	function handleCellClick(index: number) {
@@ -202,8 +210,11 @@
 		if (result === 'X') {
 			scores.player++;
 			scores = { ...scores };
-			trackEvent('complete');
-			// Could show win modal here
+			trackComplete(GAME_NUMBER);
+			// Show win modal after a short delay
+			setTimeout(() => {
+				showWinModal = true;
+			}, 800);
 		} else if (result === 'O') {
 			scores.ai++;
 			scores = { ...scores };
@@ -216,18 +227,6 @@
 	function setDifficulty(diff: 'easy' | 'medium' | 'hard') {
 		difficulty = diff;
 		newGame();
-	}
-
-	async function trackEvent(event: 'start' | 'complete') {
-		try {
-			await fetch('https://puzzlesapi.azurewebsites.net/api/event', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ game: '11', event })
-			});
-		} catch {
-			// Ignore tracking errors
-		}
 	}
 
 	// Initialize game
@@ -307,6 +306,13 @@
 		</ul>
 	</div>
 </div>
+
+<WinModal
+	isOpen={showWinModal}
+	points={POINTS}
+	gameNumber={GAME_NUMBER}
+	onClose={() => showWinModal = false}
+/>
 
 <style>
 	.game {

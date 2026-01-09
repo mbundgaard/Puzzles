@@ -2,8 +2,10 @@
 	import { base } from '$app/paths';
 	import { t, translate, type Translations } from '$lib/i18n';
 	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+	import Leaderboard from '$lib/components/Leaderboard.svelte';
 
 	let translations = $state<Translations>({});
+	let showLeaderboard = $state(false);
 
 	t.subscribe((value) => {
 		translations = value;
@@ -32,12 +34,23 @@
 
 	<header>
 		<div class="header-row">
-			<div class="spacer"></div>
+			<button class="icon-btn" onclick={() => showLeaderboard = true} aria-label="Rangliste">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+					<path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+					<path d="M4 22h16"/>
+					<path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+					<path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+					<path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+				</svg>
+			</button>
 			<h1 class="title">{translate(translations, 'app.title')}</h1>
 			<LanguageSelector />
 		</div>
 		<p class="subtitle">{translate(translations, 'app.subtitle')}</p>
 	</header>
+
+	<Leaderboard isOpen={showLeaderboard} onClose={() => showLeaderboard = false} />
 
 	<main>
 		<div class="game-grid">
@@ -140,8 +153,28 @@
 		margin: 0 auto 10px;
 	}
 
-	.spacer {
-		width: 60px;
+	.icon-btn {
+		width: 44px;
+		height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(128, 128, 128, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		color: white;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.icon-btn:active {
+		transform: scale(0.95);
+		background: rgba(128, 128, 128, 0.5);
+	}
+
+	.icon-btn svg {
+		width: 22px;
+		height: 22px;
 	}
 
 	.title {

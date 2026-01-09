@@ -13,6 +13,26 @@
 		"en": "English",
 		"fr": "Français"
 	},
+	"leaderboard": {
+		"title": "Rangliste",
+		"loading": "Indlæser...",
+		"error": "Kunne ikke indlæse",
+		"empty": "Ingen point endnu",
+		"points": "point",
+		"close": "Luk"
+	},
+	"win": {
+		"title": "Tillykke!",
+		"message": "Du klarede det!",
+		"nameLabel": "Dit navn til ranglisten:",
+		"namePlaceholder": "Indtast navn",
+		"save": "Gem Score",
+		"saving": "Gemmer...",
+		"saved": "Score gemt!",
+		"skip": "Spring over",
+		"nameError": "Navnet skal være 2-20 tegn",
+		"saveError": "Kunne ikke gemme score"
+	},
 	"games": {
 		"11-tictactoe": {
 			"title": "Kryds og Bolle",

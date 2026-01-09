@@ -13,6 +13,26 @@
 		"en": "English",
 		"fr": "Français"
 	},
+	"leaderboard": {
+		"title": "Classement",
+		"loading": "Chargement...",
+		"error": "Impossible de charger",
+		"empty": "Aucun point encore",
+		"points": "points",
+		"close": "Fermer"
+	},
+	"win": {
+		"title": "Félicitations !",
+		"message": "Vous avez réussi !",
+		"nameLabel": "Votre nom pour le classement :",
+		"namePlaceholder": "Entrez votre nom",
+		"save": "Enregistrer",
+		"saving": "Enregistrement...",
+		"saved": "Score enregistré !",
+		"skip": "Passer",
+		"nameError": "Le nom doit contenir 2-20 caractères",
+		"saveError": "Impossible d'enregistrer le score"
+	},
 	"games": {
 		"11-tictactoe": {
 			"title": "Morpion",
