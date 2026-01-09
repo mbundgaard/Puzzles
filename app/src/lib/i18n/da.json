@@ -19,6 +19,7 @@
 		"subtitle": "Tilpas din oplevelse",
 		"language": "Sprog",
 		"name": "Navn",
+		"nameDefault": "Spiller 1",
 		"namePlaceholder": "Dit navn til ranglisten",
 		"nameSave": "Gem navn",
 		"nameSaved": "Gemt!",

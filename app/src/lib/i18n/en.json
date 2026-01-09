@@ -19,6 +19,7 @@
 		"subtitle": "Customize your experience",
 		"language": "Language",
 		"name": "Name",
+		"nameDefault": "Player 1",
 		"namePlaceholder": "Your name for the leaderboard",
 		"nameSave": "Save name",
 		"nameSaved": "Saved!",

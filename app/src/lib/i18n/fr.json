@@ -19,6 +19,7 @@
 		"subtitle": "Personnalisez votre expérience",
 		"language": "Langue",
 		"name": "Nom",
+		"nameDefault": "Joueur 1",
 		"namePlaceholder": "Votre nom pour le classement",
 		"nameSave": "Enregistrer",
 		"nameSaved": "Enregistré!",

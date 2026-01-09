@@ -118,8 +118,7 @@
 			<div class="menu-list">
 				<button class="menu-item" onclick={() => showName = true}>
 					<span class="menu-icon">👤</span>
-					<span class="menu-label">{tr('settings.name')}</span>
-					<span class="menu-value">{currentNickname || '—'}</span>
+					<span class="menu-label">{currentNickname || tr('settings.nameDefault')}</span>
 					<span class="menu-arrow">›</span>
 				</button>
 				<button class="menu-item" onclick={() => showChangelog = true}>
