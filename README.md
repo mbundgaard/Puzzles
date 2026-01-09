@@ -20,7 +20,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 10 | [Ordleg](10-ordleg/) | 1/3/5 | 2025-12-28 | 2026-01-08 | Guess the 5-letter Danish word in 6 tries |
 | 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | 2025-12-28 | | Tic-tac-toe against an AI opponent |
 | 12 | [Rørføring](12-roerfoering/) | 1/2/3 | 2025-12-28 | 2025-12-30 | Place pipes to connect start to end |
-| 13 | [15-Puslespil](13-femten-puslespil/) | 3 | 2025-12-28 | | Slide tiles to arrange numbers 1-15 in order |
+| 13 | [Skubbepuslespil](13-femten-puslespil/) | 3 | 2025-12-28 | | Slide tiles to arrange numbers 1-15 in order |
 | 14 | [Mastermind](14-kodeknaekker/) | 3 | 2025-12-28 | | Crack the secret color code |
 | 15 | [Broer](15-broer/) | 3 | 2025-12-29 | | Connect islands with the correct number of bridges |
 | 16 | [Lys Op](16-lys-op/) | 3 | 2025-12-29 | | Place light bulbs to illuminate all cells |

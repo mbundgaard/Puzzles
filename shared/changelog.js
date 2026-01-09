@@ -12,6 +12,7 @@
     // Changelog entries - sorted by closedAt descending
     // Add new entries at the TOP of this array with ISO timestamp from GitHub
     const CHANGELOG_ENTRIES = [
+        { issue: 64, closedAt: '2026-01-09T07:08:00Z', submitter: 'Sara', text: 'Renamed 15-Puslespil to Skubbepuslespil' },
         { issue: 65, closedAt: '2026-01-09T07:02:00Z', submitter: 'Sara', text: 'Fixed missing OPDATERET badge on Ordleg' },
         { issue: 61, closedAt: '2026-01-07T12:00:00Z', submitter: 'Martin', text: 'Made game badges dynamic (NY/OPDATERET auto-calculated from dates)' },
         { issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin', text: 'Added snap-to-grid in Tangram (5-unit intervals)' },

@@ -21,7 +21,7 @@ public static class GameValidator
         ["10"] = "Ordleg",
         ["11"] = "Kryds og Bolle",
         ["12"] = "Rørføring",
-        ["13"] = "15-Puslespil",
+        ["13"] = "Skubbepuslespil",
         ["14"] = "Mastermind",
         ["17"] = "Pind",
         ["18"] = "Dam",
