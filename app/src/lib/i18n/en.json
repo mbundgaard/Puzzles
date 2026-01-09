@@ -77,8 +77,8 @@
 		"madeBy": "Made with ❤️ in Denmark"
 	},
 	"update": {
-		"available": "New version available",
-		"refresh": "Update"
+		"done": "Updated!",
+		"alreadyUpdated": "Already up to date ✓"
 	},
 	"notMigrated": {
 		"title": "Coming soon!",

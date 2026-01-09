@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { t, translate, type Translations } from '$lib/i18n';
+	import { checkForUpdates } from '$lib/api';
 
 	let translations = $state<Translations>({});
 	t.subscribe((value) => {
@@ -11,102 +12,73 @@
 		return translate(translations, key);
 	}
 
-	let needRefresh = $state(false);
-	let updateSW: ((reloadPage?: boolean) => Promise<void>) | undefined;
+	let toastMessage = $state('');
+	let toastVisible = $state(false);
+	let checking = $state(false);
 
 	onMount(() => {
-		// PWA module only available in production builds
-		if (import.meta.env.DEV) return;
-
-		// Register service worker for PWA updates
-		registerPWA();
+		// Check if we just updated (set before reload)
+		if (sessionStorage.getItem('versionUpdated') === 'true') {
+			sessionStorage.removeItem('versionUpdated');
+			showToast(tr('update.done'));
+		}
 	});
 
-	async function registerPWA() {
-		const pwaModule = 'virtual:pwa-' + 'register/svelte';
-		const { useRegisterSW } = await (Function('m', 'return import(m)')(pwaModule));
-		const { needRefresh: needRefreshStore, updateServiceWorker } = useRegisterSW({
-			onRegistered(registration: ServiceWorkerRegistration | undefined) {
-				console.log('SW registered:', registration);
-			},
-			onRegisterError(error: Error) {
-				console.error('SW registration error:', error);
-			}
-		});
-
-		needRefreshStore.subscribe((value: boolean) => {
-			needRefresh = value;
-		});
-
-		updateSW = updateServiceWorker;
+	function showToast(message: string) {
+		toastMessage = message;
+		toastVisible = true;
+		setTimeout(() => {
+			toastVisible = false;
+		}, 3000);
 	}
 
-	function handleUpdate() {
-		if (updateSW) {
-			updateSW(true);
+	export async function checkVersion(showAlreadyUpdated = true) {
+		if (checking) return;
+		checking = true;
+
+		try {
+			const hasUpdate = await checkForUpdates();
+			if (hasUpdate) {
+				sessionStorage.setItem('versionUpdated', 'true');
+				location.reload();
+			} else if (showAlreadyUpdated) {
+				showToast(tr('update.alreadyUpdated'));
+			}
+		} catch {
+			// On error, just reload
+			location.reload();
+		} finally {
+			checking = false;
 		}
 	}
 </script>
 
-{#if needRefresh}
-	<div class="update-banner">
-		<span class="update-text">{tr('update.available')}</span>
-		<button class="update-btn" onclick={handleUpdate}>
-			{tr('update.refresh')}
-		</button>
+{#if toastVisible}
+	<div class="toast" class:show={toastVisible}>
+		{toastMessage}
 	</div>
 {/if}
 
 <style>
-	.update-banner {
+	.toast {
 		position: fixed;
-		bottom: 70px;
-		left: 16px;
-		right: 16px;
-		background: linear-gradient(135deg, #1e1e3f 0%, #2d1f4e 100%);
+		bottom: 100px;
+		left: 50%;
+		transform: translateX(-50%) translateY(20px);
+		background: rgba(30, 30, 63, 0.95);
 		border: 1px solid rgba(236, 72, 153, 0.3);
 		border-radius: 12px;
-		padding: 12px 16px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
+		padding: 12px 24px;
+		color: white;
+		font-size: 0.9rem;
 		z-index: 200;
-		animation: slideUp 0.3s ease;
+		opacity: 0;
+		transition: all 0.3s ease;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 	}
 
-	@keyframes slideUp {
-		from {
-			transform: translateY(20px);
-			opacity: 0;
-		}
-		to {
-			transform: translateY(0);
-			opacity: 1;
-		}
-	}
-
-	.update-text {
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.9);
-	}
-
-	.update-btn {
-		padding: 8px 16px;
-		background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%);
-		border: none;
-		border-radius: 8px;
-		color: white;
-		font-size: 0.85rem;
-		font-weight: 600;
-		font-family: 'Poppins', sans-serif;
-		cursor: pointer;
-		transition: transform 0.2s ease;
-		white-space: nowrap;
-	}
-
-	.update-btn:active {
-		transform: scale(0.95);
+	.toast.show {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
 	}
 </style>

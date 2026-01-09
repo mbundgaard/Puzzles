@@ -15,6 +15,7 @@
 	let isGamePage = $state(false);
 	let isHomePage = $state(false);
 	let contentEl: HTMLElement;
+	let updateBanner: UpdateBanner;
 
 	// Scroll handling for hiding/showing header and footer
 	let lastScrollTop = 0;
@@ -84,7 +85,7 @@
 	{/if}
 
 	{#if isHomePage}
-		<Header />
+		<Header onTitleClick={() => updateBanner?.checkVersion()} />
 	{/if}
 
 	<div class="content" class:has-header={!isGamePage} class:has-nav={!isGamePage} bind:this={contentEl}>
@@ -95,7 +96,7 @@
 		<BottomTabBar />
 	{/if}
 
-	<UpdateBanner />
+	<UpdateBanner bind:this={updateBanner} />
 </div>
 
 <style>

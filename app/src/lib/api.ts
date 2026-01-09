@@ -5,6 +5,28 @@
 const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
 const NICKNAME_KEY = 'hjernespil_nickname';
 
+declare const __BUILD_VERSION__: number;
+
+// ============ Version Check ============
+
+export async function checkForUpdates(): Promise<boolean> {
+	try {
+		const response = await fetch(`${API_BASE}/version`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ version: __BUILD_VERSION__ })
+		});
+		const data = await response.json();
+		return data.newVersionExists === true;
+	} catch {
+		return false;
+	}
+}
+
+export function getBuildVersion(): number {
+	return __BUILD_VERSION__;
+}
+
 // ============ Types ============
 
 export interface LeaderboardEntry {

@@ -2,9 +2,12 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import { defineConfig } from 'vite';
 
+const buildTime = new Date();
+
 export default defineConfig({
 	define: {
-		__BUILD_TIME__: JSON.stringify(new Date().toISOString())
+		__BUILD_TIME__: JSON.stringify(buildTime.toISOString()),
+		__BUILD_VERSION__: Math.floor(buildTime.getTime() / 1000)
 	},
 	plugins: [
 		sveltekit(),

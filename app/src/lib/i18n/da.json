@@ -77,8 +77,8 @@
 		"madeBy": "Lavet med ❤️ i Danmark"
 	},
 	"update": {
-		"available": "Ny version tilgængelig",
-		"refresh": "Opdater"
+		"done": "Opdateret!",
+		"alreadyUpdated": "Allerede opdateret ✓"
 	},
 	"notMigrated": {
 		"title": "Kommer snart!",

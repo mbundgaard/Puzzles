@@ -77,8 +77,8 @@
 		"madeBy": "Fait avec ❤️ au Danemark"
 	},
 	"update": {
-		"available": "Nouvelle version disponible",
-		"refresh": "Mettre à jour"
+		"done": "Mis à jour!",
+		"alreadyUpdated": "Déjà à jour ✓"
 	},
 	"notMigrated": {
 		"title": "Bientôt disponible !",
