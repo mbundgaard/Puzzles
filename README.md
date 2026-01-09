@@ -46,6 +46,7 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 - Install as an app on phone or tablet
 - Works offline (after first visit)
 - Add to home screen on iOS and Android
+- Auto-update detection with prompt banner
 
 ### Touch-First Design
 - Designed for mobile first, also works on desktop
