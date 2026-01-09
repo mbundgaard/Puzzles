@@ -672,7 +672,8 @@ When migrating each game:
 1. ✅ Create this implementation guide
 2. ✅ Move current classic site into `/app_classic/` folder
 3. ✅ Update all internal links to work from `/app_classic/` subfolder
-4. ⬜ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app_classic/`
+4. ✅ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app_classic/`
+   - Added redirect at root (`/index.html`) → `/app_classic/`
 5. ⬜ Initialize SvelteKit project in `/app/` folder
 6. ⬜ Set up GitHub Action to deploy SvelteKit to `/app/` and classic to `/app_classic/`
 7. ⬜ Set up i18n infrastructure
