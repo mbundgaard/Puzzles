@@ -2,7 +2,7 @@
   "name": "Hjernespil",
   "short_name": "Hjernespil",
   "description": "Træn din hjerne med sjove udfordringer",
-  "start_url": "/Puzzles/",
+  "start_url": "/Puzzles/app_classic/",
   "display": "standalone",
   "background_color": "#0f0f23",
   "theme_color": "#0f0f23",

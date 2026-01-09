@@ -23,18 +23,18 @@ During development, both sites run simultaneously:
 
 | Site | URL | Status |
 |------|-----|--------|
-| **Classic** | `https://mbundgaard.github.io/Puzzles/` | Live (current) |
+| **Classic** | `https://mbundgaard.github.io/Puzzles/app_classic/` | Live |
 | **New App** | `https://mbundgaard.github.io/Puzzles/app/` | Development |
 
 This allows:
-- Users continue using the classic site uninterrupted
+- Users continue using the classic site at `/app_classic/`
 - New app can be tested and iterated on at `/app/`
 - Gradual migration without downtime
 - Easy rollback if issues arise
 
 ### Phase 0: Set Up Parallel Structure
 
-Keep the classic site at root, add new app as subfolder:
+Classic site moved to `/app_classic/`, new SvelteKit app in `/app/`:
 
 ```
 /Puzzles
@@ -46,14 +46,15 @@ Keep the classic site at root, add new app as subfolder:
 │
 ├── api/                        # Backend Azure Functions (existing)
 │
-│ # Classic site (stays at root during development)
-├── index.html                  # Classic main page
-├── manifest.json               # Classic PWA manifest
-├── shared/                     # Classic shared files
-├── icons/                      # Shared icons
-├── 01-reversi/                 # Classic games
-├── 02-tents/
-└── ... (all 29 games)
+│ # Classic site (moved to subfolder)
+├── app_classic/                # Classic vanilla HTML/CSS/JS site
+│   ├── index.html              # Classic main page
+│   ├── manifest.json           # Classic PWA manifest
+│   ├── shared/                 # Classic shared files
+│   ├── icons/                  # Icons
+│   ├── 01-reversi/             # Classic games
+│   ├── 02-tents/
+│   └── ... (all 29 games)
 │
 │ # New app source (committed)
 ├── app/                        # SvelteKit source
@@ -65,7 +66,7 @@ Keep the classic site at root, add new app as subfolder:
 └── www/                        # Build output (NOT committed, local dev only)
 ```
 
-The new app deploys to `/Puzzles/app/` via GitHub Actions.
+The classic site deploys directly via GitHub Pages. The new SvelteKit app will use GitHub Actions to build and deploy to `/Puzzles/app/`.
 
 ### Phase 1: Foundation
 
@@ -401,7 +402,7 @@ Shows language availability:
 
 ### During Development (Parallel Deployment)
 
-Classic site stays at root, new app source in `/app/`:
+Classic site in `/app_classic/`, new SvelteKit app in `/app/`:
 
 ```
 /Puzzles
@@ -410,7 +411,7 @@ Classic site stays at root, new app source in `/app/`:
 ├── .gitignore                    # Includes www/ (build output)
 ├── .github/
 │   └── workflows/
-│       ├── build-app.yml         # Build & deploy SvelteKit to /app/
+│       ├── build-app.yml         # Build & deploy SvelteKit app (future)
 │       └── deploy-api.yml        # Deploy Azure Functions
 ├── CLAUDE.md
 ├── README.md
@@ -419,17 +420,18 @@ Classic site stays at root, new app source in `/app/`:
 │ # Backend
 ├── api/                          # Azure Functions (C#)
 │
-│ # Classic site (at root - stays live)
-├── index.html                    # Classic main page
-├── manifest.json                 # Classic PWA manifest
-├── shared/                       # Classic shared files
-│   ├── api.js
-│   ├── ui.js
-│   └── changelog.js
-├── icons/                        # Shared icons (used by both)
-├── 01-reversi/                   # Classic games
-├── 02-tents/
-└── ... (all 29 game folders)
+│ # Classic site (in subfolder)
+├── app_classic/                  # Classic vanilla HTML/CSS/JS site
+│   ├── index.html                # Classic main page
+│   ├── manifest.json             # Classic PWA manifest
+│   ├── shared/                   # Classic shared files
+│   │   ├── api.js
+│   │   ├── ui.js
+│   │   └── changelog.js
+│   ├── icons/                    # Icons
+│   ├── 01-reversi/               # Classic games
+│   ├── 02-tents/
+│   └── ... (all 29 game folders)
 │
 │ # New app source (committed)
 ├── app/                          # SvelteKit source
@@ -668,22 +670,22 @@ When migrating each game:
 ### Development Phase (Parallel Deployment)
 
 1. ✅ Create this implementation guide
-2. ⬜ Move current classic site into `/app/` folder
-3. ⬜ Update all internal links to work from `/app/` subfolder
-4. ⬜ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app/`
-5. ⬜ Initialize SvelteKit project (replacing classic files in `/app/`)
-6. ⬜ Set up GitHub Action to deploy to `/app/` subfolder
+2. ✅ Move current classic site into `/app_classic/` folder
+3. ✅ Update all internal links to work from `/app_classic/` subfolder
+4. ⬜ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app_classic/`
+5. ⬜ Initialize SvelteKit project in `/app/` folder
+6. ⬜ Set up GitHub Action to deploy SvelteKit to `/app/` and classic to `/app_classic/`
 7. ⬜ Set up i18n infrastructure
 8. ⬜ Build app shell with language selector
 9. ⬜ Migrate first game (Kryds og Bolle)
 10. ⬜ Add English + French translations
 11. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
 12. ⬜ Continue game migrations
-13. ⬜ Add cross-link from classic site to new app ("Prøv ny version")
+13. ⬜ Add cross-link between classic and new app
 
 ### Cutover Phase (When Ready)
 
-14. ⬜ Move classic site to `/classic/` subfolder
+14. ⬜ Move new app to root, archive classic to `/classic/`
 15. ⬜ Update SvelteKit base path to `/Puzzles`
 16. ⬜ Update GitHub Action to deploy new app at root
 17. ⬜ Add "Classic version" link in new app footer
