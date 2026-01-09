@@ -139,6 +139,126 @@ When the new app is ready for production:
 
 ---
 
+## UI/Navigation Design
+
+### Layout Overview
+
+The new app uses a mobile-first design with bottom navigation:
+
+```
+┌─────────────────────────────┐
+│ 🇩🇰 ▼    Hjernespil    🏆   │  ← Header: language selector + title + leaderboard
+├─────────────────────────────┤
+│ ┌─────────────────────────┐ │
+│ │ 🎮 Reversi          ›   │ │
+│ ├─────────────────────────┤ │
+│ │ 🏕️ Telte og Træer   ›   │ │  ← Game list (scrollable)
+│ ├─────────────────────────┤ │
+│ │ 🔢 Sudoku        NY ›   │ │  ← Badges shown inline
+│ └─────────────────────────┘ │
+│        ... scroll ...       │
+├─────────────────────────────┤
+│  🎮      💡       ⚙️        │  ← Bottom navigation
+│ Spil   Foreslå   Indstil.   │
+└─────────────────────────────┘
+```
+
+### Bottom Navigation
+
+Three tabs in the bottom navigation bar:
+
+| Tab | Icon | Label | Content |
+|-----|------|-------|---------|
+| Games | 🎮 | Spil | Game list (home) |
+| Suggest | 💡 | Foreslå | Submit game idea |
+| Settings | ⚙️ | Indstillinger | Language, info, changelog |
+
+### Navigation Visibility
+
+**Bottom nav hides when playing a game** to maximize screen space:
+
+```
+Home/Settings:              Game page:
+┌───────────────┐           ┌───────────────┐
+│               │           │               │
+│  Content      │           │    Game       │
+│               │           │  (full screen)│
+│               │           │               │
+├───────────────┤           │         ✕     │  ← Only close button
+│ 🎮  💡  ⚙️    │           │               │
+└───────────────┘           └───────────────┘
+```
+
+Games get full viewport height. The existing close button (✕) handles navigation back to the game list.
+
+### Header Design
+
+Simplified header with three elements:
+
+```
+┌─────────────────────────────────────┐
+│  🇩🇰 ▼         Hjernespil        🏆  │
+│  └─ Language    └─ Title    └─ Leaderboard
+└─────────────────────────────────────┘
+```
+
+- **Language dropdown**: Flag + dropdown arrow, opens language selector
+- **Title**: App name, centered
+- **Leaderboard**: Quick access to scores
+
+### Page Transitions
+
+Native-feeling transitions between pages:
+
+| Navigation | Transition |
+|------------|------------|
+| Home → Game | Slide in from right |
+| Game → Home | Slide out to right |
+| Tab switch | Fade/crossfade |
+| Modal open | Slide up from bottom |
+
+```svelte
+<!-- Example using Svelte transitions -->
+<script>
+  import { fly, fade } from 'svelte/transition';
+</script>
+
+{#key currentPage}
+  <div in:fly={{ x: 300, duration: 200 }} out:fly={{ x: -300, duration: 200 }}>
+    <slot />
+  </div>
+{/key}
+```
+
+### Game List vs Grid
+
+Using **list view** instead of grid for the game menu:
+
+| Aspect | Grid (Classic) | List (New) |
+|--------|----------------|------------|
+| Scanning | Slower | Faster |
+| Info density | Icon + title | Icon + title + description |
+| Touch targets | Smaller | Full-width rows |
+| Badges | Corner overlay | Inline |
+
+### Dark Theme
+
+Maintaining the dark theme from classic:
+
+```css
+:root {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-purple: #9333ea;
+  --accent-cyan: #06b6d4;
+  --accent-magenta: #ec4899;
+}
+```
+
+---
+
 ## Internationalization (i18n)
 
 ### Supported Languages
