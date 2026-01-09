@@ -29,9 +29,9 @@
 		"subtitle": "Dites-nous ce que vous pensez",
 		"category": "Catégorie",
 		"categories": {
-			"general": "Commentaires généraux",
-			"game": "Commentaires sur un jeu",
-			"newGame": "Suggérer un jeu"
+			"general": "Général",
+			"game": "Jeu",
+			"newGame": "Nouveau jeu"
 		},
 		"selectGame": "Choisir un jeu",
 		"descriptionRequired": "Veuillez décrire votre idée",
