@@ -2,24 +2,458 @@
 
 ## Overview
 
-This document outlines how to transform Hjernespil into a more native-feeling Progressive Web App (PWA). Based on research into modern web frameworks and PWA best practices.
+This document outlines how to transform Hjernespil into a more native-feeling Progressive Web App (PWA) with multi-language support. The migration will happen incrementally, one game at a time.
 
 ---
 
 ## Current State
 
 - **Technology**: Vanilla HTML/CSS/JS
-- **Structure**: 29 standalone game folders, each with index.html/style.css/script.js
+- **Structure**: 29 standalone game folders
+- **Language**: Danish only (hardcoded in HTML/JS)
 - **PWA Support**: Basic manifest.json, no service worker
-- **Navigation**: Full page reloads between games
-- **Hosting**: Static files on GitHub Pages / Azure SWA
 
-### Current Limitations
+---
 
-1. No page transitions (jarring navigation)
-2. No offline caching (requires network)
-3. No app shell (full reload on each page)
-4. Large initial payloads per game
+## Migration Strategy
+
+### Phase 0: Backup Classic Site
+
+Before any changes, archive the current site:
+
+```
+/Puzzles
+├── classic/                    # Archived original site
+│   ├── index.html
+│   ├── 01-reversi/
+│   ├── 02-tents-and-trees/
+│   └── ... (all 29 games)
+│
+├── app-src/                    # New SvelteKit source
+└── app/                        # Built output (served at /Puzzles/)
+```
+
+The classic site remains accessible at `/Puzzles/classic/` as a fallback.
+
+### Phase 1: Foundation
+
+1. Set up SvelteKit project with i18n support
+2. Create app shell (header, navigation, transitions)
+3. Implement language selector
+4. Build home page with game grid
+
+### Phase 2: Game Migration (One at a Time)
+
+Migrate games in order of complexity:
+
+| Order | Game | Why |
+|-------|------|-----|
+| 1 | Kryds og Bolle (#11) | Simplest, minimal text |
+| 2 | Hukommelse (#07) | Simple, tests animations |
+| 3 | 2048 (#05) | Tests swipe gestures |
+| 4 | Minestryger (#06) | Tests grid interactions |
+| 5 | ... | Continue by complexity |
+
+**For each game:**
+1. Create translation file (`i18n/[lang].json`)
+2. Port game logic to Svelte component
+3. Test in all 3 languages
+4. Update home page to show game
+5. Mark as available in game registry
+
+### Phase 3: PWA Features
+
+After core games are migrated:
+- Service worker with offline support
+- Install prompt
+- Push notifications (optional)
+
+### Phase 4: Cutover
+
+1. Move classic site to `/Puzzles/classic/`
+2. Deploy new app to `/Puzzles/`
+3. Add "Classic version" link in footer
+
+---
+
+## Internationalization (i18n)
+
+### Supported Languages
+
+| Code | Language | Status |
+|------|----------|--------|
+| `da` | Danish | Default (complete) |
+| `en` | English | To be added |
+| `fr` | French | To be added |
+
+### Translation File Structure
+
+Each game has its own translation folder:
+
+```
+/app-src/src/lib/games/
+├── memory/
+│   ├── Memory.svelte           # Game component
+│   └── i18n/
+│       ├── da.json             # Danish (default)
+│       ├── en.json             # English
+│       └── fr.json             # French
+│
+├── tictactoe/
+│   ├── TicTacToe.svelte
+│   └── i18n/
+│       ├── da.json
+│       ├── en.json
+│       └── fr.json
+```
+
+### Translation File Format
+
+```json
+// games/memory/i18n/da.json
+{
+  "title": "Hukommelse",
+  "newGame": "Nyt Spil",
+  "moves": "Træk",
+  "found": "Fundet",
+  "victory": {
+    "title": "Tillykke!",
+    "message": "Du klarede det på {moves} træk"
+  },
+  "rules": {
+    "title": "Regler",
+    "goal": "Find alle par af kort",
+    "howTo": "Tryk på to kort for at vende dem"
+  }
+}
+```
+
+```json
+// games/memory/i18n/en.json
+{
+  "title": "Memory",
+  "newGame": "New Game",
+  "moves": "Moves",
+  "found": "Found",
+  "victory": {
+    "title": "Congratulations!",
+    "message": "You completed it in {moves} moves"
+  },
+  "rules": {
+    "title": "Rules",
+    "goal": "Find all matching pairs",
+    "howTo": "Tap two cards to flip them"
+  }
+}
+```
+
+```json
+// games/memory/i18n/fr.json
+{
+  "title": "Mémoire",
+  "newGame": "Nouveau Jeu",
+  "moves": "Coups",
+  "found": "Trouvé",
+  "victory": {
+    "title": "Félicitations!",
+    "message": "Vous avez réussi en {moves} coups"
+  },
+  "rules": {
+    "title": "Règles",
+    "goal": "Trouvez toutes les paires",
+    "howTo": "Appuyez sur deux cartes pour les retourner"
+  }
+}
+```
+
+### Shared Translations
+
+Common UI elements are in a shared file:
+
+```
+/app-src/src/lib/i18n/
+├── da.json                     # Shared Danish
+├── en.json                     # Shared English
+├── fr.json                     # Shared French
+└── index.ts                    # i18n logic
+```
+
+```json
+// lib/i18n/da.json
+{
+  "app": {
+    "title": "Hjernespil",
+    "subtitle": "Træn din hjerne med sjove udfordringer",
+    "back": "Tilbage",
+    "settings": "Indstillinger",
+    "language": "Sprog",
+    "classicVersion": "Klassisk version"
+  },
+  "languages": {
+    "da": "Dansk",
+    "en": "English",
+    "fr": "Français"
+  }
+}
+```
+
+### Language Selection Logic
+
+```typescript
+// lib/i18n/index.ts
+
+// 1. Check URL parameter: ?lang=en
+// 2. Check localStorage: localStorage.getItem('language')
+// 3. Check browser language: navigator.language
+// 4. Default to 'da'
+
+export function getLanguage(): 'da' | 'en' | 'fr' {
+  // URL param takes priority
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang && ['da', 'en', 'fr'].includes(urlLang)) {
+    return urlLang as 'da' | 'en' | 'fr';
+  }
+
+  // Then localStorage
+  const savedLang = localStorage.getItem('language');
+  if (savedLang && ['da', 'en', 'fr'].includes(savedLang)) {
+    return savedLang as 'da' | 'en' | 'fr';
+  }
+
+  // Then browser language
+  const browserLang = navigator.language.split('-')[0];
+  if (['da', 'en', 'fr'].includes(browserLang)) {
+    return browserLang as 'da' | 'en' | 'fr';
+  }
+
+  return 'da';
+}
+```
+
+### Fallback to Danish
+
+If a translation is missing for a game:
+
+```typescript
+// lib/i18n/index.ts
+
+export async function loadGameTranslations(
+  gameId: string,
+  lang: string
+): Promise<Translations> {
+  try {
+    // Try requested language
+    const translations = await import(`../games/${gameId}/i18n/${lang}.json`);
+    return translations.default;
+  } catch {
+    // Fallback to Danish
+    console.warn(`No ${lang} translation for ${gameId}, using Danish`);
+    const fallback = await import(`../games/${gameId}/i18n/da.json`);
+    return fallback.default;
+  }
+}
+```
+
+### Language Selector Component
+
+Located in the header/settings:
+
+```svelte
+<!-- LanguageSelector.svelte -->
+<script>
+  import { language, setLanguage } from '$lib/i18n';
+
+  const languages = [
+    { code: 'da', flag: '🇩🇰', name: 'Dansk' },
+    { code: 'en', flag: '🇬🇧', name: 'English' },
+    { code: 'fr', flag: '🇫🇷', name: 'Français' }
+  ];
+</script>
+
+<div class="language-selector">
+  {#each languages as lang}
+    <button
+      class:active={$language === lang.code}
+      on:click={() => setLanguage(lang.code)}
+    >
+      <span class="flag">{lang.flag}</span>
+      <span class="name">{lang.name}</span>
+    </button>
+  {/each}
+</div>
+```
+
+### Game Availability Per Language
+
+The game registry tracks which languages are available:
+
+```typescript
+// lib/games/registry.ts
+
+export const games = [
+  {
+    id: 'memory',
+    icon: '🧠',
+    languages: ['da', 'en', 'fr'],  // All languages
+    component: () => import('./memory/Memory.svelte')
+  },
+  {
+    id: 'tictactoe',
+    icon: '⭕',
+    languages: ['da', 'en'],        // No French yet
+    component: () => import('./tictactoe/TicTacToe.svelte')
+  },
+  {
+    id: 'reversi',
+    icon: '⚫',
+    languages: ['da'],              // Danish only (not migrated)
+    component: null,                // Links to classic version
+    classicUrl: '/Puzzles/classic/01-reversi/'
+  }
+];
+```
+
+### Home Page Game Grid
+
+Shows language availability:
+
+```svelte
+{#each games as game}
+  <a href="/spil/{game.id}" class="game-card">
+    <span class="icon">{game.icon}</span>
+    <span class="name">{$t(`games.${game.id}.title`)}</span>
+
+    {#if !game.languages.includes($language)}
+      <span class="badge">🇩🇰</span>  <!-- Shows Danish fallback -->
+    {/if}
+  </a>
+{/each}
+```
+
+---
+
+## Folder Structure (Final)
+
+```
+/Puzzles
+├── classic/                      # Archived original site
+│   ├── index.html
+│   ├── shared/
+│   └── 01-reversi/ ... 29-*/
+│
+├── app-src/                      # SvelteKit source
+│   ├── src/
+│   │   ├── routes/
+│   │   │   ├── +layout.svelte    # App shell
+│   │   │   ├── +page.svelte      # Home (game grid)
+│   │   │   └── spil/
+│   │   │       └── [game]/
+│   │   │           └── +page.svelte
+│   │   │
+│   │   └── lib/
+│   │       ├── i18n/             # Shared translations
+│   │       │   ├── da.json
+│   │       │   ├── en.json
+│   │       │   ├── fr.json
+│   │       │   └── index.ts
+│   │       │
+│   │       ├── components/       # Shared UI
+│   │       │   ├── GameShell.svelte
+│   │       │   ├── LanguageSelector.svelte
+│   │       │   └── ...
+│   │       │
+│   │       └── games/            # Game modules
+│   │           ├── registry.ts
+│   │           ├── memory/
+│   │           │   ├── Memory.svelte
+│   │           │   └── i18n/
+│   │           │       ├── da.json
+│   │           │       ├── en.json
+│   │           │       └── fr.json
+│   │           ├── tictactoe/
+│   │           └── ...
+│   │
+│   ├── static/
+│   └── package.json
+│
+├── app/                          # Built output (auto-generated)
+│   └── ...
+│
+└── .github/
+    └── workflows/
+        └── build-app.yml         # Auto-build on push
+```
+
+---
+
+## GitHub Action
+
+```yaml
+name: Build SvelteKit App
+
+on:
+  push:
+    branches: [main]
+    paths: ['app-src/**']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install & Build
+        working-directory: app-src
+        run: |
+          npm install
+          npm run build
+
+      - name: Commit built files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add app
+          git diff --staged --quiet || git commit -m "Build app [skip ci]"
+          git push
+```
+
+---
+
+## Migration Checklist Per Game
+
+When migrating each game:
+
+- [ ] Create game folder in `app-src/src/lib/games/[name]/`
+- [ ] Create Svelte component with game logic
+- [ ] Create `i18n/da.json` with all Danish strings
+- [ ] Create `i18n/en.json` with English translation
+- [ ] Create `i18n/fr.json` with French translation
+- [ ] Add game to `registry.ts`
+- [ ] Test in all 3 languages
+- [ ] Test touch interactions on mobile
+- [ ] Test offline behavior
+- [ ] Update progress tracker
+
+---
+
+## Progress Tracker
+
+| # | Game | Migrated | DA | EN | FR |
+|---|------|----------|----|----|-----|
+| 01 | Reversi | ⬜ | ✅ | ⬜ | ⬜ |
+| 02 | Telte og Træer | ⬜ | ✅ | ⬜ | ⬜ |
+| 03 | Sudoku | ⬜ | ✅ | ⬜ | ⬜ |
+| 04 | Nonogram | ⬜ | ✅ | ⬜ | ⬜ |
+| 05 | 2048 | ⬜ | ✅ | ⬜ | ⬜ |
+| 06 | Minestryger | ⬜ | ✅ | ⬜ | ⬜ |
+| 07 | Hukommelse | ⬜ | ✅ | ⬜ | ⬜ |
+| ... | ... | ... | ... | ... | ... |
 
 ---
 
@@ -27,259 +461,36 @@ This document outlines how to transform Hjernespil into a more native-feeling Pr
 
 ### Why SvelteKit?
 
-| Factor | SvelteKit | Next.js | Vanilla + Enhancements |
-|--------|-----------|---------|------------------------|
-| Bundle size | Smallest (compiles away) | Large (React runtime) | Medium |
-| Transitions | Built-in, smooth | Requires config | Manual (View Transitions API) |
-| Learning curve | Easy from vanilla JS | Steeper (React) | None |
-| PWA support | Excellent (vite-pwa) | Good (next-pwa) | Manual |
-| Build required | Yes | Yes | No |
+| Factor | SvelteKit | Next.js | Vanilla |
+|--------|-----------|---------|---------|
+| Bundle size | Smallest | Large | Medium |
+| Transitions | Built-in | Manual | Manual |
+| i18n | Easy | Plugin | Manual |
+| PWA support | Excellent | Good | Manual |
 
-**Verdict**: SvelteKit provides the best balance of native feel, small bundles, and developer experience.
+### Key Dependencies
 
-### Alternative: Enhance Vanilla
-
-If avoiding a build step is critical, enhance the current site with:
-- **View Transitions API** - Native browser transitions (Chrome 111+)
-- **Workbox** - Service worker for offline support
-- **Barba.js** - Smooth page transitions
-
----
-
-## Key Features for Native Feel
-
-### 1. Page Transitions
-
-Native apps have smooth transitions between screens. Implement:
-
-```
-Home → Game: Slide in from right
-Game → Home: Slide out to right
-```
-
-**SvelteKit approach**:
-```svelte
-{#key $page.url.pathname}
-  <div in:fly={{ x: 100 }} out:fly={{ x: -100 }}>
-    {@render children()}
-  </div>
-{/key}
-```
-
-### 2. App Shell Architecture
-
-Load a minimal shell instantly, then hydrate content:
-
-```
-┌─────────────────────┐
-│  Header (cached)    │  ← Instant
-├─────────────────────┤
-│                     │
-│  Content (dynamic)  │  ← Loads after
-│                     │
-├─────────────────────┤
-│  Nav bar (cached)   │  ← Instant
-└─────────────────────┘
-```
-
-### 3. Service Worker & Offline
-
-Cache strategy for instant loads:
-
-| Resource | Strategy |
-|----------|----------|
-| App shell | Cache first |
-| Game assets | Cache first |
-| API calls | Network first, fallback to cache |
-| Images | Stale while revalidate |
-
-### 4. Touch Interactions
-
-- **Haptic feedback** - Vibration on key actions (where supported)
-- **Pull to refresh** - Native gesture support
-- **Swipe navigation** - Back gesture on games
-- **Active states** - Immediate visual feedback (no 300ms delay)
-
-### 5. Bottom Navigation
-
-Native apps use bottom nav, not hamburger menus:
-
-```
-┌─────────────────────────────────┐
-│                                 │
-│          Game Content           │
-│                                 │
-├─────────────────────────────────┤
-│  🏠 Home  │  🏆 Score  │  ⚙️ More │
-└─────────────────────────────────┘
-```
-
-### 6. Skeleton Loading
-
-Show content placeholders while loading:
-
-```
-┌─────────────────┐
-│ ████████████    │  ← Gray placeholder
-│ ████████        │
-│ ████████████████│
-└─────────────────┘
-```
-
----
-
-## Implementation Approach
-
-### Folder Structure
-
-```
-/Puzzles
-├── app-src/              # SvelteKit source
-│   ├── src/
-│   │   ├── routes/
-│   │   │   ├── +layout.svelte    # App shell + transitions
-│   │   │   ├── +page.svelte      # Home page
-│   │   │   └── spil/
-│   │   │       └── [game]/       # Dynamic game routes
-│   │   └── lib/
-│   │       ├── components/       # Shared components
-│   │       └── games/            # Game logic
-│   └── static/
-│
-├── app/                  # Built output (auto-generated)
-│
-├── index.html            # Classic site (keep for now)
-└── 01-reversi/           # Classic games (keep)
-```
-
-### Build & Deploy
-
-1. **GitHub Action** triggers on push to `app-src/**`
-2. Runs `npm install && npm run build`
-3. Outputs static files to `/app/`
-4. Commits built files to repo
-5. Deployed alongside classic site
-
-### Migration Strategy
-
-**Phase 1**: Build new app shell with 3 pilot games
-- Memory (simple, tests card animations)
-- 2048 (tests swipe gestures)
-- Tic-tac-toe (tests AI integration)
-
-**Phase 2**: Add PWA features
-- Service worker with Workbox
-- Offline support
-- Install prompt
-
-**Phase 3**: Migrate remaining games
-- Port games one by one
-- Keep classic site as fallback
-
-**Phase 4**: Replace main site
-- Redirect `/Puzzles/` to `/Puzzles/app/`
-- Archive classic version at `/Puzzles/classic/`
-
----
-
-## Technical Specifications
-
-### SvelteKit Configuration
-
-```javascript
-// svelte.config.js
-import adapter from '@sveltejs/adapter-static';
-
-export default {
-  kit: {
-    adapter: adapter({
-      pages: '../app',
-      assets: '../app',
-      fallback: 'index.html'
-    }),
-    paths: {
-      base: '/Puzzles/app'
-    }
+```json
+{
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.0",
+    "@sveltejs/kit": "^2.0.0",
+    "svelte": "^4.2.0",
+    "vite": "^5.0.0"
   }
-};
+}
 ```
-
-### PWA Plugin
-
-```javascript
-// vite.config.js
-import { SvelteKitPWA } from '@vite-pwa/sveltekit';
-
-export default {
-  plugins: [
-    SvelteKitPWA({
-      strategies: 'generateSW',
-      manifest: {
-        name: 'Hjernespil',
-        short_name: 'Hjernespil',
-        theme_color: '#0f0f23',
-        display: 'standalone'
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
-      }
-    })
-  ]
-};
-```
-
-### Transition Animation
-
-```svelte
-<script>
-  import { fly } from 'svelte/transition';
-  import { page } from '$app/stores';
-</script>
-
-{#key $page.url.pathname}
-  <main
-    in:fly={{ y: 20, duration: 300, delay: 100 }}
-    out:fly={{ y: -20, duration: 200 }}
-  >
-    <slot />
-  </main>
-{/key}
-```
-
----
-
-## Native Features Checklist
-
-| Feature | Priority | Complexity |
-|---------|----------|------------|
-| Page transitions | High | Low |
-| Service worker / offline | High | Medium |
-| App shell architecture | High | Medium |
-| Bottom navigation | Medium | Low |
-| Pull to refresh | Medium | Medium |
-| Haptic feedback | Low | Low |
-| Splash screen | Low | Low |
-| Share API integration | Low | Low |
-
----
-
-## Resources
-
-- [SvelteKit Documentation](https://kit.svelte.dev/)
-- [Vite PWA Plugin](https://vite-pwa-org.netlify.app/)
-- [Workbox](https://developer.chrome.com/docs/workbox/)
-- [View Transitions API](https://developer.chrome.com/docs/web-platform/view-transitions/)
-- [PWA Best Practices](https://web.dev/pwa-checklist/)
 
 ---
 
 ## Next Steps
 
-1. Review this document
-2. Decide on Phase 1 games
-3. Initialize SvelteKit project
-4. Implement app shell with transitions
-5. Port first 3 games
-6. Add PWA features
-7. Test on real devices
-8. Gather feedback
+1. ✅ Create this implementation guide
+2. ⬜ Archive classic site to `/classic/`
+3. ⬜ Initialize SvelteKit project in `/app-src/`
+4. ⬜ Set up i18n infrastructure
+5. ⬜ Build app shell with language selector
+6. ⬜ Migrate first game (Kryds og Bolle)
+7. ⬜ Add English + French translations
+8. ⬜ Test on real devices
+9. ⬜ Continue game migrations
