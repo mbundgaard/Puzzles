@@ -17,7 +17,7 @@ export default defineConfig({
 				theme_color: '#0f0f23',
 				background_color: '#0f0f23',
 				display: 'standalone',
-				scope: '/Puzzles/',
+				orientation: 'any',
 				start_url: '/Puzzles/',
 				icons: [
 					{
@@ -29,6 +29,12 @@ export default defineConfig({
 						src: '/Puzzles/icons/icon-512.png',
 						sizes: '512x512',
 						type: 'image/png'
+					},
+					{
+						src: '/Puzzles/icons/icon-512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'maskable'
 					}
 				]
 			},
