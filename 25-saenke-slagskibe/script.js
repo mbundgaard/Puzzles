@@ -1,207 +1,449 @@
-class Battleship {
+class BattleshipPuzzle {
     constructor() {
         this.gridSize = 10;
-        this.ships = [
-            { name: 'Hangarskib', size: 5 },
-            { name: 'Slagskib', size: 4 },
-            { name: 'Krydser', size: 3 },
-            { name: 'Ubåd', size: 3 },
-            { name: 'Destroyer', size: 2 }
+        // Standard newspaper fleet: 1×4, 2×3, 3×2, 4×1 = 10 ships, 20 segments
+        this.fleet = [
+            { name: 'Slagskib', size: 4, count: 1 },
+            { name: 'Krydser', size: 3, count: 2 },
+            { name: 'Destroyer', size: 2, count: 3 },
+            { name: 'Ubåd', size: 1, count: 4 }
         ];
 
-        this.grid = [];
-        this.placedShips = [];
-        this.shots = 0;
+        this.difficulty = 'medium'; // easy, medium, hard
+        this.grid = [];           // Solution grid
+        this.playerGrid = [];     // Player's current state
+        this.rowClues = [];       // Ship segments per row
+        this.colClues = [];       // Ship segments per column
+        this.ships = [];          // Placed ships for tracking
+        this.markMode = 'ship';   // 'ship' or 'water'
         this.gameOver = false;
 
         this.init();
     }
 
     init() {
-        this.bindNewGameButton();
-        this.startGame();
+        this.bindEvents();
+        this.loadDifficulty();
+        this.newGame();
     }
 
-    bindNewGameButton() {
-        document.getElementById('new-game-btn').addEventListener('click', () => {
-            this.resetGame();
+    bindEvents() {
+        document.getElementById('new-game-btn').addEventListener('click', () => this.newGame());
+        document.getElementById('mark-ship-btn').addEventListener('click', () => this.setMarkMode('ship'));
+        document.getElementById('mark-water-btn').addEventListener('click', () => this.setMarkMode('water'));
+
+        // Difficulty buttons
+        document.querySelectorAll('.diff-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.setDifficulty(e.target.dataset.diff);
+            });
         });
     }
 
-    resetGame() {
-        this.grid = [];
-        this.placedShips = [];
-        this.shots = 0;
+    loadDifficulty() {
+        const saved = localStorage.getItem('battleship-difficulty');
+        if (saved) {
+            this.difficulty = saved;
+        }
+        this.updateDifficultyUI();
+    }
+
+    setDifficulty(diff) {
+        this.difficulty = diff;
+        localStorage.setItem('battleship-difficulty', diff);
+        this.updateDifficultyUI();
+        this.newGame();
+    }
+
+    updateDifficultyUI() {
+        document.querySelectorAll('.diff-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.diff === this.difficulty);
+        });
+    }
+
+    setMarkMode(mode) {
+        this.markMode = mode;
+        document.getElementById('mark-ship-btn').classList.toggle('active', mode === 'ship');
+        document.getElementById('mark-water-btn').classList.toggle('active', mode === 'water');
+    }
+
+    newGame() {
         this.gameOver = false;
+        this.ships = [];
+        this.grid = this.createEmptyGrid();
+        this.playerGrid = this.createEmptyGrid();
 
-        document.getElementById('game-phase').style.display = 'block';
-        document.getElementById('game-over').style.display = 'none';
+        this.placeAllShips();
+        this.calculateClues();
+        this.revealStartingClues();
+        this.render();
 
-        this.startGame();
+        HjernespilAPI.trackStart('25');
     }
 
     createEmptyGrid() {
         return Array(this.gridSize).fill(null).map(() =>
-            Array(this.gridSize).fill({ ship: null, hit: false })
+            Array(this.gridSize).fill(null).map(() => ({
+                isShip: false,
+                shipId: null,
+                revealed: false,
+                playerMark: null // null, 'ship', 'water'
+            }))
         );
     }
 
-    startGame() {
-        this.grid = this.createEmptyGrid();
-        this.placeShips();
-        this.renderGrid();
-        this.updateUI();
-
-        HjernespilAPI.sessionEvent('newGame');
-    }
-
-    getShipCells(row, col, size, horizontal) {
-        const cells = [];
-        for (let i = 0; i < size; i++) {
-            if (horizontal) {
-                cells.push([row, col + i]);
-            } else {
-                cells.push([row + i, col]);
+    // Check if a cell and its diagonal neighbors are free
+    canPlaceAt(row, col) {
+        for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+                const r = row + dr;
+                const c = col + dc;
+                if (r >= 0 && r < this.gridSize && c >= 0 && c < this.gridSize) {
+                    if (this.grid[r][c].isShip) return false;
+                }
             }
         }
-        return cells;
+        return true;
     }
 
     canPlaceShip(row, col, size, horizontal) {
-        const cells = this.getShipCells(row, col, size, horizontal);
+        const cells = [];
+        for (let i = 0; i < size; i++) {
+            const r = horizontal ? row : row + i;
+            const c = horizontal ? col + i : col;
 
-        for (const [r, c] of cells) {
             if (r < 0 || r >= this.gridSize || c < 0 || c >= this.gridSize) {
                 return false;
             }
-            if (this.grid[r][c].ship !== null) {
-                return false;
-            }
+            cells.push([r, c]);
+        }
+
+        // Check each cell and its neighbors (no touching rule)
+        for (const [r, c] of cells) {
+            if (!this.canPlaceAt(r, c)) return false;
         }
 
         return true;
     }
 
-    placeShips() {
-        this.ships.forEach((ship, index) => {
-            let placed = false;
-            let attempts = 0;
+    placeShip(row, col, size, horizontal, shipId) {
+        const cells = [];
+        for (let i = 0; i < size; i++) {
+            const r = horizontal ? row : row + i;
+            const c = horizontal ? col + i : col;
+            this.grid[r][c].isShip = true;
+            this.grid[r][c].shipId = shipId;
+            cells.push([r, c]);
+        }
 
-            while (!placed && attempts < 100) {
-                const row = Math.floor(Math.random() * this.gridSize);
-                const col = Math.floor(Math.random() * this.gridSize);
-                const horizontal = Math.random() > 0.5;
-
-                if (this.canPlaceShip(row, col, ship.size, horizontal)) {
-                    const cells = this.getShipCells(row, col, ship.size, horizontal);
-                    const shipData = {
-                        name: ship.name,
-                        size: ship.size,
-                        cells: cells,
-                        hits: 0
-                    };
-
-                    cells.forEach(([r, c]) => {
-                        this.grid[r][c] = { ship: index, hit: false };
-                    });
-
-                    this.placedShips.push(shipData);
-                    placed = true;
-                }
-                attempts++;
-            }
+        this.ships.push({
+            id: shipId,
+            size: size,
+            cells: cells,
+            horizontal: horizontal
         });
     }
 
-    renderGrid() {
-        const grid = document.getElementById('puzzle-grid');
-        grid.innerHTML = '';
+    placeAllShips() {
+        let shipId = 0;
 
-        for (let row = 0; row < this.gridSize; row++) {
-            for (let col = 0; col < this.gridSize; col++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.dataset.row = row;
-                cell.dataset.col = col;
+        for (const shipType of this.fleet) {
+            for (let i = 0; i < shipType.count; i++) {
+                let placed = false;
+                let attempts = 0;
 
-                const cellData = this.grid[row][col];
-                if (cellData.hit) {
-                    cell.classList.add('revealed');
-                    if (cellData.ship !== null) {
-                        const ship = this.placedShips[cellData.ship];
-                        if (ship.hits >= ship.size) {
-                            cell.classList.add('sunk');
-                        } else {
-                            cell.classList.add('hit');
-                        }
-                    } else {
-                        cell.classList.add('miss');
+                while (!placed && attempts < 1000) {
+                    const row = Math.floor(Math.random() * this.gridSize);
+                    const col = Math.floor(Math.random() * this.gridSize);
+                    const horizontal = Math.random() > 0.5;
+
+                    if (this.canPlaceShip(row, col, shipType.size, horizontal)) {
+                        this.placeShip(row, col, shipType.size, horizontal, shipId);
+                        placed = true;
                     }
+                    attempts++;
                 }
-
-                cell.addEventListener('click', () => this.handleShot(row, col));
-                grid.appendChild(cell);
+                shipId++;
             }
         }
     }
 
-    handleShot(row, col) {
-        if (this.gameOver) return;
-        if (this.grid[row][col].hit) return;
+    calculateClues() {
+        this.rowClues = [];
+        this.colClues = [];
 
-        this.grid[row][col].hit = true;
-        this.shots++;
-
-        if (this.grid[row][col].ship !== null) {
-            const shipIndex = this.grid[row][col].ship;
-            this.placedShips[shipIndex].hits++;
-        }
-
-        this.renderGrid();
-        this.updateUI();
-
-        if (this.checkVictory()) {
-            this.endGame();
+        for (let i = 0; i < this.gridSize; i++) {
+            let rowCount = 0;
+            let colCount = 0;
+            for (let j = 0; j < this.gridSize; j++) {
+                if (this.grid[i][j].isShip) rowCount++;
+                if (this.grid[j][i].isShip) colCount++;
+            }
+            this.rowClues.push(rowCount);
+            this.colClues.push(colCount);
         }
     }
 
-    updateUI() {
-        const shipsRemaining = this.placedShips.filter(s => s.hits < s.size).length;
-        const shipsSunk = this.placedShips.length - shipsRemaining;
+    revealStartingClues() {
+        // Reveal some cells based on difficulty
+        const revealCounts = {
+            easy: { ships: 8, water: 12 },
+            medium: { ships: 4, water: 6 },
+            hard: { ships: 2, water: 2 }
+        };
 
-        document.getElementById('shots-count').textContent = this.shots;
-        document.getElementById('ships-found').textContent = shipsSunk;
-        document.getElementById('ships-total').textContent = this.placedShips.length;
+        const counts = revealCounts[this.difficulty];
 
-        // Update ship list
-        const shipList = document.getElementById('ship-list');
-        shipList.innerHTML = this.placedShips.map((ship, i) => {
-            const isSunk = ship.hits >= ship.size;
-            let className = 'ship-item';
-            if (isSunk) className += ' sunk';
-            return `<div class="${className}">${ship.name} (${ship.size})</div>`;
-        }).join('');
+        // Reveal some ship cells
+        const shipCells = [];
+        for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+                if (this.grid[r][c].isShip) {
+                    shipCells.push([r, c]);
+                }
+            }
+        }
+
+        this.shuffle(shipCells);
+        for (let i = 0; i < Math.min(counts.ships, shipCells.length); i++) {
+            const [r, c] = shipCells[i];
+            this.playerGrid[r][c].revealed = true;
+            this.playerGrid[r][c].playerMark = 'ship';
+            this.playerGrid[r][c].isShip = true;
+        }
+
+        // Reveal some water cells
+        const waterCells = [];
+        for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+                if (!this.grid[r][c].isShip) {
+                    waterCells.push([r, c]);
+                }
+            }
+        }
+
+        this.shuffle(waterCells);
+        for (let i = 0; i < Math.min(counts.water, waterCells.length); i++) {
+            const [r, c] = waterCells[i];
+            this.playerGrid[r][c].revealed = true;
+            this.playerGrid[r][c].playerMark = 'water';
+        }
+    }
+
+    shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    handleCellClick(row, col) {
+        if (this.gameOver) return;
+        if (this.playerGrid[row][col].revealed) return;
+
+        const cell = this.playerGrid[row][col];
+
+        if (cell.playerMark === this.markMode) {
+            // Toggle off if same mode
+            cell.playerMark = null;
+        } else {
+            cell.playerMark = this.markMode;
+        }
+
+        this.render();
+        this.checkVictory();
     }
 
     checkVictory() {
-        return this.placedShips.every(ship => ship.hits >= ship.size);
+        // Check if all ship cells are marked as ship
+        // and no water cells are marked as ship
+        for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+                const solution = this.grid[r][c].isShip;
+                const playerMark = this.playerGrid[r][c].playerMark;
+
+                if (solution && playerMark !== 'ship') return false;
+                if (!solution && playerMark === 'ship') return false;
+            }
+        }
+
+        this.victory();
+        return true;
     }
 
-    endGame() {
+    victory() {
         this.gameOver = true;
 
-        document.getElementById('game-phase').style.display = 'none';
-        const gameOverEl = document.getElementById('game-over');
-        gameOverEl.style.display = 'block';
+        // Calculate points based on difficulty
+        const points = { easy: 1, medium: 2, hard: 3 }[this.difficulty];
 
-        document.getElementById('final-shots').textContent = this.shots;
+        HjernespilAPI.trackComplete('25');
+        HjernespilUI.showWinModal(points);
+    }
 
-        HjernespilAPI.sessionEvent('win');
-        HjernespilUI.showWinModal(2);
+    getShipSegmentType(row, col) {
+        if (!this.grid[row][col].isShip) return null;
+
+        const shipId = this.grid[row][col].shipId;
+        const ship = this.ships.find(s => s.id === shipId);
+        if (!ship) return 'submarine';
+
+        if (ship.size === 1) return 'submarine';
+
+        const cellIndex = ship.cells.findIndex(([r, c]) => r === row && c === col);
+
+        if (cellIndex === 0) {
+            return ship.horizontal ? 'left' : 'top';
+        } else if (cellIndex === ship.size - 1) {
+            return ship.horizontal ? 'right' : 'bottom';
+        } else {
+            return ship.horizontal ? 'horizontal' : 'vertical';
+        }
+    }
+
+    render() {
+        this.renderGrid();
+        this.renderFleetStatus();
+    }
+
+    renderGrid() {
+        const container = document.getElementById('puzzle-grid');
+        container.innerHTML = '';
+
+        // Create grid with clues
+        // Top-left corner (empty)
+        const corner = document.createElement('div');
+        corner.className = 'clue-cell corner';
+        container.appendChild(corner);
+
+        // Column clues (top row)
+        for (let c = 0; c < this.gridSize; c++) {
+            const clue = document.createElement('div');
+            clue.className = 'clue-cell col-clue';
+            clue.textContent = this.colClues[c];
+
+            // Check if column is complete
+            let marked = 0;
+            for (let r = 0; r < this.gridSize; r++) {
+                if (this.playerGrid[r][c].playerMark === 'ship') marked++;
+            }
+            if (marked === this.colClues[c]) clue.classList.add('complete');
+            if (marked > this.colClues[c]) clue.classList.add('over');
+
+            container.appendChild(clue);
+        }
+
+        // Grid rows with row clues
+        for (let r = 0; r < this.gridSize; r++) {
+            // Row clue
+            const rowClue = document.createElement('div');
+            rowClue.className = 'clue-cell row-clue';
+            rowClue.textContent = this.rowClues[r];
+
+            // Check if row is complete
+            let marked = 0;
+            for (let c = 0; c < this.gridSize; c++) {
+                if (this.playerGrid[r][c].playerMark === 'ship') marked++;
+            }
+            if (marked === this.rowClues[r]) rowClue.classList.add('complete');
+            if (marked > this.rowClues[r]) rowClue.classList.add('over');
+
+            container.appendChild(rowClue);
+
+            // Grid cells
+            for (let c = 0; c < this.gridSize; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+
+                const playerCell = this.playerGrid[r][c];
+
+                if (playerCell.revealed) {
+                    cell.classList.add('revealed');
+                    if (playerCell.playerMark === 'ship') {
+                        cell.classList.add('ship');
+                        const segType = this.getShipSegmentType(r, c);
+                        if (segType) cell.classList.add(segType);
+                    } else if (playerCell.playerMark === 'water') {
+                        cell.classList.add('water');
+                    }
+                } else if (playerCell.playerMark === 'ship') {
+                    cell.classList.add('ship', 'player-marked');
+                } else if (playerCell.playerMark === 'water') {
+                    cell.classList.add('water', 'player-marked');
+                }
+
+                cell.addEventListener('click', () => this.handleCellClick(r, c));
+                container.appendChild(cell);
+            }
+        }
+    }
+
+    renderFleetStatus() {
+        const container = document.getElementById('fleet-status');
+        container.innerHTML = '';
+
+        // Count placed ships by size in player grid
+        const placedBySize = {};
+
+        // Find connected ship groups in player grid
+        const visited = new Set();
+
+        for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+                if (this.playerGrid[r][c].playerMark === 'ship' && !visited.has(`${r},${c}`)) {
+                    const shipCells = this.floodFillShip(r, c, visited);
+                    const size = shipCells.length;
+                    placedBySize[size] = (placedBySize[size] || 0) + 1;
+                }
+            }
+        }
+
+        for (const shipType of this.fleet) {
+            const div = document.createElement('div');
+            div.className = 'fleet-item';
+
+            const placed = placedBySize[shipType.size] || 0;
+            const needed = shipType.count;
+
+            // Ship icons
+            const icons = '■'.repeat(shipType.size);
+
+            div.innerHTML = `
+                <span class="ship-icons">${icons}</span>
+                <span class="ship-name">${shipType.name}</span>
+                <span class="ship-count ${placed === needed ? 'complete' : ''}">${placed}/${needed}</span>
+            `;
+
+            container.appendChild(div);
+        }
+    }
+
+    floodFillShip(startR, startC, visited) {
+        const cells = [];
+        const stack = [[startR, startC]];
+
+        while (stack.length > 0) {
+            const [r, c] = stack.pop();
+            const key = `${r},${c}`;
+
+            if (visited.has(key)) continue;
+            if (r < 0 || r >= this.gridSize || c < 0 || c >= this.gridSize) continue;
+            if (this.playerGrid[r][c].playerMark !== 'ship') continue;
+
+            visited.add(key);
+            cells.push([r, c]);
+
+            // Only horizontal and vertical neighbors (ships are straight)
+            stack.push([r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]);
+        }
+
+        return cells;
     }
 }
 
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new Battleship();
+    new BattleshipPuzzle();
 });

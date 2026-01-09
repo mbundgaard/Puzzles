@@ -32,7 +32,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | 2025-12-30 | | Move all disks to the rightmost peg |
 | 23 | [Slange](23-slange/) | 2/3/4 | 2025-12-30 | | Classic snake game with win condition |
 | 24 | [Tangram](24-tangram/) | 1/3/5 | 2025-12-30 | 2026-01-06 | Drag and rotate pieces to cover the shape |
-| 25 | [Sænke Slagskibe](25-saenke-slagskibe/) | 2 | 2025-12-31 | 2025-12-31 | Find hidden ships on the grid - like a newspaper puzzle |
+| 25 | [Sænke Slagskibe](25-saenke-slagskibe/) | 1/2/3 | 2025-12-31 | 2026-01-09 | Logic puzzle - use row/column numbers to find the hidden fleet |
 | 26 | [Gæt Dyret](26-gaet-dyret/) | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
 | 27 | [Ordsøgning](27-ordsogning/) | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
 | 28 | [Labyrint](28-labyrint/) | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
