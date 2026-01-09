@@ -20,6 +20,7 @@
 		"language": "Language",
 		"name": "Name",
 		"namePlaceholder": "Your name for the leaderboard",
+		"nameSave": "Save name",
 		"nameSaved": "Saved!",
 		"feedback": "Feedback",
 		"info": "Info",

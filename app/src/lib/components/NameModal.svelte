@@ -84,7 +84,7 @@
 			{/if}
 
 			<button class="save-btn" class:saved onclick={handleSave} disabled={saved}>
-				{saved ? tr('settings.nameSaved') : tr('win.save')}
+				{saved ? tr('settings.nameSaved') : tr('settings.nameSave')}
 			</button>
 		</div>
 	</div>
