@@ -115,9 +115,9 @@ export async function loadGameTranslations(gameId: string): Promise<Translations
 	}
 }
 
-// Available languages for selector
+// Available languages for selector (using country codes for SVG flags)
 export const availableLanguages = [
-	{ code: 'da' as Language, flag: '🇩🇰', name: 'Dansk' },
-	{ code: 'en' as Language, flag: '🇬🇧', name: 'English' },
-	{ code: 'fr' as Language, flag: '🇫🇷', name: 'Français' }
+	{ code: 'da' as Language, countryCode: 'dk', name: 'Dansk' },
+	{ code: 'en' as Language, countryCode: 'gb', name: 'English' },
+	{ code: 'fr' as Language, countryCode: 'fr', name: 'Français' }
 ];
