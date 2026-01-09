@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useRegisterSW } from 'virtual:pwa-register/svelte';
 	import { t, translate, type Translations } from '$lib/i18n';
 
 	let translations = $state<Translations>({});
@@ -16,21 +15,31 @@
 	let updateSW: ((reloadPage?: boolean) => Promise<void>) | undefined;
 
 	onMount(() => {
+		// PWA module only available in production builds
+		if (import.meta.env.DEV) return;
+
+		// Register service worker for PWA updates
+		registerPWA();
+	});
+
+	async function registerPWA() {
+		const pwaModule = 'virtual:pwa-' + 'register/svelte';
+		const { useRegisterSW } = await (Function('m', 'return import(m)')(pwaModule));
 		const { needRefresh: needRefreshStore, updateServiceWorker } = useRegisterSW({
-			onRegistered(registration) {
+			onRegistered(registration: ServiceWorkerRegistration | undefined) {
 				console.log('SW registered:', registration);
 			},
-			onRegisterError(error) {
+			onRegisterError(error: Error) {
 				console.error('SW registration error:', error);
 			}
 		});
 
-		needRefreshStore.subscribe((value) => {
+		needRefreshStore.subscribe((value: boolean) => {
 			needRefresh = value;
 		});
 
 		updateSW = updateServiceWorker;
-	});
+	}
 
 	function handleUpdate() {
 		if (updateSW) {

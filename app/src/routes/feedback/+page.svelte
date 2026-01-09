@@ -169,18 +169,18 @@
 		margin: 0 auto;
 	}
 
-	.form-card, .success-card {
+	.form-card {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.success-card {
 		background: rgba(255, 255, 255, 0.08);
 		backdrop-filter: blur(10px);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 16px;
 		padding: 24px;
-	}
-
-	.form-card {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
 	}
 
 	.field {
