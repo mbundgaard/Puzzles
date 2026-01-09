@@ -31,7 +31,11 @@ public static class GameValidator
         ["22"] = "Tårnet i Hanoi",
         ["23"] = "Slange",
         ["24"] = "Tangram",
-        ["25"] = "Sænke Slagskibe"
+        ["25"] = "Sænke Slagskibe",
+        ["26"] = "Gæt Dyret",
+        ["27"] = "Ordsøgning",
+        ["28"] = "Labyrint",
+        ["29"] = "Strikkespil"
     };
 
     /// <summary>

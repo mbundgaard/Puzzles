@@ -36,6 +36,7 @@ This is a family project made just for fun - built 100% with [Claude Code](https
 | 26 | [Gæt Dyret](26-gaet-dyret/) | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
 | 27 | [Ordsøgning](27-ordsogning/) | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
 | 28 | [Labyrint](28-labyrint/) | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
+| 29 | [Strikkespil](29-strikkespil/) | 3 | 2026-01-09 | | Connect yarn loops - knitting-themed rotation puzzle |
 
 ## Features
 

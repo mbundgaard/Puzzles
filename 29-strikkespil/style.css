@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #0f0f23;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    background: linear-gradient(145deg, rgba(249, 168, 212, 0.1) 0%, rgba(251, 146, 60, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(249, 168, 212, 0.2);
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(128, 128, 128, 0.3);
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background: rgba(128, 128, 128, 0.5);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f9a8d4 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+}
+
+.stat-item {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.stat-item span {
+    color: #f9a8d4;
+    font-weight: 600;
+}
+
+button {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #f9a8d4 0%, #fb923c 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:hover {
+    box-shadow: 0 4px 15px rgba(249, 168, 212, 0.3);
+}
+
+/* Board */
+.board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    aspect-ratio: 1;
+}
+
+/* Individual cells */
+.cell {
+    aspect-ratio: 1;
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    overflow: hidden;
+}
+
+.cell:active {
+    transform: scale(0.95);
+}
+
+.cell.solved {
+    background: rgba(50, 70, 50, 0.8);
+}
+
+/* Yarn piece container */
+.yarn-piece {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease;
+}
+
+/* Yarn line base styles */
+.yarn-line {
+    position: absolute;
+    background: linear-gradient(90deg, #f9a8d4, #fbbf24, #f9a8d4);
+    background-size: 200% 100%;
+    border-radius: 4px;
+}
+
+/* Horizontal line (center) */
+.yarn-h {
+    width: 100%;
+    height: 20%;
+    top: 40%;
+    left: 0;
+}
+
+/* Vertical line (center) */
+.yarn-v {
+    width: 20%;
+    height: 100%;
+    top: 0;
+    left: 40%;
+}
+
+/* Half lines for corners and T-pieces */
+.yarn-top {
+    width: 20%;
+    height: 50%;
+    top: 0;
+    left: 40%;
+}
+
+.yarn-bottom {
+    width: 20%;
+    height: 50%;
+    bottom: 0;
+    left: 40%;
+}
+
+.yarn-left {
+    width: 50%;
+    height: 20%;
+    top: 40%;
+    left: 0;
+}
+
+.yarn-right {
+    width: 50%;
+    height: 20%;
+    top: 40%;
+    right: 0;
+}
+
+/* Center connector for corners and T-pieces */
+.yarn-center {
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    top: 40%;
+    left: 40%;
+    background: linear-gradient(135deg, #f9a8d4, #fbbf24);
+    border-radius: 50%;
+}
+
+/* Connection indicators */
+.cell.connected-top .yarn-top,
+.cell.connected-top .yarn-v {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.cell.connected-bottom .yarn-bottom,
+.cell.connected-bottom .yarn-v {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.cell.connected-left .yarn-left,
+.cell.connected-left .yarn-h {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.cell.connected-right .yarn-right,
+.cell.connected-right .yarn-h {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+/* Loose end indicator */
+.yarn-line.loose {
+    background: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+    animation: pulse-loose 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-loose {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Solved state */
+.board.solved .cell {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.board.solved .yarn-line {
+    background: linear-gradient(90deg, #4ade80, #22c55e, #4ade80);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+.board.solved .yarn-center {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+/* Rotation animation */
+.cell.rotating .yarn-piece {
+    transition: transform 0.2s ease;
+}
+
+/* Rules */
+.rules {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px 20px;
+    border-radius: 12px;
+}
+
+.rules h3 {
+    color: #f9a8d4;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.rules ul {
+    list-style: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+.rules li {
+    padding-left: 15px;
+    position: relative;
+}
+
+.rules li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #fb923c;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    .game-container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .board {
+        gap: 2px;
+        padding: 6px;
+    }
+
+    .controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        width: 100%;
+    }
+}

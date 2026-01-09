@@ -319,6 +319,7 @@
         .game-card.animal-guess .game-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .game-card.wordsearch .game-icon { background: linear-gradient(135deg, #a855f7, #7c3aed); }
         .game-card.maze .game-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .game-card.knitting .game-icon { background: linear-gradient(135deg, #f9a8d4, #fb923c); }
 
         .game-info {
             flex: 1;
@@ -1004,6 +1005,15 @@
 
             <!-- Game List (sorted by: updated desc, created desc) -->
             <div class="game-list">
+                <a href="29-strikkespil/index.html" class="game-card knitting" data-game="29">
+                    <div class="game-icon">🧶</div>
+                    <div class="game-info">
+                        <div class="game-name">Strikkespil</div>
+                        <div class="game-desc">Forbind alle garnstykkerne</div>
+                    </div>
+                    <div class="game-arrow">›</div>
+                </a>
+
                 <a href="10-ordleg/index.html" class="game-card ordleg" data-game="10">
                     <div class="game-icon">📝<span class="ai-indicator"><img src="icons/icons_433019.svg" alt="AI"></span></div>
                     <div class="game-info">
@@ -1304,7 +1314,7 @@
     <script src="shared/changelog.js"></script>
     <script>
         // App version (Unix timestamp UTC) - update before each commit
-        const APP_VERSION = 1767943057;
+        const APP_VERSION = 1767947530;
         window.APP_VERSION = APP_VERSION;
         localStorage.setItem('app_version', APP_VERSION);  // Store for game pages
 
@@ -1331,7 +1341,8 @@
             '25': { created: '2025-12-31', updated: '2025-12-31' },
             '26': { created: '2026-01-02', updated: '2026-01-03' },
             '27': { created: '2026-01-03' },
-            '28': { created: '2026-01-05' }
+            '28': { created: '2026-01-05' },
+            '29': { created: '2026-01-09' }
         };
 
         // Add badges dynamically based on dates
