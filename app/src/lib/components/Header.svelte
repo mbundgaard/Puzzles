@@ -2,12 +2,6 @@
 	import { t, translate, type Translations } from '$lib/i18n';
 	import { barsHidden } from '$lib/stores/scroll';
 
-	interface Props {
-		onTitleClick?: () => void;
-	}
-
-	let { onTitleClick }: Props = $props();
-
 	let translations = $state<Translations>({});
 	let hidden = $state(false);
 
@@ -22,15 +16,10 @@
 	function tr(key: string): string {
 		return translate(translations, key);
 	}
-
-	function handleTitleClick() {
-		if (onTitleClick) onTitleClick();
-	}
 </script>
 
 <header class="header" class:hidden>
-	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
-	<h1 class="title" onclick={handleTitleClick}>{tr('app.title')}</h1>
+	<h1 class="title">{tr('app.title')}</h1>
 	<p class="subtitle">{tr('app.subtitle')}</p>
 </header>
 
@@ -60,8 +49,6 @@
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
 		margin: 0 0 8px 0;
-		cursor: pointer;
-		-webkit-tap-highlight-color: transparent;
 	}
 
 	.subtitle {

@@ -32,8 +32,8 @@
 		}, 3000);
 	}
 
-	export async function checkVersion(showAlreadyUpdated = true) {
-		if (checking) return;
+	export async function checkVersion(showAlreadyUpdated = true): Promise<void> {
+		if (checking) return Promise.resolve();
 		checking = true;
 
 		try {

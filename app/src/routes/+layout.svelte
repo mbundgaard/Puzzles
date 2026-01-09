@@ -14,16 +14,34 @@
 	// Check if we're on a game page (should hide tab bar)
 	let isGamePage = $state(false);
 	let isHomePage = $state(false);
+	let wasOnGamePage = false;
 	let contentEl: HTMLElement;
 	let updateBanner: UpdateBanner;
+
+	// Pull to refresh state
+	let pullStartY = 0;
+	let isPulling = $state(false);
+	let pullDistance = $state(0);
+	let isRefreshing = $state(false);
+	const PULL_THRESHOLD = 80;
 
 	// Scroll handling for hiding/showing header and footer
 	let lastScrollTop = 0;
 	const scrollThreshold = 10;
 
 	page.subscribe((value) => {
-		isGamePage = value.url.pathname.includes('/spil/');
-		isHomePage = value.url.pathname === `${base}/` || value.url.pathname === `${base}`;
+		const newIsGamePage = value.url.pathname.includes('/spil/');
+		const newIsHomePage = value.url.pathname === `${base}/` || value.url.pathname === `${base}`;
+
+		// Check if returning from game to home - trigger silent version check
+		if (wasOnGamePage && newIsHomePage && !newIsGamePage) {
+			updateBanner?.checkVersion(false); // silent, no "already updated" toast
+		}
+
+		wasOnGamePage = newIsGamePage;
+		isGamePage = newIsGamePage;
+		isHomePage = newIsHomePage;
+
 		// Reset bars visibility and scroll state on navigation
 		barsHidden.set(false);
 		lastScrollTop = 0;
@@ -58,13 +76,60 @@
 		}
 	}
 
+	// Pull to refresh handlers
+	function handleTouchStart(e: TouchEvent) {
+		if (!isHomePage || isRefreshing) return;
+		if (contentEl && contentEl.scrollTop === 0) {
+			pullStartY = e.touches[0].clientY;
+			isPulling = true;
+		}
+	}
+
+	function handleTouchMove(e: TouchEvent) {
+		if (!isPulling || isRefreshing) return;
+		if (contentEl && contentEl.scrollTop > 0) {
+			isPulling = false;
+			pullDistance = 0;
+			return;
+		}
+
+		const currentY = e.touches[0].clientY;
+		const distance = currentY - pullStartY;
+
+		if (distance > 0) {
+			pullDistance = Math.min(distance, PULL_THRESHOLD * 1.5);
+		}
+	}
+
+	function handleTouchEnd() {
+		if (!isPulling || isRefreshing) return;
+		isPulling = false;
+
+		if (pullDistance >= PULL_THRESHOLD) {
+			isRefreshing = true;
+			updateBanner?.checkVersion(true).finally(() => {
+				isRefreshing = false;
+				pullDistance = 0;
+			});
+		} else {
+			pullDistance = 0;
+		}
+	}
+
 	onMount(() => {
 		language.init();
 
 		if (contentEl) {
 			contentEl.addEventListener('scroll', handleScroll, { passive: true });
+			contentEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+			contentEl.addEventListener('touchmove', handleTouchMove, { passive: true });
+			contentEl.addEventListener('touchend', handleTouchEnd);
+
 			return () => {
 				contentEl.removeEventListener('scroll', handleScroll);
+				contentEl.removeEventListener('touchstart', handleTouchStart);
+				contentEl.removeEventListener('touchmove', handleTouchMove);
+				contentEl.removeEventListener('touchend', handleTouchEnd);
 			};
 		}
 	});
@@ -85,7 +150,11 @@
 	{/if}
 
 	{#if isHomePage}
-		<Header onTitleClick={() => updateBanner?.checkVersion()} />
+		<Header />
+		<!-- Pull to refresh indicator -->
+		<div class="pull-indicator" class:visible={pullDistance > 0} style="transform: translateY({Math.min(pullDistance - 40, 40)}px)">
+			<div class="pull-spinner" class:spinning={isRefreshing}></div>
+		</div>
 	{/if}
 
 	<div class="content" class:has-header={!isGamePage} class:has-nav={!isGamePage} bind:this={contentEl}>
@@ -181,5 +250,36 @@
 			transform: scale(1.3) translate(10px, 10px);
 			opacity: 0.6;
 		}
+	}
+
+	/* Pull to refresh */
+	.pull-indicator {
+		position: fixed;
+		top: 60px;
+		left: 50%;
+		transform: translateX(-50%) translateY(-40px);
+		z-index: 95;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+
+	.pull-indicator.visible {
+		opacity: 1;
+	}
+
+	.pull-spinner {
+		width: 32px;
+		height: 32px;
+		border: 3px solid rgba(236, 72, 153, 0.3);
+		border-top-color: #ec4899;
+		border-radius: 50%;
+	}
+
+	.pull-spinner.spinning {
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
 	}
 </style>
