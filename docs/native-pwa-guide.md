@@ -690,7 +690,11 @@ When migrating each game:
 9. ✅ Migrate first game (Kryds og Bolle)
    - Created TicTacToe.svelte with full game logic
    - Created game-specific translations for all 3 languages
+   - Added WinModal integration with leaderboard submission
 10. ✅ Add English + French translations
+    - Added API client (api.ts) with leaderboard and win recording functions
+    - Added Leaderboard component with full i18n support
+    - Added WinModal component with full i18n support
 11. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
 12. ⬜ Continue game migrations (paused - only game 11 requested)
 13. ✅ Add cross-link between classic and new app
