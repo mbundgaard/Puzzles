@@ -18,34 +18,6 @@ const STITCHES = {
     PM: { type: 'P', color: 'M', name: 'Vrang mørk' }
 };
 
-// Fallback patterns (used if AI fails)
-const FALLBACK_PATTERNS = [
-    {
-        name: "Perlestrik tofarvet",
-        recipe: "Ret masker er lys, vrang masker er mørk. Skiftevis ret og vrang, forskudt hver række. Række 1 starter med ret lys.",
-        generate: (row, col) => (row + col) % 2 === 0 ? 'KL' : 'PM'
-    },
-    {
-        name: "Skaktern",
-        recipe: "2×2 blokke der skifter farve. Alle masker er ret. Øverste venstre blok er lys. Mønsteret gentages som et skakbræt.",
-        generate: (row, col) => (Math.floor(row / 2) + Math.floor(col / 2)) % 2 === 0 ? 'KL' : 'KM'
-    },
-    {
-        name: "Ramme",
-        recipe: "Lys ramme med mørk midte. Alle masker er ret. Række 1 og 6 er helt lys. Kolonne 1 og 10 er helt lys. Resten er mørk.",
-        generate: (row, col) => (row === 0 || row === ROWS - 1 || col === 0 || col === COLS - 1) ? 'KL' : 'KM'
-    },
-    {
-        name: "Kryds",
-        recipe: "Alle masker er ret. Midterste to kolonner (5-6) er mørk. Midterste to rækker (3-4) er mørk. Resten er lys.",
-        generate: (row, col) => {
-            const midCol = col === 4 || col === 5;
-            const midRow = row === 2 || row === 3;
-            return (midCol || midRow) ? 'KM' : 'KL';
-        }
-    }
-];
-
 // Game state
 let solution = [];
 let playerGrid = [];
@@ -178,7 +150,7 @@ function selectStitch(stitch) {
 
 // Check the solution
 function checkSolution() {
-    if (isLoading) return;
+    if (isLoading || solution.length === 0) return;
 
     let allFilled = true;
     let allCorrect = true;
@@ -246,58 +218,33 @@ function hideMessage() {
 
 // Fetch pattern from AI API
 async function fetchAIPattern() {
-    try {
-        const response = await fetch(`${API_BASE}/game/29/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
+    const response = await fetch(`${API_BASE}/game/29/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    });
 
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Validate response
-        if (!data.name || !data.recipe || !data.solution) {
-            throw new Error('Invalid response format');
-        }
-
-        if (data.solution.length !== ROWS) {
-            throw new Error('Invalid row count');
-        }
-
-        for (let row = 0; row < ROWS; row++) {
-            if (data.solution[row].length !== COLS) {
-                throw new Error('Invalid column count');
-            }
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Failed to fetch AI pattern:', error);
-        return null;
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
     }
-}
 
-// Use fallback pattern
-function useFallbackPattern() {
-    const pattern = FALLBACK_PATTERNS[Math.floor(Math.random() * FALLBACK_PATTERNS.length)];
+    const data = await response.json();
 
-    // Generate solution from pattern
-    const generatedSolution = [];
+    // Validate response
+    if (!data.name || !data.recipe || !data.solution) {
+        throw new Error('Invalid response format');
+    }
+
+    if (data.solution.length !== ROWS) {
+        throw new Error('Invalid row count');
+    }
+
     for (let row = 0; row < ROWS; row++) {
-        generatedSolution[row] = [];
-        for (let col = 0; col < COLS; col++) {
-            generatedSolution[row][col] = pattern.generate(row, col);
+        if (data.solution[row].length !== COLS) {
+            throw new Error('Invalid column count');
         }
     }
 
-    return {
-        name: pattern.name,
-        recipe: pattern.recipe,
-        solution: generatedSolution
-    };
+    return data;
 }
 
 // Generate a new pattern
@@ -322,28 +269,31 @@ async function newGame() {
     selectedCell = null;
     selectedStitch = null;
     gameWon = false;
+    solution = [];
     hideMessage();
     renderBoard();
     renderPicker();
 
-    // Try AI first, fall back to local patterns
-    let pattern = await fetchAIPattern();
-    if (!pattern) {
-        pattern = useFallbackPattern();
+    try {
+        const pattern = await fetchAIPattern();
+
+        // Set solution
+        solution = pattern.solution;
+
+        // Update UI
+        recipeText.innerHTML = `<strong>${pattern.name}:</strong> ${pattern.recipe}`;
+
+        // Track start
+        HjernespilAPI.trackStart('29');
+    } catch (error) {
+        console.error('Failed to fetch pattern:', error);
+        recipeText.innerHTML = '<em>Kunne ikke hente mønster. Prøv igen.</em>';
+        showMessage('Fejl ved hentning af mønster', 'error');
     }
-
-    // Set solution
-    solution = pattern.solution;
-
-    // Update UI
-    recipeText.innerHTML = `<strong>${pattern.name}:</strong> ${pattern.recipe}`;
 
     isLoading = false;
     newBtn.disabled = false;
     checkBtn.disabled = false;
-
-    // Track start
-    HjernespilAPI.trackStart('29');
 }
 
 // Initialize
