@@ -8,8 +8,8 @@ public interface IVersionStorage
     Task<int> GetLatestVersionAsync();
 
     /// <summary>
-    /// Updates the latest version if the provided version is newer.
-    /// Returns true if a newer version already exists (client should update).
+    /// Checks if the client version is older than the server version.
+    /// Returns true if server has a newer version (client should update).
     /// </summary>
     Task<bool> CheckAndUpdateVersionAsync(int clientVersion);
 

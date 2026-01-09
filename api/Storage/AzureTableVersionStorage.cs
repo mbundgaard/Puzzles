@@ -45,36 +45,14 @@ public class AzureTableVersionStorage : IVersionStorage
         try
         {
             var response = await _tableClient.GetEntityAsync<VersionEntity>(PartitionKey, RowKey);
-            var entity = response.Value;
+            var serverVersion = response.Value.Version;
 
-            if (clientVersion > entity.Version)
-            {
-                // Client has newer version - update storage
-                entity.Version = clientVersion;
-                await _tableClient.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace);
-                return false; // No newer version exists
-            }
-            else if (clientVersion < entity.Version)
-            {
-                // Storage has newer version - client should update
-                return true;
-            }
-            else
-            {
-                // Same version
-                return false;
-            }
+            // Only check - never auto-update. Use SetVersionAsync explicitly.
+            return clientVersion < serverVersion;
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
         {
-            // No version stored yet - store client's version
-            var entity = new VersionEntity
-            {
-                PartitionKey = PartitionKey,
-                RowKey = RowKey,
-                Version = clientVersion
-            };
-            await _tableClient.AddEntityAsync(entity);
+            // No version stored yet - client is up to date
             return false;
         }
     }
