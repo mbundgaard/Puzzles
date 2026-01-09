@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { t, translate, language, availableLanguages, type Translations, type Language } from '$lib/i18n';
+	import { getNickname } from '$lib/api';
 	import ChangelogModal from '$lib/components/ChangelogModal.svelte';
 	import AboutModal from '$lib/components/AboutModal.svelte';
 	import ShareQRModal from '$lib/components/ShareQRModal.svelte';
+	import NameModal from '$lib/components/NameModal.svelte';
 	import PageHeader from '$lib/components/PageHeader.svelte';
 
 	let translations = $state<Translations>({});
@@ -32,6 +34,15 @@
 	let showChangelog = $state(false);
 	let showAbout = $state(false);
 	let showShareQR = $state(false);
+	let showName = $state(false);
+
+	// Current nickname (reactive to modal close)
+	let currentNickname = $state(getNickname() || '');
+
+	function handleNameClose() {
+		showName = false;
+		currentNickname = getNickname() || '';
+	}
 
 	// Share via SMS
 	const appUrl = 'https://mbundgaard.github.io/Puzzles/';
@@ -106,6 +117,12 @@
 		<section class="settings-section">
 			<h2 class="section-title">{tr('settings.info')}</h2>
 			<div class="menu-list">
+				<button class="menu-item" onclick={() => showName = true}>
+					<span class="menu-icon">👤</span>
+					<span class="menu-label">{tr('settings.name')}</span>
+					<span class="menu-value">{currentNickname || '—'}</span>
+					<span class="menu-arrow">›</span>
+				</button>
 				<button class="menu-item" onclick={() => showChangelog = true}>
 					<span class="menu-icon">📋</span>
 					<span class="menu-label">{tr('settings.changelog')}</span>
@@ -137,6 +154,7 @@
 </div>
 
 <!-- Modals -->
+<NameModal isOpen={showName} onClose={handleNameClose} />
 <ChangelogModal isOpen={showChangelog} onClose={() => showChangelog = false} />
 <AboutModal isOpen={showAbout} onClose={() => showAbout = false} />
 <ShareQRModal isOpen={showShareQR} onClose={() => showShareQR = false} />
@@ -317,6 +335,12 @@
 	.menu-label {
 		flex: 1;
 		font-weight: 500;
+	}
+
+	.menu-value {
+		color: rgba(255, 255, 255, 0.4);
+		font-size: 0.9rem;
+		margin-right: 4px;
 	}
 
 	.menu-arrow {

@@ -1,0 +1,182 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { t, translate, type Translations } from '$lib/i18n';
+	import { getNickname, setNickname, isValidNickname } from '$lib/api';
+
+	interface Props {
+		isOpen: boolean;
+		onClose: () => void;
+	}
+
+	let { isOpen, onClose }: Props = $props();
+
+	let translations = $state<Translations>({});
+	t.subscribe((value) => {
+		translations = value;
+	});
+
+	function tr(key: string): string {
+		return translate(translations, key);
+	}
+
+	let name = $state('');
+	let saved = $state(false);
+	let error = $state(false);
+
+	onMount(() => {
+		name = getNickname() || '';
+	});
+
+	// Reset state when modal opens
+	$effect(() => {
+		if (isOpen) {
+			name = getNickname() || '';
+			saved = false;
+			error = false;
+		}
+	});
+
+	function handleSave() {
+		if (isValidNickname(name)) {
+			setNickname(name.trim());
+			saved = true;
+			error = false;
+			setTimeout(() => {
+				onClose();
+			}, 800);
+		} else {
+			error = true;
+			saved = false;
+		}
+	}
+
+	function handleOverlayClick(e: MouseEvent) {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
+	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			handleSave();
+		}
+	}
+</script>
+
+{#if isOpen}
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_interactive_supports_focus -->
+	<div class="overlay" onclick={handleOverlayClick} role="dialog" aria-modal="true">
+		<div class="modal">
+			<h2 class="title">{tr('settings.name')}</h2>
+
+			<input
+				type="text"
+				bind:value={name}
+				placeholder={tr('settings.namePlaceholder')}
+				class="name-input"
+				class:error
+				maxlength="20"
+				onkeydown={handleKeydown}
+			/>
+
+			{#if error}
+				<p class="error-text">{tr('win.nameError')}</p>
+			{/if}
+
+			<button class="save-btn" class:saved onclick={handleSave} disabled={saved}>
+				{saved ? tr('settings.nameSaved') : tr('win.save')}
+			</button>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.8);
+		z-index: 1000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+	}
+
+	.modal {
+		background: linear-gradient(135deg, #1e1e3f 0%, #2d1f4e 100%);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 20px;
+		padding: 28px;
+		width: 100%;
+		max-width: 340px;
+		text-align: center;
+	}
+
+	.title {
+		font-size: 1.5rem;
+		font-weight: 700;
+		background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #d946ef 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0 0 20px 0;
+	}
+
+	.name-input {
+		width: 100%;
+		padding: 14px 16px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 12px;
+		color: white;
+		font-size: 1rem;
+		font-family: 'Poppins', sans-serif;
+		text-align: center;
+		box-sizing: border-box;
+	}
+
+	.name-input::placeholder {
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.name-input:focus {
+		outline: none;
+		border-color: #ec4899;
+	}
+
+	.name-input.error {
+		border-color: #ef4444;
+	}
+
+	.error-text {
+		color: #ef4444;
+		font-size: 0.85rem;
+		margin: 8px 0 0 0;
+	}
+
+	.save-btn {
+		margin-top: 20px;
+		padding: 14px 32px;
+		font-size: 1rem;
+		font-weight: 600;
+		font-family: 'Poppins', sans-serif;
+		background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%);
+		color: white;
+		border: none;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.save-btn:active:not(:disabled) {
+		transform: scale(0.95);
+	}
+
+	.save-btn.saved {
+		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+	}
+
+	.save-btn:disabled {
+		cursor: default;
+	}
+</style>
