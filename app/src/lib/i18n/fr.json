@@ -1,0 +1,22 @@
+{
+	"app": {
+		"title": "Jeux Cérébraux",
+		"subtitle": "Entraînez votre cerveau avec des défis amusants",
+		"back": "Retour",
+		"settings": "Paramètres",
+		"language": "Langue",
+		"newGame": "Nouveau Jeu",
+		"classicVersion": "Version classique"
+	},
+	"languages": {
+		"da": "Dansk",
+		"en": "English",
+		"fr": "Français"
+	},
+	"games": {
+		"11-tictactoe": {
+			"title": "Morpion",
+			"description": "Stratégie classique contre l'IA"
+		}
+	}
+}

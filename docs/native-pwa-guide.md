@@ -636,6 +636,8 @@ When migrating each game:
 | 06 | Minestryger | ⬜ | ✅ | ⬜ | ⬜ |
 | 07 | Hukommelse | ⬜ | ✅ | ⬜ | ⬜ |
 | ... | ... | ... | ... | ... | ... |
+| 11 | Kryds og Bolle | ✅ | ✅ | ✅ | ✅ |
+| ... | ... | ... | ... | ... | ... |
 
 ---
 
@@ -674,15 +676,25 @@ When migrating each game:
 3. ✅ Update all internal links to work from `/app_classic/` subfolder
 4. ✅ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app_classic/`
    - Added redirect at root (`/index.html`) → `/app_classic/`
-5. ⬜ Initialize SvelteKit project in `/app/` folder
-6. ⬜ Set up GitHub Action to deploy SvelteKit to `/app/` and classic to `/app_classic/`
-7. ⬜ Set up i18n infrastructure
-8. ⬜ Build app shell with language selector
-9. ⬜ Migrate first game (Kryds og Bolle)
-10. ⬜ Add English + French translations
+5. ✅ Initialize SvelteKit project in `/app/` folder
+   - Created package.json, svelte.config.js, vite.config.js
+   - Set up app.html with PWA meta tags and app.css with global styles
+6. ✅ Set up GitHub Action to deploy SvelteKit to `/app/` and classic to `/app_classic/`
+   - Created `.github/workflows/build-app.yml`
+7. ✅ Set up i18n infrastructure
+   - Created shared translations (da.json, en.json, fr.json)
+   - Implemented language store with URL param > localStorage > browser detection
+8. ✅ Build app shell with language selector
+   - Created LanguageSelector component with dropdown
+   - Created +layout.svelte and +page.svelte with game grid
+9. ✅ Migrate first game (Kryds og Bolle)
+   - Created TicTacToe.svelte with full game logic
+   - Created game-specific translations for all 3 languages
+10. ✅ Add English + French translations
 11. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
-12. ⬜ Continue game migrations
-13. ⬜ Add cross-link between classic and new app
+12. ⬜ Continue game migrations (paused - only game 11 requested)
+13. ✅ Add cross-link between classic and new app
+    - Footer link in new app points to /Puzzles/app_classic/
 
 ### Cutover Phase (When Ready)
 

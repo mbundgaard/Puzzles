@@ -1,0 +1,29 @@
+{
+	"title": "Tic-Tac-Toe",
+	"newGame": "New Game",
+	"status": {
+		"yourTurn": "Your turn (X)",
+		"aiThinking": "AI thinking...",
+		"won": "You won!",
+		"lost": "AI won!",
+		"draw": "Draw!"
+	},
+	"score": {
+		"you": "You",
+		"ai": "AI",
+		"draw": "Draw"
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Normal",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "You play as X, the computer is O",
+		"rule2": "Tap a cell to place your mark",
+		"rule3": "Get three in a row (horizontal, vertical, or diagonal) to win",
+		"rule4": "Choose difficulty to adjust the AI level"
+	}
+}

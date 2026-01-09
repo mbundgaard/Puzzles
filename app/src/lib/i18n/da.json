@@ -1,0 +1,22 @@
+{
+	"app": {
+		"title": "Hjernespil",
+		"subtitle": "Træn din hjerne med sjove udfordringer",
+		"back": "Tilbage",
+		"settings": "Indstillinger",
+		"language": "Sprog",
+		"newGame": "Nyt Spil",
+		"classicVersion": "Klassisk version"
+	},
+	"languages": {
+		"da": "Dansk",
+		"en": "English",
+		"fr": "Français"
+	},
+	"games": {
+		"11-tictactoe": {
+			"title": "Kryds og Bolle",
+			"description": "Klassisk strategi mod AI"
+		}
+	}
+}

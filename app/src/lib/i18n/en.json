@@ -1,0 +1,22 @@
+{
+	"app": {
+		"title": "Brain Games",
+		"subtitle": "Train your brain with fun challenges",
+		"back": "Back",
+		"settings": "Settings",
+		"language": "Language",
+		"newGame": "New Game",
+		"classicVersion": "Classic version"
+	},
+	"languages": {
+		"da": "Dansk",
+		"en": "English",
+		"fr": "Français"
+	},
+	"games": {
+		"11-tictactoe": {
+			"title": "Tic-Tac-Toe",
+			"description": "Classic strategy vs AI"
+		}
+	}
+}

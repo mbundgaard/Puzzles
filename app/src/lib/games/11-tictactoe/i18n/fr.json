@@ -1,0 +1,29 @@
+{
+	"title": "Morpion",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"yourTurn": "Votre tour (X)",
+		"aiThinking": "L'IA réfléchit...",
+		"won": "Vous avez gagné !",
+		"lost": "L'IA a gagné !",
+		"draw": "Match nul !"
+	},
+	"score": {
+		"you": "Vous",
+		"ai": "IA",
+		"draw": "Nul"
+	},
+	"difficulty": {
+		"label": "Difficulté",
+		"easy": "Facile",
+		"medium": "Normal",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Vous jouez X, l'ordinateur joue O",
+		"rule2": "Appuyez sur une case pour placer votre marque",
+		"rule3": "Alignez trois symboles (horizontal, vertical ou diagonal) pour gagner",
+		"rule4": "Choisissez la difficulté pour ajuster le niveau de l'IA"
+	}
+}
