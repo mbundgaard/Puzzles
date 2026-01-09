@@ -668,20 +668,23 @@ When migrating each game:
 ### Development Phase (Parallel Deployment)
 
 1. ✅ Create this implementation guide
-2. ⬜ Initialize SvelteKit project in `/app/` with `/Puzzles/app` base path
-3. ⬜ Set up GitHub Action to deploy to `/app/` subfolder
-4. ⬜ Set up i18n infrastructure
-5. ⬜ Build app shell with language selector
-6. ⬜ Migrate first game (Kryds og Bolle)
-7. ⬜ Add English + French translations
-8. ⬜ Test at `https://mbundgaard.github.io/Puzzles/app/`
-9. ⬜ Continue game migrations
-10. ⬜ Add cross-link from classic site to new app ("Prøv ny version")
+2. ⬜ Move current classic site into `/app/` folder
+3. ⬜ Update all internal links to work from `/app/` subfolder
+4. ⬜ Push and verify classic site works at `https://mbundgaard.github.io/Puzzles/app/`
+5. ⬜ Initialize SvelteKit project (replacing classic files in `/app/`)
+6. ⬜ Set up GitHub Action to deploy to `/app/` subfolder
+7. ⬜ Set up i18n infrastructure
+8. ⬜ Build app shell with language selector
+9. ⬜ Migrate first game (Kryds og Bolle)
+10. ⬜ Add English + French translations
+11. ⬜ Test SvelteKit app at `https://mbundgaard.github.io/Puzzles/app/`
+12. ⬜ Continue game migrations
+13. ⬜ Add cross-link from classic site to new app ("Prøv ny version")
 
 ### Cutover Phase (When Ready)
 
-11. ⬜ Move classic site to `/classic/` subfolder
-12. ⬜ Update SvelteKit base path to `/Puzzles`
-13. ⬜ Update GitHub Action to deploy new app at root
-14. ⬜ Add "Classic version" link in new app footer
-15. ⬜ Announce migration to users
+14. ⬜ Move classic site to `/classic/` subfolder
+15. ⬜ Update SvelteKit base path to `/Puzzles`
+16. ⬜ Update GitHub Action to deploy new app at root
+17. ⬜ Add "Classic version" link in new app footer
+18. ⬜ Announce migration to users
