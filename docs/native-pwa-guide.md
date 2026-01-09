@@ -175,18 +175,44 @@ Three tabs in the bottom navigation bar:
 
 ### Navigation Visibility
 
-**Bottom nav hides when playing a game** to maximize screen space:
+Bottom nav behavior varies by context:
+
+**On home/settings pages**: Hide on scroll down, show on scroll up (like Instagram/Twitter)
+**On game pages**: Always hidden for full-screen gameplay
 
 ```
-Home/Settings:              Game page:
-┌───────────────┐           ┌───────────────┐
-│               │           │               │
-│  Content      │           │    Game       │
-│               │           │  (full screen)│
-│               │           │               │
-├───────────────┤           │         ✕     │  ← Only close button
-│ 🎮  💡  ⚙️    │           │               │
-└───────────────┘           └───────────────┘
+Home (idle):       Home (scrolling):    Game page:
+┌─────────────┐    ┌─────────────┐      ┌─────────────┐
+│             │    │             │      │             │
+│   Content   │    │   Content   │      │    Game     │
+│             │    │             │      │ (full screen│
+│             │    │   (more     │      │             │
+├─────────────┤    │   space)    │      │       ✕     │
+│ 🎮  💡  ⚙️  │    │             │      │             │
+└─────────────┘    └─────────────┘      └─────────────┘
+     visible):         hidden            always hidden
+```
+
+```svelte
+<!-- Bottom nav with scroll detection -->
+<script>
+  let lastScrollY = 0;
+  let navVisible = true;
+
+  function handleScroll() {
+    const currentY = window.scrollY;
+    navVisible = currentY < lastScrollY || currentY < 50;
+    lastScrollY = currentY;
+  }
+</script>
+
+<svelte:window on:scroll={handleScroll} />
+
+{#if !isGamePage}
+  <nav class="bottom-nav" class:hidden={!navVisible}>
+    <!-- tabs -->
+  </nav>
+{/if}
 ```
 
 Games get full viewport height. The existing close button (✕) handles navigation back to the game list.
