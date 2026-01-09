@@ -71,6 +71,10 @@
 		},
 		"madeBy": "Lavet med ❤️ i Danmark"
 	},
+	"update": {
+		"available": "Ny version tilgængelig",
+		"refresh": "Opdater"
+	},
 	"notMigrated": {
 		"title": "Kommer snart!",
 		"message": "Dette spil er ikke blevet migreret til den nye app endnu.",

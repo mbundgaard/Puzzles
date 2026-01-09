@@ -6,6 +6,7 @@
 	import { barsHidden } from '$lib/stores/scroll';
 	import BottomTabBar from '$lib/components/BottomTabBar.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import UpdateBanner from '$lib/components/UpdateBanner.svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -93,6 +94,8 @@
 	{#if !isGamePage}
 		<BottomTabBar />
 	{/if}
+
+	<UpdateBanner />
 </div>
 
 <style>

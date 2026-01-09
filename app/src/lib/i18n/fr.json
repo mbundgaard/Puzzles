@@ -71,6 +71,10 @@
 		},
 		"madeBy": "Fait avec ❤️ au Danemark"
 	},
+	"update": {
+		"available": "Nouvelle version disponible",
+		"refresh": "Mettre à jour"
+	},
 	"notMigrated": {
 		"title": "Bientôt disponible !",
 		"message": "Ce jeu n'a pas encore été migré vers la nouvelle app.",
