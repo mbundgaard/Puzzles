@@ -19,6 +19,8 @@
 	--color-error: #ef4444;
 	--color-warning: #eab308;
 	--font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--header-height: 110px;
+	--header-padding-top: 8px;
 }
 
 html, body {

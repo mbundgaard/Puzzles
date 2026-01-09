@@ -29,12 +29,12 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		padding: 20px 20px 20px;
-		padding-top: max(20px, calc(env(safe-area-inset-top) + 12px));
+		padding: var(--header-padding-top) 20px 36px;
+		padding-top: max(var(--header-padding-top), calc(env(safe-area-inset-top) + 4px));
 		text-align: center;
 		background: linear-gradient(to bottom, rgba(15, 15, 35, 0.98) 0%, rgba(15, 15, 35, 0.9) 70%, transparent 100%);
 		z-index: 90;
-		transition: transform 0.3s ease;
+		transition: transform 0.4s ease-out;
 	}
 
 	.header.hidden {

@@ -86,7 +86,7 @@
 		<Header />
 	{/if}
 
-	<div class="content" class:has-header={isHomePage} class:has-nav={!isGamePage} bind:this={contentEl}>
+	<div class="content" class:has-header={!isGamePage} class:has-nav={!isGamePage} bind:this={contentEl}>
 		{@render children()}
 	</div>
 
@@ -115,7 +115,7 @@
 	}
 
 	.content.has-header {
-		padding-top: 90px;
+		padding-top: var(--header-height);
 	}
 
 	.content.has-nav {

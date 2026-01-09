@@ -160,7 +160,6 @@
 
 <style>
 	.feedback-page {
-		padding-top: 90px;
 		padding-bottom: 20px;
 	}
 

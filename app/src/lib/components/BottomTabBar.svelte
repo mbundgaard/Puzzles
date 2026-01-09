@@ -87,15 +87,15 @@
 		left: 0;
 		right: 0;
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-evenly;
 		align-items: center;
 		background: rgba(15, 15, 30, 0.95);
 		backdrop-filter: blur(20px);
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 8px 0;
+		padding: 8px 10px;
 		padding-bottom: max(8px, env(safe-area-inset-bottom));
 		z-index: 100;
-		transition: transform 0.3s ease;
+		transition: transform 0.4s ease-out;
 	}
 
 	.tab-bar.hidden {
@@ -103,11 +103,12 @@
 	}
 
 	.tab {
+		flex: 1;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 4px;
-		padding: 8px 20px;
+		padding: 8px 0;
 		text-decoration: none;
 		color: rgba(255, 255, 255, 0.5);
 		transition: all 0.2s ease;
