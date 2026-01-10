@@ -89,7 +89,6 @@
 			<div class="success-card">
 				<span class="checkmark">✓</span>
 				<p>{tr('feedback.sent')}</p>
-				<p class="redirect-hint">{tr('feedback.redirecting')}</p>
 			</div>
 		{:else}
 			<div class="form-card">
@@ -316,9 +315,4 @@
 		margin: 0;
 	}
 
-	.redirect-hint {
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.5);
-		margin-top: 12px;
-	}
 </style>

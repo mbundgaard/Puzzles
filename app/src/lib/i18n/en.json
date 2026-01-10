@@ -114,6 +114,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"88": "Removed 'returning to home' message after feedback submission",
 		"74": "Removed visible scrollbars in the app",
 		"68": "Battleship is now multiplayer!",
 		"84": "Name prompt now appears when starting a game without a saved name",

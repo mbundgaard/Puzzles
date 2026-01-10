@@ -114,6 +114,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"88": "Suppression du message 'retour à l'accueil' après envoi de commentaires",
 		"74": "Suppression des barres de défilement visibles dans l'app",
 		"68": "Bataille Navale est maintenant multijoueur!",
 		"84": "L'invite de nom apparaît maintenant au démarrage d'un jeu sans nom enregistré",

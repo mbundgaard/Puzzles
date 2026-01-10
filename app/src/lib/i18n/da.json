@@ -114,6 +114,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"88": "Fjernet 'går tilbage til forsiden' besked efter feedback",
 		"74": "Fjernet synlige scrollbars i appen",
 		"68": "Sænke Slagskibe er nu multiplayer!",
 		"84": "Navneprompt vises nu ved start af spil uden gemt navn",
