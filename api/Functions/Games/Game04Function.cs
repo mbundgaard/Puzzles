@@ -91,46 +91,46 @@ public class Game04Function
 
     private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category)
     {
-        var languageInstructions = language.ToLower() switch
+        var outputLanguage = language.ToLower() switch
         {
-            "da" => "Skriv alle spørgsmål og svar på DANSK.",
-            "en" => "Write all questions and answers in ENGLISH.",
-            "fr" => "Écrivez toutes les questions et réponses en FRANÇAIS.",
-            _ => "Write all questions and answers in ENGLISH."
+            "da" => "Danish",
+            "en" => "English",
+            "fr" => "French",
+            _ => "English"
         };
 
-        var systemPrompt = $@"Du er en quiz-generator. Generer præcis 12 trivia-spørgsmål om emnet: {category}
+        var systemPrompt = $@"You are a quiz generator. Generate exactly 12 trivia questions about: {category}
 
-{languageInstructions}
+IMPORTANT: Write all questions and answers in {outputLanguage}.
 
-Regler:
-1. Generer PRÆCIS 12 spørgsmål
-2. Spørgsmål 1-4: NEMME (almindelig viden, de fleste kan svare)
-3. Spørgsmål 5-8: MELLEM (kræver noget viden)
-4. Spørgsmål 9-12: SVÆRE (specifik viden, udfordrende)
-5. Hvert spørgsmål har PRÆCIS 4 svarmuligheder
-6. Kun ÉT svar er korrekt
-7. Placer det korrekte svar på en TILFÆLDIG position (0-3) for hvert spørgsmål
-8. Forkerte svar skal være plausible men tydeligt forkerte
-9. Ingen trick-spørgsmål eller tvetydige svar
-10. Alle fakta skal være korrekte
+Rules:
+1. Generate EXACTLY 12 questions
+2. Questions 1-4: EASY (common knowledge, most people can answer)
+3. Questions 5-8: MEDIUM (requires some knowledge)
+4. Questions 9-12: HARD (specific knowledge, challenging)
+5. Each question has EXACTLY 4 answer options
+6. Only ONE answer is correct
+7. Place the correct answer at a RANDOM position (0-3) for each question
+8. Wrong answers should be plausible but clearly incorrect
+9. No trick questions or ambiguous answers
+10. All facts must be accurate
 
-Svar KUN med JSON i dette format:
+Respond ONLY with JSON in this format:
 {{
   ""questions"": [
     {{
-      ""question"": ""Spørgsmålstekst her?"",
-      ""options"": [""Svar A"", ""Svar B"", ""Svar C"", ""Svar D""],
+      ""question"": ""Question text here?"",
+      ""options"": [""Answer A"", ""Answer B"", ""Answer C"", ""Answer D""],
       ""correct"": 2
     }}
   ]
 }}
 
-correct er index (0-3) på det rigtige svar i options-arrayet.";
+correct is the index (0-3) of the correct answer in the options array.";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = $"Generer 12 quiz-spørgsmål om: {category}" } },
+            new[] { new AIMessage { Role = "user", Content = $"Generate 12 quiz questions about: {category}" } },
             new AIRequestOptions { Temperature = 0.8 }
         );
 
