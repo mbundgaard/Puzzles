@@ -24,6 +24,7 @@
 	// Add new entries at the TOP of this array
 	const changelogEntries = [
 		{ issue: 77, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Language selection changed to native dropdown' },
+		{ issue: 60, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Games now show sparkle (new) and dizzy star (updated) badges' },
 		{ issue: 79, closedAt: '2026-01-10T17:00:00Z', submitter: 'Sara', text: 'Feedback popup now only appears after one week of use' },
 		{ issue: 76, closedAt: '2026-01-10T16:00:00Z', submitter: 'Martin', text: 'Feedback page now auto-redirects to home after submission' },
 		{ issue: 73, closedAt: '2026-01-10T14:00:00Z', submitter: 'Martin', text: 'New SvelteKit app with modern UI, i18n, PWA install banner, and weekly feedback popup' },
