@@ -138,8 +138,6 @@ Rules:
 9. No trick questions or ambiguous answers
 10. All facts must be accurate
 
-IMPORTANT: Easy questions (1-4) must be genuinely easy! Common knowledge that anyone would know.
-
 Respond ONLY with JSON in this format:
 {{
   ""questions"": [
