@@ -24,6 +24,7 @@
 	// Changelog entries - sorted by closedAt descending (newest first)
 	// Add new entries at the TOP of this array
 	const changelogEntries = [
+		{ issue: 70, closedAt: '2026-01-10T12:00:00Z', submitter: 'Martin', text: 'Added English and French translations' },
 		{ issue: 66, closedAt: '2026-01-09T11:55:00Z', submitter: 'Sara', text: 'Games now auto-sorted by most recent activity' },
 		{ issue: 17, closedAt: '2026-01-09T10:00:00Z', submitter: 'Sara', text: 'Added Strikkespil - rotate yarn tiles to connect all loose ends' },
 		{ issue: 63, closedAt: '2026-01-09T09:30:00Z', submitter: 'Sara', text: 'Redesigned Sænke Slagskibe as newspaper-style logic puzzle' },
