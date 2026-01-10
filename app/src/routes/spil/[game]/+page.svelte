@@ -3,7 +3,9 @@
 	import { onMount } from 'svelte';
 	import { getGame } from '$lib/games/registry';
 	import { language, loadGameTranslations, t, translate, type Translations } from '$lib/i18n';
+	import { getNickname } from '$lib/api';
 	import GameShell from '$lib/components/GameShell.svelte';
+	import NameModal from '$lib/components/NameModal.svelte';
 	import type { ComponentType } from 'svelte';
 
 	let gameId = $derived($page.params.game);
@@ -13,6 +15,7 @@
 	let gameTranslations = $state<Translations>({});
 	let appTranslations = $state<Translations>({});
 	let currentLang = $state<string>('da');
+	let showNamePrompt = $state(false);
 
 	language.subscribe((value) => {
 		currentLang = value;
@@ -26,7 +29,16 @@
 		return translate(appTranslations, key);
 	}
 
+	function handleNameModalClose() {
+		showNamePrompt = false;
+	}
+
 	onMount(async () => {
+		// Check if nickname exists, prompt if not
+		if (!getNickname()) {
+			showNamePrompt = true;
+		}
+
 		if (gameInfo) {
 			const module = await gameInfo.component();
 			GameComponent = module.default;
@@ -64,6 +76,8 @@
 		<div class="spinner"></div>
 	</div>
 {/if}
+
+<NameModal isOpen={showNamePrompt} onClose={handleNameModalClose} />
 
 <style>
 	.not-migrated {
