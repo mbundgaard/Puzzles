@@ -279,6 +279,7 @@ export const games: GameInfo[] = [
 		accentColor: '#a855f7',
 		points: 5,
 		created: '2026-01-03',
+		updated: '2026-01-10',
 		ai: true
 	},
 	{

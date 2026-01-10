@@ -1,6 +1,7 @@
 {
 	"title": "Ordsogning",
 	"newGame": "Nyt Spil",
+	"giveUp": "Giv Op",
 	"selectDifficulty": "Valg svarhedsgrad:",
 	"points": "point",
 	"status": "Fundet: {found}/{total}",

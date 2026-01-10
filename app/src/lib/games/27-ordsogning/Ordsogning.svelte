@@ -60,6 +60,7 @@
 	let foundWords = $state<Set<string>>(new Set());
 	let startCell = $state<StartCell | null>(null);
 	let gameOver = $state(false);
+	let gaveUp = $state(false);
 
 	// Valid directions: right, down, diagonal down-right, diagonal up-right
 	const directions = [
@@ -102,6 +103,7 @@
 			foundWords = new Set();
 			startCell = null;
 			gameOver = false;
+			gaveUp = false;
 
 			phase = 'game';
 
@@ -271,6 +273,16 @@
 		showWinModal = false;
 	}
 
+	function giveUp(): void {
+		if (gameOver || gaveUp) return;
+
+		// Reveal all words
+		const allWords = wordPositions.map(wp => wp.word);
+		foundWords = new Set(allWords);
+		gameOver = true;
+		gaveUp = true;
+	}
+
 	// Calculate line positions for SVG overlay
 	function getFoundLines(): Array<{ x1: number; y1: number; x2: number; y2: number }> {
 		const lines: Array<{ x1: number; y1: number; x2: number; y2: number }> = [];
@@ -377,7 +389,12 @@
 			{/each}
 		</div>
 
-		<button class="btn" onclick={showDifficultySelect}>{t('newGame')}</button>
+		<div class="button-row">
+			{#if !gameOver}
+				<button class="btn btn-secondary" onclick={giveUp}>{t('giveUp')}</button>
+			{/if}
+			<button class="btn" onclick={showDifficultySelect}>{t('newGame')}</button>
+		</div>
 	{/if}
 
 	<div class="rules">
@@ -608,6 +625,12 @@
 	}
 
 	/* Button */
+	.button-row {
+		display: flex;
+		gap: 12px;
+		margin-bottom: 20px;
+	}
+
 	.btn {
 		padding: 12px 30px;
 		font-size: 1rem;
@@ -619,7 +642,11 @@
 		border-radius: 25px;
 		cursor: pointer;
 		transition: all 0.3s ease;
-		margin-bottom: 20px;
+	}
+
+	.btn-secondary {
+		background: rgba(100, 116, 139, 0.4);
+		border: 1px solid rgba(148, 163, 184, 0.5);
 	}
 
 	.btn:active {

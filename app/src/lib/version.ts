@@ -1,3 +1,3 @@
 // App version as Unix timestamp (seconds since epoch)
 // Updated automatically before each deployment
-export const APP_VERSION = 1768078446;
+export const APP_VERSION = 1768078757;

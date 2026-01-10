@@ -1,6 +1,7 @@
 {
 	"title": "Word Search",
 	"newGame": "New Game",
+	"giveUp": "Give Up",
 	"selectDifficulty": "Select difficulty:",
 	"points": "points",
 	"status": "Found: {found}/{total}",

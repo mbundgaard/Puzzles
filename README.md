@@ -32,7 +32,7 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 | 24 | Tangram | 1/3/5 | 2025-12-30 | 2026-01-06 | Drag and rotate pieces to cover the shape |
 | 25 | Sænke Slagskibe | 3/4/5 | 2025-12-31 | 2026-01-10 | Multiplayer battleship - play against a friend! |
 | 26 | Gæt Dyret | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
-| 27 | Ordsøgning | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
+| 27 | Ordsøgning | 1/3/5 | 2026-01-03 | 2026-01-10 | Find hidden words in the grid - AI generated puzzles |
 | 28 | Labyrint | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
 | 29 | Maskeværk | 3 | 2026-01-09 | | Read the AI-generated knitting pattern and fill the grid correctly |
 

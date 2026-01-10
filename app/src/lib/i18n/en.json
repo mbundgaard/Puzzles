@@ -114,6 +114,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"71": "Added 'Give Up' button to Word Search that reveals all words",
 		"86": "Added favorite games - tap the heart to pin games to the top",
 		"88": "Removed 'returning to home' message after feedback submission",
 		"74": "Removed visible scrollbars in the app",
