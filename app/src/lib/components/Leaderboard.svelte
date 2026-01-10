@@ -181,7 +181,13 @@
 		padding: 8px;
 		max-height: 420px;
 		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 		margin-top: 16px;
+	}
+
+	.list::-webkit-scrollbar {
+		display: none;
 	}
 
 	.message {

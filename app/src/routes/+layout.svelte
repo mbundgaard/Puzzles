@@ -190,6 +190,12 @@
 		flex-direction: column;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.content::-webkit-scrollbar {
+		display: none;
 	}
 
 	.content.has-header {

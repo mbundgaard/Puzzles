@@ -233,9 +233,15 @@
 		width: 100%;
 		max-height: 90vh;
 		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 		animation: slideUp 0.3s ease;
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		position: relative;
+	}
+
+	.modal::-webkit-scrollbar {
+		display: none;
 	}
 
 	@keyframes slideUp {
