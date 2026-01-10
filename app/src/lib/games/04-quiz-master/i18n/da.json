@@ -1,8 +1,8 @@
 {
 	"title": "Quiz Mester",
 	"newGame": "Nyt Spil",
+	"todaysCategories": "Dagens kategorier",
 	"selectCategory": "Vælg en kategori",
-	"newCategories": "Nye kategorier",
 	"questionNumber": "Spørgsmål {current} af {total}",
 	"points": "point",
 	"banked": "I banken",

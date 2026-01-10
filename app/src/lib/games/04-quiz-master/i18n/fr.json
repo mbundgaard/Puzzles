@@ -1,8 +1,8 @@
 {
 	"title": "Maître du Quiz",
 	"newGame": "Nouvelle partie",
+	"todaysCategories": "Catégories du jour",
 	"selectCategory": "Choisissez une catégorie",
-	"newCategories": "Nouvelles catégories",
 	"questionNumber": "Question {current} sur {total}",
 	"points": "points",
 	"banked": "En banque",

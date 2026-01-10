@@ -1,8 +1,8 @@
 {
 	"title": "Quiz Master",
 	"newGame": "New Game",
+	"todaysCategories": "Today's categories",
 	"selectCategory": "Choose a category",
-	"newCategories": "New categories",
 	"questionNumber": "Question {current} of {total}",
 	"points": "points",
 	"banked": "Banked",

@@ -68,20 +68,51 @@
 	let isLastQuestionInLevel = $derived(questionInLevel === QUESTIONS_PER_LEVEL - 1);
 	let isCheckpoint = $derived(currentQuestionIndex > 0 && currentQuestionIndex % QUESTIONS_PER_LEVEL === 0);
 
+	// Simple hash function for seeding
+	function hashString(str: string): number {
+		let hash = 0;
+		for (let i = 0; i < str.length; i++) {
+			const char = str.charCodeAt(i);
+			hash = ((hash << 5) - hash) + char;
+			hash = hash & hash; // Convert to 32bit integer
+		}
+		return Math.abs(hash);
+	}
+
+	// Seeded random number generator
+	function seededRandom(seed: number): () => number {
+		return function() {
+			seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+			return seed / 0x7fffffff;
+		};
+	}
+
+	// Get today's categories (same for everyone, changes daily)
+	function getDailyCategories(): string[] {
+		const allCategories = (translations as Record<string, unknown>)['categories'] as string[];
+		if (!Array.isArray(allCategories) || allCategories.length === 0) {
+			return [];
+		}
+
+		// Use today's date as seed
+		const today = new Date().toISOString().split('T')[0]; // "2026-01-10"
+		const seed = hashString(today);
+		const random = seededRandom(seed);
+
+		// Seeded shuffle using Fisher-Yates
+		const shuffled = [...allCategories];
+		for (let i = shuffled.length - 1; i > 0; i--) {
+			const j = Math.floor(random() * (i + 1));
+			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+		}
+
+		return shuffled.slice(0, 4);
+	}
+
 	// Initialize categories on mount
 	onMount(() => {
-		shuffleCategories();
+		availableCategories = getDailyCategories();
 	});
-
-	function shuffleCategories() {
-		// Access categories array directly from translations (not via t() which only returns strings)
-		const allCategories = (translations as Record<string, unknown>)['categories'] as string[];
-		if (Array.isArray(allCategories) && allCategories.length > 0) {
-			// Shuffle and pick 4 random categories
-			const shuffled = [...allCategories].sort(() => Math.random() - 0.5);
-			availableCategories = shuffled.slice(0, 4);
-		}
-	}
 
 	async function startGame(category: string) {
 		selectedCategory = category;
@@ -225,7 +256,7 @@
 		answerRevealed = false;
 		bankedPoints = 0;
 		showWinModal = false;
-		shuffleCategories();
+		// Categories stay the same (daily categories)
 	}
 
 	function getAnswerClass(index: number): string {
@@ -246,7 +277,8 @@
 	{#if gamePhase === 'select'}
 		<!-- Category Selection Screen -->
 		<div class="select-screen">
-			<h2>{t('selectCategory')}</h2>
+			<h2>{t('todaysCategories')}</h2>
+			<p class="select-subtitle">{t('selectCategory')}</p>
 
 			<div class="category-grid">
 				{#each availableCategories as category}
@@ -259,10 +291,6 @@
 					</button>
 				{/each}
 			</div>
-
-			<button class="shuffle-btn" onclick={shuffleCategories} disabled={isLoading}>
-				{t('newCategories')}
-			</button>
 
 			<div class="rules">
 				<h3>{t('rules.title')}</h3>
@@ -450,6 +478,13 @@
 		margin: 0;
 	}
 
+	.select-subtitle {
+		text-align: center;
+		font-size: 0.95rem;
+		color: rgba(255, 255, 255, 0.7);
+		margin: -0.5rem 0 0 0;
+	}
+
 	.category-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -486,22 +521,6 @@
 	.category-btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
-	}
-
-	.shuffle-btn {
-		padding: 0.75rem 1.5rem;
-		font-size: 0.9rem;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		align-self: center;
-	}
-
-	.shuffle-btn:hover:not(:disabled) {
-		background: rgba(255, 255, 255, 0.2);
 	}
 
 	.rules {
