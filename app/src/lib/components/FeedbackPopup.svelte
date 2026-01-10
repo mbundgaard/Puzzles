@@ -53,7 +53,6 @@
 {#if showPopup}
 	<div class="overlay" onclick={close}>
 		<div class="popup" onclick={(e) => e.stopPropagation()}>
-			<button class="close-btn" onclick={close}>×</button>
 			<h2 class="title">{tr('feedbackPopup.title')}</h2>
 			<p class="body">{tr('feedbackPopup.body')}</p>
 			<div class="buttons">
@@ -104,24 +103,6 @@
 			transform: translateY(0);
 			opacity: 1;
 		}
-	}
-
-	.close-btn {
-		position: absolute;
-		top: 12px;
-		right: 16px;
-		background: none;
-		border: none;
-		color: rgba(255, 255, 255, 0.5);
-		font-size: 1.8rem;
-		cursor: pointer;
-		line-height: 1;
-		padding: 4px;
-		transition: color 0.2s;
-	}
-
-	.close-btn:hover {
-		color: rgba(255, 255, 255, 0.8);
 	}
 
 	.title {
