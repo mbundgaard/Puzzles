@@ -2,16 +2,50 @@
 	import { base } from '$app/paths';
 	import { t, translate, type Translations } from '$lib/i18n';
 	import InstallBanner from '$lib/components/InstallBanner.svelte';
-	import { getSortedGames, getGameBadge } from '$lib/games/registry';
+	import { getSortedGames, getGameBadge, type GameInfo } from '$lib/games/registry';
+	import { favorites } from '$lib/favorites';
+	import { onMount } from 'svelte';
 
 	let translations = $state<Translations>({});
+	let favoriteIds = $state<string[]>([]);
 
 	t.subscribe((value) => {
 		translations = value;
 	});
 
-	// Games sorted by most recent activity (newest/updated first)
-	const games = getSortedGames();
+	favorites.subscribe((value) => {
+		favoriteIds = value;
+	});
+
+	onMount(() => {
+		favorites.init();
+	});
+
+	// Games sorted by favorites first, then by most recent activity
+	const baseGames = getSortedGames();
+
+	function getSortedGamesWithFavorites(favs: string[]): GameInfo[] {
+		return [...baseGames].sort((a, b) => {
+			const aFav = favs.includes(a.id);
+			const bFav = favs.includes(b.id);
+			if (aFav && !bFav) return -1;
+			if (!aFav && bFav) return 1;
+			// Keep original sort order within each group
+			const aDate = a.updated || a.created;
+			const bDate = b.updated || b.created;
+			return bDate.localeCompare(aDate);
+		});
+	}
+
+	function toggleFavorite(e: Event, gameId: string) {
+		e.preventDefault();
+		e.stopPropagation();
+		favorites.toggle(gameId);
+	}
+
+	function isFavorite(gameId: string): boolean {
+		return favoriteIds.includes(gameId);
+	}
 </script>
 
 <svelte:head>
@@ -21,13 +55,30 @@
 <div class="home">
 	<div class="game-grid">
 			<InstallBanner />
-			{#each games as game}
+			{#each getSortedGamesWithFavorites(favoriteIds) as game}
 				{@const badge = getGameBadge(game)}
+				{@const fav = isFavorite(game.id)}
 				<a
 					href="{base}/spil/{game.id}"
 					class="game-card"
 					style="--accent-color: {game.accentColor}"
 				>
+					<button
+						class="favorite-btn"
+						class:is-favorite={fav}
+						onclick={(e) => toggleFavorite(e, game.id)}
+						aria-label={translate(translations, fav ? 'favorites.remove' : 'favorites.add')}
+					>
+						{#if fav}
+							<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+								<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+							</svg>
+						{:else}
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+								<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+							</svg>
+						{/if}
+					</button>
 					<div class="game-icon">{game.icon}</div>
 					<div class="game-info">
 						<div class="game-name">{translate(translations, `games.${game.id}.title`)}</div>
@@ -145,6 +196,43 @@
 	.game-card:active .game-arrow {
 		transform: translateX(4px);
 		color: var(--accent-color);
+	}
+
+	.favorite-btn {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		width: 36px;
+		height: 36px;
+		border: none;
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: rgba(255, 255, 255, 0.5);
+		transition: all 0.2s ease;
+		z-index: 10;
+		padding: 0;
+	}
+
+	.favorite-btn:hover {
+		background: rgba(0, 0, 0, 0.5);
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.favorite-btn:active {
+		transform: scale(0.9);
+	}
+
+	.favorite-btn.is-favorite {
+		color: #ef4444;
+		background: rgba(239, 68, 68, 0.2);
+	}
+
+	.favorite-btn.is-favorite:hover {
+		background: rgba(239, 68, 68, 0.3);
 	}
 
 	@media (min-width: 500px) {

@@ -9,6 +9,10 @@
 	"common": {
 		"cancel": "Annuller"
 	},
+	"favorites": {
+		"add": "Tilføj til favoritter",
+		"remove": "Fjern fra favoritter"
+	},
 	"tabs": {
 		"games": "Spil"
 	},

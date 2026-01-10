@@ -9,6 +9,10 @@
 	"common": {
 		"cancel": "Cancel"
 	},
+	"favorites": {
+		"add": "Add to favorites",
+		"remove": "Remove from favorites"
+	},
 	"tabs": {
 		"games": "Games"
 	},
