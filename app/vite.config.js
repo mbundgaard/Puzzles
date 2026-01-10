@@ -15,6 +15,7 @@ export default defineConfig({
 				background_color: '#0f0f23',
 				display: 'standalone',
 				orientation: 'any',
+				scope: '/Puzzles/',
 				start_url: '/Puzzles/',
 				icons: [
 					{
