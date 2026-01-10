@@ -47,6 +47,7 @@
 		"sending": "Sending...",
 		"sent": "Thanks for your feedback!",
 		"sendAnother": "Send more feedback",
+		"redirecting": "Returning to home...",
 		"error": "Could not send feedback"
 	},
 	"share": {

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
 	import { submitFeedback } from '$lib/api';
+	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import PageHeader from '$lib/components/PageHeader.svelte';
 
 	let translations = $state<Translations>({});
@@ -59,6 +61,10 @@
 
 			if (result.success) {
 				submitted = true;
+				// Auto-redirect to home after 2 seconds
+				setTimeout(() => {
+					goto(base || '/');
+				}, 2000);
 			} else {
 				errorMessage = result.error || tr('feedback.error');
 				submitting = false;
@@ -83,9 +89,7 @@
 			<div class="success-card">
 				<span class="checkmark">✓</span>
 				<p>{tr('feedback.sent')}</p>
-				<button class="new-feedback-btn" onclick={resetForm}>
-					{tr('feedback.sendAnother')}
-				</button>
+				<p class="redirect-hint">{tr('feedback.redirecting')}</p>
 			</div>
 		{:else}
 			<div class="form-card">
@@ -309,24 +313,12 @@
 	.success-card p {
 		color: rgba(255, 255, 255, 0.8);
 		font-size: 1.1rem;
-		margin: 0 0 24px 0;
+		margin: 0;
 	}
 
-	.new-feedback-btn {
-		padding: 12px 24px;
-		font-size: 0.95rem;
-		font-weight: 500;
-		font-family: 'Poppins', sans-serif;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 20px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.new-feedback-btn:active {
-		transform: scale(0.95);
-		background: rgba(255, 255, 255, 0.15);
+	.redirect-hint {
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.5);
+		margin-top: 12px;
 	}
 </style>
