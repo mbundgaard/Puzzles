@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { getGame } from '$lib/games/registry';
 	import { language, loadGameTranslations, t, translate, type Translations } from '$lib/i18n';
@@ -31,6 +33,10 @@
 
 	function handleNameModalClose() {
 		showNamePrompt = false;
+	}
+
+	function handleNameModalCancel() {
+		goto(`${base}/`);
 	}
 
 	onMount(async () => {
@@ -77,7 +83,12 @@
 	</div>
 {/if}
 
-<NameModal isOpen={showNamePrompt} onClose={handleNameModalClose} />
+<NameModal
+	isOpen={showNamePrompt}
+	onClose={handleNameModalClose}
+	required={true}
+	onCancel={handleNameModalCancel}
+/>
 
 <style>
 	.not-migrated {

@@ -6,6 +6,9 @@
 		"newGame": "Nouveau Jeu",
 		"classicVersion": "Version classique"
 	},
+	"common": {
+		"cancel": "Annuler"
+	},
 	"tabs": {
 		"games": "Jeux"
 	},

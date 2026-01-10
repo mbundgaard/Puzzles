@@ -6,9 +6,11 @@
 	interface Props {
 		isOpen: boolean;
 		onClose: () => void;
+		required?: boolean;
+		onCancel?: () => void;
 	}
 
-	let { isOpen, onClose }: Props = $props();
+	let { isOpen, onClose, required = false, onCancel }: Props = $props();
 
 	let translations = $state<Translations>({});
 	t.subscribe((value) => {
@@ -51,7 +53,15 @@
 	}
 
 	function handleOverlayClick(e: MouseEvent) {
-		if (e.target === e.currentTarget) {
+		if (e.target === e.currentTarget && !required) {
+			onClose();
+		}
+	}
+
+	function handleCancel() {
+		if (onCancel) {
+			onCancel();
+		} else {
 			onClose();
 		}
 	}
@@ -86,6 +96,12 @@
 			<button class="save-btn" class:saved onclick={handleSave} disabled={saved}>
 				{saved ? tr('settings.nameSaved') : tr('settings.nameSave')}
 			</button>
+
+			{#if required}
+				<button class="cancel-btn" onclick={handleCancel}>
+					{tr('common.cancel')}
+				</button>
+			{/if}
 		</div>
 	</div>
 {/if}
@@ -178,5 +194,21 @@
 
 	.save-btn:disabled {
 		cursor: default;
+	}
+
+	.cancel-btn {
+		margin-top: 12px;
+		padding: 10px 24px;
+		font-size: 0.9rem;
+		font-family: 'Poppins', sans-serif;
+		background: transparent;
+		color: rgba(255, 255, 255, 0.5);
+		border: none;
+		cursor: pointer;
+		transition: color 0.2s ease;
+	}
+
+	.cancel-btn:active {
+		color: rgba(255, 255, 255, 0.8);
 	}
 </style>

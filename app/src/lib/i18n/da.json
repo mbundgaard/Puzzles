@@ -6,6 +6,9 @@
 		"newGame": "Nyt Spil",
 		"classicVersion": "Klassisk version"
 	},
+	"common": {
+		"cancel": "Annuller"
+	},
 	"tabs": {
 		"games": "Spil"
 	},

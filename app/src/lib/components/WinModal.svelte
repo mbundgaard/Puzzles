@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getNickname, setNickname, isValidNickname, recordWin } from '$lib/api';
+	import { getNickname, recordWin } from '$lib/api';
 	import { t, translate, type Translations } from '$lib/i18n';
 
 	interface Props {
@@ -25,53 +25,42 @@
 	let submitted = $state(false);
 	let errorMessage = $state('');
 
-	// Load saved nickname when modal opens
+	// Auto-submit when modal opens
 	$effect(() => {
-		if (isOpen) {
+		if (isOpen && !submitting && !submitted) {
 			const saved = getNickname();
 			if (saved) {
 				nickname = saved;
+				submitWin(saved);
 			}
-			submitted = false;
-			submitting = false;
-			errorMessage = '';
 		}
 	});
 
-	async function handleSubmit() {
-		const trimmedNickname = nickname.trim();
-
-		if (!isValidNickname(trimmedNickname)) {
-			errorMessage = tr('win.nameError');
-			return;
-		}
-
+	async function submitWin(name: string) {
 		submitting = true;
 		errorMessage = '';
 
-		setNickname(trimmedNickname);
-		const result = await recordWin(gameNumber, trimmedNickname, points);
+		const result = await recordWin(gameNumber, name, points);
 
 		if (result.success) {
 			submitted = true;
-			setTimeout(() => {
-				onClose();
-			}, 1500);
 		} else {
 			errorMessage = result.error || tr('win.saveError');
-			submitting = false;
 		}
+		submitting = false;
+	}
+
+	function handleClose() {
+		// Reset state for next time
+		submitted = false;
+		submitting = false;
+		errorMessage = '';
+		onClose();
 	}
 
 	function handleOverlayClick(e: MouseEvent) {
 		if (e.target === e.currentTarget) {
-			onClose();
-		}
-	}
-
-	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter' && !submitting && !submitted) {
-			handleSubmit();
+			handleClose();
 		}
 	}
 </script>
@@ -82,40 +71,26 @@
 		<div class="modal">
 			<h2>{tr('win.title')}</h2>
 			<p class="points">+{points} {tr('leaderboard.points')}</p>
-			<p class="message">{tr('win.message')}</p>
 
-			{#if submitted}
+			{#if submitting}
+				<div class="status">
+					<div class="spinner"></div>
+					<p>{tr('win.saving')}</p>
+				</div>
+			{:else if submitted}
 				<div class="success">
 					<span class="checkmark">✓</span>
-					<p>{tr('win.saved')}</p>
+					<p class="nickname">{nickname}</p>
+					<p class="saved-text">{tr('win.saved')}</p>
 				</div>
-			{:else}
-				<div class="nickname-section">
-					<label for="nickname-input">{tr('win.nameLabel')}</label>
-					<input
-						id="nickname-input"
-						type="text"
-						bind:value={nickname}
-						placeholder={tr('win.namePlaceholder')}
-						maxlength="20"
-						disabled={submitting}
-						onkeydown={handleKeydown}
-					/>
-					{#if errorMessage}
-						<p class="error">{errorMessage}</p>
-					{/if}
-					<button
-						class="submit-btn"
-						onclick={handleSubmit}
-						disabled={submitting}
-					>
-						{submitting ? tr('win.saving') : tr('win.save')}
-					</button>
+			{:else if errorMessage}
+				<div class="error-state">
+					<p class="error">{errorMessage}</p>
 				</div>
 			{/if}
 
-			<button class="skip-btn" onclick={onClose}>
-				{submitted ? tr('leaderboard.close') : tr('win.skip')}
+			<button class="close-btn" onclick={handleClose}>
+				{tr('leaderboard.close')}
 			</button>
 		</div>
 	</div>
@@ -171,93 +146,30 @@
 		font-size: 1.5rem;
 		font-weight: 700;
 		color: #fbbf24;
-		margin: 0 0 5px 0;
-	}
-
-	.message {
-		color: rgba(255, 255, 255, 0.7);
 		margin: 0 0 20px 0;
 	}
 
-	.nickname-section {
-		margin-bottom: 15px;
+	.status {
+		padding: 20px;
 	}
 
-	.nickname-section label {
-		display: block;
-		font-size: 0.9rem;
+	.spinner {
+		width: 40px;
+		height: 40px;
+		border: 3px solid rgba(255, 255, 255, 0.2);
+		border-top-color: #22c55e;
+		border-radius: 50%;
+		margin: 0 auto 10px;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+
+	.status p {
 		color: rgba(255, 255, 255, 0.7);
-		margin-bottom: 8px;
-	}
-
-	.nickname-section input {
-		width: 100%;
-		padding: 12px 15px;
-		font-size: 1rem;
-		font-family: 'Poppins', sans-serif;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 10px;
-		color: white;
-		margin-bottom: 10px;
-	}
-
-	.nickname-section input:focus {
-		outline: none;
-		border-color: #22c55e;
-	}
-
-	.nickname-section input::placeholder {
-		color: rgba(255, 255, 255, 0.4);
-	}
-
-	.nickname-section input:disabled {
-		opacity: 0.6;
-	}
-
-	.error {
-		color: #ef4444;
-		font-size: 0.85rem;
-		margin: -5px 0 10px 0;
-	}
-
-	.submit-btn {
-		width: 100%;
-		padding: 12px 30px;
-		font-size: 1rem;
-		font-weight: 600;
-		font-family: 'Poppins', sans-serif;
-		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-		color: white;
-		border: none;
-		border-radius: 25px;
-		cursor: pointer;
-		transition: all 0.3s ease;
-	}
-
-	.submit-btn:active:not(:disabled) {
-		transform: scale(0.95);
-	}
-
-	.submit-btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
-	.skip-btn {
-		margin-top: 10px;
-		padding: 8px 20px;
-		font-size: 0.9rem;
-		font-family: 'Poppins', sans-serif;
-		background: transparent;
-		color: rgba(255, 255, 255, 0.5);
-		border: none;
-		cursor: pointer;
-		transition: color 0.2s ease;
-	}
-
-	.skip-btn:active {
-		color: rgba(255, 255, 255, 0.8);
+		margin: 0;
 	}
 
 	.success {
@@ -281,8 +193,42 @@
 		to { transform: scale(1); }
 	}
 
-	.success p {
-		color: rgba(255, 255, 255, 0.8);
+	.nickname {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: white;
+		margin: 0 0 5px 0;
+	}
+
+	.saved-text {
+		color: rgba(255, 255, 255, 0.7);
 		margin: 0;
+	}
+
+	.error-state {
+		padding: 20px;
+	}
+
+	.error {
+		color: #ef4444;
+		margin: 0;
+	}
+
+	.close-btn {
+		margin-top: 15px;
+		padding: 12px 30px;
+		font-size: 1rem;
+		font-weight: 600;
+		font-family: 'Poppins', sans-serif;
+		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+		color: white;
+		border: none;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.close-btn:active {
+		transform: scale(0.95);
 	}
 </style>
