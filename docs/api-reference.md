@@ -26,10 +26,12 @@ Protected endpoints are marked with 🔐 below.
 | Method | Route | Description |
 |--------|-------|-------------|
 | POST | `/api/feedback` | Submit feedback `{game?, rating, text?, nickname?}` → creates GitHub issue |
-| POST | `/api/issue/create` | 🔐 Create issue `{title, body}` → `{issueNumber}` |
-| POST | `/api/issue/edit` | 🔐 Edit issue `{issueNumber, title?, body?, state?}` |
+| POST | `/api/issue/create` | 🔐 Create issue `{title, body, label?}` → `{issueNumber}` |
+| POST | `/api/issue/edit` | 🔐 Edit issue `{issueNumber, title?, body?, state?, label?}` |
 | POST | `/api/issue/close` | 🔐 Close issue with comment `{issueNumber, comment}` |
 | POST | `/api/issue/delete` | 🔐 Delete issue `{issueNumber}` |
+
+**Valid labels:** `Game feedback`, `General feedback`, `Suggest new game`
 
 ## Version Management
 
@@ -81,11 +83,13 @@ User feedback is submitted via the API and automatically creates GitHub issues. 
 
 **Feedback types (determined by `game` value):**
 
-| Game Value | Type | Issue Title |
-|------------|------|-------------|
-| `null` / `""` | General Feedback | `Feedback: {AI title}` |
-| `"00"` | New Game Suggestion | `New Game: {AI title}` |
-| `"01"`-`"99"` | Game-Specific | `{GameName}: {AI title}` |
+| Game Value | Type | Label |
+|------------|------|-------|
+| `null` / `""` | General Feedback | `General feedback` |
+| `"00"` | New Game Suggestion | `Suggest new game` |
+| `"01"`-`"99"` | Game-Specific | `Game feedback` |
+
+Issue titles are clean (AI-generated) without category prefixes. The label carries the category information.
 
 If feedback contains Danish text, the AI translates it to English and includes the original in a collapsible section.
 
