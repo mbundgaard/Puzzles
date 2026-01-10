@@ -173,7 +173,7 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<int?> CreateIssueAsync(string title, string body)
+    public async Task<int?> CreateIssueAsync(string title, string body, string? label = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -183,7 +183,9 @@ public class GitHubService : IGitHubService
 
         try
         {
-            var payload = new { title, body };
+            object payload = label != null
+                ? new { title, body, labels = new[] { label } }
+                : new { title, body };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -211,7 +213,7 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> EditIssueAsync(int issueNumber, string? title, string? body, string? state = null)
+    public async Task<bool> EditIssueAsync(int issueNumber, string? title, string? body, string? state = null, string? label = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -219,7 +221,7 @@ public class GitHubService : IGitHubService
             return false;
         }
 
-        if (title == null && body == null && state == null)
+        if (title == null && body == null && state == null && label == null)
         {
             _logger.LogWarning("No changes provided for issue {Issue}", issueNumber);
             return false;
@@ -227,10 +229,11 @@ public class GitHubService : IGitHubService
 
         try
         {
-            var payload = new Dictionary<string, string>();
+            var payload = new Dictionary<string, object>();
             if (title != null) payload["title"] = title;
             if (body != null) payload["body"] = body;
             if (state != null) payload["state"] = state;
+            if (label != null) payload["labels"] = new[] { label };
 
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");

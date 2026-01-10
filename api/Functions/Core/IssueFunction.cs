@@ -61,7 +61,13 @@ public class IssueFunction
             return new BadRequestObjectResult(new { error = "Body is required" });
         }
 
-        var issueNumber = await _gitHubService.CreateIssueAsync(request.Title.Trim(), request.Body.Trim());
+        var validLabels = new[] { "Game feedback", "General feedback", "Suggest new game" };
+        if (!string.IsNullOrWhiteSpace(request.Label) && !validLabels.Contains(request.Label))
+        {
+            return new BadRequestObjectResult(new { error = "Label must be 'Game feedback', 'General feedback', or 'Suggest new game'" });
+        }
+
+        var issueNumber = await _gitHubService.CreateIssueAsync(request.Title.Trim(), request.Body.Trim(), request.Label?.Trim());
 
         if (issueNumber.HasValue)
         {
@@ -101,9 +107,9 @@ public class IssueFunction
             return new BadRequestObjectResult(new { error = "Invalid issue number" });
         }
 
-        if (string.IsNullOrWhiteSpace(request.Title) && string.IsNullOrWhiteSpace(request.Body) && string.IsNullOrWhiteSpace(request.State))
+        if (string.IsNullOrWhiteSpace(request.Title) && string.IsNullOrWhiteSpace(request.Body) && string.IsNullOrWhiteSpace(request.State) && string.IsNullOrWhiteSpace(request.Label))
         {
-            return new BadRequestObjectResult(new { error = "At least one of title, body, or state is required" });
+            return new BadRequestObjectResult(new { error = "At least one of title, body, state, or label is required" });
         }
 
         if (!string.IsNullOrWhiteSpace(request.State) && request.State != "open" && request.State != "closed")
@@ -111,11 +117,18 @@ public class IssueFunction
             return new BadRequestObjectResult(new { error = "State must be 'open' or 'closed'" });
         }
 
+        var validLabels = new[] { "Game feedback", "General feedback", "Suggest new game" };
+        if (!string.IsNullOrWhiteSpace(request.Label) && !validLabels.Contains(request.Label))
+        {
+            return new BadRequestObjectResult(new { error = "Label must be 'Game feedback', 'General feedback', or 'Suggest new game'" });
+        }
+
         var success = await _gitHubService.EditIssueAsync(
             request.IssueNumber,
             request.Title?.Trim(),
             request.Body?.Trim(),
-            request.State?.Trim());
+            request.State?.Trim(),
+            request.Label?.Trim());
 
         if (success)
         {

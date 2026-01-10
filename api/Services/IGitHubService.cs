@@ -19,22 +19,24 @@ public interface IGitHubService
         string? aiTitle = null, string? aiTranslation = null);
 
     /// <summary>
-    /// Creates a GitHub issue with the specified title and body.
+    /// Creates a GitHub issue with the specified title, body, and optional label.
     /// </summary>
     /// <param name="title">Issue title</param>
     /// <param name="body">Issue body (markdown)</param>
+    /// <param name="label">Optional label to apply</param>
     /// <returns>The created issue number, or null if creation failed</returns>
-    Task<int?> CreateIssueAsync(string title, string body);
+    Task<int?> CreateIssueAsync(string title, string body, string? label = null);
 
     /// <summary>
-    /// Edits a GitHub issue's title, body, and/or state.
+    /// Edits a GitHub issue's title, body, state, and/or label.
     /// </summary>
     /// <param name="issueNumber">The issue number to edit</param>
     /// <param name="title">New title (null to keep existing)</param>
     /// <param name="body">New body (null to keep existing)</param>
     /// <param name="state">New state: "open" or "closed" (null to keep existing)</param>
+    /// <param name="label">Label to set (replaces existing labels, null to keep existing)</param>
     /// <returns>True if issue was edited successfully</returns>
-    Task<bool> EditIssueAsync(int issueNumber, string? title, string? body, string? state = null);
+    Task<bool> EditIssueAsync(int issueNumber, string? title, string? body, string? state = null, string? label = null);
 
     /// <summary>
     /// Closes a GitHub issue with a comment explaining the resolution.
