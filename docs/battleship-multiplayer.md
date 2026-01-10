@@ -43,10 +43,10 @@ Two-player battleship game where players compete on separate devices via the API
 │   ═══════════════════════════════════════════════════════════════════════   │
 │                                   │                                          │
 │   Creator goes first              │                                          │
-│   9. POST /shoot {x, y}           │                                          │
+│   9. POST /shoot {row, col}       │                                          │
 │      └─> Returns hit/miss + state │                                          │
 │                                   │         8. Polling detects turn          │
-│                                   │         9. POST /shoot {x, y}            │
+│                                   │         9. POST /shoot {row, col}        │
 │                                   │            └─> Returns hit/miss + state  │
 │   10. Polling detects turn        │                                          │
 │   ... continues until all ships   │                                          │
@@ -79,8 +79,8 @@ Points can go negative. If a player has 1 point and loses 2, they go to -1.
 ## Game Rules
 
 ### Board
-- 10x10 grid (coordinates 0-9 for both X and Y)
-- X = horizontal (columns), Y = vertical (rows)
+- 10x10 grid (coordinates 0-9 for both row and column)
+- Row = vertical (0 = top), Column = horizontal (0 = left)
 
 ### Ships
 Standard battleship fleet:
@@ -93,10 +93,10 @@ Standard battleship fleet:
 | Submarine | 3 |
 | Destroyer | 2 |
 
-Ships are placed with:
-- `x`, `y`: Starting position (top-left of ship)
-- `length`: Number of cells
-- `horizontal`: true = extends right, false = extends down
+Ships are stored as a sorted array of coordinates `[[row, col], ...]`:
+- Each cell occupied by a ship is one entry
+- A ship of length 4 = 4 coordinate entries
+- Sorted by row first, then column (reading order: left-to-right, top-to-bottom)
 
 ### Shooting
 - Players alternate turns (creator goes first)
@@ -222,17 +222,10 @@ GET /api/game/25/{gameId}/state?playerToken={token}
   "winnerPoints": 5,
   "loserPoints": 2,
   "yourRole": "creator",
-  "yourShips": [
-    { "x": 0, "y": 0, "length": 5, "horizontal": true }
-  ],
+  "yourShips": [[0,0],[0,1],[0,2],[0,3],[0,4]],
   "opponentShips": null,
-  "yourShots": [
-    { "x": 3, "y": 4, "hit": true },
-    { "x": 5, "y": 2, "hit": false }
-  ],
-  "opponentShots": [
-    { "x": 0, "y": 0, "hit": true }
-  ],
+  "yourShots": [[2,5,0],[4,3,1]],
+  "opponentShots": [[0,0,1]],
   "currentTurn": "creator",
   "isYourTurn": true,
   "winner": null,
@@ -246,11 +239,14 @@ GET /api/game/25/{gameId}/state?playerToken={token}
 - `playing` - Battle in progress
 - `ended` - Game over
 
-**Note:** `opponentShips` is only populated when `status` is `ended`.
+**Notes:**
+- `opponentShips` is only populated when `status` is `ended`
+- `yourShips`: Array of `[row, col]` coordinates, sorted by row then column
+- `yourShots` / `opponentShots`: Array of `[row, col, hit]` where hit is 1 (hit) or 0 (miss), sorted by row then column
 
 ### Place Ships
 
-Submits ship placement.
+Submits ship placement as coordinate array.
 
 ```
 POST /api/game/25/{gameId}/ships
@@ -261,14 +257,16 @@ POST /api/game/25/{gameId}/ships
 {
   "playerToken": "550e8400-e29b-41d4-a716-446655440000",
   "ships": [
-    { "x": 0, "y": 0, "length": 5, "horizontal": true },
-    { "x": 0, "y": 2, "length": 4, "horizontal": true },
-    { "x": 0, "y": 4, "length": 3, "horizontal": true },
-    { "x": 0, "y": 6, "length": 3, "horizontal": true },
-    { "x": 0, "y": 8, "length": 2, "horizontal": true }
+    [0,0],[0,1],[0,2],[0,3],[0,4],
+    [2,0],[2,1],[2,2],[2,3],
+    [4,0],[4,1],[4,2],
+    [6,0],[6,1],[6,2],
+    [8,0],[8,1]
   ]
 }
 ```
+
+Each coordinate is `[row, col]`. The API will sort the coordinates before storing.
 
 **Response:** Full game state (same as GET /state)
 
@@ -284,14 +282,14 @@ POST /api/game/25/{gameId}/shoot
 ```json
 {
   "playerToken": "550e8400-e29b-41d4-a716-446655440000",
-  "x": 3,
-  "y": 4
+  "row": 4,
+  "col": 3
 }
 ```
 
 **Response:** Full game state (same as GET /state)
 
-The shot result is included in `yourShots` array with the `hit` value.
+The shot result is added to `yourShots` array as `[row, col, hit]` where hit is 1 or 0.
 
 ## Polling Strategy
 
@@ -366,10 +364,14 @@ Games are stored in Azure Table Storage:
 | JoinerToken | string | Player 2 auth token |
 | WinnerPoints | int | Points for winner (3-5) |
 | LoserPoints | int | Points lost by loser (0-2) |
-| CreatorShips | string | JSON array of ships |
-| JoinerShips | string | JSON array of ships |
-| CreatorShots | string | JSON array of shots |
-| JoinerShots | string | JSON array of shots |
+| CreatorShips | string | JSON: `[[row,col], ...]` sorted coordinates |
+| JoinerShips | string | JSON: `[[row,col], ...]` sorted coordinates |
+| CreatorShots | string | JSON: `[[row,col,hit], ...]` sorted, hit=0/1 |
+| JoinerShots | string | JSON: `[[row,col,hit], ...]` sorted, hit=0/1 |
 | CurrentTurn | string | "creator" or "joiner" |
 | Winner | string | "creator", "joiner", or null |
 | CreatedAt | DateTime | Game creation timestamp |
+
+**Storage Operations:**
+- Full entity read for all operations (needed to build response)
+- Merge updates for individual properties (shots, status, winner, currentTurn)
