@@ -23,6 +23,7 @@ builder.Services.AddSingleton<IWinStorage>(new AzureTableWinStorage(connectionSt
 builder.Services.AddSingleton<IEventStorage>(new AzureTableEventStorage(connectionString));
 builder.Services.AddSingleton<IVersionStorage>(new AzureTableVersionStorage(connectionString));
 builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(connectionString));
+builder.Services.AddSingleton<IBattleshipStorage>(new AzureTableBattleshipStorage(connectionString));
 
 // Register GitHub service for feedback issues
 builder.Services.AddHttpClient<IGitHubService, GitHubService>();

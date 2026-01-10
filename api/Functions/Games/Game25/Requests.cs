@@ -1,0 +1,33 @@
+using Puzzles.Models;
+
+namespace Puzzles.Functions.Games.Game25;
+
+public class CreateGameRequest
+{
+    public string CreatorName { get; set; } = string.Empty;
+    public int WinnerPoints { get; set; }
+    public int LoserPoints { get; set; }
+}
+
+public class JoinGameRequest
+{
+    public string JoinerName { get; set; } = string.Empty;
+}
+
+public class CancelGameRequest
+{
+    public string PlayerToken { get; set; } = string.Empty;
+}
+
+public class PlaceShipsRequest
+{
+    public string PlayerToken { get; set; } = string.Empty;
+    public List<Ship> Ships { get; set; } = [];
+}
+
+public class ShootRequest
+{
+    public string PlayerToken { get; set; } = string.Empty;
+    public int X { get; set; }
+    public int Y { get; set; }
+}
