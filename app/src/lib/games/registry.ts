@@ -16,7 +16,7 @@ export interface GameInfo {
 
 export type Badge = 'new' | 'updated' | null;
 
-const BADGE_DAYS = 7;
+const BADGE_DAYS = 4;
 
 export function getGameBadge(game: GameInfo): Badge {
 	const now = Date.now();
