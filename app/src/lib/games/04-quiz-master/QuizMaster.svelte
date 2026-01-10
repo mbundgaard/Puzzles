@@ -74,7 +74,8 @@
 	});
 
 	function shuffleCategories() {
-		const allCategories = t('categories') as unknown as string[];
+		// Access categories array directly from translations (not via t() which only returns strings)
+		const allCategories = (translations as Record<string, unknown>)['categories'] as string[];
 		if (Array.isArray(allCategories) && allCategories.length > 0) {
 			// Shuffle and pick 4 random categories
 			const shuffled = [...allCategories].sort(() => Math.random() - 0.5);
