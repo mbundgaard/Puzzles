@@ -89,7 +89,6 @@
 					{:else if badge === 'updated'}
 						<span class="badge badge-updated">💫</span>
 					{/if}
-					<div class="game-arrow">›</div>
 				</a>
 			{/each}
 	</div>
@@ -177,17 +176,6 @@
 		line-height: 1;
 	}
 
-	.game-arrow {
-		font-size: 1.5rem;
-		color: rgba(255, 255, 255, 0.3);
-		transition: transform 0.2s ease;
-	}
-
-	.game-card:active .game-arrow {
-		transform: translateX(4px);
-		color: var(--accent-color);
-	}
-
 	.favorite-btn {
 		position: absolute;
 		top: 8px;
@@ -237,10 +225,6 @@
 			flex-direction: column;
 			text-align: center;
 			padding: 24px 16px;
-		}
-
-		.game-arrow {
-			display: none;
 		}
 
 		.game-icon {
