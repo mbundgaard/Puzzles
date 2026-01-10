@@ -23,6 +23,7 @@
 	// Changelog entries - sorted by closedAt descending (newest first)
 	// Add new entries at the TOP of this array
 	const changelogEntries = [
+		{ issue: 85, closedAt: '2026-01-10T20:00:00Z', submitter: 'Martin', text: 'Leaderboard now shows all players instead of top 10' },
 		{ issue: 77, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Language selection changed to native dropdown' },
 		{ issue: 60, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Games now show sparkle (new) and dizzy star (updated) badges' },
 		{ issue: 79, closedAt: '2026-01-10T17:00:00Z', submitter: 'Sara', text: 'Feedback popup now only appears after one week of use' },
