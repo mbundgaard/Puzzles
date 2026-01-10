@@ -591,8 +591,6 @@
 			<div class="waiting-content">
 				<div class="spinner"></div>
 				<h2>{t('waiting.title')}</h2>
-				<p class="game-code">{t('waiting.gameCode')}: <strong>{gameId}</strong></p>
-				<p class="waiting-hint">{t('waiting.hint')}</p>
 			</div>
 		</div>
 	{:else if phase === 'joining'}
