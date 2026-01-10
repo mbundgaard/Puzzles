@@ -2,6 +2,14 @@
 
 **Base URL:** `https://puzzlesapi.azurewebsites.net`
 
+## Authentication
+
+Admin endpoints require an API key in the `X-API-Key` header. The key is stored in:
+- **Local development:** `api/local.settings.json` (`ADMIN_API_KEY`)
+- **Production:** Azure environment variable `ADMIN_API_KEY`
+
+Protected endpoints are marked with 🔐 below.
+
 ## Core Endpoints
 
 | Method | Route | Description |
@@ -10,25 +18,25 @@
 | GET | `/api/leaderboard?game=all&top=10` | Get top players (current month) |
 | GET | `/api/stats` | Get total points (all-time) |
 | POST | `/api/event` | Record game event `{game, event}` (event: "start" or "complete") |
-| GET | `/api/usage?game=all` | Get usage stats this month |
-| GET | `/api/today` | Get today's starts and completions |
+| GET | `/api/usage?game=all` | 🔐 Get usage stats this month |
+| GET | `/api/today` | 🔐 Get today's starts and completions |
 
 ## Feedback & Issues
 
 | Method | Route | Description |
 |--------|-------|-------------|
 | POST | `/api/feedback` | Submit feedback `{game?, rating, text?, nickname?}` → creates GitHub issue |
-| POST | `/api/issue/create` | Create issue `{title, body}` → `{issueNumber}` |
-| POST | `/api/issue/edit` | Edit issue `{issueNumber, title?, body?, state?}` |
-| POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
-| POST | `/api/issue/delete` | Delete issue `{issueNumber}` (requires admin) |
+| POST | `/api/issue/create` | 🔐 Create issue `{title, body}` → `{issueNumber}` |
+| POST | `/api/issue/edit` | 🔐 Edit issue `{issueNumber, title?, body?, state?}` |
+| POST | `/api/issue/close` | 🔐 Close issue with comment `{issueNumber, comment}` |
+| POST | `/api/issue/delete` | 🔐 Delete issue `{issueNumber}` |
 
 ## Version Management
 
 | Method | Route | Description |
 |--------|-------|-------------|
 | POST | `/api/version` | Check version `{version}` → `{newVersionExists: bool}` |
-| POST | `/api/version/set` | Set server version `{version}` → `{success, version}` |
+| POST | `/api/version/set` | 🔐 Set server version `{version}` → `{success, version}` |
 
 ## Session Tracking
 

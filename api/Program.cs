@@ -25,6 +25,9 @@ builder.Services.AddSingleton<IVersionStorage>(new AzureTableVersionStorage(conn
 builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(connectionString));
 builder.Services.AddSingleton<IBattleshipStorage>(new AzureTableBattleshipStorage(connectionString));
 
+// Register admin auth service
+builder.Services.AddSingleton<IAdminAuthService, AdminAuthService>();
+
 // Register GitHub service for feedback issues
 builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 

@@ -45,6 +45,16 @@ All puzzles MUST work on mobile devices with touch-only input:
 - **No hover-only interactions** - Hover effects are supplementary only
 - **Tap targets** - Interactive elements must be at least 44x44 pixels
 
+### Admin API Authentication
+
+Admin endpoints require an API key in the `X-API-Key` header:
+- **issue/*** - All issue management endpoints
+- **version/set** - Deploy version endpoint
+- **usage** - Usage stats
+- **today** - Today's stats
+
+The API key is stored in `api/local.settings.json` (for local dev) and as `ADMIN_API_KEY` environment variable in Azure.
+
 ### Closing Issues (MUST follow)
 
 **Do NOT use `Fixes #X` in commit messages.** Follow this workflow:
@@ -52,11 +62,12 @@ All puzzles MUST work on mobile devices with touch-only input:
 1. Fix the issue in the code
 2. Add changelog entry to `app/src/lib/components/ChangelogModal.svelte`
 3. Commit and push all changes
-4. Call the API to close the issue:
+4. Call the API to close the issue (include API key):
 
 ```bash
 curl -X POST https://puzzlesapi.azurewebsites.net/api/issue/close \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: <key from local.settings.json>" \
   -d '{"issueNumber": 9, "comment": "**Fixed:** Description of what was fixed."}'
 ```
 
@@ -85,10 +96,11 @@ When ready to commit and deploy:
 
 2. **Commit and push** all changes to main
 
-3. **Update server version** by calling the API:
+3. **Update server version** by calling the API (include API key):
    ```bash
    curl -X POST https://puzzlesapi.azurewebsites.net/api/version/set \
      -H "Content-Type: application/json" \
+     -H "X-API-Key: <key from local.settings.json>" \
      -d '{"version": <same_timestamp>}'
    ```
 

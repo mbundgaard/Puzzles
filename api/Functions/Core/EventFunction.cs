@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
+using Puzzles.Services;
 using Puzzles.Storage;
 
 namespace Puzzles.Functions.Core;
@@ -11,11 +12,13 @@ public class EventFunction
 {
     private readonly ILogger<EventFunction> _logger;
     private readonly IEventStorage _storage;
+    private readonly IAdminAuthService _adminAuth;
 
-    public EventFunction(ILogger<EventFunction> logger, IEventStorage storage)
+    public EventFunction(ILogger<EventFunction> logger, IEventStorage storage, IAdminAuthService adminAuth)
     {
         _logger = logger;
         _storage = storage;
+        _adminAuth = adminAuth;
     }
 
     [Function("RecordEvent")]
@@ -81,6 +84,9 @@ public class EventFunction
     public async Task<IActionResult> GetUsageStats(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "usage")] HttpRequest req)
     {
+        var authResult = _adminAuth.Authorize(req);
+        if (authResult != null) return authResult;
+
         // Optional game filter
         var gameParam = req.Query["game"].FirstOrDefault();
         string? game = null;
@@ -105,6 +111,9 @@ public class EventFunction
     public async Task<IActionResult> GetTodayStats(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "today")] HttpRequest req)
     {
+        var authResult = _adminAuth.Authorize(req);
+        if (authResult != null) return authResult;
+
         var starts = await _storage.GetTodayStartsAsync();
         var completions = await _storage.GetTodayCompletionsAsync();
 

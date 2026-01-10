@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Puzzles.Models;
+using Puzzles.Services;
 using Puzzles.Storage;
 
 namespace Puzzles.Functions.Core;
@@ -11,11 +12,13 @@ public class VersionFunction
 {
     private readonly ILogger<VersionFunction> _logger;
     private readonly IVersionStorage _storage;
+    private readonly IAdminAuthService _adminAuth;
 
-    public VersionFunction(ILogger<VersionFunction> logger, IVersionStorage storage)
+    public VersionFunction(ILogger<VersionFunction> logger, IVersionStorage storage, IAdminAuthService adminAuth)
     {
         _logger = logger;
         _storage = storage;
+        _adminAuth = adminAuth;
     }
 
     [Function("CheckVersion")]
@@ -52,6 +55,9 @@ public class VersionFunction
     public async Task<IActionResult> SetVersion(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "version/set")] HttpRequest req)
     {
+        var authResult = _adminAuth.Authorize(req);
+        if (authResult != null) return authResult;
+
         VersionRequest? versionRequest;
         try
         {
