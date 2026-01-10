@@ -6,6 +6,7 @@ Some games use Azure OpenAI to generate content dynamically. These games display
 
 | Game | Endpoints | What AI Does |
 |------|-----------|--------------|
+| 04 - Quiz Mester | `/api/game/04/generate` | Generates trivia questions across 3 difficulty levels |
 | 10 - Ordleg | `/api/game/10/word` | Generates Danish words by category/difficulty |
 | 26 - Gæt Dyret | `/api/game/26/pick`, `/ask`, `/hint` | Picks animals, answers yes/no questions, generates hints |
 | 27 - Ordsøgning | `/api/game/27/generate` | Creates word search grids with hidden words |

@@ -13,6 +13,7 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 | 01 | Reversi | 3 | 2025-12-28 | | Classic strategy game - capture opponent pieces by surrounding them |
 | 02 | Telte og Træer | 3 | 2025-12-28 | 2026-01-10 | Logic puzzle - place tents next to trees without touching |
 | 03 | Sudoku | 3 | 2025-12-28 | 2026-01-10 | Fill the grid so each row, column, and box contains 1-9 |
+| 04 | Quiz Mester | 7 | 2026-01-10 | | Millionaire-style trivia with AI-generated questions |
 | 05 | 2048 | 3 | 2025-12-28 | 2026-01-10 | Slide and merge tiles to reach 2048 |
 | 06 | Minestryger | 3 | 2025-12-28 | | Find all safe cells without hitting a mine |
 | 07 | Hukommelse | 3 | 2025-12-28 | | Match pairs of cards by remembering their positions |

@@ -52,6 +52,7 @@ Protected endpoints are marked with 🔐 below.
 
 | Method | Route | Description |
 |--------|-------|-------------|
+| POST | `/api/game/04/generate` | Generate quiz `{language, category, seed?}` → 12 questions |
 | POST | `/api/game/10/word` | Get word for Ordleg `{length, difficulty, category}` |
 | POST | `/api/game/26/pick` | Pick animal `{category?, difficulty?}` |
 | POST | `/api/game/26/ask` | Ask about animal `{animal, question}` → yes/no/maybe |
