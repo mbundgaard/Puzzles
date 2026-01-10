@@ -18,9 +18,9 @@ public class BattleshipGame
     public int WinnerPoints { get; set; } // 3, 4, or 5
     public int LoserPoints { get; set; }  // 0, 1, or 2 (applied as negative)
 
-    public string? CreatorShips { get; set; } // JSON array of ship positions
+    public string? CreatorShips { get; set; } // JSON array of coordinates: [[row,col], ...]
     public string? JoinerShips { get; set; }
-    public string CreatorShots { get; set; } = "[]"; // JSON array of shots
+    public string CreatorShots { get; set; } = "[]"; // JSON array of coordinates with hit: [[row,col,hit], ...]
     public string JoinerShots { get; set; } = "[]";
 
     public string CurrentTurn { get; set; } = "creator"; // "creator" or "joiner"
@@ -44,23 +44,3 @@ public static class BattleshipStatus
     public const string Ended = "ended";
 }
 
-/// <summary>
-/// Represents a ship on the board.
-/// </summary>
-public class Ship
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int Length { get; set; }
-    public bool Horizontal { get; set; }
-}
-
-/// <summary>
-/// Represents a shot on the board.
-/// </summary>
-public class Shot
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-    public bool Hit { get; set; }
-}

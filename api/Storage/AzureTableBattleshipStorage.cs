@@ -93,6 +93,15 @@ public class AzureTableBattleshipStorage : IBattleshipStorage
         await _tableClient.UpsertEntityAsync(entity, TableUpdateMode.Replace);
     }
 
+    public async Task MergePropertyAsync(string gameId, string propertyName, string value)
+    {
+        var entity = new TableEntity(PartitionKey, gameId)
+        {
+            { propertyName, value }
+        };
+        await _tableClient.UpdateEntityAsync(entity, ETag.All, TableUpdateMode.Merge);
+    }
+
     public async Task<List<BattleshipGame>> GetOpenGamesAsync()
     {
         var cutoff = DateTime.UtcNow - ExpirationTime;

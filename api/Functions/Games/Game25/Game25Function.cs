@@ -229,7 +229,7 @@ public class Game25Function
             return new BadRequestObjectResult(new { error = "PlayerToken is required" });
         }
 
-        if (request.Ships == null || request.Ships.Count == 0)
+        if (request.Ships == null || request.Ships.Length == 0)
         {
             return new BadRequestObjectResult(new { error = "Ships are required" });
         }
@@ -251,7 +251,9 @@ public class Game25Function
             return new UnauthorizedObjectResult(new { error = "Invalid player token" });
         }
 
-        var shipsJson = JsonSerializer.Serialize(request.Ships);
+        // Sort ships by row, then column
+        var sortedShips = request.Ships.OrderBy(s => s[0]).ThenBy(s => s[1]).ToArray();
+        var shipsJson = JsonSerializer.Serialize(sortedShips);
 
         if (role == "creator")
         {
@@ -330,31 +332,46 @@ public class Game25Function
 
         // Get opponent's ships
         var opponentShipsJson = role == "creator" ? game.JoinerShips : game.CreatorShips;
-        var opponentShips = JsonSerializer.Deserialize<List<Ship>>(opponentShipsJson!, JsonOptions) ?? [];
+        var opponentShips = JsonSerializer.Deserialize<int[][]>(opponentShipsJson!, JsonOptions) ?? [];
 
         // Check if hit
-        var isHit = CheckHit(request.X, request.Y, opponentShips);
+        var isHit = opponentShips.Any(s => s[0] == request.Row && s[1] == request.Col);
 
         // Add shot to player's shots
         var shotsJson = role == "creator" ? game.CreatorShots : game.JoinerShots;
-        var shots = JsonSerializer.Deserialize<List<Shot>>(shotsJson, JsonOptions) ?? [];
-        shots.Add(new Shot { X = request.X, Y = request.Y, Hit = isHit });
+        var shots = JsonSerializer.Deserialize<List<int[]>>(shotsJson, JsonOptions) ?? [];
+        shots.Add([request.Row, request.Col, isHit ? 1 : 0]);
 
+        // Sort by row, then column and serialize
+        var sortedShots = shots.OrderBy(s => s[0]).ThenBy(s => s[1]).ToArray();
+        var sortedShotsJson = JsonSerializer.Serialize(sortedShots);
+
+        // Update shots in game object (for BuildGameState)
         if (role == "creator")
         {
-            game.CreatorShots = JsonSerializer.Serialize(shots);
+            game.CreatorShots = sortedShotsJson;
         }
         else
         {
-            game.JoinerShots = JsonSerializer.Serialize(shots);
+            game.JoinerShots = sortedShotsJson;
         }
 
-        // Check if game is over (all opponent ships sunk)
-        var allSunk = CheckAllShipsSunk(opponentShips, shots);
+        // Merge just the shots property
+        var shotsProperty = role == "creator" ? "CreatorShots" : "JoinerShots";
+        await _storage.MergePropertyAsync(gameId, shotsProperty, sortedShotsJson);
+
+        // Check if game is over (all opponent ships hit)
+        var allSunk = opponentShips.All(ship =>
+            sortedShots.Any(shot => shot[0] == ship[0] && shot[1] == ship[1]));
+
         if (allSunk)
         {
             game.Status = BattleshipStatus.Ended;
             game.Winner = role;
+
+            // Merge status and winner
+            await _storage.MergePropertyAsync(gameId, "Status", BattleshipStatus.Ended);
+            await _storage.MergePropertyAsync(gameId, "Winner", role);
 
             // Record win/loss points
             await RecordGameResultAsync(game);
@@ -365,9 +382,8 @@ public class Game25Function
         {
             // Switch turns
             game.CurrentTurn = role == "creator" ? "joiner" : "creator";
+            await _storage.MergePropertyAsync(gameId, "CurrentTurn", game.CurrentTurn);
         }
-
-        await _storage.UpdateGameAsync(game);
 
         return new OkObjectResult(BuildGameState(game, role));
     }
@@ -379,36 +395,6 @@ public class Game25Function
         if (game.CreatorToken == playerToken) return "creator";
         if (game.JoinerToken == playerToken) return "joiner";
         return null;
-    }
-
-    private static bool CheckHit(int x, int y, List<Ship> ships)
-    {
-        foreach (var ship in ships)
-        {
-            for (var i = 0; i < ship.Length; i++)
-            {
-                var shipX = ship.Horizontal ? ship.X + i : ship.X;
-                var shipY = ship.Horizontal ? ship.Y : ship.Y + i;
-                if (shipX == x && shipY == y) return true;
-            }
-        }
-        return false;
-    }
-
-    private static bool CheckAllShipsSunk(List<Ship> ships, List<Shot> shots)
-    {
-        foreach (var ship in ships)
-        {
-            for (var i = 0; i < ship.Length; i++)
-            {
-                var shipX = ship.Horizontal ? ship.X + i : ship.X;
-                var shipY = ship.Horizontal ? ship.Y : ship.Y + i;
-
-                var isHit = shots.Any(s => s.X == shipX && s.Y == shipY && s.Hit);
-                if (!isHit) return false;
-            }
-        }
-        return true;
     }
 
     private async Task RecordGameResultAsync(BattleshipGame game)
@@ -447,22 +433,22 @@ public class Game25Function
         var yourShotsJson = role == "creator" ? game.CreatorShots : game.JoinerShots;
         var opponentShotsJson = role == "creator" ? game.JoinerShots : game.CreatorShots;
 
-        List<Ship>? yourShips = null;
-        List<Ship>? opponentShips = null;
+        int[][]? yourShips = null;
+        int[][]? opponentShips = null;
 
         if (!string.IsNullOrEmpty(yourShipsJson))
         {
-            yourShips = JsonSerializer.Deserialize<List<Ship>>(yourShipsJson, JsonOptions);
+            yourShips = JsonSerializer.Deserialize<int[][]>(yourShipsJson, JsonOptions);
         }
 
         // Only reveal opponent ships when game is ended
         if (game.Status == BattleshipStatus.Ended && !string.IsNullOrEmpty(opponentShipsJson))
         {
-            opponentShips = JsonSerializer.Deserialize<List<Ship>>(opponentShipsJson, JsonOptions);
+            opponentShips = JsonSerializer.Deserialize<int[][]>(opponentShipsJson, JsonOptions);
         }
 
-        var yourShots = JsonSerializer.Deserialize<List<Shot>>(yourShotsJson, JsonOptions) ?? [];
-        var opponentShots = JsonSerializer.Deserialize<List<Shot>>(opponentShotsJson, JsonOptions) ?? [];
+        var yourShots = JsonSerializer.Deserialize<int[][]>(yourShotsJson, JsonOptions) ?? [];
+        var opponentShots = JsonSerializer.Deserialize<int[][]>(opponentShotsJson, JsonOptions) ?? [];
 
         return new GameState
         {

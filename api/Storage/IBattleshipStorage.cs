@@ -23,6 +23,11 @@ public interface IBattleshipStorage
     Task UpdateGameAsync(BattleshipGame game);
 
     /// <summary>
+    /// Merges a single property on a game entity (partial update).
+    /// </summary>
+    Task MergePropertyAsync(string gameId, string propertyName, string value);
+
+    /// <summary>
     /// Gets all open games (status = open, not expired).
     /// </summary>
     Task<List<BattleshipGame>> GetOpenGamesAsync();

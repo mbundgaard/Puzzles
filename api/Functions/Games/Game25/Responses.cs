@@ -1,5 +1,3 @@
-using Puzzles.Models;
-
 namespace Puzzles.Functions.Games.Game25;
 
 public class CreateGameResponse
@@ -32,10 +30,10 @@ public class GameState
     public int WinnerPoints { get; set; }
     public int LoserPoints { get; set; }
     public string YourRole { get; set; } = string.Empty;
-    public List<Ship>? YourShips { get; set; }
-    public List<Ship>? OpponentShips { get; set; }
-    public List<Shot> YourShots { get; set; } = [];
-    public List<Shot> OpponentShots { get; set; } = [];
+    public int[][]? YourShips { get; set; } // [[row,col], ...] sorted
+    public int[][]? OpponentShips { get; set; } // Only revealed when game ended
+    public int[][] YourShots { get; set; } = []; // [[row,col,hit], ...] sorted
+    public int[][] OpponentShots { get; set; } = []; // [[row,col,hit], ...] sorted
     public string CurrentTurn { get; set; } = string.Empty;
     public bool IsYourTurn { get; set; }
     public string? Winner { get; set; }
