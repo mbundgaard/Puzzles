@@ -153,7 +153,7 @@
 	{#if isHomePage}
 		<Header />
 		<!-- Pull to refresh indicator -->
-		<div class="pull-indicator" class:visible={pullDistance > 0} style="transform: translateY({Math.min(pullDistance - 40, 40)}px)">
+		<div class="pull-indicator" class:visible={pullDistance > 0} style="transform: translateX(-50%) translateY({Math.min(pullDistance - 40, 40)}px)">
 			<div class="pull-spinner" class:spinning={isRefreshing}></div>
 		</div>
 	{/if}
