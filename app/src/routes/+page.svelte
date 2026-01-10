@@ -30,16 +30,14 @@
 				>
 					<div class="game-icon">{game.icon}</div>
 					<div class="game-info">
-						<div class="game-name">
-							{translate(translations, `games.${game.id}.title`)}
-							{#if badge === 'new'}
-								<span class="badge badge-new">✨</span>
-							{:else if badge === 'updated'}
-								<span class="badge badge-updated">💫</span>
-							{/if}
-						</div>
+						<div class="game-name">{translate(translations, `games.${game.id}.title`)}</div>
 						<div class="game-desc">{translate(translations, `games.${game.id}.description`)}</div>
 					</div>
+					{#if badge === 'new'}
+						<span class="badge badge-new">✨</span>
+					{:else if badge === 'updated'}
+						<span class="badge badge-updated">💫</span>
+					{/if}
 					<span class="game-number">#{game.id.split('-')[0]}</span>
 					<div class="game-arrow">›</div>
 				</a>
@@ -117,10 +115,6 @@
 		font-size: 1.1rem;
 		font-weight: 600;
 		margin-bottom: 2px;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		flex-wrap: wrap;
 	}
 
 	.game-desc {
@@ -129,7 +123,7 @@
 	}
 
 	.badge {
-		font-size: 0.9rem;
+		font-size: 1.1rem;
 		line-height: 1;
 	}
 
@@ -179,8 +173,10 @@
 			font-size: 2.5rem;
 		}
 
-		.game-name {
-			justify-content: center;
+		.badge {
+			position: absolute;
+			top: 8px;
+			right: 8px;
 		}
 	}
 </style>
