@@ -18,7 +18,9 @@
 		"nextLevel": "Næste niveau",
 		"worth": "Værdi:",
 		"continue": "Fortsæt",
-		"walkAway": "Tag pengene"
+		"walkAway": "Tag pengene",
+		"safetyNet": "Dit sikkerhedsnet",
+		"riskExplain": "Svarer du forkert, falder du tilbage til {points} point"
 	},
 	"won": {
 		"title": "Tillykke!"
@@ -40,8 +42,8 @@
 		"title": "Sådan spiller du",
 		"rule1": "Svar på 12 spørgsmål fordelt på 3 niveauer",
 		"rule2": "Du har begrænset tid til hvert spørgsmål",
-		"rule3": "Ved checkpoint kan du sikre dine point",
-		"rule4": "Et forkert svar = du mister usikrede point"
+		"rule3": "Checkpoints er sikkerhedsnet - point du når er sikre",
+		"rule4": "Forkert svar = du falder tilbage til sidste checkpoint"
 	},
 	"categories": [
 		"Dansk historie",

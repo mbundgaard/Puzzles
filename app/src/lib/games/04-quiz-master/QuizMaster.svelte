@@ -119,12 +119,15 @@
 		isLoading = true;
 
 		try {
+			// Add random seed to ensure question variety
+			const seed = Math.floor(Math.random() * 1000000);
 			const response = await fetch(`${API_BASE}/generate`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					language: getLanguage(),
-					category: category
+					category: category,
+					seed: seed
 				})
 			});
 
@@ -244,6 +247,13 @@
 			}, 800);
 		} else {
 			gamePhase = 'lost';
+			// If player has banked points, track them
+			if (bankedPoints > 0) {
+				trackComplete(GAME_NUMBER);
+				setTimeout(() => {
+					showWinModal = true;
+				}, 800);
+			}
 		}
 	}
 
@@ -278,7 +288,6 @@
 		<!-- Category Selection Screen -->
 		<div class="select-screen">
 			<h2>{t('todaysCategories')}</h2>
-			<p class="select-subtitle">{t('selectCategory')}</p>
 
 			<div class="category-grid">
 				{#each availableCategories as category}
@@ -387,11 +396,16 @@
 				<div class="checkpoint-icon">&#10003;</div>
 				<h2>{t('checkpoint.title')}</h2>
 				<p class="checkpoint-level">{t(`levels.level${currentLevel + 1}`)} {t('checkpoint.complete')}</p>
-				<p class="checkpoint-points">{bankedPoints} {t('points')} {t('checkpoint.banked')}</p>
+
+				<div class="safety-net-info">
+					<p class="safety-label">{t('checkpoint.safetyNet')}</p>
+					<p class="safety-points">{bankedPoints} {t('points')}</p>
+				</div>
 
 				<div class="checkpoint-next">
 					<p>{t('checkpoint.nextLevel')}: {t(`levels.level${currentLevel + 2}`)}</p>
 					<p class="next-points">{t('checkpoint.worth')} {LEVEL_POINTS[currentLevel + 1]} {t('points')}</p>
+					<p class="risk-explain">{t('checkpoint.riskExplain').replace('{points}', String(bankedPoints))}</p>
 				</div>
 
 				<div class="checkpoint-buttons">
@@ -478,13 +492,6 @@
 		margin: 0;
 	}
 
-	.select-subtitle {
-		text-align: center;
-		font-size: 0.95rem;
-		color: rgba(255, 255, 255, 0.7);
-		margin: -0.5rem 0 0 0;
-	}
-
 	.category-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -506,12 +513,6 @@
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-	}
-
-	.category-btn:hover:not(:disabled) {
-		background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.2) 100%);
-		border-color: #ffd700;
-		transform: translateY(-2px);
 	}
 
 	.category-btn:active:not(:disabled) {
@@ -744,11 +745,6 @@
 		min-height: 56px;
 	}
 
-	.answer-btn:hover:not(:disabled) {
-		background: rgba(255, 255, 255, 0.15);
-		border-color: rgba(255, 215, 0, 0.5);
-	}
-
 	.answer-btn:disabled {
 		cursor: default;
 	}
@@ -842,14 +838,28 @@
 	.checkpoint-level {
 		font-size: 1.1rem;
 		color: rgba(255, 255, 255, 0.8);
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 1rem 0;
 	}
 
-	.checkpoint-points {
+	.safety-net-info {
+		background: rgba(34, 197, 94, 0.15);
+		border: 1px solid rgba(34, 197, 94, 0.4);
+		border-radius: 12px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.safety-label {
+		margin: 0 0 0.25rem 0;
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.safety-points {
+		margin: 0;
 		font-size: 1.5rem;
 		font-weight: bold;
 		color: #22c55e;
-		margin: 0 0 1.5rem 0;
 	}
 
 	.checkpoint-next {
@@ -868,6 +878,13 @@
 		color: #ffd700 !important;
 		font-weight: bold;
 		margin-top: 0.25rem !important;
+	}
+
+	.risk-explain {
+		margin-top: 0.75rem !important;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.6);
+		font-style: italic;
 	}
 
 	.checkpoint-buttons {

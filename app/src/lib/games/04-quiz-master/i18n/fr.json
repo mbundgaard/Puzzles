@@ -18,7 +18,9 @@
 		"nextLevel": "Niveau suivant",
 		"worth": "Valeur :",
 		"continue": "Continuer",
-		"walkAway": "Prendre l'argent"
+		"walkAway": "Prendre l'argent",
+		"safetyNet": "Votre filet de sécurité",
+		"riskExplain": "Mauvaise réponse = retour à {points} points"
 	},
 	"won": {
 		"title": "Félicitations !"
@@ -40,8 +42,8 @@
 		"title": "Comment jouer",
 		"rule1": "Répondez à 12 questions sur 3 niveaux",
 		"rule2": "Vous avez un temps limité pour chaque question",
-		"rule3": "Aux checkpoints, vous pouvez sécuriser vos points",
-		"rule4": "Une mauvaise réponse = vous perdez les points non sécurisés"
+		"rule3": "Les checkpoints sont des filets de sécurité - points atteints sont acquis",
+		"rule4": "Mauvaise réponse = retour au dernier checkpoint"
 	},
 	"categories": [
 		"Histoire de France",

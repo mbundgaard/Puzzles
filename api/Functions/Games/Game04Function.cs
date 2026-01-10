@@ -68,7 +68,7 @@ public class Game04Function
         // Try up to 3 times to generate valid questions
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var questions = await GenerateQuestionsAsync(request.Language, request.Category);
+            var questions = await GenerateQuestionsAsync(request.Language, request.Category, request.Seed);
             if (questions != null && questions.Count == 12)
             {
                 _logger.LogInformation("Quiz generated: {Category} ({Language}), attempt {Attempt}",
@@ -89,7 +89,7 @@ public class Game04Function
         };
     }
 
-    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category)
+    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, int? seed)
     {
         var outputLanguage = language.ToLower() switch
         {
@@ -99,9 +99,13 @@ public class Game04Function
             _ => "English"
         };
 
+        var seedInstruction = seed.HasValue
+            ? $"\nIMPORTANT: Use seed {seed.Value} to generate a UNIQUE set of questions. Each seed should produce completely different questions."
+            : "";
+
         var systemPrompt = $@"You are a quiz generator. Generate exactly 12 trivia questions about: {category}
 
-IMPORTANT: Write all questions and answers in {outputLanguage}.
+IMPORTANT: Write all questions and answers in {outputLanguage}.{seedInstruction}
 
 Rules:
 1. Generate EXACTLY 12 questions
@@ -175,6 +179,7 @@ correct is the index (0-3) of the correct answer in the options array.";
     {
         public string Language { get; set; } = "";
         public string Category { get; set; } = "";
+        public int? Seed { get; set; }
     }
 
     private class QuizGenerateResponse

@@ -18,7 +18,9 @@
 		"nextLevel": "Next level",
 		"worth": "Worth:",
 		"continue": "Continue",
-		"walkAway": "Take the money"
+		"walkAway": "Take the money",
+		"safetyNet": "Your safety net",
+		"riskExplain": "Wrong answer = you drop back to {points} points"
 	},
 	"won": {
 		"title": "Congratulations!"
@@ -40,8 +42,8 @@
 		"title": "How to play",
 		"rule1": "Answer 12 questions across 3 levels",
 		"rule2": "You have limited time for each question",
-		"rule3": "At checkpoints you can secure your points",
-		"rule4": "A wrong answer = you lose unsecured points"
+		"rule3": "Checkpoints are safety nets - points you reach are safe",
+		"rule4": "Wrong answer = you drop back to the last checkpoint"
 	},
 	"categories": [
 		"British history",
