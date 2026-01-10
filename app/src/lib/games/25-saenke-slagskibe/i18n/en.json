@@ -2,7 +2,7 @@
 	"title": "Battleship",
 	"back": "Back",
 	"cancel": "Cancel",
-	"loading": "Loading...",
+	"loading": "Loading",
 	"menu": {
 		"title": "Battleship",
 		"subtitle": "Play against a friend!",
@@ -20,7 +20,7 @@
 		"lowStakes": "Low Stakes"
 	},
 	"waiting": {
-		"title": "Waiting for opponent...",
+		"title": "Waiting for opponent",
 		"gameCode": "Game code",
 		"hint": "Share the code with your friend"
 	},
@@ -37,14 +37,14 @@
 	"placing": {
 		"title": "Place your ships",
 		"vs": "vs",
-		"waitingOpponent": "Waiting for opponent...",
+		"waitingOpponent": "Waiting for opponent",
 		"placeShip": "Place ship",
 		"allPlaced": "All ships placed!",
 		"horizontal": "Horizontal",
 		"vertical": "Vertical",
 		"undo": "Undo",
 		"ready": "Ready!",
-		"waitingForOpponent": "Waiting for opponent to place ships..."
+		"waitingForOpponent": "Waiting for opponent to place ships"
 	},
 	"battle": {
 		"vs": "vs",

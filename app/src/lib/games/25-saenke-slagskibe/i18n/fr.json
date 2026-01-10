@@ -2,25 +2,25 @@
 	"title": "Bataille Navale",
 	"back": "Retour",
 	"cancel": "Annuler",
-	"loading": "Chargement...",
+	"loading": "Chargement",
 	"menu": {
 		"title": "Bataille Navale",
 		"subtitle": "Jouez contre un ami!",
-		"createGame": "Creer une partie",
+		"createGame": "Créer une partie",
 		"joinGame": "Rejoindre une partie"
 	},
 	"create": {
-		"title": "Creer une partie",
+		"title": "Créer une partie",
 		"selectStakes": "Choisir la structure de points",
 		"start": "Commencer"
 	},
 	"stakes": {
-		"highStakes": "Enjeux eleves",
+		"highStakes": "Enjeux élevés",
 		"mediumStakes": "Enjeux moyens",
 		"lowStakes": "Enjeux faibles"
 	},
 	"waiting": {
-		"title": "En attente d'un adversaire...",
+		"title": "En attente d'un adversaire",
 		"gameCode": "Code de jeu",
 		"hint": "Partagez le code avec votre ami"
 	},
@@ -30,21 +30,21 @@
 		"refresh": "Actualiser"
 	},
 	"time": {
-		"justNow": "A l'instant",
+		"justNow": "À l'instant",
 		"oneMinuteAgo": "Il y a 1 minute",
 		"minutesAgo": "Il y a {n} minutes"
 	},
 	"placing": {
 		"title": "Placez vos navires",
 		"vs": "contre",
-		"waitingOpponent": "En attente de l'adversaire...",
+		"waitingOpponent": "En attente de l'adversaire",
 		"placeShip": "Placer le navire",
-		"allPlaced": "Tous les navires sont places!",
+		"allPlaced": "Tous les navires sont placés!",
 		"horizontal": "Horizontal",
 		"vertical": "Vertical",
 		"undo": "Annuler",
-		"ready": "Pret!",
-		"waitingForOpponent": "En attente du placement des navires de l'adversaire..."
+		"ready": "Prêt!",
+		"waitingForOpponent": "En attente du placement des navires de l'adversaire"
 	},
 	"battle": {
 		"vs": "contre",
@@ -54,7 +54,7 @@
 		"yourBoard": "Votre plateau"
 	},
 	"ended": {
-		"youWon": "Vous avez gagne!",
+		"youWon": "Vous avez gagné!",
 		"youLost": "Vous avez perdu",
 		"points": "points",
 		"yourShips": "Vos navires",
