@@ -106,6 +106,27 @@
 		"points": "points",
 		"close": "Close"
 	},
+	"changelog": {
+		"84": "Name prompt now appears when starting a game without a saved name",
+		"85": "Leaderboard now shows all players instead of top 10",
+		"77": "Language selection changed to native dropdown",
+		"60": "Games now show sparkle (new) and dizzy star (updated) badges",
+		"79": "Feedback popup now only appears after one week of use",
+		"76": "Feedback page now auto-redirects to home after submission",
+		"73": "New SvelteKit app with modern UI, i18n, PWA install banner, and weekly feedback popup",
+		"70": "Added English and French translations",
+		"66": "Games now auto-sorted by most recent activity",
+		"17": "Added Strikkespil - rotate yarn tiles to connect all loose ends",
+		"63": "Redesigned Sænke Slagskibe as newspaper-style logic puzzle",
+		"64": "Renamed 15-Puslespil to Skubbepuslespil",
+		"65": "Fixed missing OPDATERET badge on Ordleg",
+		"61": "Made game badges dynamic (auto-calculated from dates)",
+		"59": "Added snap-to-grid in Tangram",
+		"48": "Added Labyrint - maze game with fog of war",
+		"53": "Added hints to Gæt Dyret",
+		"56": "Fixed Ordsøgning generating nonexistent words",
+		"24": "Added Ordsøgning - find hidden words"
+	},
 	"win": {
 		"title": "Congratulations!",
 		"message": "You did it!",

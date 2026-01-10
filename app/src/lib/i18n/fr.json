@@ -106,6 +106,27 @@
 		"points": "points",
 		"close": "Fermer"
 	},
+	"changelog": {
+		"84": "L'invite de nom apparaît maintenant au démarrage d'un jeu sans nom enregistré",
+		"85": "Le classement affiche maintenant tous les joueurs au lieu du top 10",
+		"77": "Sélection de langue changée en menu déroulant natif",
+		"60": "Les jeux affichent maintenant des badges étincelle (nouveau) et étoile (mis à jour)",
+		"79": "La popup de feedback n'apparaît maintenant qu'après une semaine d'utilisation",
+		"76": "La page de feedback redirige maintenant automatiquement vers l'accueil après envoi",
+		"73": "Nouvelle app SvelteKit avec UI moderne, i18n, bannière d'installation PWA et popup de feedback hebdomadaire",
+		"70": "Ajout des traductions anglaises et françaises",
+		"66": "Les jeux sont maintenant triés automatiquement par activité récente",
+		"17": "Ajout de Strikkespil - tournez les tuiles de laine pour connecter toutes les extrémités",
+		"63": "Redesign de Sænke Slagskibe en puzzle logique style journal",
+		"64": "Renommé 15-Puslespil en Skubbepuslespil",
+		"65": "Corrigé le badge OPDATERET manquant sur Ordleg",
+		"61": "Badges de jeux rendus dynamiques (calculés automatiquement à partir des dates)",
+		"59": "Ajout du snap-to-grid dans Tangram",
+		"48": "Ajout de Labyrint - jeu de labyrinthe avec brouillard de guerre",
+		"53": "Ajout d'indices à Gæt Dyret",
+		"56": "Corrigé Ordsøgning qui générait des mots inexistants",
+		"24": "Ajout de Ordsøgning - trouvez les mots cachés"
+	},
 	"win": {
 		"title": "Félicitations !",
 		"message": "Vous avez réussi !",

@@ -106,6 +106,27 @@
 		"points": "point",
 		"close": "Luk"
 	},
+	"changelog": {
+		"84": "Navneprompt vises nu ved start af spil uden gemt navn",
+		"85": "Ranglisten viser nu alle spillere i stedet for top 10",
+		"77": "Sprogvalg ændret til native dropdown",
+		"60": "Spil viser nu gnist (nyt) og svimmel stjerne (opdateret) badges",
+		"79": "Feedback-popup vises nu kun efter en uges brug",
+		"76": "Feedback-side omdirigerer nu automatisk til forsiden efter afsendelse",
+		"73": "Ny SvelteKit-app med moderne UI, i18n, PWA install-banner og ugentlig feedback-popup",
+		"70": "Tilføjet engelske og franske oversættelser",
+		"66": "Spil sorteres nu automatisk efter seneste aktivitet",
+		"17": "Tilføjet Strikkespil - drej garntiles for at forbinde alle løse ender",
+		"63": "Redesignet Sænke Slagskibe som avis-stil logikpuslespil",
+		"64": "Omdøbt 15-Puslespil til Skubbepuslespil",
+		"65": "Rettet manglende OPDATERET-badge på Ordleg",
+		"61": "Gjort spilbadges dynamiske (auto-beregnet fra datoer)",
+		"59": "Tilføjet snap-to-grid i Tangram",
+		"48": "Tilføjet Labyrint - labyrinthspil med tåge",
+		"53": "Tilføjet hints til Gæt Dyret",
+		"56": "Rettet Ordsøgning der genererede ikke-eksisterende ord",
+		"24": "Tilføjet Ordsøgning - find skjulte ord"
+	},
 	"win": {
 		"title": "Tillykke!",
 		"message": "Du klarede det!",

@@ -22,26 +22,27 @@
 
 	// Changelog entries - sorted by closedAt descending (newest first)
 	// Add new entries at the TOP of this array
+	// NOTE: Text is stored in translation files under changelog.[issue] keys
 	const changelogEntries = [
-		{ issue: 84, closedAt: '2026-01-10T21:00:00Z', submitter: 'Martin', text: 'Name prompt now appears when starting a game without a saved name' },
-		{ issue: 85, closedAt: '2026-01-10T20:00:00Z', submitter: 'Martin', text: 'Leaderboard now shows all players instead of top 10' },
-		{ issue: 77, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Language selection changed to native dropdown' },
-		{ issue: 60, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin', text: 'Games now show sparkle (new) and dizzy star (updated) badges' },
-		{ issue: 79, closedAt: '2026-01-10T17:00:00Z', submitter: 'Sara', text: 'Feedback popup now only appears after one week of use' },
-		{ issue: 76, closedAt: '2026-01-10T16:00:00Z', submitter: 'Martin', text: 'Feedback page now auto-redirects to home after submission' },
-		{ issue: 73, closedAt: '2026-01-10T14:00:00Z', submitter: 'Martin', text: 'New SvelteKit app with modern UI, i18n, PWA install banner, and weekly feedback popup' },
-		{ issue: 70, closedAt: '2026-01-10T12:00:00Z', submitter: 'Martin', text: 'Added English and French translations' },
-		{ issue: 66, closedAt: '2026-01-09T11:55:00Z', submitter: 'Sara', text: 'Games now auto-sorted by most recent activity' },
-		{ issue: 17, closedAt: '2026-01-09T10:00:00Z', submitter: 'Sara', text: 'Added Strikkespil - rotate yarn tiles to connect all loose ends' },
-		{ issue: 63, closedAt: '2026-01-09T09:30:00Z', submitter: 'Sara', text: 'Redesigned Sænke Slagskibe as newspaper-style logic puzzle' },
-		{ issue: 64, closedAt: '2026-01-09T07:08:00Z', submitter: 'Sara', text: 'Renamed 15-Puslespil to Skubbepuslespil' },
-		{ issue: 65, closedAt: '2026-01-09T07:02:00Z', submitter: 'Sara', text: 'Fixed missing OPDATERET badge on Ordleg' },
-		{ issue: 61, closedAt: '2026-01-07T12:00:00Z', submitter: 'Martin', text: 'Made game badges dynamic (auto-calculated from dates)' },
-		{ issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin', text: 'Added snap-to-grid in Tangram' },
-		{ issue: 48, closedAt: '2026-01-05T10:30:00Z', submitter: 'TestUser', text: 'Added Labyrint - maze game with fog of war' },
-		{ issue: 53, closedAt: '2026-01-03T17:20:00Z', submitter: 'Martin', text: 'Added hints to Gæt Dyret' },
-		{ issue: 56, closedAt: '2026-01-03T16:30:00Z', submitter: 'User', text: 'Fixed Ordsøgning generating nonexistent words' },
-		{ issue: 24, closedAt: '2026-01-03T15:01:00Z', submitter: 'User', text: 'Added Ordsøgning - find hidden words' },
+		{ issue: 84, closedAt: '2026-01-10T21:00:00Z', submitter: 'Martin' },
+		{ issue: 85, closedAt: '2026-01-10T20:00:00Z', submitter: 'Martin' },
+		{ issue: 77, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin' },
+		{ issue: 60, closedAt: '2026-01-10T18:00:00Z', submitter: 'Martin' },
+		{ issue: 79, closedAt: '2026-01-10T17:00:00Z', submitter: 'Sara' },
+		{ issue: 76, closedAt: '2026-01-10T16:00:00Z', submitter: 'Martin' },
+		{ issue: 73, closedAt: '2026-01-10T14:00:00Z', submitter: 'Martin' },
+		{ issue: 70, closedAt: '2026-01-10T12:00:00Z', submitter: 'Martin' },
+		{ issue: 66, closedAt: '2026-01-09T11:55:00Z', submitter: 'Sara' },
+		{ issue: 17, closedAt: '2026-01-09T10:00:00Z', submitter: 'Sara' },
+		{ issue: 63, closedAt: '2026-01-09T09:30:00Z', submitter: 'Sara' },
+		{ issue: 64, closedAt: '2026-01-09T07:08:00Z', submitter: 'Sara' },
+		{ issue: 65, closedAt: '2026-01-09T07:02:00Z', submitter: 'Sara' },
+		{ issue: 61, closedAt: '2026-01-07T12:00:00Z', submitter: 'Martin' },
+		{ issue: 59, closedAt: '2026-01-06T10:00:00Z', submitter: 'Martin' },
+		{ issue: 48, closedAt: '2026-01-05T10:30:00Z', submitter: 'TestUser' },
+		{ issue: 53, closedAt: '2026-01-03T17:20:00Z', submitter: 'Martin' },
+		{ issue: 56, closedAt: '2026-01-03T16:30:00Z', submitter: 'User' },
+		{ issue: 24, closedAt: '2026-01-03T15:01:00Z', submitter: 'User' },
 	];
 
 	function formatDate(isoString: string): string {
@@ -89,7 +90,7 @@
 							</a>
 							<span class="submitter">{entry.submitter}</span>
 						</div>
-						<p class="entry-text">{entry.text}</p>
+						<p class="entry-text">{tr('changelog.' + entry.issue)}</p>
 					</div>
 				{/each}
 			</div>
