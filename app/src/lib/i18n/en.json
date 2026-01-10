@@ -114,6 +114,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"86": "Added favorite games - tap the heart to pin games to the top",
 		"88": "Removed 'returning to home' message after feedback submission",
 		"74": "Removed visible scrollbars in the app",
 		"68": "Battleship is now multiplayer!",

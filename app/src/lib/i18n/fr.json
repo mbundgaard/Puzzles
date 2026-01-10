@@ -114,6 +114,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"86": "Ajout des jeux favoris - appuyez sur le cœur pour épingler les jeux en haut",
 		"88": "Suppression du message 'retour à l'accueil' après envoi de commentaires",
 		"74": "Suppression des barres de défilement visibles dans l'app",
 		"68": "Bataille Navale est maintenant multijoueur!",
