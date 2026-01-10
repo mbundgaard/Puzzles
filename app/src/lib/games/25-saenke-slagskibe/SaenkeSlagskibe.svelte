@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
-	import { trackStart, trackComplete, recordWin, getNickname } from '$lib/api';
+	import { trackStart, trackComplete, getNickname } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
 	import { onMount, onDestroy } from 'svelte';
 
@@ -46,18 +46,16 @@
 	}
 
 	// Types
-	interface Ship {
-		x: number;
-		y: number;
+	// Local placement uses objects for easier manipulation
+	interface PlacedShip {
+		x: number; // column
+		y: number; // row
 		length: number;
 		horizontal: boolean;
 	}
 
-	interface Shot {
-		x: number;
-		y: number;
-		hit: boolean;
-	}
+	// API format: [[row, col], ...] for ships, [[row, col, hit], ...] for shots
+	// hit is 1 for hit, 0 for miss
 
 	interface GameState {
 		gameId: string;
@@ -67,10 +65,10 @@
 		winnerPoints: number;
 		loserPoints: number;
 		yourRole: 'creator' | 'joiner';
-		yourShips: Ship[] | null;
-		opponentShips: Ship[] | null;
-		yourShots: Shot[];
-		opponentShots: Shot[];
+		yourShips: number[][] | null; // [[row, col], ...] sorted
+		opponentShips: number[][] | null; // Only revealed when game ended
+		yourShots: number[][]; // [[row, col, hit], ...] sorted
+		opponentShots: number[][]; // [[row, col, hit], ...] sorted
 		currentTurn: 'creator' | 'joiner';
 		isYourTurn: boolean;
 		winner: 'creator' | 'joiner' | null;
@@ -101,7 +99,7 @@
 	let showWinModal = $state(false);
 
 	// Ship placement state
-	let placingShips = $state<Ship[]>([]);
+	let placingShips = $state<PlacedShip[]>([]);
 	let currentShipIndex = $state(0);
 	let shipHorizontal = $state(true);
 	let placementPreview = $state<{ x: number; y: number } | null>(null);
@@ -250,13 +248,23 @@
 		loading = true;
 		error = null;
 
+		// Convert PlacedShip objects to coordinate array [[row, col], ...]
+		const shipCoords: number[][] = [];
+		for (const ship of placingShips) {
+			for (let i = 0; i < ship.length; i++) {
+				const col = ship.horizontal ? ship.x + i : ship.x;
+				const row = ship.horizontal ? ship.y : ship.y + i;
+				shipCoords.push([row, col]);
+			}
+		}
+
 		try {
 			const response = await fetch(`${API_BASE}/${gameId}/ships`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					playerToken,
-					ships: placingShips
+					ships: shipCoords
 				})
 			});
 
@@ -281,8 +289,8 @@
 	async function shoot(x: number, y: number): Promise<void> {
 		if (!gameId || !playerToken || !gameState?.isYourTurn) return;
 
-		// Check if already shot here
-		if (gameState.yourShots.some((s) => s.x === x && s.y === y)) return;
+		// Check if already shot here (shots are [row, col, hit] where row=y, col=x)
+		if (gameState.yourShots.some((s) => s[0] === y && s[1] === x)) return;
 
 		loading = true;
 		error = null;
@@ -291,7 +299,7 @@
 			const response = await fetch(`${API_BASE}/${gameId}/shoot`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ playerToken, x, y })
+				body: JSON.stringify({ playerToken, row: y, col: x })
 			});
 
 			if (!response.ok) {
@@ -398,15 +406,13 @@
 		if (!currentShip) return;
 		if (!canPlaceShip(x, y, currentShip.length, shipHorizontal)) return;
 
-		placingShips = [
-			...placingShips,
-			{
-				x,
-				y,
-				length: currentShip.length,
-				horizontal: shipHorizontal
-			}
-		];
+		const newShip: PlacedShip = {
+			x,
+			y,
+			length: currentShip.length,
+			horizontal: shipHorizontal
+		};
+		placingShips = [...placingShips, newShip];
 		currentShipIndex++;
 		placementPreview = null;
 	}
@@ -430,8 +436,8 @@
 		placementPreview = null;
 	}
 
-	// Check if a cell is occupied by a placed ship
-	function isShipCell(x: number, y: number, ships: Ship[]): boolean {
+	// Check if a cell is occupied by a locally placed ship (during placement phase)
+	function isPlacedShipCell(x: number, y: number, ships: PlacedShip[]): boolean {
 		for (const ship of ships) {
 			for (let i = 0; i < ship.length; i++) {
 				const sx = ship.horizontal ? ship.x + i : ship.x;
@@ -440,6 +446,11 @@
 			}
 		}
 		return false;
+	}
+
+	// Check if a cell is occupied by a ship from API (coordinate array [[row, col], ...])
+	function isShipCellFromCoords(x: number, y: number, coords: number[][]): boolean {
+		return coords.some((c) => c[0] === y && c[1] === x); // c[0]=row=y, c[1]=col=x
 	}
 
 	// Get preview cells for current ship placement
@@ -465,22 +476,16 @@
 
 	// ============ Game End ============
 
-	async function handleGameEnd(): Promise<void> {
+	function handleGameEnd(): void {
 		if (!gameState) return;
 
 		trackComplete(GAME_NUMBER);
 
-		// Record win/loss to leaderboard
+		// Points are recorded by the API, just show the win modal
 		if (gameState.youWon) {
-			await recordWin(GAME_NUMBER, playerName, gameState.winnerPoints);
 			setTimeout(() => {
 				showWinModal = true;
 			}, 500);
-		} else {
-			// Record loss (negative points)
-			if (gameState.loserPoints > 0) {
-				await recordWin(GAME_NUMBER, playerName, -gameState.loserPoints);
-			}
 		}
 	}
 
@@ -657,7 +662,7 @@
 				{#each { length: GRID_SIZE } as _, y}
 					<div class="grid-row">
 						{#each { length: GRID_SIZE } as _, x}
-							{@const isPlaced = isShipCell(x, y, placingShips)}
+							{@const isPlaced = isPlacedShipCell(x, y, placingShips)}
 							{@const previewCells = getPreviewCells()}
 							{@const previewCell = previewCells.find((c) => c.x === x && c.y === y)}
 							<button
@@ -724,11 +729,11 @@
 					{#each { length: GRID_SIZE } as _, y}
 						<div class="grid-row">
 							{#each { length: GRID_SIZE } as _, x}
-								{@const shot = gameState?.yourShots.find((s) => s.x === x && s.y === y)}
+								{@const shot = gameState?.yourShots.find((s) => s[0] === y && s[1] === x)}
 								<button
 									class="cell"
-									class:hit={shot?.hit}
-									class:miss={shot !== undefined && !shot.hit}
+									class:hit={shot && shot[2] === 1}
+									class:miss={shot !== undefined && shot[2] === 0}
 									onclick={() => shoot(x, y)}
 									disabled={!gameState?.isYourTurn || shot !== undefined || loading}
 								></button>
@@ -746,16 +751,16 @@
 						<div class="grid-row">
 							{#each { length: GRID_SIZE } as _, x}
 								{@const isShip = gameState?.yourShips
-									? isShipCell(x, y, gameState.yourShips)
+									? isShipCellFromCoords(x, y, gameState.yourShips)
 									: false}
 								{@const opponentShot = gameState?.opponentShots.find(
-									(s) => s.x === x && s.y === y
+									(s) => s[0] === y && s[1] === x
 								)}
 								<div
 									class="cell"
 									class:ship={isShip}
-									class:hit={opponentShot?.hit}
-									class:miss={opponentShot !== undefined && !opponentShot.hit}
+									class:hit={opponentShot && opponentShot[2] === 1}
+									class:miss={opponentShot !== undefined && opponentShot[2] === 0}
 								></div>
 							{/each}
 						</div>
@@ -791,16 +796,16 @@
 							<div class="grid-row">
 								{#each { length: GRID_SIZE } as _, x}
 									{@const isShip = gameState?.yourShips
-										? isShipCell(x, y, gameState.yourShips)
+										? isShipCellFromCoords(x, y, gameState.yourShips)
 										: false}
 									{@const shot = gameState?.opponentShots.find(
-										(s) => s.x === x && s.y === y
+										(s) => s[0] === y && s[1] === x
 									)}
 									<div
 										class="cell"
 										class:ship={isShip}
-										class:hit={shot?.hit}
-										class:miss={shot !== undefined && !shot.hit}
+										class:hit={shot && shot[2] === 1}
+										class:miss={shot !== undefined && shot[2] === 0}
 									></div>
 								{/each}
 							</div>
@@ -815,16 +820,16 @@
 							<div class="grid-row">
 								{#each { length: GRID_SIZE } as _, x}
 									{@const isShip = gameState?.opponentShips
-										? isShipCell(x, y, gameState.opponentShips)
+										? isShipCellFromCoords(x, y, gameState.opponentShips)
 										: false}
 									{@const shot = gameState?.yourShots.find(
-										(s) => s.x === x && s.y === y
+										(s) => s[0] === y && s[1] === x
 									)}
 									<div
 										class="cell"
 										class:ship={isShip}
-										class:hit={shot?.hit}
-										class:miss={shot !== undefined && !shot.hit}
+										class:hit={shot && shot[2] === 1}
+										class:miss={shot !== undefined && shot[2] === 0}
 									></div>
 								{/each}
 							</div>
