@@ -64,12 +64,13 @@ export function isValidNickname(nickname: string): boolean {
 
 // ============ Leaderboard ============
 
-export async function getLeaderboard(game: string | null = null, top: number = 10): Promise<LeaderboardResponse> {
+export async function getLeaderboard(game: string | null = null): Promise<LeaderboardResponse> {
 	try {
-		const params = new URLSearchParams({ top: top.toString() });
+		const params = new URLSearchParams();
 		if (game) params.set('game', game);
 
-		const response = await fetch(`${API_BASE}/leaderboard?${params}`);
+		const url = params.toString() ? `${API_BASE}/leaderboard?${params}` : `${API_BASE}/leaderboard`;
+		const response = await fetch(url);
 		return await response.json();
 	} catch (error) {
 		console.warn('Failed to get leaderboard:', error);

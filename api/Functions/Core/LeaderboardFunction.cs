@@ -28,12 +28,12 @@ public class LeaderboardFunction
             game = null;
         }
 
-        // Optional top count (default 10, max 50)
+        // Optional top count (default 0 = all players)
         var topParam = req.Query["top"].FirstOrDefault();
-        var top = 10;
-        if (int.TryParse(topParam, out var parsedTop))
+        int? top = null;
+        if (int.TryParse(topParam, out var parsedTop) && parsedTop > 0)
         {
-            top = Math.Clamp(parsedTop, 1, 50);
+            top = parsedTop;
         }
 
         var leaderboard = await _storage.GetLeaderboardAsync(game, top);

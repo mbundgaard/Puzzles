@@ -51,7 +51,7 @@ public class AzureTableWinStorage : IWinStorage
         return true;
     }
 
-    public async Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int top = 10)
+    public async Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int? top = null)
     {
         // Filter by current month (partition key is yyyy-MM)
         var currentMonth = DateTime.UtcNow.ToString("yyyy-MM");
@@ -69,15 +69,19 @@ public class AzureTableWinStorage : IWinStorage
         }
 
         // Group by nickname and sum points (old records without Points get 1 point)
-        var grouped = wins
+        var query = wins
             .GroupBy(w => w.Nickname.ToLowerInvariant())
             .Select(g => new
             {
                 Nickname = g.First().Nickname,
                 Points = g.Sum(w => w.Points > 0 ? w.Points : 1)
             })
-            .OrderByDescending(x => x.Points)
-            .Take(top)
+            .OrderByDescending(x => x.Points);
+
+        // Apply limit if specified
+        var limited = top.HasValue ? query.Take(top.Value) : query;
+
+        var grouped = limited
             .Select((x, i) => new LeaderboardEntry
             {
                 Rank = i + 1,

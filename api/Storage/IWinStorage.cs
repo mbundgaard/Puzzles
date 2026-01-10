@@ -17,8 +17,8 @@ public interface IWinStorage
     /// Gets the leaderboard for the current month.
     /// </summary>
     /// <param name="game">Optional game filter. Null = all games.</param>
-    /// <param name="top">Number of top entries to return.</param>
-    Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int top = 10);
+    /// <param name="top">Number of top entries to return. Null = all players.</param>
+    Task<LeaderboardResponse> GetLeaderboardAsync(string? game, int? top = null);
 
     /// <summary>
     /// Checks if a win was recorded recently (rate limiting).
