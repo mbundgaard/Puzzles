@@ -1,0 +1,17 @@
+{
+	"title": "2048",
+	"newGame": "Nyt Spil",
+	"score": "Score",
+	"best": "Bedste",
+	"status": {
+		"won": "Du vandt! Du nåede 2048!",
+		"gameOver": "Spil slut!"
+	},
+	"continue": "Fortsæt",
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Brug pilene for at flytte fliserne",
+		"rule2": "Når to fliser med samme tal mødes, smelter de sammen",
+		"rule3": "Nå tallet 2048 for at vinde!"
+	}
+}

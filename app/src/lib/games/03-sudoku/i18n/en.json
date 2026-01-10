@@ -1,0 +1,22 @@
+{
+	"title": "Sudoku",
+	"newGame": "New Game",
+	"clear": "Clear",
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"status": {
+		"playing": "Fill all cells correctly",
+		"won": "Congratulations! You solved the puzzle!"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Fill the grid so each row, column and 3x3 box contains the numbers 1-9",
+		"rule2": "Tap a cell to select it",
+		"rule3": "Tap a number to fill the cell",
+		"rule4": "Pre-filled numbers cannot be changed"
+	}
+}

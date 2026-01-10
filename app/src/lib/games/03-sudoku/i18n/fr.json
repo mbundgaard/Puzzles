@@ -1,0 +1,22 @@
+{
+	"title": "Sudoku",
+	"newGame": "Nouvelle Partie",
+	"clear": "Effacer",
+	"difficulty": {
+		"label": "Difficulte",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"status": {
+		"playing": "Remplissez toutes les cases correctement",
+		"won": "Felicitations! Vous avez resolu le puzzle!"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Remplissez la grille pour que chaque ligne, colonne et boite 3x3 contienne les chiffres 1-9",
+		"rule2": "Appuyez sur une case pour la selectionner",
+		"rule3": "Appuyez sur un chiffre pour remplir la case",
+		"rule4": "Les chiffres pre-remplis ne peuvent pas etre modifies"
+	}
+}

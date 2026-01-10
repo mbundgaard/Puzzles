@@ -1,0 +1,21 @@
+{
+	"title": "Tents and Trees",
+	"newGame": "New Game",
+	"mode": {
+		"tent": "Tent",
+		"grass": "Mark"
+	},
+	"status": {
+		"tentMode": "Tap to place tent",
+		"grassMode": "Tap to mark empty cell",
+		"won": "Congratulations! Puzzle solved!"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Tap a cell to place a tent or mark it as empty",
+		"rule2": "Each tent must be adjacent to exactly one tree (up/down/left/right)",
+		"rule3": "Each tree is paired with exactly one tent",
+		"rule4": "Tents cannot touch each other, not even diagonally",
+		"rule5": "Numbers show how many tents must be in each row/column"
+	}
+}

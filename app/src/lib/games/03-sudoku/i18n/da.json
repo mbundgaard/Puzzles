@@ -1,0 +1,22 @@
+{
+	"title": "Sudoku",
+	"newGame": "Nyt Spil",
+	"clear": "Slet",
+	"difficulty": {
+		"label": "Svaerhedsgrad",
+		"easy": "Let",
+		"medium": "Medium",
+		"hard": "Svaer"
+	},
+	"status": {
+		"playing": "Udfyld alle felter korrekt",
+		"won": "Tillykke! Du loeste puslespillet!"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Udfyld gitteret sa hver raekke, kolonne og 3x3 boks indeholder tallene 1-9",
+		"rule2": "Tryk pa en celle for at vaelge den",
+		"rule3": "Tryk pa et tal for at udfylde cellen",
+		"rule4": "Forudfyldte tal kan ikke aendres"
+	}
+}

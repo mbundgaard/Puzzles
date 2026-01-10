@@ -1,0 +1,21 @@
+{
+	"title": "Tentes et Arbres",
+	"newGame": "Nouvelle Partie",
+	"mode": {
+		"tent": "Tente",
+		"grass": "Marquer"
+	},
+	"status": {
+		"tentMode": "Appuyez pour placer une tente",
+		"grassMode": "Appuyez pour marquer une case vide",
+		"won": "Felicitations! Puzzle resolu!"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Appuyez sur une case pour placer une tente ou la marquer comme vide",
+		"rule2": "Chaque tente doit etre adjacente a exactement un arbre (haut/bas/gauche/droite)",
+		"rule3": "Chaque arbre est associe a exactement une tente",
+		"rule4": "Les tentes ne peuvent pas se toucher, meme en diagonale",
+		"rule5": "Les nombres indiquent combien de tentes doivent etre dans chaque ligne/colonne"
+	}
+}

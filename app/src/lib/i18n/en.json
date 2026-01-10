@@ -123,6 +123,18 @@
 			"title": "Reversi",
 			"description": "Capture the pieces"
 		},
+		"02-tents": {
+			"title": "Tents and Trees",
+			"description": "Place tents next to trees"
+		},
+		"03-sudoku": {
+			"title": "Sudoku",
+			"description": "Fill in the numbers"
+		},
+		"05-2048": {
+			"title": "2048",
+			"description": "Combine the tiles"
+		},
 		"06-minestryger": {
 			"title": "Minesweeper",
 			"description": "Avoid the mines"

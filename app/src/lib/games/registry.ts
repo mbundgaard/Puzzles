@@ -22,6 +22,33 @@ export const games: GameInfo[] = [
 		points: 3
 	},
 	{
+		id: '02-tents',
+		number: '02',
+		icon: '⛺',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./02-tents/Tents.svelte'),
+		accentColor: '#22c55e',
+		points: 3
+	},
+	{
+		id: '03-sudoku',
+		number: '03',
+		icon: '9️⃣',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./03-sudoku/Sudoku.svelte'),
+		accentColor: '#667eea',
+		points: 3
+	},
+	{
+		id: '05-2048',
+		number: '05',
+		icon: '🎮',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./05-2048/Game2048.svelte'),
+		accentColor: '#ffd700',
+		points: 3
+	},
+	{
 		id: '06-minestryger',
 		number: '06',
 		icon: '💣',

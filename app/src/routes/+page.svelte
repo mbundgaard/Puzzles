@@ -11,6 +11,9 @@
 
 	// Games sorted by most recent activity (matching classic app order)
 	const games = [
+		{ id: '02-tents', icon: '⛺', accentColor: '#22c55e' },
+		{ id: '03-sudoku', icon: '9️⃣', accentColor: '#667eea' },
+		{ id: '05-2048', icon: '🎮', accentColor: '#f59e0b' },
 		{ id: '29-maskevaerk', icon: '🧶', accentColor: '#f9a8d4', ai: true },
 		{ id: '10-ordleg', icon: '📝', accentColor: '#22c55e', ai: true },
 		{ id: '24-tangram', icon: '🧩', accentColor: '#a855f7' },

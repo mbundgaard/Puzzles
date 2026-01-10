@@ -123,6 +123,18 @@
 			"title": "Reversi",
 			"description": "Erobr brikkerne"
 		},
+		"02-tents": {
+			"title": "Telte og Træer",
+			"description": "Placer telte ved træer"
+		},
+		"03-sudoku": {
+			"title": "Sudoku",
+			"description": "Udfyld tallene"
+		},
+		"05-2048": {
+			"title": "2048",
+			"description": "Kombiner fliserne"
+		},
 		"06-minestryger": {
 			"title": "Minestryger",
 			"description": "Undgå minerne"

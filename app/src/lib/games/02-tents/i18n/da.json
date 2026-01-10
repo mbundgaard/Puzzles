@@ -1,0 +1,21 @@
+{
+	"title": "Telte og Traeer",
+	"newGame": "Nyt Spil",
+	"mode": {
+		"tent": "Telt",
+		"grass": "Marker"
+	},
+	"status": {
+		"tentMode": "Tryk for at placere telt",
+		"grassMode": "Tryk for at markere tomt felt",
+		"won": "Tillykke! Puslespillet er loest!"
+	},
+	"rules": {
+		"title": "Saadan spiller du",
+		"rule1": "Tryk paa et felt for at placere telt eller markere tomt",
+		"rule2": "Hvert telt skal vaere ved siden af praecis et trae (op/ned/venstre/hoejre)",
+		"rule3": "Hvert trae hoerer sammen med praecis et telt",
+		"rule4": "Telte maa ikke roere hinanden, heller ikke diagonalt",
+		"rule5": "Tallene viser hvor mange telte der skal vaere i hver raekke/kolonne"
+	}
+}

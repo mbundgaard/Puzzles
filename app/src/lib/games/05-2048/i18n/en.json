@@ -1,0 +1,17 @@
+{
+	"title": "2048",
+	"newGame": "New Game",
+	"score": "Score",
+	"best": "Best",
+	"status": {
+		"won": "You won! You reached 2048!",
+		"gameOver": "Game Over!"
+	},
+	"continue": "Continue",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Use the arrows to move the tiles",
+		"rule2": "When two tiles with the same number meet, they merge",
+		"rule3": "Reach the number 2048 to win!"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"title": "2048",
+	"newGame": "Nouveau Jeu",
+	"score": "Score",
+	"best": "Meilleur",
+	"status": {
+		"won": "Vous avez gagné ! Vous avez atteint 2048 !",
+		"gameOver": "Partie terminée !"
+	},
+	"continue": "Continuer",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Utilisez les flèches pour déplacer les tuiles",
+		"rule2": "Quand deux tuiles avec le même nombre se rencontrent, elles fusionnent",
+		"rule3": "Atteignez le nombre 2048 pour gagner !"
+	}
+}
