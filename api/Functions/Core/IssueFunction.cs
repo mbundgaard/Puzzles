@@ -183,44 +183,4 @@ public class IssueFunction
 
         return new ObjectResult(new { error = "Failed to close issue" }) { StatusCode = 500 };
     }
-
-    [Function("DeleteIssue")]
-    public async Task<IActionResult> DeleteIssue(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "issue/delete")] HttpRequest req)
-    {
-        var authResult = _adminAuth.Authorize(req);
-        if (authResult != null) return authResult;
-
-        DeleteIssueRequest? request;
-        try
-        {
-            using var reader = new StreamReader(req.Body, Encoding.UTF8);
-            var body = await reader.ReadToEndAsync();
-            request = JsonSerializer.Deserialize<DeleteIssueRequest>(body, JsonOptions);
-        }
-        catch
-        {
-            return new BadRequestObjectResult(new { error = "Invalid JSON" });
-        }
-
-        if (request == null)
-        {
-            return new BadRequestObjectResult(new { error = "Request body required" });
-        }
-
-        if (request.IssueNumber <= 0)
-        {
-            return new BadRequestObjectResult(new { error = "Invalid issue number" });
-        }
-
-        var success = await _gitHubService.DeleteIssueAsync(request.IssueNumber);
-
-        if (success)
-        {
-            _logger.LogInformation("Issue {Issue} deleted", request.IssueNumber);
-            return new OkObjectResult(new { success = true, message = $"Issue #{request.IssueNumber} deleted" });
-        }
-
-        return new ObjectResult(new { error = "Failed to delete issue. Note: GitHub may not allow issue deletion." }) { StatusCode = 500 };
-    }
 }

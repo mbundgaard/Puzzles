@@ -45,11 +45,4 @@ public interface IGitHubService
     /// <param name="comment">Comment explaining what was done to resolve the issue</param>
     /// <returns>True if issue was closed successfully</returns>
     Task<bool> CloseIssueAsync(int issueNumber, string comment);
-
-    /// <summary>
-    /// Deletes a GitHub issue. Note: This requires admin permissions and may not be available.
-    /// </summary>
-    /// <param name="issueNumber">The issue number to delete</param>
-    /// <returns>True if issue was deleted successfully</returns>
-    Task<bool> DeleteIssueAsync(int issueNumber);
 }

@@ -259,37 +259,6 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> DeleteIssueAsync(int issueNumber)
-    {
-        if (string.IsNullOrEmpty(_token))
-        {
-            _logger.LogWarning("GitHub token not configured, skipping issue delete");
-            return false;
-        }
-
-        try
-        {
-            var url = $"https://api.github.com/repos/{_owner}/{_repo}/issues/{issueNumber}";
-            var response = await _httpClient.DeleteAsync(url);
-
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.LogInformation("GitHub issue {Issue} deleted", issueNumber);
-                return true;
-            }
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Failed to delete issue {Issue}: {Status} - {Body}",
-                issueNumber, response.StatusCode, responseBody);
-            return false;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error deleting GitHub issue {Issue}", issueNumber);
-            return false;
-        }
-    }
-
     public async Task<bool> CloseIssueAsync(int issueNumber, string comment)
     {
         if (string.IsNullOrEmpty(_token))
