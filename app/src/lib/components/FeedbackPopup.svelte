@@ -20,7 +20,12 @@
 
 	function shouldShowFeedbackPopup(): boolean {
 		const lastShown = localStorage.getItem(POPUP_KEY);
-		if (!lastShown) return true;
+
+		// First visit: set timestamp and don't show popup yet
+		if (!lastShown) {
+			localStorage.setItem(POPUP_KEY, Date.now().toString());
+			return false;
+		}
 
 		const daysSince = (Date.now() - parseInt(lastShown)) / (1000 * 60 * 60 * 24);
 		return daysSince >= POPUP_INTERVAL_DAYS;
