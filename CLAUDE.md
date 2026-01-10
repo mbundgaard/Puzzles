@@ -308,8 +308,7 @@ The README.md contains a games table with these columns:
 When updating an existing game:
 1. Make your changes to the game files
 2. Update the **Updated** column in README.md to today's date
-3. Update the `updated` field in `GAME_DATES` constant in index.html to today's date
-4. Commit all changes together
+3. Commit all changes together
 
 **Note:** Badges are automatically calculated - no manual badge HTML needed!
 
@@ -431,7 +430,7 @@ Issues appear at: https://github.com/mbundgaard/Puzzles/issues
 When fixing an issue, **do NOT use `Fixes #X` in commit messages**. Follow this workflow:
 
 1. **Fix the issue** in the code
-2. **Add changelog entry** to `shared/changelog.js` (see Changelog section below)
+2. **Add changelog entry** to `app/src/lib/components/ChangelogModal.svelte` (see Changelog section below)
 3. **Commit and push** all changes
 4. **Call the API** to close the issue with a descriptive comment:
 ```bash

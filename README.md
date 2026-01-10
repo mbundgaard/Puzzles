@@ -10,35 +10,31 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 
 | # | Game | Points | Created | Updated | Description |
 |---|------|--------|---------|---------|-------------|
-| 01 | [Reversi](01-reversi/) | 3 | 2025-12-28 | | Classic strategy game - capture opponent pieces by surrounding them |
-| 02 | [Telte og Træer](02-tents-and-trees/) | 3 | 2025-12-28 | | Logic puzzle - place tents next to trees without touching |
-| 03 | [Sudoku](03-sudoku/) | 3 | 2025-12-28 | | Fill the grid so each row, column, and box contains 1-9 |
-| 04 | [Nonogram](04-nonogram/) | 3 | 2025-12-28 | | Reveal the hidden picture using number clues |
-| 05 | [2048](05-2048/) | 3 | 2025-12-28 | | Slide and merge tiles to reach 2048 |
-| 06 | [Minestryger](06-minesweeper/) | 3 | 2025-12-28 | | Find all safe cells without hitting a mine |
-| 07 | [Hukommelse](07-memory/) | 3 | 2025-12-28 | | Match pairs of cards by remembering their positions |
-| 08 | [Kabale](08-solitaire/) | 3 | 2025-12-28 | | Classic card game - move all cards to the foundations |
-| 09 | [Kalaha](09-kalaha/) | 3 | 2025-12-28 | | Ancient strategy game - capture more stones than the AI |
-| 10 | [Ordleg](10-ordleg/) | 1/3/5 | 2025-12-28 | 2026-01-08 | Guess the 5-letter Danish word in 6 tries |
-| 11 | [Kryds og Bolle](11-kryds-og-bolle/) | 1 | 2025-12-28 | | Tic-tac-toe against an AI opponent |
-| 12 | [Rørføring](12-roerfoering/) | 1/2/3 | 2025-12-28 | 2025-12-30 | Place pipes to connect start to end |
-| 13 | [Skubbepuslespil](13-femten-puslespil/) | 3 | 2025-12-28 | | Slide tiles to arrange numbers 1-15 in order |
-| 14 | [Mastermind](14-kodeknaekker/) | 3 | 2025-12-28 | | Crack the secret color code |
-| 15 | [Broer](15-broer/) | 3 | 2025-12-29 | | Connect islands with the correct number of bridges |
-| 16 | [Lys Op](16-lys-op/) | 3 | 2025-12-29 | | Place light bulbs to illuminate all cells |
-| 17 | [Pind](17-pind/) | 3 | 2025-12-29 | | Peg solitaire - leave only one peg standing |
-| 18 | [Dam](18-dam/) | 3 | 2025-12-29 | | Checkers against AI with forced captures |
-| 19 | [Mølle](19-moelle/) | 3 | 2025-12-29 | | Nine Men's Morris - form mills to capture pieces |
-| 20 | [Slitherlink](20-slitherlink/) | 3 | 2025-12-29 | | Draw a loop following number clues |
-| 21 | [Fire på Stribe](21-fire-paa-stribe/) | 3 | 2025-12-29 | | Connect four in a row against AI |
-| 22 | [Tårnet i Hanoi](22-hanoi/) | 3 | 2025-12-30 | | Move all disks to the rightmost peg |
-| 23 | [Slange](23-slange/) | 2/3/4 | 2025-12-30 | | Classic snake game with win condition |
-| 24 | [Tangram](24-tangram/) | 1/3/5 | 2025-12-30 | 2026-01-06 | Drag and rotate pieces to cover the shape |
-| 25 | [Sænke Slagskibe](25-saenke-slagskibe/) | 1/2/3 | 2025-12-31 | 2026-01-09 | Logic puzzle - use row/column numbers to find the hidden fleet |
-| 26 | [Gæt Dyret](26-gaet-dyret/) | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
-| 27 | [Ordsøgning](27-ordsogning/) | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
-| 28 | [Labyrint](28-labyrint/) | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
-| 29 | [Maskeværk](29-maskevaerk/) | 3 | 2026-01-09 | | Read the AI-generated knitting pattern and fill the grid correctly |
+| 01 | Reversi | 3 | 2025-12-28 | | Classic strategy game - capture opponent pieces by surrounding them |
+| 02 | Telte og Træer | 3 | 2025-12-28 | 2026-01-10 | Logic puzzle - place tents next to trees without touching |
+| 03 | Sudoku | 3 | 2025-12-28 | 2026-01-10 | Fill the grid so each row, column, and box contains 1-9 |
+| 05 | 2048 | 3 | 2025-12-28 | 2026-01-10 | Slide and merge tiles to reach 2048 |
+| 06 | Minestryger | 3 | 2025-12-28 | | Find all safe cells without hitting a mine |
+| 07 | Hukommelse | 3 | 2025-12-28 | | Match pairs of cards by remembering their positions |
+| 08 | Kabale | 3 | 2025-12-28 | | Classic card game - move all cards to the foundations |
+| 09 | Kalaha | 3 | 2025-12-28 | | Ancient strategy game - capture more stones than the AI |
+| 10 | Ordleg | 1/3/5 | 2025-12-28 | 2026-01-08 | Guess the 5-letter Danish word in 6 tries |
+| 11 | Kryds og Bolle | 1 | 2025-12-28 | | Tic-tac-toe against an AI opponent |
+| 12 | Rørføring | 1/2/3 | 2025-12-28 | 2025-12-30 | Place pipes to connect start to end |
+| 13 | Skubbepuslespil | 3 | 2025-12-28 | | Slide tiles to arrange numbers 1-15 in order |
+| 14 | Mastermind | 3 | 2025-12-28 | | Crack the secret color code |
+| 17 | Pind | 3 | 2025-12-29 | | Peg solitaire - leave only one peg standing |
+| 18 | Dam | 3 | 2025-12-29 | | Checkers against AI with forced captures |
+| 19 | Mølle | 3 | 2025-12-29 | | Nine Men's Morris - form mills to capture pieces |
+| 21 | Fire på Stribe | 3 | 2025-12-29 | | Connect four in a row against AI |
+| 22 | Tårnet i Hanoi | 3 | 2025-12-30 | | Move all disks to the rightmost peg |
+| 23 | Slange | 2/3/4 | 2025-12-30 | | Classic snake game with win condition |
+| 24 | Tangram | 1/3/5 | 2025-12-30 | 2026-01-06 | Drag and rotate pieces to cover the shape |
+| 25 | Sænke Slagskibe | 1/2/3 | 2025-12-31 | 2026-01-09 | Logic puzzle - use row/column numbers to find the hidden fleet |
+| 26 | Gæt Dyret | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
+| 27 | Ordsøgning | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
+| 28 | Labyrint | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
+| 29 | Maskeværk | 3 | 2026-01-09 | | Read the AI-generated knitting pattern and fill the grid correctly |
 
 ## Features
 
