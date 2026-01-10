@@ -66,20 +66,18 @@
 		<!-- Language Section -->
 		<section class="settings-section">
 			<h2 class="section-title">{tr('settings.language')}</h2>
-			<div class="language-grid">
-				{#each availableLanguages as lang}
-					<button
-						class="language-option"
-						class:active={currentLang === lang.code}
-						onclick={() => selectLanguage(lang.code)}
-					>
-						<img class="flag" src={getFlagUrl(lang.countryCode)} alt="" />
-						<span class="name">{lang.name}</span>
-						{#if currentLang === lang.code}
-							<span class="check">✓</span>
-						{/if}
-					</button>
-				{/each}
+			<div class="language-select-wrapper">
+				<img class="selected-flag" src={getFlagUrl(availableLanguages.find(l => l.code === currentLang)?.countryCode || 'dk')} alt="" />
+				<select
+					class="language-select"
+					value={currentLang}
+					onchange={(e) => selectLanguage(e.currentTarget.value as Language)}
+				>
+					{#each availableLanguages as lang}
+						<option value={lang.code}>{lang.name}</option>
+					{/each}
+				</select>
+				<span class="select-arrow">›</span>
 			</div>
 		</section>
 
@@ -181,57 +179,51 @@
 		margin: 0 0 12px 4px;
 	}
 
-	.language-grid {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.language-option {
+	.language-select-wrapper {
+		position: relative;
 		display: flex;
 		align-items: center;
-		gap: 14px;
-		width: 100%;
-		padding: 14px 16px;
 		background: rgba(255, 255, 255, 0.08);
 		backdrop-filter: blur(10px);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 14px;
-		color: rgba(255, 255, 255, 0.8);
-		font-size: 1rem;
-		font-family: 'Poppins', sans-serif;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		text-align: left;
-		-webkit-tap-highlight-color: transparent;
+		padding: 14px 16px;
 	}
 
-	.language-option:active {
-		transform: scale(0.98);
-	}
-
-	.language-option.active {
-		background: rgba(236, 72, 153, 0.15);
-		border-color: rgba(236, 72, 153, 0.3);
-		color: white;
-	}
-
-	.language-option .flag {
+	.selected-flag {
 		width: 32px;
 		height: 24px;
 		object-fit: cover;
 		border-radius: 4px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		pointer-events: none;
 	}
 
-	.language-option .name {
+	.language-select {
 		flex: 1;
+		appearance: none;
+		-webkit-appearance: none;
+		background: transparent;
+		border: none;
+		color: white;
+		font-size: 1rem;
+		font-family: 'Poppins', sans-serif;
 		font-weight: 500;
+		padding: 0 12px;
+		cursor: pointer;
+		outline: none;
 	}
 
-	.language-option .check {
-		color: #ec4899;
-		font-weight: 600;
+	.language-select option {
+		background: #1a1a2e;
+		color: white;
+	}
+
+	.select-arrow {
+		font-size: 1.3rem;
+		color: rgba(255, 255, 255, 0.3);
+		pointer-events: none;
+		transform: rotate(90deg);
 	}
 
 	.button-row {
