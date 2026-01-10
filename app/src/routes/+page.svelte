@@ -89,7 +89,6 @@
 					{:else if badge === 'updated'}
 						<span class="badge badge-updated">💫</span>
 					{/if}
-					<span class="game-number">#{game.id.split('-')[0]}</span>
 					<div class="game-arrow">›</div>
 				</a>
 			{/each}
@@ -178,15 +177,6 @@
 		line-height: 1;
 	}
 
-	.game-number {
-		position: absolute;
-		bottom: 8px;
-		right: 40px;
-		font-size: 0.75rem;
-		color: rgba(255, 255, 255, 0.2);
-		font-weight: 500;
-	}
-
 	.game-arrow {
 		font-size: 1.5rem;
 		color: rgba(255, 255, 255, 0.3);
@@ -251,11 +241,6 @@
 
 		.game-arrow {
 			display: none;
-		}
-
-		.game-number {
-			right: 10px;
-			bottom: 6px;
 		}
 
 		.game-icon {
