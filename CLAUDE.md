@@ -13,6 +13,19 @@ These are user feedback and bug reports waiting to be addressed.
 2. **Game Suggestions** - new game ideas (game = "00")
 3. **Game Feedback** - feedback about specific games (game = "01"-"99")
 
+**Use this exact table format:**
+
+```
+General Feedback
+┌─────┬────────────────────────────────────────────┐
+│  #  │                   Title                    │
+├─────┼────────────────────────────────────────────┤
+│ 82  │ News page should support selected language │
+├─────┼────────────────────────────────────────────┤
+│ 74  │ Remove Vertical Scrollbar in App           │
+└─────┴────────────────────────────────────────────┘
+```
+
 ---
 
 > **Note:** Also read `README.md` for project overview and game list.
