@@ -12,15 +12,15 @@
 		"level3": "Svær"
 	},
 	"checkpoint": {
-		"title": "Checkpoint!",
 		"complete": "gennemført",
-		"banked": "sikret",
-		"nextLevel": "Næste niveau",
-		"worth": "Værdi:",
-		"continue": "Fortsæt",
-		"walkAway": "Tag pengene",
-		"safetyNet": "Dit sikkerhedsnet",
-		"riskExplain": "Svarer du forkert, falder du tilbage til {points} point"
+		"youEarned": "Du har optjent",
+		"bankTitle": "Indløs",
+		"bankDesc": "Gem dine point og afslut spillet",
+		"bank": "Gem point",
+		"continueTitle": "Vov det",
+		"continueDesc": "Forkert svar = du mister alt",
+		"chasePoints": "Jagt {points} point",
+		"continue": "Fortsæt"
 	},
 	"won": {
 		"title": "Tillykke!"
@@ -42,8 +42,8 @@
 		"title": "Sådan spiller du",
 		"rule1": "Svar på 12 spørgsmål fordelt på 3 niveauer",
 		"rule2": "Du har begrænset tid til hvert spørgsmål",
-		"rule3": "Checkpoints er sikkerhedsnet - point du når er sikre",
-		"rule4": "Forkert svar = du falder tilbage til sidste checkpoint"
+		"rule3": "Ved checkpoints: gem dine point eller vov dem",
+		"rule4": "Forkert svar = du mister alle ikke-gemte point"
 	},
 	"categories": [
 		"Dansk historie",

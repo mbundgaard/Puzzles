@@ -31,7 +31,8 @@
 	let currentQuestionIndex = $state(0);
 	let selectedAnswer = $state<number | null>(null);
 	let answerRevealed = $state(false);
-	let bankedPoints = $state(0);
+	let bankedPoints = $state(0); // Points that are SAFE (only when walked away)
+	let checkpointValue = $state(0); // Points available to bank at checkpoint
 
 	// Timer
 	let timeRemaining = $state(0);
@@ -206,8 +207,8 @@
 			bankedPoints = LEVEL_POINTS[2]; // 7 points
 			endGame(true);
 		} else if (nextIndex % QUESTIONS_PER_LEVEL === 0) {
-			// Completed a level - checkpoint
-			bankedPoints = LEVEL_POINTS[currentLevel];
+			// Completed a level - checkpoint (points not banked yet!)
+			checkpointValue = LEVEL_POINTS[currentLevel];
 			gamePhase = 'checkpoint';
 		} else {
 			// Next question
@@ -227,14 +228,14 @@
 	}
 
 	function walkAway() {
+		// Bank the checkpoint value - this makes the points SAFE
+		bankedPoints = checkpointValue;
 		gamePhase = 'walkaway';
 		stopTimer();
-		if (bankedPoints > 0) {
-			trackComplete(GAME_NUMBER);
-			setTimeout(() => {
-				showWinModal = true;
-			}, 800);
-		}
+		trackComplete(GAME_NUMBER);
+		setTimeout(() => {
+			showWinModal = true;
+		}, 800);
 	}
 
 	function endGame(won: boolean) {
@@ -246,14 +247,9 @@
 				showWinModal = true;
 			}, 800);
 		} else {
+			// Lost - no points (unless they had banked earlier, but that's not possible in current flow)
 			gamePhase = 'lost';
-			// If player has banked points, track them
-			if (bankedPoints > 0) {
-				trackComplete(GAME_NUMBER);
-				setTimeout(() => {
-					showWinModal = true;
-				}, 800);
-			}
+			bankedPoints = 0; // Ensure no points on loss
 		}
 	}
 
@@ -265,6 +261,7 @@
 		selectedAnswer = null;
 		answerRevealed = false;
 		bankedPoints = 0;
+		checkpointValue = 0;
 		showWinModal = false;
 		// Categories stay the same (daily categories)
 	}
@@ -394,27 +391,31 @@
 		<div class="checkpoint-screen">
 			<div class="checkpoint-content">
 				<div class="checkpoint-icon">&#10003;</div>
-				<h2>{t('checkpoint.title')}</h2>
-				<p class="checkpoint-level">{t(`levels.level${currentLevel + 1}`)} {t('checkpoint.complete')}</p>
+				<h2>{t(`levels.level${currentLevel + 1}`)} {t('checkpoint.complete')}!</h2>
 
-				<div class="safety-net-info">
-					<p class="safety-label">{t('checkpoint.safetyNet')}</p>
-					<p class="safety-points">{bankedPoints} {t('points')}</p>
+				<div class="checkpoint-earned">
+					<p class="earned-label">{t('checkpoint.youEarned')}</p>
+					<p class="earned-points">{checkpointValue} {t('points')}</p>
 				</div>
 
-				<div class="checkpoint-next">
-					<p>{t('checkpoint.nextLevel')}: {t(`levels.level${currentLevel + 2}`)}</p>
-					<p class="next-points">{t('checkpoint.worth')} {LEVEL_POINTS[currentLevel + 1]} {t('points')}</p>
-					<p class="risk-explain">{t('checkpoint.riskExplain').replace('{points}', String(bankedPoints))}</p>
-				</div>
+				<div class="checkpoint-choices">
+					<div class="choice-card bank-card">
+						<h3>{t('checkpoint.bankTitle')}</h3>
+						<p class="choice-result">+{checkpointValue} {t('points')}</p>
+						<p class="choice-desc">{t('checkpoint.bankDesc')}</p>
+						<button class="bank-btn" onclick={walkAway}>
+							{t('checkpoint.bank')}
+						</button>
+					</div>
 
-				<div class="checkpoint-buttons">
-					<button class="continue-btn" onclick={continueAfterCheckpoint}>
-						{t('checkpoint.continue')}
-					</button>
-					<button class="walkaway-btn" onclick={walkAway}>
-						{t('checkpoint.walkAway')} ({bankedPoints} {t('points')})
-					</button>
+					<div class="choice-card continue-card">
+						<h3>{t('checkpoint.continueTitle')}</h3>
+						<p class="choice-result">{t('checkpoint.chasePoints').replace('{points}', String(LEVEL_POINTS[currentLevel + 1]))}</p>
+						<p class="choice-desc">{t('checkpoint.continueDesc')}</p>
+						<button class="continue-btn" onclick={continueAfterCheckpoint}>
+							{t('checkpoint.continue')}
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -832,97 +833,109 @@
 
 	.checkpoint-content h2 {
 		color: #ffd700;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 1.5rem 0;
+		font-size: 1.3rem;
 	}
 
-	.checkpoint-level {
-		font-size: 1.1rem;
-		color: rgba(255, 255, 255, 0.8);
-		margin: 0 0 1rem 0;
-	}
-
-	.safety-net-info {
-		background: rgba(34, 197, 94, 0.15);
-		border: 1px solid rgba(34, 197, 94, 0.4);
+	.checkpoint-earned {
+		background: rgba(255, 215, 0, 0.15);
+		border: 2px solid rgba(255, 215, 0, 0.4);
 		border-radius: 12px;
 		padding: 1rem;
-		margin-bottom: 1rem;
+		margin-bottom: 1.5rem;
+		text-align: center;
 	}
 
-	.safety-label {
+	.earned-label {
 		margin: 0 0 0.25rem 0;
 		font-size: 0.9rem;
 		color: rgba(255, 255, 255, 0.7);
 	}
 
-	.safety-points {
+	.earned-points {
 		margin: 0;
-		font-size: 1.5rem;
+		font-size: 2rem;
 		font-weight: bold;
+		color: #ffd700;
+	}
+
+	.checkpoint-choices {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.choice-card {
+		padding: 1rem;
+		border-radius: 12px;
+		text-align: center;
+	}
+
+	.choice-card h3 {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.1rem;
+	}
+
+	.choice-result {
+		margin: 0 0 0.25rem 0;
+		font-size: 1.2rem;
+		font-weight: bold;
+	}
+
+	.choice-desc {
+		margin: 0 0 1rem 0;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.bank-card {
+		background: rgba(34, 197, 94, 0.15);
+		border: 2px solid rgba(34, 197, 94, 0.4);
+	}
+
+	.bank-card h3 {
 		color: #22c55e;
 	}
 
-	.checkpoint-next {
-		padding: 1rem;
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 8px;
-		margin-bottom: 1.5rem;
+	.bank-card .choice-result {
+		color: #22c55e;
 	}
 
-	.checkpoint-next p {
-		margin: 0;
-		color: rgba(255, 255, 255, 0.8);
-	}
-
-	.next-points {
-		color: #ffd700 !important;
-		font-weight: bold;
-		margin-top: 0.25rem !important;
-	}
-
-	.risk-explain {
-		margin-top: 0.75rem !important;
-		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.6);
-		font-style: italic;
-	}
-
-	.checkpoint-buttons {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.continue-btn {
-		padding: 1rem 2rem;
-		font-size: 1.1rem;
+	.bank-btn {
+		padding: 0.75rem 2rem;
+		font-size: 1rem;
 		font-weight: bold;
 		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 		border: none;
-		border-radius: 12px;
+		border-radius: 10px;
 		color: white;
 		cursor: pointer;
 		transition: all 0.3s ease;
 	}
 
-	.continue-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+	.continue-card {
+		background: rgba(239, 68, 68, 0.1);
+		border: 2px solid rgba(239, 68, 68, 0.3);
 	}
 
-	.walkaway-btn {
-		padding: 0.75rem 1.5rem;
+	.continue-card h3 {
+		color: #f87171;
+	}
+
+	.continue-card .choice-result {
+		color: #ffd700;
+	}
+
+	.continue-btn {
+		padding: 0.75rem 2rem;
 		font-size: 1rem;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 12px;
+		font-weight: bold;
+		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+		border: none;
+		border-radius: 10px;
 		color: white;
 		cursor: pointer;
 		transition: all 0.3s ease;
-	}
-
-	.walkaway-btn:hover {
-		background: rgba(255, 255, 255, 0.2);
 	}
 
 	/* Result Screens */

@@ -12,15 +12,15 @@
 		"level3": "Difficile"
 	},
 	"checkpoint": {
-		"title": "Checkpoint !",
 		"complete": "terminé",
-		"banked": "sécurisé",
-		"nextLevel": "Niveau suivant",
-		"worth": "Valeur :",
-		"continue": "Continuer",
-		"walkAway": "Prendre l'argent",
-		"safetyNet": "Votre filet de sécurité",
-		"riskExplain": "Mauvaise réponse = retour à {points} points"
+		"youEarned": "Vous avez gagné",
+		"bankTitle": "Encaisser",
+		"bankDesc": "Gardez vos points et terminez",
+		"bank": "Encaisser",
+		"continueTitle": "Risquer",
+		"continueDesc": "Mauvaise réponse = tout perdre",
+		"chasePoints": "Visez {points} points",
+		"continue": "Continuer"
 	},
 	"won": {
 		"title": "Félicitations !"
@@ -42,8 +42,8 @@
 		"title": "Comment jouer",
 		"rule1": "Répondez à 12 questions sur 3 niveaux",
 		"rule2": "Vous avez un temps limité pour chaque question",
-		"rule3": "Les checkpoints sont des filets de sécurité - points atteints sont acquis",
-		"rule4": "Mauvaise réponse = retour au dernier checkpoint"
+		"rule3": "Aux checkpoints: encaissez ou risquez vos points",
+		"rule4": "Mauvaise réponse = perdez tous les points non encaissés"
 	},
 	"categories": [
 		"Histoire de France",
