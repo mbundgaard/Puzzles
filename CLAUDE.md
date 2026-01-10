@@ -403,6 +403,7 @@ public interface IAIService
 | POST | `/api/issue/close` | Close issue with comment `{issueNumber, comment}` |
 | POST | `/api/issue/delete` | Delete issue `{issueNumber}` (requires admin) |
 | POST | `/api/version` | Check version `{version}` → `{newVersionExists: bool}` |
+| POST | `/api/version/set` | Set server version `{version}` → `{success, version}` |
 | POST | `/api/session/{game}/{sessionId}/start` | Start session `{nickname?, device?, appVersion?}` |
 | POST | `/api/session/{game}/{sessionId}/update` | Add event `{event}` (newGame, win, lose) |
 | POST | `/api/session/{game}/{sessionId}/end` | End session |
