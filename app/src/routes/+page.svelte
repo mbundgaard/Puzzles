@@ -190,8 +190,8 @@
 
 	.favorite-btn {
 		position: absolute;
-		bottom: 6px;
-		right: 58px;
+		top: 8px;
+		right: 8px;
 		width: 28px;
 		height: 28px;
 		border: none;
@@ -256,8 +256,9 @@
 		}
 
 		.favorite-btn {
-			right: 28px;
-			bottom: 4px;
+			top: 8px;
+			left: 8px;
+			right: auto;
 		}
 	}
 </style>
