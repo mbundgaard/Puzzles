@@ -2,6 +2,10 @@
 	"title": "Sudoku",
 	"newGame": "New Game",
 	"clear": "Clear",
+	"mode": {
+		"pen": "Pen",
+		"notes": "Notes"
+	},
 	"difficulty": {
 		"label": "Difficulty",
 		"easy": "Easy",

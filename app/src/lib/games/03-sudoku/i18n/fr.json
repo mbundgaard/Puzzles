@@ -2,6 +2,10 @@
 	"title": "Sudoku",
 	"newGame": "Nouvelle Partie",
 	"clear": "Effacer",
+	"mode": {
+		"pen": "Stylo",
+		"notes": "Notes"
+	},
 	"difficulty": {
 		"label": "Difficulte",
 		"easy": "Facile",

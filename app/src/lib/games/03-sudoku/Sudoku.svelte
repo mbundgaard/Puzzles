@@ -40,8 +40,10 @@
 	let board = $state<number[][]>([]);
 	let solution = $state<number[][]>([]);
 	let given = $state<boolean[][]>([]);
+	let candidates = $state<Set<number>[][]>([]);
 	let selectedCell = $state<{ row: number; col: number } | null>(null);
 	let gameWon = $state(false);
+	let notesMode = $state(false);
 
 	// Derived values
 	let status = $derived(gameWon ? t('status.won') : t('status.playing'));
@@ -54,6 +56,30 @@
 		const boxRow = Math.floor(selectedCell.row / 3);
 		const boxCol = Math.floor(selectedCell.col / 3);
 		if (Math.floor(row / 3) === boxRow && Math.floor(col / 3) === boxCol) return true;
+		return false;
+	}
+
+	// Check if a cell has a duplicate in its row, column, or 3x3 box
+	function hasConflict(row: number, col: number): boolean {
+		const val = board[row][col];
+		if (val === 0) return false;
+
+		// Check row
+		for (let c = 0; c < 9; c++) {
+			if (c !== col && board[row][c] === val) return true;
+		}
+		// Check column
+		for (let r = 0; r < 9; r++) {
+			if (r !== row && board[r][col] === val) return true;
+		}
+		// Check 3x3 box
+		const boxRow = Math.floor(row / 3) * 3;
+		const boxCol = Math.floor(col / 3) * 3;
+		for (let r = boxRow; r < boxRow + 3; r++) {
+			for (let c = boxCol; c < boxCol + 3; c++) {
+				if ((r !== row || c !== col) && board[r][c] === val) return true;
+			}
+		}
 		return false;
 	}
 
@@ -137,9 +163,11 @@
 		solution = generateSolution();
 		board = removeNumbers(solution);
 		given = board.map(row => row.map(cell => cell !== 0));
+		candidates = Array(9).fill(null).map(() => Array(9).fill(null).map(() => new Set<number>()));
 		selectedCell = null;
 		gameWon = false;
 		showWinModal = false;
+		notesMode = false;
 
 		trackStart(GAME_NUMBER);
 	}
@@ -154,15 +182,29 @@
 		const { row, col } = selectedCell;
 		if (given[row][col]) return;
 
-		board[row][col] = num;
-		board = [...board]; // Trigger reactivity
+		if (notesMode && num !== 0) {
+			// Toggle candidate
+			const cellCandidates = candidates[row][col];
+			if (cellCandidates.has(num)) {
+				cellCandidates.delete(num);
+			} else {
+				cellCandidates.add(num);
+			}
+			candidates = [...candidates]; // Trigger reactivity
+		} else {
+			// Enter number (or clear with 0)
+			board[row][col] = num;
+			// Clear candidates when entering a number
+			candidates[row][col] = new Set<number>();
+			board = [...board]; // Trigger reactivity
 
-		if (checkWin()) {
-			gameWon = true;
-			trackComplete(GAME_NUMBER);
-			setTimeout(() => {
-				showWinModal = true;
-			}, 500);
+			if (checkWin()) {
+				gameWon = true;
+				trackComplete(GAME_NUMBER);
+				setTimeout(() => {
+					showWinModal = true;
+				}, 500);
+			}
 		}
 	}
 
@@ -189,6 +231,10 @@
 			classes.push('selected');
 		} else if (isHighlighted(row, col)) {
 			classes.push('highlight');
+		}
+		// Add error class for duplicates (only for user-entered values)
+		if (!given[row]?.[col] && hasConflict(row, col)) {
+			classes.push('error');
 		}
 		// Add border classes for 3x3 box separation
 		if ((col + 1) % 3 === 0 && col < 8) {
@@ -242,7 +288,15 @@
 						disabled={gameWon}
 						aria-label="Cell {row},{col}"
 					>
-						{board[row]?.[col] !== 0 ? board[row][col] : ''}
+						{#if board[row]?.[col] !== 0}
+							{board[row][col]}
+						{:else if candidates[row]?.[col]?.size > 0}
+							<div class="candidates">
+								{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as num}
+									<span class="candidate">{candidates[row][col].has(num) ? num : ''}</span>
+								{/each}
+							</div>
+						{/if}
 					</button>
 				{/each}
 			{/each}
@@ -265,6 +319,25 @@
 			disabled={gameWon}
 		>
 			{t('clear')}
+		</button>
+	</div>
+
+	<div class="mode-toggle">
+		<button
+			class="mode-btn"
+			class:active={!notesMode}
+			onclick={() => notesMode = false}
+			disabled={gameWon}
+		>
+			{t('mode.pen')}
+		</button>
+		<button
+			class="mode-btn"
+			class:active={notesMode}
+			onclick={() => notesMode = true}
+			disabled={gameWon}
+		>
+			{t('mode.notes')}
 		</button>
 	</div>
 
@@ -409,6 +482,29 @@
 		background: rgba(102, 126, 234, 0.2);
 	}
 
+	.cell.error {
+		background: rgba(239, 68, 68, 0.3);
+		color: #fca5a5;
+	}
+
+	.candidates {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		width: 100%;
+		height: 100%;
+		padding: 1px;
+	}
+
+	.candidate {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 0.45rem;
+		color: rgba(255, 255, 255, 0.6);
+		line-height: 1;
+	}
+
 	.cell.border-right {
 		border-right: 2px solid rgba(255, 255, 255, 0.3);
 	}
@@ -452,6 +548,41 @@
 
 	.num-btn.clear {
 		font-size: 0.9rem;
+	}
+
+	.mode-toggle {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 20px;
+	}
+
+	.mode-btn {
+		padding: 10px 24px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		font-family: 'Poppins', sans-serif;
+		background: rgba(128, 128, 128, 0.3);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		color: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 20px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.mode-btn.active {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		border-color: transparent;
+	}
+
+	.mode-btn:active:not(:disabled) {
+		transform: scale(0.95);
+	}
+
+	.mode-btn:disabled {
+		opacity: 0.5;
+		cursor: default;
 	}
 
 	.controls {

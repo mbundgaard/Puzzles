@@ -2,6 +2,10 @@
 	"title": "Sudoku",
 	"newGame": "Nyt Spil",
 	"clear": "Slet",
+	"mode": {
+		"pen": "Tal",
+		"notes": "Noter"
+	},
 	"difficulty": {
 		"label": "Svaerhedsgrad",
 		"easy": "Let",
