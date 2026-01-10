@@ -152,6 +152,10 @@
 		"saveError": "Kunne ikke gemme score"
 	},
 	"games": {
+		"04-quiz-master": {
+			"title": "Quiz Mester",
+			"description": "Test din viden"
+		},
 		"01-reversi": {
 			"title": "Reversi",
 			"description": "Erobr brikkerne"

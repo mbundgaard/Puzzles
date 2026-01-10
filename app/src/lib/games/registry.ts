@@ -44,6 +44,17 @@ export function getSortedGames(): GameInfo[] {
 
 export const games: GameInfo[] = [
 	{
+		id: '04-quiz-master',
+		number: '04',
+		icon: '🏆',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./04-quiz-master/QuizMaster.svelte'),
+		accentColor: '#ffd700',
+		points: 7,
+		created: '2026-01-10',
+		ai: true
+	},
+	{
 		id: '01-reversi',
 		number: '01',
 		icon: '⚫',

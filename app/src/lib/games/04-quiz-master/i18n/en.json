@@ -1,0 +1,98 @@
+{
+	"title": "Quiz Master",
+	"newGame": "New Game",
+	"selectCategory": "Choose a category",
+	"newCategories": "New categories",
+	"questionNumber": "Question {current} of {total}",
+	"points": "points",
+	"banked": "Banked",
+	"levels": {
+		"level1": "Easy",
+		"level2": "Medium",
+		"level3": "Hard"
+	},
+	"checkpoint": {
+		"title": "Checkpoint!",
+		"complete": "complete",
+		"banked": "secured",
+		"nextLevel": "Next level",
+		"worth": "Worth:",
+		"continue": "Continue",
+		"walkAway": "Take the money"
+	},
+	"won": {
+		"title": "Congratulations!"
+	},
+	"walkaway": {
+		"title": "Smart choice!"
+	},
+	"lost": {
+		"title": "Game Over!",
+		"correctWas": "The correct answer was",
+		"youKeep": "You keep",
+		"noPoints": "No points this time"
+	},
+	"status": {
+		"loading": "Loading quiz...",
+		"error": "Could not load quiz. Please try again."
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Answer 12 questions across 3 levels",
+		"rule2": "You have limited time for each question",
+		"rule3": "At checkpoints you can secure your points",
+		"rule4": "A wrong answer = you lose unsecured points"
+	},
+	"categories": [
+		"British history",
+		"British inventions",
+		"Shakespeare",
+		"British films",
+		"British music",
+		"British sports stars",
+		"London",
+		"British royalty",
+		"British nature",
+		"British traditions",
+		"World geography",
+		"Capital cities",
+		"Flags of the world",
+		"World history",
+		"World War II",
+		"Ancient history",
+		"Medieval times",
+		"The Cold War",
+		"Space exploration",
+		"The Solar System",
+		"Animal kingdom",
+		"Sea creatures",
+		"Birds",
+		"Insects",
+		"Human body",
+		"Science",
+		"Famous inventions",
+		"Chemistry",
+		"Physics",
+		"Mathematics",
+		"Sports",
+		"Football",
+		"The Olympic Games",
+		"Movies and Hollywood",
+		"Animation and cartoons",
+		"Music through the ages",
+		"Rock and pop",
+		"Classical music",
+		"Art and artists",
+		"Literature",
+		"Food and drink",
+		"World cuisines",
+		"Technology",
+		"The Internet",
+		"Computers and gaming",
+		"Cars and transport",
+		"Aviation",
+		"Famous buildings",
+		"Religion and philosophy",
+		"Languages"
+	]
+}

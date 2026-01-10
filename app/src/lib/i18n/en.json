@@ -152,6 +152,10 @@
 		"saveError": "Could not save score"
 	},
 	"games": {
+		"04-quiz-master": {
+			"title": "Quiz Master",
+			"description": "Test your knowledge"
+		},
 		"01-reversi": {
 			"title": "Reversi",
 			"description": "Capture the pieces"

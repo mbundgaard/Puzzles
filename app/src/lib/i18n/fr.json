@@ -152,6 +152,10 @@
 		"saveError": "Impossible d'enregistrer le score"
 	},
 	"games": {
+		"04-quiz-master": {
+			"title": "Maître du Quiz",
+			"description": "Testez vos connaissances"
+		},
 		"01-reversi": {
 			"title": "Reversi",
 			"description": "Capturez les pièces"

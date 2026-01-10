@@ -1,0 +1,98 @@
+{
+	"title": "Quiz Mester",
+	"newGame": "Nyt Spil",
+	"selectCategory": "Vælg en kategori",
+	"newCategories": "Nye kategorier",
+	"questionNumber": "Spørgsmål {current} af {total}",
+	"points": "point",
+	"banked": "I banken",
+	"levels": {
+		"level1": "Let",
+		"level2": "Mellem",
+		"level3": "Svær"
+	},
+	"checkpoint": {
+		"title": "Checkpoint!",
+		"complete": "gennemført",
+		"banked": "sikret",
+		"nextLevel": "Næste niveau",
+		"worth": "Værdi:",
+		"continue": "Fortsæt",
+		"walkAway": "Tag pengene"
+	},
+	"won": {
+		"title": "Tillykke!"
+	},
+	"walkaway": {
+		"title": "Klogt valg!"
+	},
+	"lost": {
+		"title": "Desværre!",
+		"correctWas": "Det rigtige svar var",
+		"youKeep": "Du beholder",
+		"noPoints": "Ingen point denne gang"
+	},
+	"status": {
+		"loading": "Indlæser quiz...",
+		"error": "Kunne ikke hente quiz. Prøv igen."
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Svar på 12 spørgsmål fordelt på 3 niveauer",
+		"rule2": "Du har begrænset tid til hvert spørgsmål",
+		"rule3": "Ved checkpoint kan du sikre dine point",
+		"rule4": "Et forkert svar = du mister usikrede point"
+	},
+	"categories": [
+		"Dansk historie",
+		"Danske opfindelser",
+		"H.C. Andersen",
+		"Danske film",
+		"Dansk musik",
+		"Danske sportsstjerner",
+		"København",
+		"Danske konger og dronninger",
+		"Dansk natur",
+		"Danske traditioner",
+		"Verdensgeografi",
+		"Hovedstæder",
+		"Flag fra hele verden",
+		"Verdenshistorie",
+		"2. verdenskrig",
+		"Antikken",
+		"Middelalderen",
+		"Den kolde krig",
+		"Rumfart og astronauter",
+		"Solsystemet",
+		"Dyreriget",
+		"Havets dyr",
+		"Fugle",
+		"Insekter",
+		"Menneskets krop",
+		"Videnskab",
+		"Berømte opfindelser",
+		"Kemi",
+		"Fysik",
+		"Matematik",
+		"Sport",
+		"Fodbold",
+		"De olympiske lege",
+		"Film og Hollywood",
+		"Tegnefilm og animation",
+		"Musik gennem tiden",
+		"Rock og pop",
+		"Klassisk musik",
+		"Kunst og kunstnere",
+		"Litteratur",
+		"Mad og drikke",
+		"Verdenskøkkener",
+		"Teknologi",
+		"Internettet",
+		"Computere og gaming",
+		"Biler og transport",
+		"Fly og luftfart",
+		"Berømte bygninger",
+		"Religion og filosofi",
+		"Sprog og kommunikation"
+	]
+}
