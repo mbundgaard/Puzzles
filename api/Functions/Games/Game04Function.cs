@@ -89,6 +89,21 @@ public class Game04Function
         };
     }
 
+    // Focus areas to ensure variety - rotated based on seed
+    private static readonly string[] FocusAreas = new[]
+    {
+        "people and personalities",
+        "dates and timelines",
+        "places and locations",
+        "events and milestones",
+        "numbers and statistics",
+        "origins and history",
+        "innovations and changes",
+        "comparisons and records",
+        "culture and traditions",
+        "technical details"
+    };
+
     private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, int? seed)
     {
         var outputLanguage = language.ToLower() switch
@@ -99,13 +114,18 @@ public class Game04Function
             _ => "English"
         };
 
-        var seedInstruction = seed.HasValue
-            ? $"\nIMPORTANT: Use seed {seed.Value} to generate a UNIQUE set of questions. Each seed should produce completely different questions."
-            : "";
+        // Use seed to select different focus areas for variety
+        var actualSeed = seed ?? Random.Shared.Next();
+        var focus1 = FocusAreas[actualSeed % FocusAreas.Length];
+        var focus2 = FocusAreas[(actualSeed / 10) % FocusAreas.Length];
+        var focus3 = FocusAreas[(actualSeed / 100) % FocusAreas.Length];
 
-        var systemPrompt = $@"You are a quiz generator. Generate exactly 12 trivia questions about: {category}
+        var systemPrompt = $@"You are a creative quiz generator. Generate exactly 12 UNIQUE trivia questions about: {category}
 
-IMPORTANT: Write all questions and answers in {outputLanguage}.{seedInstruction}
+IMPORTANT: Write all questions and answers in {outputLanguage}.
+
+For THIS quiz (session {actualSeed}), focus especially on: {focus1}, {focus2}, {focus3}
+Avoid the most common/obvious questions. Be creative and explore lesser-known aspects of the topic.
 
 Rules:
 1. Generate EXACTLY 12 questions
@@ -132,10 +152,12 @@ Respond ONLY with JSON in this format:
 
 correct is the index (0-3) of the correct answer in the options array.";
 
+        var userMessage = $"Generate 12 unique quiz questions about: {category}. Session ID: {actualSeed}. Make them different from typical questions about this topic.";
+
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = $"Generate 12 quiz questions about: {category}" } },
-            new AIRequestOptions { Temperature = 0.8 }
+            new[] { new AIMessage { Role = "user", Content = userMessage } },
+            new AIRequestOptions { Temperature = 1.0 }
         );
 
         if (string.IsNullOrEmpty(response)) return null;
