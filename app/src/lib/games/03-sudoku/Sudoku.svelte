@@ -209,9 +209,11 @@
 	}
 
 	function checkWin(): boolean {
+		// Check if all cells are filled and no conflicts exist
 		for (let r = 0; r < 9; r++) {
 			for (let c = 0; c < 9; c++) {
-				if (board[r][c] !== solution[r][c]) return false;
+				if (board[r][c] === 0) return false;
+				if (hasConflict(r, c)) return false;
 			}
 		}
 		return true;
