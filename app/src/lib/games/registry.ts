@@ -9,6 +9,37 @@ export interface GameInfo {
 	component: () => Promise<{ default: ComponentType }>;
 	accentColor: string;
 	points: number;
+	created: string;
+	updated?: string;
+	ai?: boolean;
+}
+
+export type Badge = 'new' | 'updated' | null;
+
+const BADGE_DAYS = 7;
+
+export function getGameBadge(game: GameInfo): Badge {
+	const now = Date.now();
+	const createdDate = new Date(game.created).getTime();
+	const daysSinceCreated = (now - createdDate) / (1000 * 60 * 60 * 24);
+
+	if (daysSinceCreated <= BADGE_DAYS) return 'new';
+
+	if (game.updated) {
+		const updatedDate = new Date(game.updated).getTime();
+		const daysSinceUpdated = (now - updatedDate) / (1000 * 60 * 60 * 24);
+		if (daysSinceUpdated <= BADGE_DAYS) return 'updated';
+	}
+
+	return null;
+}
+
+export function getSortedGames(): GameInfo[] {
+	return [...games].sort((a, b) => {
+		const aDate = a.updated || a.created;
+		const bDate = b.updated || b.created;
+		return bDate.localeCompare(aDate);
+	});
 }
 
 export const games: GameInfo[] = [
@@ -19,7 +50,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./01-reversi/Reversi.svelte'),
 		accentColor: '#4ade80',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '06-minestryger',
@@ -28,7 +60,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./06-minestryger/Minestryger.svelte'),
 		accentColor: '#ef4444',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '07-hukommelse',
@@ -37,7 +70,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./07-hukommelse/Hukommelse.svelte'),
 		accentColor: '#06b6d4',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '08-kabale',
@@ -46,7 +80,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./08-kabale/Kabale.svelte'),
 		accentColor: '#ec4899',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '09-kalaha',
@@ -55,7 +90,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./09-kalaha/Kalaha.svelte'),
 		accentColor: '#b45309',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '10-ordleg',
@@ -64,7 +100,10 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./10-ordleg/Ordleg.svelte'),
 		accentColor: '#22c55e',
-		points: 5
+		points: 5,
+		created: '2025-12-28',
+		updated: '2026-01-08',
+		ai: true
 	},
 	{
 		id: '11-tictactoe',
@@ -73,7 +112,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./11-tictactoe/TicTacToe.svelte'),
 		accentColor: '#ec4899',
-		points: 1
+		points: 1,
+		created: '2025-12-28'
 	},
 	{
 		id: '12-roerfoering',
@@ -82,7 +122,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./12-roerfoering/Roerfoering.svelte'),
 		accentColor: '#06b6d4',
-		points: 3
+		points: 3,
+		created: '2025-12-28',
+		updated: '2025-12-30'
 	},
 	{
 		id: '13-skubbepuslespil',
@@ -91,7 +133,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./13-skubbepuslespil/Skubbepuslespil.svelte'),
 		accentColor: '#f59e0b',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '14-mastermind',
@@ -100,7 +143,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./14-mastermind/Mastermind.svelte'),
 		accentColor: '#f43f5e',
-		points: 3
+		points: 3,
+		created: '2025-12-28'
 	},
 	{
 		id: '17-pind',
@@ -109,7 +153,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./17-pind/Pind.svelte'),
 		accentColor: '#a855f7',
-		points: 3
+		points: 3,
+		created: '2025-12-29'
 	},
 	{
 		id: '18-dam',
@@ -118,7 +163,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./18-dam/Dam.svelte'),
 		accentColor: '#ef4444',
-		points: 3
+		points: 3,
+		created: '2025-12-29'
 	},
 	{
 		id: '19-moelle',
@@ -127,7 +173,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./19-moelle/Moelle.svelte'),
 		accentColor: '#8b5cf6',
-		points: 3
+		points: 3,
+		created: '2025-12-29'
 	},
 	{
 		id: '21-fire-paa-stribe',
@@ -136,7 +183,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./21-fire-paa-stribe/FirePaaStribe.svelte'),
 		accentColor: '#fbbf24',
-		points: 3
+		points: 3,
+		created: '2025-12-29'
 	},
 	{
 		id: '22-hanoi',
@@ -145,7 +193,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./22-hanoi/Hanoi.svelte'),
 		accentColor: '#8b5cf6',
-		points: 3
+		points: 3,
+		created: '2025-12-30'
 	},
 	{
 		id: '23-slange',
@@ -154,7 +203,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./23-slange/Slange.svelte'),
 		accentColor: '#22c55e',
-		points: 4
+		points: 4,
+		created: '2025-12-30'
 	},
 	{
 		id: '24-tangram',
@@ -163,7 +213,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./24-tangram/Tangram.svelte'),
 		accentColor: '#a855f7',
-		points: 5
+		points: 5,
+		created: '2025-12-30',
+		updated: '2026-01-06'
 	},
 	{
 		id: '25-saenke-slagskibe',
@@ -172,7 +224,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./25-saenke-slagskibe/SaenkeSlagskibe.svelte'),
 		accentColor: '#0ea5e9',
-		points: 3
+		points: 3,
+		created: '2025-12-31',
+		updated: '2026-01-09'
 	},
 	{
 		id: '26-gaet-dyret',
@@ -181,7 +235,10 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./26-gaet-dyret/GaetDyret.svelte'),
 		accentColor: '#f59e0b',
-		points: 5
+		points: 5,
+		created: '2026-01-02',
+		updated: '2026-01-03',
+		ai: true
 	},
 	{
 		id: '27-ordsogning',
@@ -190,7 +247,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./27-ordsogning/Ordsogning.svelte'),
 		accentColor: '#a855f7',
-		points: 5
+		points: 5,
+		created: '2026-01-03',
+		ai: true
 	},
 	{
 		id: '28-labyrint',
@@ -199,7 +258,8 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./28-labyrint/Labyrint.svelte'),
 		accentColor: '#06b6d4',
-		points: 3
+		points: 3,
+		created: '2026-01-05'
 	},
 	{
 		id: '29-maskevaerk',
@@ -208,7 +268,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./29-maskevaerk/Maskevaerk.svelte'),
 		accentColor: '#f9a8d4',
-		points: 3
+		points: 3,
+		created: '2026-01-09',
+		ai: true
 	}
 ];
 

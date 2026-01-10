@@ -2,6 +2,7 @@
 	import { base } from '$app/paths';
 	import { t, translate, type Translations } from '$lib/i18n';
 	import InstallBanner from '$lib/components/InstallBanner.svelte';
+	import { getSortedGames, getGameBadge } from '$lib/games/registry';
 
 	let translations = $state<Translations>({});
 
@@ -9,31 +10,8 @@
 		translations = value;
 	});
 
-	// Games sorted by most recent activity (matching classic app order)
-	const games = [
-		{ id: '29-maskevaerk', icon: '🧶', accentColor: '#f9a8d4', ai: true },
-		{ id: '10-ordleg', icon: '📝', accentColor: '#22c55e', ai: true },
-		{ id: '24-tangram', icon: '🧩', accentColor: '#a855f7' },
-		{ id: '28-labyrint', icon: '🌀', accentColor: '#06b6d4' },
-		{ id: '26-gaet-dyret', icon: '🦁', accentColor: '#f59e0b', ai: true },
-		{ id: '27-ordsogning', icon: '🔤', accentColor: '#a855f7', ai: true },
-		{ id: '25-saenke-slagskibe', icon: '🚢', accentColor: '#0ea5e9' },
-		{ id: '12-roerfoering', icon: '🔧', accentColor: '#06b6d4' },
-		{ id: '23-slange', icon: '🐍', accentColor: '#22c55e' },
-		{ id: '22-hanoi', icon: '🗼', accentColor: '#8b5cf6' },
-		{ id: '21-fire-paa-stribe', icon: '🔴', accentColor: '#fbbf24' },
-		{ id: '19-moelle', icon: '⚪', accentColor: '#8b5cf6' },
-		{ id: '18-dam', icon: '⚫', accentColor: '#ef4444' },
-		{ id: '17-pind', icon: '🎯', accentColor: '#a855f7' },
-		{ id: '14-mastermind', icon: '🔮', accentColor: '#f43f5e' },
-		{ id: '13-skubbepuslespil', icon: '🔢', accentColor: '#f59e0b' },
-		{ id: '11-tictactoe', icon: '❌', accentColor: '#ec4899' },
-		{ id: '09-kalaha', icon: '🥜', accentColor: '#b45309' },
-		{ id: '08-kabale', icon: '🌸', accentColor: '#ec4899' },
-		{ id: '07-hukommelse', icon: '🃏', accentColor: '#06b6d4' },
-		{ id: '06-minestryger', icon: '💣', accentColor: '#ef4444' },
-		{ id: '01-reversi', icon: '⚫', accentColor: '#4ade80' }
-	];
+	// Games sorted by most recent activity (newest/updated first)
+	const games = getSortedGames();
 </script>
 
 <svelte:head>
@@ -44,6 +22,7 @@
 	<div class="game-grid">
 			<InstallBanner />
 			{#each games as game}
+				{@const badge = getGameBadge(game)}
 				<a
 					href="{base}/spil/{game.id}"
 					class="game-card"
@@ -51,7 +30,14 @@
 				>
 					<div class="game-icon">{game.icon}</div>
 					<div class="game-info">
-						<div class="game-name">{translate(translations, `games.${game.id}.title`)}</div>
+						<div class="game-name">
+							{translate(translations, `games.${game.id}.title`)}
+							{#if badge === 'new'}
+								<span class="badge badge-new">✨</span>
+							{:else if badge === 'updated'}
+								<span class="badge badge-updated">💫</span>
+							{/if}
+						</div>
 						<div class="game-desc">{translate(translations, `games.${game.id}.description`)}</div>
 					</div>
 					<span class="game-number">#{game.id.split('-')[0]}</span>
@@ -131,11 +117,20 @@
 		font-size: 1.1rem;
 		font-weight: 600;
 		margin-bottom: 2px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		flex-wrap: wrap;
 	}
 
 	.game-desc {
 		font-size: 0.85rem;
 		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.badge {
+		font-size: 0.9rem;
+		line-height: 1;
 	}
 
 	.game-number {
@@ -182,6 +177,10 @@
 			width: 60px;
 			height: 60px;
 			font-size: 2.5rem;
+		}
+
+		.game-name {
+			justify-content: center;
 		}
 	}
 </style>
