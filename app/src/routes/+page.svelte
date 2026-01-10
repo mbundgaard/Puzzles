@@ -70,11 +70,11 @@
 						aria-label={translate(translations, fav ? 'favorites.remove' : 'favorites.add')}
 					>
 						{#if fav}
-							<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+							<svg viewBox="0 0 24 24" fill="currentColor">
 								<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
 							</svg>
 						{:else}
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 								<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
 							</svg>
 						{/if}
@@ -200,26 +200,30 @@
 
 	.favorite-btn {
 		position: absolute;
-		top: 8px;
-		left: 8px;
-		width: 36px;
-		height: 36px;
+		bottom: 6px;
+		right: 58px;
+		width: 28px;
+		height: 28px;
 		border: none;
-		background: rgba(0, 0, 0, 0.3);
+		background: transparent;
 		border-radius: 50%;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: rgba(255, 255, 255, 0.5);
+		color: rgba(255, 255, 255, 0.25);
 		transition: all 0.2s ease;
 		z-index: 10;
 		padding: 0;
 	}
 
+	.favorite-btn svg {
+		width: 14px;
+		height: 14px;
+	}
+
 	.favorite-btn:hover {
-		background: rgba(0, 0, 0, 0.5);
-		color: rgba(255, 255, 255, 0.8);
+		color: rgba(255, 255, 255, 0.5);
 	}
 
 	.favorite-btn:active {
@@ -228,11 +232,10 @@
 
 	.favorite-btn.is-favorite {
 		color: #ef4444;
-		background: rgba(239, 68, 68, 0.2);
 	}
 
 	.favorite-btn.is-favorite:hover {
-		background: rgba(239, 68, 68, 0.3);
+		color: #f87171;
 	}
 
 	@media (min-width: 500px) {
@@ -265,6 +268,11 @@
 			position: absolute;
 			top: 8px;
 			right: 8px;
+		}
+
+		.favorite-btn {
+			right: 28px;
+			bottom: 4px;
 		}
 	}
 </style>
