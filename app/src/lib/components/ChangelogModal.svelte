@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
-
-	declare const __BUILD_TIME__: string;
+	import { APP_VERSION } from '$lib/version';
 
 	interface Props {
 		isOpen: boolean;
@@ -46,8 +45,8 @@
 		return new Date(isoString).toLocaleDateString('en', { month: 'short', day: 'numeric' });
 	}
 
-	function formatBuildTime(): string {
-		const date = new Date(__BUILD_TIME__);
+	function formatVersion(): string {
+		const date = new Date(APP_VERSION * 1000); // Convert seconds to milliseconds
 		const options: Intl.DateTimeFormatOptions = {
 			timeZone: 'Europe/Copenhagen',
 			day: 'numeric',
@@ -93,7 +92,7 @@
 			</div>
 
 			<div class="version">
-				{formatBuildTime()}
+				{formatVersion()}
 			</div>
 		</div>
 	</div>

@@ -2,10 +2,10 @@
  * Hjernespil API Client for SvelteKit
  */
 
+import { APP_VERSION } from './version';
+
 const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
 const NICKNAME_KEY = 'hjernespil_nickname';
-
-declare const __BUILD_VERSION__: number;
 
 // ============ Version Check ============
 
@@ -14,7 +14,7 @@ export async function checkForUpdates(): Promise<boolean> {
 		const response = await fetch(`${API_BASE}/version`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ version: __BUILD_VERSION__ })
+			body: JSON.stringify({ version: APP_VERSION })
 		});
 		const data = await response.json();
 		return data.newVersionExists === true;
@@ -23,8 +23,8 @@ export async function checkForUpdates(): Promise<boolean> {
 	}
 }
 
-export function getBuildVersion(): number {
-	return __BUILD_VERSION__;
+export function getAppVersion(): number {
+	return APP_VERSION;
 }
 
 // ============ Types ============
