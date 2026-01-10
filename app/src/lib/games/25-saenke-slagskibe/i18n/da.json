@@ -1,32 +1,32 @@
 {
-	"title": "Saenke Slagskibe",
+	"title": "Sænke Slagskibe",
 	"back": "Tilbage",
 	"cancel": "Annuller",
-	"loading": "Indlaeser...",
+	"loading": "Indlæser",
 	"menu": {
-		"title": "Saenke Slagskibe",
+		"title": "Sænke Slagskibe",
 		"subtitle": "Spil mod en ven!",
 		"createGame": "Opret Spil",
 		"joinGame": "Tilslut Spil"
 	},
 	"create": {
 		"title": "Opret Spil",
-		"selectStakes": "Vaelg pointstruktur",
+		"selectStakes": "Vælg pointstruktur",
 		"start": "Start Spil"
 	},
 	"stakes": {
-		"highStakes": "Hoej Indsats",
+		"highStakes": "Høj Indsats",
 		"mediumStakes": "Medium Indsats",
 		"lowStakes": "Lav Indsats"
 	},
 	"waiting": {
-		"title": "Venter paa modstander...",
+		"title": "Venter på modstander",
 		"gameCode": "Spilkode",
 		"hint": "Del koden med din ven"
 	},
 	"join": {
 		"title": "Tilslut Spil",
-		"noGames": "Ingen aabne spil",
+		"noGames": "Ingen åbne spil",
 		"refresh": "Opdater"
 	},
 	"time": {
@@ -37,14 +37,14 @@
 	"placing": {
 		"title": "Placer dine skibe",
 		"vs": "Mod",
-		"waitingOpponent": "Venter paa modstander...",
+		"waitingOpponent": "Venter på modstander",
 		"placeShip": "Placer skib",
 		"allPlaced": "Alle skibe er placeret!",
 		"horizontal": "Vandret",
 		"vertical": "Lodret",
 		"undo": "Fortryd",
 		"ready": "Klar!",
-		"waitingForOpponent": "Venter paa at modstanderen placerer skibe..."
+		"waitingForOpponent": "Venter på at modstanderen placerer skibe"
 	},
 	"battle": {
 		"vs": "Mod",
