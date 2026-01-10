@@ -5,6 +5,7 @@
 	import { language } from '$lib/i18n';
 	import { barsHidden } from '$lib/stores/scroll';
 	import BottomTabBar from '$lib/components/BottomTabBar.svelte';
+	import FeedbackPopup from '$lib/components/FeedbackPopup.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import UpdateBanner from '$lib/components/UpdateBanner.svelte';
 	import '../app.css';
@@ -166,6 +167,10 @@
 	{/if}
 
 	<UpdateBanner bind:this={updateBanner} />
+
+	{#if isHomePage}
+		<FeedbackPopup />
+	{/if}
 </div>
 
 <style>

@@ -85,6 +85,12 @@
 		"iosHint1": "Tap",
 		"iosHint2": "→ \"Add to Home Screen\""
 	},
+	"feedbackPopup": {
+		"title": "What do you think of the games?",
+		"body": "We'd love to hear your thoughts or ideas for new games",
+		"yes": "Yes, sure",
+		"later": "Maybe later"
+	},
 	"notMigrated": {
 		"title": "Coming soon!",
 		"message": "This game hasn't been migrated to the new app yet.",

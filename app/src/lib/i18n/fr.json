@@ -85,6 +85,12 @@
 		"iosHint1": "Appuyez sur",
 		"iosHint2": "→ \"Sur l'écran d'accueil\""
 	},
+	"feedbackPopup": {
+		"title": "Que pensez-vous des jeux ?",
+		"body": "Nous aimerions avoir votre avis ou vos idées de nouveaux jeux",
+		"yes": "Oui, volontiers",
+		"later": "Peut-être plus tard"
+	},
 	"notMigrated": {
 		"title": "Bientôt disponible !",
 		"message": "Ce jeu n'a pas encore été migré vers la nouvelle app.",
