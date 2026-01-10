@@ -111,6 +111,7 @@
 	},
 	"changelog": {
 		"74": "Fjernet synlige scrollbars i appen",
+		"68": "Sænke Slagskibe er nu multiplayer!",
 		"84": "Navneprompt vises nu ved start af spil uden gemt navn",
 		"85": "Ranglisten viser nu alle spillere i stedet for top 10",
 		"77": "Sprogvalg ændret til native dropdown",
@@ -226,7 +227,7 @@
 		},
 		"25-saenke-slagskibe": {
 			"title": "Sænke Slagskibe",
-			"description": "Multiplayer - spil mod en ven!"
+			"description": "Spil mod en ven"
 		},
 		"26-gaet-dyret": {
 			"title": "Gæt Dyret",
