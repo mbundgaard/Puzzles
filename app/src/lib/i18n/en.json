@@ -110,6 +110,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"74": "Removed visible scrollbars in the app",
 		"84": "Name prompt now appears when starting a game without a saved name",
 		"85": "Leaderboard now shows all players instead of top 10",
 		"77": "Language selection changed to native dropdown",

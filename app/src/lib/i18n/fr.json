@@ -110,6 +110,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"74": "Suppression des barres de défilement visibles dans l'app",
 		"84": "L'invite de nom apparaît maintenant au démarrage d'un jeu sans nom enregistré",
 		"85": "Le classement affiche maintenant tous les joueurs au lieu du top 10",
 		"77": "Sélection de langue changée en menu déroulant natif",
