@@ -392,30 +392,18 @@
 			<div class="checkpoint-content">
 				<div class="checkpoint-icon">&#10003;</div>
 				<h2>{t(`levels.level${currentLevel + 1}`)} {t('checkpoint.complete')}!</h2>
+				<p class="checkpoint-points">{checkpointValue} {t('points')}</p>
 
-				<div class="checkpoint-earned">
-					<p class="earned-label">{t('checkpoint.youEarned')}</p>
-					<p class="earned-points">{checkpointValue} {t('points')}</p>
-				</div>
+				<div class="checkpoint-buttons">
+					<button class="bank-btn" onclick={walkAway}>
+						{t('checkpoint.bank')} {checkpointValue} {t('points')}
+					</button>
+					<p class="btn-hint bank-hint">{t('checkpoint.bankDesc')}</p>
 
-				<div class="checkpoint-choices">
-					<div class="choice-card bank-card">
-						<h3>{t('checkpoint.bankTitle')}</h3>
-						<p class="choice-result">+{checkpointValue} {t('points')}</p>
-						<p class="choice-desc">{t('checkpoint.bankDesc')}</p>
-						<button class="bank-btn" onclick={walkAway}>
-							{t('checkpoint.bank')}
-						</button>
-					</div>
-
-					<div class="choice-card continue-card">
-						<h3>{t('checkpoint.continueTitle')}</h3>
-						<p class="choice-result">{t('checkpoint.chasePoints').replace('{points}', String(LEVEL_POINTS[currentLevel + 1]))}</p>
-						<p class="choice-desc">{t('checkpoint.continueDesc')}</p>
-						<button class="continue-btn" onclick={continueAfterCheckpoint}>
-							{t('checkpoint.continue')}
-						</button>
-					</div>
+					<button class="risk-btn" onclick={continueAfterCheckpoint}>
+						{t('checkpoint.chasePoints').replace('{points}', String(LEVEL_POINTS[currentLevel + 1]))}
+					</button>
+					<p class="btn-hint risk-hint">{t('checkpoint.continueDesc')}</p>
 				</div>
 			</div>
 		</div>
@@ -833,109 +821,54 @@
 
 	.checkpoint-content h2 {
 		color: #ffd700;
-		margin: 0 0 1.5rem 0;
+		margin: 0 0 0.5rem 0;
 		font-size: 1.3rem;
 	}
 
-	.checkpoint-earned {
-		background: rgba(255, 215, 0, 0.15);
-		border: 2px solid rgba(255, 215, 0, 0.4);
-		border-radius: 12px;
-		padding: 1rem;
-		margin-bottom: 1.5rem;
-		text-align: center;
-	}
-
-	.earned-label {
-		margin: 0 0 0.25rem 0;
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.7);
-	}
-
-	.earned-points {
-		margin: 0;
-		font-size: 2rem;
+	.checkpoint-points {
+		font-size: 2.5rem;
 		font-weight: bold;
 		color: #ffd700;
+		margin: 0 0 2rem 0;
 	}
 
-	.checkpoint-choices {
+	.checkpoint-buttons {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.choice-card {
-		padding: 1rem;
-		border-radius: 12px;
-		text-align: center;
-	}
-
-	.choice-card h3 {
-		margin: 0 0 0.5rem 0;
-		font-size: 1.1rem;
-	}
-
-	.choice-result {
-		margin: 0 0 0.25rem 0;
-		font-size: 1.2rem;
-		font-weight: bold;
-	}
-
-	.choice-desc {
-		margin: 0 0 1rem 0;
-		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.6);
-	}
-
-	.bank-card {
-		background: rgba(34, 197, 94, 0.15);
-		border: 2px solid rgba(34, 197, 94, 0.4);
-	}
-
-	.bank-card h3 {
-		color: #22c55e;
-	}
-
-	.bank-card .choice-result {
-		color: #22c55e;
+		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.bank-btn {
-		padding: 0.75rem 2rem;
-		font-size: 1rem;
+		padding: 1rem 2rem;
+		font-size: 1.1rem;
 		font-weight: bold;
 		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 		border: none;
-		border-radius: 10px;
+		border-radius: 12px;
 		color: white;
 		cursor: pointer;
 		transition: all 0.3s ease;
 	}
 
-	.continue-card {
-		background: rgba(239, 68, 68, 0.1);
-		border: 2px solid rgba(239, 68, 68, 0.3);
-	}
-
-	.continue-card h3 {
-		color: #f87171;
-	}
-
-	.continue-card .choice-result {
-		color: #ffd700;
-	}
-
-	.continue-btn {
-		padding: 0.75rem 2rem;
-		font-size: 1rem;
+	.risk-btn {
+		padding: 1rem 2rem;
+		font-size: 1.1rem;
 		font-weight: bold;
 		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 		border: none;
-		border-radius: 10px;
+		border-radius: 12px;
 		color: white;
 		cursor: pointer;
 		transition: all 0.3s ease;
+		margin-top: 1rem;
+	}
+
+	.btn-hint {
+		margin: 0.25rem 0 0 0;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.5);
+		text-align: center;
 	}
 
 	/* Result Screens */

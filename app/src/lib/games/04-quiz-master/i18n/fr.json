@@ -13,14 +13,10 @@
 	},
 	"checkpoint": {
 		"complete": "terminé",
-		"youEarned": "Vous avez gagné",
-		"bankTitle": "Encaisser",
-		"bankDesc": "Gardez vos points et terminez",
 		"bank": "Encaisser",
-		"continueTitle": "Risquer",
-		"continueDesc": "Mauvaise réponse = tout perdre",
-		"chasePoints": "Visez {points} points",
-		"continue": "Continuer"
+		"bankDesc": "Gardez vos points et terminez",
+		"chasePoints": "Risquer pour {points} points",
+		"continueDesc": "Mauvaise réponse = tout perdre"
 	},
 	"won": {
 		"title": "Félicitations !"

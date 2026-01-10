@@ -13,14 +13,10 @@
 	},
 	"checkpoint": {
 		"complete": "gennemført",
-		"youEarned": "Du har optjent",
-		"bankTitle": "Indløs",
-		"bankDesc": "Gem dine point og afslut spillet",
-		"bank": "Gem point",
-		"continueTitle": "Vov det",
-		"continueDesc": "Forkert svar = du mister alt",
-		"chasePoints": "Jagt {points} point",
-		"continue": "Fortsæt"
+		"bank": "Gem",
+		"bankDesc": "Sikre dine point og afslut",
+		"chasePoints": "Vov det for {points} point",
+		"continueDesc": "Forkert svar = mister alt"
 	},
 	"won": {
 		"title": "Tillykke!"

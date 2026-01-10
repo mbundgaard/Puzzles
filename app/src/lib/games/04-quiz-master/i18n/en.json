@@ -13,14 +13,10 @@
 	},
 	"checkpoint": {
 		"complete": "complete",
-		"youEarned": "You earned",
-		"bankTitle": "Bank it",
+		"bank": "Bank",
 		"bankDesc": "Secure your points and end the game",
-		"bank": "Bank points",
-		"continueTitle": "Risk it",
-		"continueDesc": "Wrong answer = lose everything",
-		"chasePoints": "Chase {points} points",
-		"continue": "Continue"
+		"chasePoints": "Risk it for {points} points",
+		"continueDesc": "Wrong answer = lose everything"
 	},
 	"won": {
 		"title": "Congratulations!"
