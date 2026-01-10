@@ -1,0 +1,31 @@
+{
+	"title": "Saenke Slagskibe",
+	"newGame": "Nyt Spil",
+	"difficulty": {
+		"title": "Svaerhedsgrad",
+		"easy": "Let",
+		"medium": "Normal",
+		"hard": "Svaer"
+	},
+	"markMode": {
+		"ship": "Skib",
+		"water": "Vand"
+	},
+	"fleet": {
+		"title": "Flaade",
+		"battleship": "Slagskib",
+		"cruiser": "Krydser",
+		"destroyer": "Destroyer",
+		"submarine": "Ubaad"
+	},
+	"won": "Tilykke! Du fandt alle skibene!",
+	"rules": {
+		"title": "Regler",
+		"goal": "Find alle skibene i gitteret ved at bruge tallene som ledetraade.",
+		"numbers": "Tallene viser hvor mange skibsfelter der er i hver raekke og kolonne.",
+		"ships": "Flaaden bestaar af: 1 slagskib (4), 2 krydsere (3), 3 destroyere (2), 4 ubaade (1).",
+		"noTouch": "Skibe maa ikke roere hinanden - heller ikke diagonalt!",
+		"howTo": "Tryk paa et felt for at markere det. Brug knapperne til at skifte mellem skib og vand.",
+		"tip": "Start med raekker/kolonner der har 0 (alt er vand) eller hoeje tal."
+	}
+}

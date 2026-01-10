@@ -1,0 +1,29 @@
+{
+	"title": "Kalaha",
+	"newGame": "New Game",
+	"status": {
+		"yourTurn": "Your turn",
+		"aiThinking": "AI thinking...",
+		"gameOver": "Game over"
+	},
+	"result": {
+		"won": "You won!",
+		"lost": "AI won!",
+		"draw": "Draw!"
+	},
+	"score": {
+		"you": "You",
+		"ai": "AI"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Tap one of your pits (bottom row) to sow",
+		"rule2": "Stones are distributed counter-clockwise, one in each pit",
+		"rule3": "Skip the opponent's store",
+		"rule4": "If you land in a pit with stones, pick them up and continue",
+		"rule5": "Your turn ends when you land in an empty pit or your store",
+		"rule6": "Land in your store to get an extra turn",
+		"rule7": "Land in an empty pit on your side to capture opponent's stones across",
+		"rule8": "The player with the most stones in their store wins"
+	}
+}

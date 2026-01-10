@@ -1,0 +1,30 @@
+{
+	"title": "Slange",
+	"newGame": "Nyt Spil",
+	"selectDifficulty": "Valg svarhedsgrad",
+	"difficulty": {
+		"easy": "Let",
+		"medium": "Mellem",
+		"hard": "Svar"
+	},
+	"score": "Point",
+	"target": "Mal",
+	"gameOver": "Game Over!",
+	"collected": "Du samlede",
+	"foodItems": "mad",
+	"tryAgain": "Prov Igen",
+	"won": "Du vandt!",
+	"controls": {
+		"up": "Op",
+		"down": "Ned",
+		"left": "Venstre",
+		"right": "Hojre"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Styr slangen med pilene",
+		"rule2": "Spis maden for at vokse",
+		"rule3": "Undga at ramme vagge eller dig selv",
+		"rule4": "Saml det kravede antal mad for at vinde"
+	}
+}

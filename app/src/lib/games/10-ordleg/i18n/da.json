@@ -1,0 +1,41 @@
+{
+	"title": "Ordleg",
+	"newGame": "Nyt Spil",
+	"guess": "Gæt",
+	"loading": "Henter ord...",
+	"fetchError": "Kunne ikke hente ord. Prøv igen.",
+	"tooShort": "Ordet skal være 5 bogstaver",
+	"won": "Tillykke! Du gættede ordet!",
+	"lost": "Ordet var: {word}",
+	"winMessages": {
+		"genius": "Genialt!",
+		"amazing": "Fantastisk!",
+		"great": "Flot!",
+		"good": "Godt gået!",
+		"nice": "Fint!",
+		"phew": "Puh!"
+	},
+	"status": {
+		"attempts": "Forsøg {current} af {max}"
+	},
+	"difficulty": {
+		"easy": "Let",
+		"medium": "Medium",
+		"hard": "Svær"
+	},
+	"categories": {
+		"mixed": "Blandet",
+		"kids": "Børneord",
+		"slang": "Slang",
+		"animals": "Dyr",
+		"food": "Mad"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Gæt det hemmelige 5-bogstavs ord på 6 forsøg",
+		"rule2": "Skriv et ord og tryk Gæt for at gætte",
+		"rule3": "Grøn = bogstav er korrekt placeret",
+		"rule4": "Gul = bogstav er i ordet, men forkert plads",
+		"rule5": "Grå = bogstav er ikke i ordet"
+	}
+}

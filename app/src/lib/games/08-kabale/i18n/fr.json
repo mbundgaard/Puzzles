@@ -1,0 +1,13 @@
+{
+	"title": "Solitaire",
+	"newGame": "Nouvelle Partie",
+	"stock": "Pioche",
+	"moves": "Coups",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "D\u00e9placez toutes les cartes vers les fondations (en haut \u00e0 droite)",
+		"rule2": "Construisez les fondations de A \u00e0 K dans la m\u00eame couleur",
+		"rule3": "Construisez les colonnes en descendant avec des couleurs altern\u00e9es (rouge/noir)",
+		"rule4": "Appuyez sur la pioche pour tirer de nouvelles cartes"
+	}
+}

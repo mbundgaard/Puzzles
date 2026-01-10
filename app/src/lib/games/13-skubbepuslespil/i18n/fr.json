@@ -1,0 +1,14 @@
+{
+	"title": "Taquin",
+	"newGame": "Nouveau Jeu",
+	"moves": "Coups",
+	"time": "Temps",
+	"solved": "Félicitations ! Vous avez résolu le puzzle !",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Appuyez sur une tuile à côté de l'espace vide pour la déplacer",
+		"rule2": "Arrangez les nombres de 1 à 15 dans l'ordre",
+		"rule3": "L'espace vide doit finir en bas à droite",
+		"rule4": "Essayez de résoudre le puzzle avec le moins de coups possible"
+	}
+}

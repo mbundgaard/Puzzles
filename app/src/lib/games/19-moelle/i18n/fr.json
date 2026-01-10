@@ -1,0 +1,34 @@
+{
+	"title": "Jeu du moulin",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"placePiece": "Votre tour - placez une piece",
+		"movePiece": "Votre tour - deplacez une piece",
+		"removePiece": "Retirez une piece adverse !",
+		"aiThinking": "L'IA reflechit...",
+		"won": "Vous avez gagne !",
+		"lost": "Vous avez perdu !"
+	},
+	"phase": {
+		"placement": "Phase 1 : Placement",
+		"movement": "Phase 2 : Deplacement"
+	},
+	"score": {
+		"you": "Vous",
+		"ai": "IA",
+		"inHand": "en main"
+	},
+	"difficulty": {
+		"label": "Difficulte",
+		"easy": "Facile",
+		"medium": "Normal",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Phase 1 : Placez vos 9 pieces sur les points vides",
+		"rule2": "Phase 2 : Deplacez les pieces vers les points adjacents",
+		"rule3": "Moulin : Trois d'affilee = retirez une piece adverse",
+		"rule4": "Victoire : Reduisez l'adversaire a 2 pieces"
+	}
+}

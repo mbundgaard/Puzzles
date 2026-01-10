@@ -1,0 +1,53 @@
+{
+	"title": "Guess the Animal",
+	"newGame": "New Game",
+	"selectCategory": "Select category",
+	"difficulty": "Difficulty",
+	"categories": {
+		"marine": "Marine Animals",
+		"birds": "Birds",
+		"mammals": "Mammals",
+		"farm": "Farm Animals",
+		"wild": "Wild Animals",
+		"danish": "Danish Animals"
+	},
+	"difficulties": {
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"difficultyPoints": {
+		"easy": "1-2 points",
+		"medium": "1-3 points",
+		"hard": "1-5 points"
+	},
+	"inputPlaceholder": "Write a question or guess...",
+	"askBtn": "Ask",
+	"guessBtn": "Guess",
+	"hintBtn": "Get hint (-5 attempts)",
+	"hintBtnNotEnough": "Not enough attempts",
+	"counter": "{current}/{max}",
+	"points": "{points} points",
+	"answers": {
+		"yes": "Yes",
+		"no": "No",
+		"maybe": "Maybe",
+		"correct": "Correct!",
+		"wrong": "Wrong"
+	},
+	"guessPrefix": "Guess: ",
+	"status": {
+		"loading": "Loading...",
+		"error": "Could not start the game. Please try again."
+	},
+	"loseTitle": "No more attempts!",
+	"loseAnimalWas": "The animal was:",
+	"playAgain": "Try Again",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Ask yes/no questions about the animal",
+		"rule2": "Use the answers to guess the animal",
+		"rule3": "You have 20 attempts in total",
+		"rule4": "Fewer attempts means more points"
+	}
+}

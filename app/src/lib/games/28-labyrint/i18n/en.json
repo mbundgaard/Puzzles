@@ -1,0 +1,18 @@
+{
+	"title": "Maze",
+	"newGame": "New Game",
+	"steps": "Steps",
+	"won": "You found the exit!",
+	"controls": {
+		"up": "Up",
+		"down": "Down",
+		"left": "Left",
+		"right": "Right"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Find your way through the maze to the exit",
+		"rule2": "You can only see 3 cells around you",
+		"rule3": "The exit is marked in green"
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"title": "Solitaire",
+	"newGame": "New Game",
+	"stock": "Stock",
+	"moves": "Moves",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Move all cards to the foundations (top right)",
+		"rule2": "Build foundations up from A-K in the same suit",
+		"rule3": "Build columns down with alternating colors (red/black)",
+		"rule4": "Tap the stock to draw new cards"
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"title": "Nine Men's Morris",
+	"newGame": "New Game",
+	"status": {
+		"placePiece": "Your turn - place a piece",
+		"movePiece": "Your turn - move a piece",
+		"removePiece": "Remove an opponent's piece!",
+		"aiThinking": "AI thinking...",
+		"won": "You won!",
+		"lost": "You lost!"
+	},
+	"phase": {
+		"placement": "Phase 1: Placement",
+		"movement": "Phase 2: Movement"
+	},
+	"score": {
+		"you": "You",
+		"ai": "AI",
+		"inHand": "in hand"
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Normal",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Phase 1: Place your 9 pieces on empty points",
+		"rule2": "Phase 2: Move pieces to adjacent points",
+		"rule3": "Mill: Three in a row = remove an opponent's piece",
+		"rule4": "Win: Reduce opponent to 2 pieces"
+	}
+}

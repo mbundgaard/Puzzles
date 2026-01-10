@@ -1,0 +1,25 @@
+{
+	"title": "Travail de Mailles",
+	"newGame": "Nouveau Motif",
+	"recipe": "Modèle",
+	"selectStitch": "Choisir une maille :",
+	"checkPattern": "Vérifier le motif",
+	"loading": "Génération du motif...",
+	"fetchError": "Impossible de récupérer le motif. Réessayez.",
+	"fillAllFirst": "Remplissez toutes les cellules d'abord !",
+	"won": "Parfait ! Le motif est correct !",
+	"wrongCount": "{count} mailles incorrectes. Réessayez !",
+	"stitches": {
+		"knitLight": "Maille endroit clair",
+		"knitDark": "Maille endroit foncé",
+		"purlLight": "Maille envers clair",
+		"purlDark": "Maille envers foncé"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Lisez la description du motif et comprenez-la",
+		"rule2": "Appuyez sur une cellule pour la sélectionner",
+		"rule3": "Choisissez le bon type de maille ci-dessous",
+		"rule4": "Remplissez toute la grille et appuyez sur \"Vérifier le motif\""
+	}
+}

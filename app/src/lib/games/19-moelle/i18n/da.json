@@ -1,0 +1,34 @@
+{
+	"title": "Molle",
+	"newGame": "Nyt Spil",
+	"status": {
+		"placePiece": "Din tur - placer en brik",
+		"movePiece": "Din tur - flyt en brik",
+		"removePiece": "Fjern en modstanderbrik!",
+		"aiThinking": "AI taenker...",
+		"won": "Du vandt!",
+		"lost": "Du tabte!"
+	},
+	"phase": {
+		"placement": "Fase 1: Placering",
+		"movement": "Fase 2: Flytning"
+	},
+	"score": {
+		"you": "Du",
+		"ai": "AI",
+		"inHand": "pa hand"
+	},
+	"difficulty": {
+		"label": "Svaerhedsgrad",
+		"easy": "Let",
+		"medium": "Normal",
+		"hard": "Svaer"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Fase 1: Placer dine 9 brikker pa tomme punkter",
+		"rule2": "Fase 2: Flyt brikker til tilstodende punkter",
+		"rule3": "Molle: Tre pa raekke = fjern en modstanderbrik",
+		"rule4": "Vind: Reducer modstanderen til 2 brikker"
+	}
+}

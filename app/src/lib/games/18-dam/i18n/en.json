@@ -1,0 +1,30 @@
+{
+	"title": "Checkers",
+	"newGame": "New Game",
+	"status": {
+		"yourTurn": "Your turn",
+		"aiThinking": "AI thinking...",
+		"won": "You won!",
+		"lost": "You lost!",
+		"mustCapture": "You must capture!"
+	},
+	"score": {
+		"you": "You",
+		"ai": "AI"
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Tap a piece to select it",
+		"rule2": "Tap a valid cell to move",
+		"rule3": "Jump over opponent pieces to capture them",
+		"rule4": "If you can capture, you must capture (forced capture)",
+		"rule5": "Pieces reaching the opposite side become kings",
+		"rule6": "Kings can move backwards"
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"title": "Mots caches",
+	"newGame": "Nouvelle partie",
+	"selectDifficulty": "Choisir la difficulte:",
+	"points": "points",
+	"status": "Trouves: {found}/{total}",
+	"loading": "Generation du puzzle...",
+	"error": "Impossible de demarrer le jeu. Reessayez.",
+	"won": "Felicitations! Vous avez trouve tous les mots!",
+	"difficulty": {
+		"label": "Difficulte",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Trouvez les 8 mots caches dans la grille",
+		"rule2": "Appuyez sur la premiere lettre d'un mot, puis sur la derniere pour le marquer",
+		"rule3": "Les mots vont de gauche a droite, de haut en bas, ou en diagonale",
+		"rule4": "Difficulte: Facile (mots courts), Moyen (mots moyens), Difficile (mots longs)"
+	}
+}

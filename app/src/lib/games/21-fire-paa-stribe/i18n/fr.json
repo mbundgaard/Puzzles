@@ -1,0 +1,24 @@
+{
+	"title": "Puissance 4",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"yourTurn": "Votre tour",
+		"aiThinking": "L'ordinateur réfléchit...",
+		"won": "Félicitations ! Vous avez gagné !",
+		"lost": "L'ordinateur a gagné !",
+		"draw": "Match nul !"
+	},
+	"difficulty": {
+		"label": "Difficulté",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Appuyez sur une colonne pour laisser tomber votre pion",
+		"rule2": "Le pion tombe à la position libre la plus basse",
+		"rule3": "Alignez quatre pions (horizontal, vertical ou diagonal)",
+		"rule4": "Vous jouez avec les pions jaunes, l'ordinateur avec les rouges"
+	}
+}

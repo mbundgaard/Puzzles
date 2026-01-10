@@ -1,0 +1,28 @@
+{
+	"title": "Tangram",
+	"selectPuzzle": "Select puzzle",
+	"back": "Back",
+	"reset": "Reset",
+	"hint": "Tap to rotate - Drag to move",
+	"covered": "covered",
+	"solved": "You did it!",
+	"difficulty": {
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"puzzles": {
+		"t-lille": "Mini T",
+		"pil": "The Arrow",
+		"klassisk": "Classic",
+		"fem-dele": "Five Pieces",
+		"hus": "The House",
+		"diamant": "The Diamond"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Drag the pieces into the shape",
+		"rule2": "Tap a piece to rotate it 45 degrees",
+		"rule3": "Cover the entire shape to win"
+	}
+}

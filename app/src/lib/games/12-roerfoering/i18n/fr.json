@@ -1,0 +1,22 @@
+{
+	"title": "Flux de Tuyaux",
+	"newGame": "Nouveau Jeu",
+	"status": "Placez tous les tuyaux pour connecter le début à la fin",
+	"trayEmpty": "Tous les tuyaux sont placés",
+	"allWonToday": "Vous avez gagné toutes les difficultés aujourd'hui ! Revenez demain.",
+	"won": "Félicitations ! Vous avez réussi !",
+	"difficulty": {
+		"label": "Difficulté",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Sélectionnez un tuyau dans le plateau ci-dessous",
+		"rule2": "Appuyez sur une cellule pour placer le tuyau",
+		"rule3": "Appuyez sur un tuyau placé pour le retirer",
+		"rule4": "Connectez le début (vert) à la fin (rouge)",
+		"rule5": "Vous devez utiliser tous les tuyaux du plateau"
+	}
+}

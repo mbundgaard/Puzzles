@@ -1,0 +1,27 @@
+{
+	"title": "Demineur",
+	"newGame": "Nouvelle Partie",
+	"mode": {
+		"dig": "Creuser",
+		"flag": "Drapeau"
+	},
+	"status": {
+		"revealMode": "Appuyez pour reveler les cases",
+		"flagMode": "Appuyez pour placer des drapeaux",
+		"won": "Felicitations! Vous avez gagne!",
+		"lost": "Boom! Vous avez touche une mine!"
+	},
+	"difficulty": {
+		"label": "Difficulte",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Trouvez toutes les cases sures sans toucher une mine",
+		"rule2": "Les chiffres indiquent le nombre de mines dans les cases voisines",
+		"rule3": "Utilisez le mode \"Drapeau\" pour marquer les mines",
+		"rule4": "Appuyez pour creuser ou placer un drapeau"
+	}
+}

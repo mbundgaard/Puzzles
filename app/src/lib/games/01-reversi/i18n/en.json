@@ -1,0 +1,28 @@
+{
+	"title": "Reversi",
+	"newGame": "New Game",
+	"status": {
+		"yourTurn": "Your turn",
+		"aiThinking": "AI thinking...",
+		"won": "You won!",
+		"lost": "AI won!",
+		"draw": "Draw!",
+		"pass": "passes - no valid moves",
+		"you": "You",
+		"ai": "AI"
+	},
+	"score": {
+		"you": "You",
+		"ai": "AI"
+	},
+	"boardSize": {
+		"label": "Size"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "You play as black, AI plays as white",
+		"rule2": "Tap a cell to place your piece",
+		"rule3": "Capture opponent pieces by surrounding them",
+		"rule4": "The player with the most pieces wins"
+	}
+}

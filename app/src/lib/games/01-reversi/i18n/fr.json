@@ -1,0 +1,28 @@
+{
+	"title": "Reversi",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"yourTurn": "Votre tour",
+		"aiThinking": "L'IA réfléchit...",
+		"won": "Vous avez gagné !",
+		"lost": "L'IA a gagné !",
+		"draw": "Match nul !",
+		"pass": "passe - aucun coup valide",
+		"you": "Vous",
+		"ai": "IA"
+	},
+	"score": {
+		"you": "Vous",
+		"ai": "IA"
+	},
+	"boardSize": {
+		"label": "Taille"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Vous jouez les noirs, l'IA joue les blancs",
+		"rule2": "Appuyez sur une case pour placer votre pion",
+		"rule3": "Capturez les pions adverses en les encerclant",
+		"rule4": "Le joueur avec le plus de pions gagne"
+	}
+}

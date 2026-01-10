@@ -1,0 +1,13 @@
+{
+	"title": "Kabale",
+	"newGame": "Nyt Spil",
+	"stock": "Bunke",
+	"moves": "Tr\u00e6k",
+	"rules": {
+		"title": "S\u00e5dan spiller du",
+		"rule1": "Flyt alle kort til fundamenterne (\u00f8verst til h\u00f8jre)",
+		"rule2": "Byg fundamenter op fra A-K i samme kul\u00f8r",
+		"rule3": "Byg kolonner ned med skiftende farver (r\u00f8d/sort)",
+		"rule4": "Tryk p\u00e5 bunken for at tr\u00e6kke nye kort"
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"title": "Maskeværk",
+	"newGame": "Nyt Mønster",
+	"recipe": "Opskrift",
+	"selectStitch": "Vælg maske:",
+	"checkPattern": "Tjek mønster",
+	"loading": "Genererer mønster...",
+	"fetchError": "Kunne ikke hente mønster. Prøv igen.",
+	"fillAllFirst": "Udfyld alle felter først!",
+	"won": "Perfekt! Mønsteret er korrekt!",
+	"wrongCount": "{count} forkerte masker. Prøv igen!",
+	"stitches": {
+		"knitLight": "Ret lys",
+		"knitDark": "Ret mørk",
+		"purlLight": "Vrang lys",
+		"purlDark": "Vrang mørk"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Læs opskriften og forstå mønsteret",
+		"rule2": "Tryk på en celle for at vælge den",
+		"rule3": "Vælg den rigtige maske-type nedenfor",
+		"rule4": "Udfyld hele brættet og tryk \"Tjek mønster\""
+	}
+}

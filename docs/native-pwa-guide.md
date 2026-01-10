@@ -855,10 +855,185 @@ When migrating each game:
 14. ✅ Add cross-link between classic and new app
     - Settings page GitHub link points to repo
 
+### Game Migration Phase
+
+13. ⬜ Migrate all remaining games (see Full Game Migration section below)
+
 ### Cutover Phase (When Ready)
 
-15. ⬜ Move new app to root, archive classic to `/classic/`
-16. ⬜ Update SvelteKit base path to `/Puzzles`
-17. ⬜ Update GitHub Action to deploy new app at root
-18. ⬜ Add "Classic version" link in new app footer
-19. ⬜ Announce migration to users
+14. ⬜ Move new app to root, archive classic to `/classic/`
+15. ⬜ Update SvelteKit base path to `/Puzzles`
+16. ⬜ Update GitHub Action to deploy new app at root
+17. ⬜ Add "Classic version" link in new app footer
+18. ⬜ Announce migration to users
+
+---
+
+## Full Game Migration
+
+### Games to Migrate
+
+From the home page (+page.svelte), these 21 games need migration:
+
+| # | Game ID | Name | Points | AI | Notes |
+|---|---------|------|--------|-----|-------|
+| 01 | 01-reversi | Reversi | 3 | No | Strategy game with AI |
+| 06 | 06-minestryger | Minesweeper | 3 | No | Grid-based |
+| 07 | 07-hukommelse | Memory | 3 | No | Card matching |
+| 08 | 08-kabale | Solitaire | 3 | No | Card game |
+| 09 | 09-kalaha | Kalaha/Mancala | 3 | No | AI opponent |
+| 10 | 10-ordleg | Word Game | 1/3/5 | **Yes** | API: /api/game/10/word |
+| 12 | 12-roerfoering | Pipe Flow | 1/2/3 | No | Puzzle |
+| 13 | 13-skubbepuslespil | Sliding Puzzle | 3 | No | 15-puzzle |
+| 14 | 14-mastermind | Mastermind | 3 | No | Code breaking |
+| 17 | 17-pind | Peg Solitaire | 3 | No | Single player |
+| 18 | 18-dam | Checkers | 3 | No | AI opponent |
+| 19 | 19-moelle | Nine Men's Morris | 3 | No | AI opponent |
+| 21 | 21-fire-paa-stribe | Connect Four | 3 | No | AI opponent |
+| 22 | 22-hanoi | Tower of Hanoi | 3 | No | Puzzle |
+| 23 | 23-slange | Snake | 2/3/4 | No | Needs arrow buttons |
+| 24 | 24-tangram | Tangram | 1/3/5 | No | Drag & rotate pieces |
+| 25 | 25-saenke-slagskibe | Battleship | 1/2/3 | No | Logic puzzle |
+| 26 | 26-gaet-dyret | Guess Animal | 1/3/5 | **Yes** | API: /pick, /ask, /hint |
+| 27 | 27-ordsogning | Word Search | 1/3/5 | **Yes** | API: /generate |
+| 28 | 28-labyrint | Maze | 3 | No | Fog of war |
+| 29 | 29-maskevaerk | Knitting | 3 | **Yes** | API: /generate |
+
+### Migration Pattern
+
+#### File Structure
+
+```
+app/src/lib/games/[game-id]/
+├── [GameName].svelte      # Main component
+└── i18n/
+    ├── da.json            # Danish translations
+    ├── en.json            # English translations
+    └── fr.json            # French translations
+```
+
+#### Game Component Template
+
+```svelte
+<script lang="ts">
+	import type { Translations } from '$lib/i18n';
+	import { trackStart, trackComplete } from '$lib/api';
+	import WinModal from '$lib/components/WinModal.svelte';
+
+	interface Props {
+		translations: Translations;
+	}
+
+	let { translations }: Props = $props();
+
+	// Win modal state
+	let showWinModal = $state(false);
+	const GAME_NUMBER = 'XX';  // e.g., '01', '06'
+	const POINTS = 3;          // or variable based on difficulty
+
+	// Helper to get translation
+	function t(key: string): string {
+		const keys = key.split('.');
+		let value: unknown = translations;
+		for (const k of keys) {
+			if (value && typeof value === 'object' && k in value) {
+				value = (value as Record<string, unknown>)[k];
+			} else {
+				return key;
+			}
+		}
+		return typeof value === 'string' ? value : key;
+	}
+
+	// Game state using $state()
+	let gameOver = $state(false);
+
+	function newGame() {
+		gameOver = false;
+		showWinModal = false;
+		trackStart(GAME_NUMBER);
+	}
+
+	function handleWin() {
+		gameOver = true;
+		trackComplete(GAME_NUMBER);
+		setTimeout(() => { showWinModal = true; }, 800);
+	}
+
+	newGame();
+</script>
+
+<div class="game">
+	<!-- Game UI -->
+</div>
+
+<WinModal
+	isOpen={showWinModal}
+	points={POINTS}
+	gameNumber={GAME_NUMBER}
+	onClose={() => showWinModal = false}
+/>
+
+<style>
+	/* Dark theme, glassmorphism, touch-friendly */
+</style>
+```
+
+#### Registry Entry
+
+Add to `app/src/lib/games/registry.ts`:
+
+```typescript
+{
+	id: 'XX-game-name',
+	number: 'XX',
+	icon: '🎮',
+	languages: ['da', 'en', 'fr'],
+	component: () => import('./XX-game-name/GameName.svelte'),
+	accentColor: '#ec4899',
+	points: 3
+}
+```
+
+### AI-Powered Games API
+
+These games require backend API calls:
+
+| Game | Endpoints |
+|------|-----------|
+| 10-ordleg | `POST /api/game/10/word` - `{length, difficulty, category}` |
+| 26-gaet-dyret | `POST /api/game/26/pick`, `/ask`, `/hint` |
+| 27-ordsogning | `POST /api/game/27/generate` - `{difficulty}` |
+| 29-maskevaerk | `POST /api/game/29/generate` |
+
+### Key Requirements
+
+1. **Touch-first**: Min 44x44px tap targets, no hover-only, no swipe gestures
+2. **No keyboard**: Snake needs arrow buttons, not keyboard
+3. **Dark theme**: `rgba(255,255,255,0.08)` backgrounds, glassmorphism
+4. **i18n**: All text in da/en/fr JSON files, use `t()` helper
+5. **API tracking**: `trackStart()` in newGame, `trackComplete()` on win
+6. **Win modal**: Show WinModal with 800ms delay after victory
+
+### Suggested Batch Order
+
+**Batch 1 - Simple Games**: 01-reversi, 06-minestryger, 07-hukommelse, 13-skubbepuslespil, 17-pind, 22-hanoi
+
+**Batch 2 - AI Opponent**: 09-kalaha, 18-dam, 19-moelle, 21-fire-paa-stribe
+
+**Batch 3 - Complex UI**: 08-kabale, 12-roerfoering, 14-mastermind, 23-slange, 24-tangram, 25-saenke-slagskibe, 28-labyrint
+
+**Batch 4 - AI-Powered**: 10-ordleg, 26-gaet-dyret, 27-ordsogning, 29-maskevaerk
+
+### Reference Implementation
+
+See `app/src/lib/games/11-tictactoe/` for complete example with:
+- `TicTacToe.svelte` - Full game component with all patterns
+- `i18n/da.json`, `en.json`, `fr.json` - Translation structure
+
+### After Migration
+
+1. Run `npm run build` in `/app/` to verify compilation
+2. Test each game in preview mode
+3. Update APP_VERSION in vite.config.js
+4. Commit and push

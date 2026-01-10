@@ -1,0 +1,24 @@
+{
+	"title": "Fire på Stribe",
+	"newGame": "Nyt Spil",
+	"status": {
+		"yourTurn": "Din tur",
+		"aiThinking": "Computeren tænker...",
+		"won": "Tillykke! Du vandt!",
+		"lost": "Computeren vandt!",
+		"draw": "Uafgjort!"
+	},
+	"difficulty": {
+		"label": "Sværhedsgrad",
+		"easy": "Let",
+		"medium": "Medium",
+		"hard": "Svær"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Tryk på en kolonne for at slippe din brik",
+		"rule2": "Brikken falder til den laveste ledige plads",
+		"rule3": "Få fire brikker på række (vandret, lodret eller diagonalt)",
+		"rule4": "Du spiller med gule brikker, computeren med røde"
+	}
+}

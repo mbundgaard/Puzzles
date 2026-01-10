@@ -1,0 +1,14 @@
+{
+	"title": "Sliding Puzzle",
+	"newGame": "New Game",
+	"moves": "Moves",
+	"time": "Time",
+	"solved": "Congratulations! You solved the puzzle!",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Tap a tile next to the empty space to move it",
+		"rule2": "Arrange the numbers from 1-15 in order",
+		"rule3": "The empty space should end up in the bottom right corner",
+		"rule4": "Try to solve the puzzle with as few moves as possible"
+	}
+}

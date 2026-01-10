@@ -1,0 +1,20 @@
+{
+	"title": "Mastermind",
+	"newGame": "New Game",
+	"guess": "Guess",
+	"clear": "Clear",
+	"status": {
+		"selectColors": "Guess the secret code",
+		"attempts": "Attempt {current} of {max}",
+		"won": "Congratulations! You cracked the code in {attempts} attempts!",
+		"lost": "Too bad! You ran out of attempts."
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Select a color and tap a slot to place it",
+		"rule2": "Tap \"Guess\" when you have filled all 4 slots",
+		"rule3": "Black = correct color, correct position",
+		"rule4": "White = correct color, wrong position",
+		"rule5": "You have 10 attempts to crack the code"
+	}
+}

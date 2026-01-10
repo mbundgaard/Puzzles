@@ -1,0 +1,23 @@
+{
+	"title": "Word Search",
+	"newGame": "New Game",
+	"selectDifficulty": "Select difficulty:",
+	"points": "points",
+	"status": "Found: {found}/{total}",
+	"loading": "Generating puzzle...",
+	"error": "Could not start the game. Try again.",
+	"won": "Congratulations! You found all the words!",
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Find all 8 hidden words in the grid",
+		"rule2": "Tap the first letter of a word, then tap the last letter to mark it",
+		"rule3": "Words go left-to-right, top-to-bottom, or diagonally",
+		"rule4": "Difficulty: Easy (short words), Medium (medium words), Hard (long words)"
+	}
+}

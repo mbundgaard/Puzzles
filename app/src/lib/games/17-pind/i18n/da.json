@@ -1,0 +1,30 @@
+{
+	"title": "Pind",
+	"newGame": "Nyt Spil",
+	"undo": "Fortryd",
+	"board": {
+		"label": "Brættype",
+		"english": "Engelsk (33)",
+		"european": "Europæisk (37)"
+	},
+	"stats": {
+		"moves": "Træk",
+		"pegs": "Pinde"
+	},
+	"status": {
+		"perfect": "Perfekt!",
+		"almostPerfect": "Næsten perfekt!",
+		"won": "Du vandt!",
+		"gameOver": "Spil slut",
+		"perfectMessage": "Du efterlod kun én pind i midten!",
+		"almostMessage": "Kun én pind tilbage, men ikke i midten.",
+		"lostMessage": "{count} pinde tilbage. Prøv igen!"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Hop over en pind med en anden pind",
+		"rule2": "Den overspringede pind fjernes",
+		"rule3": "Målet er at efterlade kun én pind",
+		"rule4": "Perfekt løsning: Sidste pind i midten"
+	}
+}

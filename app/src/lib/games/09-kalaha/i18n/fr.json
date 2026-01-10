@@ -1,0 +1,29 @@
+{
+	"title": "Kalaha",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"yourTurn": "Votre tour",
+		"aiThinking": "L'IA réfléchit...",
+		"gameOver": "Partie terminée"
+	},
+	"result": {
+		"won": "Vous avez gagné !",
+		"lost": "L'IA a gagné !",
+		"draw": "Match nul !"
+	},
+	"score": {
+		"you": "Vous",
+		"ai": "IA"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Appuyez sur un de vos trous (rangée du bas) pour semer",
+		"rule2": "Les pierres sont distribuées dans le sens antihoraire, une par trou",
+		"rule3": "Sautez le grenier de l'adversaire",
+		"rule4": "Si vous atterrissez dans un trou avec des pierres, ramassez-les et continuez",
+		"rule5": "Votre tour se termine quand vous atterrissez dans un trou vide ou votre grenier",
+		"rule6": "Atterrissez dans votre grenier pour avoir un tour supplémentaire",
+		"rule7": "Atterrissez dans un trou vide de votre côté pour capturer les pierres adverses en face",
+		"rule8": "Le joueur avec le plus de pierres dans son grenier gagne"
+	}
+}

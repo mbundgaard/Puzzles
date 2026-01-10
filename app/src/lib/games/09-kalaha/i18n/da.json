@@ -1,0 +1,29 @@
+{
+	"title": "Kalaha",
+	"newGame": "Nyt Spil",
+	"status": {
+		"yourTurn": "Din tur",
+		"aiThinking": "AI tænker...",
+		"gameOver": "Spil slut"
+	},
+	"result": {
+		"won": "Du vandt!",
+		"lost": "AI vandt!",
+		"draw": "Uafgjort!"
+	},
+	"score": {
+		"you": "Dig",
+		"ai": "AI"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Tryk på en af dine huller (nederste række) for at så",
+		"rule2": "Stenene fordeles mod uret, én i hvert hul",
+		"rule3": "Spring modstanderens mål over",
+		"rule4": "Lander du i et hul med sten, samler du dem op og fortsætter",
+		"rule5": "Turen slutter når du lander i et tomt hul eller dit mål",
+		"rule6": "Lander du i dit mål, får du en ekstra tur",
+		"rule7": "Lander du i et tomt hul på din side, fanger du modstanderens sten overfor",
+		"rule8": "Spilleren med flest sten i målet vinder"
+	}
+}

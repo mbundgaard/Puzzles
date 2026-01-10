@@ -1,0 +1,30 @@
+{
+	"title": "Solitaire",
+	"newGame": "Nouveau Jeu",
+	"undo": "Annuler",
+	"board": {
+		"label": "Type de plateau",
+		"english": "Anglais (33)",
+		"european": "Européen (37)"
+	},
+	"stats": {
+		"moves": "Coups",
+		"pegs": "Pions"
+	},
+	"status": {
+		"perfect": "Parfait !",
+		"almostPerfect": "Presque parfait !",
+		"won": "Vous avez gagné !",
+		"gameOver": "Partie terminée",
+		"perfectMessage": "Vous n'avez laissé qu'un seul pion au centre !",
+		"almostMessage": "Un seul pion restant, mais pas au centre.",
+		"lostMessage": "{count} pions restants. Réessayez !"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Sautez par-dessus un pion avec un autre pion",
+		"rule2": "Le pion sauté est retiré",
+		"rule3": "L'objectif est de ne laisser qu'un seul pion",
+		"rule4": "Solution parfaite : Dernier pion au centre"
+	}
+}

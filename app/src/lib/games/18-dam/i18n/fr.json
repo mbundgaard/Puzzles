@@ -1,0 +1,30 @@
+{
+	"title": "Dames",
+	"newGame": "Nouveau Jeu",
+	"status": {
+		"yourTurn": "Votre tour",
+		"aiThinking": "L'IA réfléchit...",
+		"won": "Vous avez gagné !",
+		"lost": "Vous avez perdu !",
+		"mustCapture": "Vous devez capturer !"
+	},
+	"score": {
+		"you": "Vous",
+		"ai": "IA"
+	},
+	"difficulty": {
+		"label": "Difficulté",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Appuyez sur un pion pour le sélectionner",
+		"rule2": "Appuyez sur une case valide pour déplacer",
+		"rule3": "Sautez par-dessus les pions adverses pour les capturer",
+		"rule4": "Si vous pouvez capturer, vous devez capturer (prise obligatoire)",
+		"rule5": "Les pions atteignant le côté opposé deviennent des dames",
+		"rule6": "Les dames peuvent reculer"
+	}
+}

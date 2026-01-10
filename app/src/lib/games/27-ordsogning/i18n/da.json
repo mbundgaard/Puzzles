@@ -1,0 +1,23 @@
+{
+	"title": "Ordsogning",
+	"newGame": "Nyt Spil",
+	"selectDifficulty": "Valg svarhedsgrad:",
+	"points": "point",
+	"status": "Fundet: {found}/{total}",
+	"loading": "Genererer puslespil...",
+	"error": "Kunne ikke starte spillet. Prov igen.",
+	"won": "Tillykke! Du fandt alle ordene!",
+	"difficulty": {
+		"label": "Svarhedsgrad",
+		"easy": "Nem",
+		"medium": "Mellem",
+		"hard": "Svar"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Find alle 8 skjulte ord i gitteret",
+		"rule2": "Tryk pa det forste bogstav i et ord, derefter pa det sidste for at markere det",
+		"rule3": "Ord gar venstre-til-hojre, top-til-bund, eller diagonalt",
+		"rule4": "Svarhedsgrad: Nem (korte ord), Mellem (mellemlange ord), Svar (lange ord)"
+	}
+}

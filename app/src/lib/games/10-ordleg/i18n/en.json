@@ -1,0 +1,41 @@
+{
+	"title": "Word Game",
+	"newGame": "New Game",
+	"guess": "Guess",
+	"loading": "Fetching word...",
+	"fetchError": "Could not fetch word. Please try again.",
+	"tooShort": "Word must be 5 letters",
+	"won": "Congratulations! You guessed the word!",
+	"lost": "The word was: {word}",
+	"winMessages": {
+		"genius": "Genius!",
+		"amazing": "Amazing!",
+		"great": "Great!",
+		"good": "Good job!",
+		"nice": "Nice!",
+		"phew": "Phew!"
+	},
+	"status": {
+		"attempts": "Attempt {current} of {max}"
+	},
+	"difficulty": {
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"categories": {
+		"mixed": "Mixed",
+		"kids": "Kids",
+		"slang": "Slang",
+		"animals": "Animals",
+		"food": "Food"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Guess the secret 5-letter word in 6 attempts",
+		"rule2": "Type a word and tap Guess to submit",
+		"rule3": "Green = letter is in the correct position",
+		"rule4": "Yellow = letter is in the word but wrong position",
+		"rule5": "Gray = letter is not in the word"
+	}
+}

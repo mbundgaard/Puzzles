@@ -1,0 +1,21 @@
+{
+	"title": "Tarnet i Hanoi",
+	"newGame": "Nyt Spil",
+	"moves": "Trak",
+	"minimum": "Minimum",
+	"difficulty": {
+		"label": "Svarhedsgrad",
+		"easy": "Let",
+		"medium": "Mellem",
+		"hard": "Svar"
+	},
+	"won": "Du klarede det!",
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Flyt alle skiver fra venstre pind til hojre pind",
+		"rule2": "Tryk pa en pind for at valge den overste skive",
+		"rule3": "Tryk pa en anden pind for at flytte skiven",
+		"rule4": "En storre skive kan ikke placeres oven pa en mindre",
+		"rule5": "Prov at klare det med minimum antal trak"
+	}
+}

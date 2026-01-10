@@ -1,0 +1,18 @@
+{
+	"title": "Labyrint",
+	"newGame": "Nyt Spil",
+	"steps": "Skridt",
+	"won": "Du fandt udgangen!",
+	"controls": {
+		"up": "Op",
+		"down": "Ned",
+		"left": "Venstre",
+		"right": "Hojre"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Find vej gennem labyrinten til udgangen",
+		"rule2": "Du kan kun se 3 felter omkring dig",
+		"rule3": "Udgangen er markeret med gront"
+	}
+}

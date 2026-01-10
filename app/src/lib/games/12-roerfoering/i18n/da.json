@@ -1,0 +1,22 @@
+{
+	"title": "Rørføring",
+	"newGame": "Nyt Spil",
+	"status": "Placer alle rør for at forbinde start til slut",
+	"trayEmpty": "Alle rør er placeret",
+	"allWonToday": "Du har vundet alle sværhedsgrader i dag! Kom tilbage i morgen.",
+	"won": "Tillykke! Du klarede det!",
+	"difficulty": {
+		"label": "Sværhedsgrad",
+		"easy": "Let",
+		"medium": "Mellem",
+		"hard": "Svær"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Vælg et rør fra bakken nedenfor",
+		"rule2": "Tryk på en celle for at placere røret",
+		"rule3": "Tryk på et placeret rør for at fjerne det",
+		"rule4": "Forbind start (grøn) til slut (rød)",
+		"rule5": "Du skal bruge alle rør fra bakken"
+	}
+}

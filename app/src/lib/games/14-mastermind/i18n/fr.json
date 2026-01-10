@@ -1,0 +1,20 @@
+{
+	"title": "Mastermind",
+	"newGame": "Nouveau Jeu",
+	"guess": "Deviner",
+	"clear": "Effacer",
+	"status": {
+		"selectColors": "Devinez le code secret",
+		"attempts": "Tentative {current} sur {max}",
+		"won": "Félicitations ! Vous avez trouvé le code en {attempts} tentatives !",
+		"lost": "Dommage ! Vous n'avez plus de tentatives."
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Sélectionnez une couleur et appuyez sur un emplacement pour la placer",
+		"rule2": "Appuyez sur \"Deviner\" quand vous avez rempli les 4 emplacements",
+		"rule3": "Noir = bonne couleur, bonne position",
+		"rule4": "Blanc = bonne couleur, mauvaise position",
+		"rule5": "Vous avez 10 tentatives pour trouver le code"
+	}
+}

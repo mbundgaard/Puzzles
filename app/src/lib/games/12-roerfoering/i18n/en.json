@@ -1,0 +1,22 @@
+{
+	"title": "Pipe Flow",
+	"newGame": "New Game",
+	"status": "Place all pipes to connect start to end",
+	"trayEmpty": "All pipes placed",
+	"allWonToday": "You have won all difficulties today! Come back tomorrow.",
+	"won": "Congratulations! You did it!",
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Select a pipe from the tray below",
+		"rule2": "Tap a cell to place the pipe",
+		"rule3": "Tap a placed pipe to remove it",
+		"rule4": "Connect start (green) to end (red)",
+		"rule5": "You must use all pipes from the tray"
+	}
+}

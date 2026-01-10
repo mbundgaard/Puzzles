@@ -1,0 +1,15 @@
+{
+	"title": "Mémoire",
+	"newGame": "Nouvelle Partie",
+	"moves": "Coups",
+	"pairs": "paires",
+	"found": "Trouvé",
+	"won": "Félicitations ! Vous avez trouvé toutes les paires !",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Trouvez toutes les paires de cartes identiques",
+		"rule2": "Appuyez sur une carte pour la retourner",
+		"rule3": "Mémorisez l'emplacement des cartes",
+		"rule4": "Essayez de terminer avec le moins de coups possible"
+	}
+}

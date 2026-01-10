@@ -1,0 +1,28 @@
+{
+	"title": "Tangram",
+	"selectPuzzle": "Choisir un puzzle",
+	"back": "Retour",
+	"reset": "Reinitialiser",
+	"hint": "Appuyez pour tourner - Faites glisser pour deplacer",
+	"covered": "couvert",
+	"solved": "Vous avez reussi !",
+	"difficulty": {
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"puzzles": {
+		"t-lille": "Mini T",
+		"pil": "La Fleche",
+		"klassisk": "Classique",
+		"fem-dele": "Cinq Pieces",
+		"hus": "La Maison",
+		"diamant": "Le Diamant"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Faites glisser les pieces dans la forme",
+		"rule2": "Appuyez sur une piece pour la tourner de 45 degres",
+		"rule3": "Couvrez toute la forme pour gagner"
+	}
+}

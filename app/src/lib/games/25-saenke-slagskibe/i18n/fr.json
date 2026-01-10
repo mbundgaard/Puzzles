@@ -1,0 +1,31 @@
+{
+	"title": "Bataille Navale",
+	"newGame": "Nouvelle Partie",
+	"difficulty": {
+		"title": "Difficulte",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"markMode": {
+		"ship": "Navire",
+		"water": "Eau"
+	},
+	"fleet": {
+		"title": "Flotte",
+		"battleship": "Cuirasse",
+		"cruiser": "Croiseur",
+		"destroyer": "Destroyer",
+		"submarine": "Sous-marin"
+	},
+	"won": "Felicitations! Vous avez trouve tous les navires!",
+	"rules": {
+		"title": "Regles",
+		"goal": "Trouvez tous les navires dans la grille en utilisant les nombres comme indices.",
+		"numbers": "Les nombres indiquent combien de segments de navire se trouvent dans chaque ligne et colonne.",
+		"ships": "La flotte se compose de: 1 cuirasse (4), 2 croiseurs (3), 3 destroyers (2), 4 sous-marins (1).",
+		"noTouch": "Les navires ne peuvent pas se toucher - meme pas en diagonale!",
+		"howTo": "Appuyez sur une cellule pour la marquer. Utilisez les boutons pour alterner entre navire et eau.",
+		"tip": "Commencez par les lignes/colonnes avec 0 (tout eau) ou des nombres eleves."
+	}
+}

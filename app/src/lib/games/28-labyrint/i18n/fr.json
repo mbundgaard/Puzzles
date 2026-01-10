@@ -1,0 +1,18 @@
+{
+	"title": "Labyrinthe",
+	"newGame": "Nouveau Jeu",
+	"steps": "Pas",
+	"won": "Vous avez trouve la sortie !",
+	"controls": {
+		"up": "Haut",
+		"down": "Bas",
+		"left": "Gauche",
+		"right": "Droite"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Trouvez votre chemin a travers le labyrinthe jusqu'a la sortie",
+		"rule2": "Vous ne pouvez voir que 3 cases autour de vous",
+		"rule3": "La sortie est marquee en vert"
+	}
+}

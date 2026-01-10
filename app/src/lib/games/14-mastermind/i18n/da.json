@@ -1,0 +1,20 @@
+{
+	"title": "Mastermind",
+	"newGame": "Nyt Spil",
+	"guess": "Gæt",
+	"clear": "Ryd",
+	"status": {
+		"selectColors": "Gæt den hemmelige kode",
+		"attempts": "Forsøg {current} af {max}",
+		"won": "Tillykke! Du knækkede koden på {attempts} forsøg!",
+		"lost": "Desværre! Du løb tør for forsøg."
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Vælg en farve og tryk på et felt for at placere den",
+		"rule2": "Tryk \"Gæt\" når du har udfyldt alle 4 felter",
+		"rule3": "Sort = rigtig farve, rigtig plads",
+		"rule4": "Hvid = rigtig farve, forkert plads",
+		"rule5": "Du har 10 forsøg til at knække koden"
+	}
+}

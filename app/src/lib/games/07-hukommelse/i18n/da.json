@@ -1,0 +1,15 @@
+{
+	"title": "Hukommelse",
+	"newGame": "Nyt Spil",
+	"moves": "Træk",
+	"pairs": "par",
+	"found": "Fundet",
+	"won": "Tillykke! Du fandt alle par!",
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Find alle matchende par af kort",
+		"rule2": "Tryk på et kort for at vende det",
+		"rule3": "Husk hvor kortene er placeret",
+		"rule4": "Prøv at klare det med så få træk som muligt"
+	}
+}

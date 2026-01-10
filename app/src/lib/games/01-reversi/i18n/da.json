@@ -1,0 +1,28 @@
+{
+	"title": "Reversi",
+	"newGame": "Nyt Spil",
+	"status": {
+		"yourTurn": "Din tur",
+		"aiThinking": "AI tænker...",
+		"won": "Du vandt!",
+		"lost": "AI vandt!",
+		"draw": "Uafgjort!",
+		"pass": "passer - ingen gyldige træk",
+		"you": "Du",
+		"ai": "AI"
+	},
+	"score": {
+		"you": "Dig",
+		"ai": "AI"
+	},
+	"boardSize": {
+		"label": "Størrelse"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Du spiller som sort, AI spiller som hvid",
+		"rule2": "Tryk på et felt for at placere din brik",
+		"rule3": "Erobr modstanderens brikker ved at omringe dem",
+		"rule4": "Spilleren med flest brikker vinder"
+	}
+}

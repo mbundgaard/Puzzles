@@ -1,0 +1,21 @@
+{
+	"title": "Tour de Hanoi",
+	"newGame": "Nouveau Jeu",
+	"moves": "Coups",
+	"minimum": "Minimum",
+	"difficulty": {
+		"label": "Difficulte",
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"won": "Vous avez reussi !",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Deplacez tous les disques de la tige gauche vers la tige droite",
+		"rule2": "Appuyez sur une tige pour selectionner le disque du haut",
+		"rule3": "Appuyez sur une autre tige pour deplacer le disque",
+		"rule4": "Un disque plus grand ne peut pas etre place sur un plus petit",
+		"rule5": "Essayez de terminer avec le minimum de coups"
+	}
+}

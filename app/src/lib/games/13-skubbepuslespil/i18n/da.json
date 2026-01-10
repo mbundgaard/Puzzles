@@ -1,0 +1,14 @@
+{
+	"title": "Skubbepuslespil",
+	"newGame": "Nyt Spil",
+	"moves": "Træk",
+	"time": "Tid",
+	"solved": "Tillykke! Du løste puslespillet!",
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Tryk på en brik ved siden af det tomme felt for at flytte den",
+		"rule2": "Arranger tallene fra 1-15 i rækkefølge",
+		"rule3": "Det tomme felt skal ende nederst til højre",
+		"rule4": "Prøv at løse puslespillet med så få træk som muligt"
+	}
+}

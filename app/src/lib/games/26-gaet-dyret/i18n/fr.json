@@ -1,0 +1,53 @@
+{
+	"title": "Devinez l'Animal",
+	"newGame": "Nouveau Jeu",
+	"selectCategory": "Choisir une catégorie",
+	"difficulty": "Difficulté",
+	"categories": {
+		"marine": "Animaux marins",
+		"birds": "Oiseaux",
+		"mammals": "Mammifères",
+		"farm": "Animaux de ferme",
+		"wild": "Animaux sauvages",
+		"danish": "Animaux danois"
+	},
+	"difficulties": {
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"difficultyPoints": {
+		"easy": "1-2 points",
+		"medium": "1-3 points",
+		"hard": "1-5 points"
+	},
+	"inputPlaceholder": "Écrivez une question ou devinez...",
+	"askBtn": "Demander",
+	"guessBtn": "Deviner",
+	"hintBtn": "Obtenir un indice (-5 tentatives)",
+	"hintBtnNotEnough": "Pas assez de tentatives",
+	"counter": "{current}/{max}",
+	"points": "{points} points",
+	"answers": {
+		"yes": "Oui",
+		"no": "Non",
+		"maybe": "Peut-être",
+		"correct": "Correct !",
+		"wrong": "Faux"
+	},
+	"guessPrefix": "Deviner: ",
+	"status": {
+		"loading": "Chargement...",
+		"error": "Impossible de démarrer le jeu. Veuillez réessayer."
+	},
+	"loseTitle": "Plus de tentatives !",
+	"loseAnimalWas": "L'animal était :",
+	"playAgain": "Réessayer",
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Posez des questions oui/non sur l'animal",
+		"rule2": "Utilisez les réponses pour deviner l'animal",
+		"rule3": "Vous avez 20 tentatives au total",
+		"rule4": "Moins de tentatives signifie plus de points"
+	}
+}

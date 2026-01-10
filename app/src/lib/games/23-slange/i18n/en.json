@@ -1,0 +1,30 @@
+{
+	"title": "Snake",
+	"newGame": "New Game",
+	"selectDifficulty": "Select difficulty",
+	"difficulty": {
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"score": "Score",
+	"target": "Target",
+	"gameOver": "Game Over!",
+	"collected": "You collected",
+	"foodItems": "food",
+	"tryAgain": "Try Again",
+	"won": "You won!",
+	"controls": {
+		"up": "Up",
+		"down": "Down",
+		"left": "Left",
+		"right": "Right"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Control the snake using the arrow buttons",
+		"rule2": "Eat food to grow",
+		"rule3": "Avoid hitting walls or yourself",
+		"rule4": "Collect the required amount of food to win"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"title": "Tangram",
+	"selectPuzzle": "Vaelg puslespil",
+	"back": "Tilbage",
+	"reset": "Nulstil",
+	"hint": "Tryk for at rotere - Traek for at flytte",
+	"covered": "daekket",
+	"solved": "Du klarede det!",
+	"difficulty": {
+		"easy": "Let",
+		"medium": "Mellem",
+		"hard": "Svaer"
+	},
+	"puzzles": {
+		"t-lille": "Mini T",
+		"pil": "Pilen",
+		"klassisk": "Klassisk",
+		"fem-dele": "Fem Dele",
+		"hus": "Huset",
+		"diamant": "Diamanten"
+	},
+	"rules": {
+		"title": "Sadan spiller du",
+		"rule1": "Traek brikkerne ind i figuren",
+		"rule2": "Tryk pa en brik for at rotere den 45 grader",
+		"rule3": "Daek hele figuren for at vinde"
+	}
+}

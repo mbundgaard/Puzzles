@@ -1,0 +1,21 @@
+{
+	"title": "Tower of Hanoi",
+	"newGame": "New Game",
+	"moves": "Moves",
+	"minimum": "Minimum",
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"won": "You did it!",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Move all disks from the left peg to the right peg",
+		"rule2": "Tap a peg to select the top disk",
+		"rule3": "Tap another peg to move the disk",
+		"rule4": "A larger disk cannot be placed on a smaller one",
+		"rule5": "Try to complete it in the minimum number of moves"
+	}
+}

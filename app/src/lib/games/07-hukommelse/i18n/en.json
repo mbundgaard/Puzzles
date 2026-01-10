@@ -1,0 +1,15 @@
+{
+	"title": "Memory",
+	"newGame": "New Game",
+	"moves": "Moves",
+	"pairs": "pairs",
+	"found": "Found",
+	"won": "Congratulations! You found all pairs!",
+	"rules": {
+		"title": "How to play",
+		"rule1": "Find all matching pairs of cards",
+		"rule2": "Tap a card to flip it over",
+		"rule3": "Remember where the cards are placed",
+		"rule4": "Try to complete with as few moves as possible"
+	}
+}

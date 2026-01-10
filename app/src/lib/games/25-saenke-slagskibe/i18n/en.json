@@ -1,0 +1,31 @@
+{
+	"title": "Battleship Puzzle",
+	"newGame": "New Game",
+	"difficulty": {
+		"title": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"markMode": {
+		"ship": "Ship",
+		"water": "Water"
+	},
+	"fleet": {
+		"title": "Fleet",
+		"battleship": "Battleship",
+		"cruiser": "Cruiser",
+		"destroyer": "Destroyer",
+		"submarine": "Submarine"
+	},
+	"won": "Congratulations! You found all the ships!",
+	"rules": {
+		"title": "Rules",
+		"goal": "Find all ships in the grid using the numbers as clues.",
+		"numbers": "Numbers show how many ship segments are in each row and column.",
+		"ships": "The fleet consists of: 1 battleship (4), 2 cruisers (3), 3 destroyers (2), 4 submarines (1).",
+		"noTouch": "Ships cannot touch each other - not even diagonally!",
+		"howTo": "Tap a cell to mark it. Use the buttons to switch between ship and water.",
+		"tip": "Start with rows/columns that have 0 (all water) or high numbers."
+	}
+}

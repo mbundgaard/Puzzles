@@ -1,0 +1,27 @@
+{
+	"title": "Minestryger",
+	"newGame": "Nyt Spil",
+	"mode": {
+		"dig": "Grav",
+		"flag": "Flag"
+	},
+	"status": {
+		"revealMode": "Tryk for at afsløre felter",
+		"flagMode": "Tryk for at sætte flag",
+		"won": "Tillykke! Du vandt!",
+		"lost": "Boom! Du ramte en mine!"
+	},
+	"difficulty": {
+		"label": "Sværhedsgrad",
+		"easy": "Let",
+		"medium": "Medium",
+		"hard": "Svær"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Find alle sikre felter uden at ramme en mine",
+		"rule2": "Tallene viser hvor mange miner der er i nabofelterne",
+		"rule3": "Brug \"Flag\" tilstand til at markere miner",
+		"rule4": "Tryk for at grave eller sætte flag"
+	}
+}

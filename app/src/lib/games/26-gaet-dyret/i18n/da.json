@@ -1,0 +1,53 @@
+{
+	"title": "Gæt Dyret",
+	"newGame": "Nyt Spil",
+	"selectCategory": "Vælg kategori",
+	"difficulty": "Sværhedsgrad",
+	"categories": {
+		"marine": "Havdyr",
+		"birds": "Fugle",
+		"mammals": "Pattedyr",
+		"farm": "Bondegårdsdyr",
+		"wild": "Vilde dyr",
+		"danish": "Danske dyr"
+	},
+	"difficulties": {
+		"easy": "Let",
+		"medium": "Normal",
+		"hard": "Svær"
+	},
+	"difficultyPoints": {
+		"easy": "1-2 point",
+		"medium": "1-3 point",
+		"hard": "1-5 point"
+	},
+	"inputPlaceholder": "Skriv spørgsmål eller gæt...",
+	"askBtn": "Spørg",
+	"guessBtn": "Gæt",
+	"hintBtn": "Få hint (-5 forsøg)",
+	"hintBtnNotEnough": "Ikke nok forsøg",
+	"counter": "{current}/{max}",
+	"points": "{points} point",
+	"answers": {
+		"yes": "Ja",
+		"no": "Nej",
+		"maybe": "Måske",
+		"correct": "Rigtigt!",
+		"wrong": "Forkert"
+	},
+	"guessPrefix": "Gæt: ",
+	"status": {
+		"loading": "Indlæser...",
+		"error": "Kunne ikke starte spillet. Prøv igen."
+	},
+	"loseTitle": "Ingen flere forsøg!",
+	"loseAnimalWas": "Dyret var:",
+	"playAgain": "Prøv Igen",
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Stil ja/nej spørgsmål om dyret",
+		"rule2": "Brug svarene til at gætte dyret",
+		"rule3": "Du har 20 forsøg i alt",
+		"rule4": "Jo færre forsøg, jo flere point"
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"title": "Peg Solitaire",
+	"newGame": "New Game",
+	"undo": "Undo",
+	"board": {
+		"label": "Board type",
+		"english": "English (33)",
+		"european": "European (37)"
+	},
+	"stats": {
+		"moves": "Moves",
+		"pegs": "Pegs"
+	},
+	"status": {
+		"perfect": "Perfect!",
+		"almostPerfect": "Almost perfect!",
+		"won": "You won!",
+		"gameOver": "Game over",
+		"perfectMessage": "You left only one peg in the center!",
+		"almostMessage": "Only one peg left, but not in the center.",
+		"lostMessage": "{count} pegs remaining. Try again!"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Jump over a peg with another peg",
+		"rule2": "The jumped peg is removed",
+		"rule3": "The goal is to leave only one peg",
+		"rule4": "Perfect solution: Last peg in the center"
+	}
+}

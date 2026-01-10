@@ -1,0 +1,27 @@
+{
+	"title": "Minesweeper",
+	"newGame": "New Game",
+	"mode": {
+		"dig": "Dig",
+		"flag": "Flag"
+	},
+	"status": {
+		"revealMode": "Tap to reveal cells",
+		"flagMode": "Tap to place flags",
+		"won": "Congratulations! You won!",
+		"lost": "Boom! You hit a mine!"
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Find all safe cells without hitting a mine",
+		"rule2": "Numbers show how many mines are in neighboring cells",
+		"rule3": "Use \"Flag\" mode to mark mines",
+		"rule4": "Tap to dig or place a flag"
+	}
+}

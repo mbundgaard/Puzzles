@@ -1,0 +1,24 @@
+{
+	"title": "Connect Four",
+	"newGame": "New Game",
+	"status": {
+		"yourTurn": "Your turn",
+		"aiThinking": "Computer thinking...",
+		"won": "Congratulations! You won!",
+		"lost": "Computer won!",
+		"draw": "Draw!"
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Tap a column to drop your piece",
+		"rule2": "The piece falls to the lowest empty spot",
+		"rule3": "Get four pieces in a row (horizontal, vertical, or diagonal)",
+		"rule4": "You play with yellow pieces, computer plays with red"
+	}
+}

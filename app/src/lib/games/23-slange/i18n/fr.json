@@ -1,0 +1,30 @@
+{
+	"title": "Serpent",
+	"newGame": "Nouvelle Partie",
+	"selectDifficulty": "Choisir la difficulte",
+	"difficulty": {
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"score": "Score",
+	"target": "Objectif",
+	"gameOver": "Game Over!",
+	"collected": "Vous avez collecte",
+	"foodItems": "nourriture",
+	"tryAgain": "Reessayer",
+	"won": "Vous avez gagne!",
+	"controls": {
+		"up": "Haut",
+		"down": "Bas",
+		"left": "Gauche",
+		"right": "Droite"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Controlez le serpent avec les fleches",
+		"rule2": "Mangez la nourriture pour grandir",
+		"rule3": "Evitez de toucher les murs ou vous-meme",
+		"rule4": "Collectez la quantite requise de nourriture pour gagner"
+	}
+}

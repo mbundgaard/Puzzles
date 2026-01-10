@@ -1,0 +1,25 @@
+{
+	"title": "Stitch Work",
+	"newGame": "New Pattern",
+	"recipe": "Pattern",
+	"selectStitch": "Select stitch:",
+	"checkPattern": "Check Pattern",
+	"loading": "Generating pattern...",
+	"fetchError": "Could not fetch pattern. Try again.",
+	"fillAllFirst": "Fill all cells first!",
+	"won": "Perfect! The pattern is correct!",
+	"wrongCount": "{count} wrong stitches. Try again!",
+	"stitches": {
+		"knitLight": "Knit light",
+		"knitDark": "Knit dark",
+		"purlLight": "Purl light",
+		"purlDark": "Purl dark"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Read the pattern description and understand it",
+		"rule2": "Tap a cell to select it",
+		"rule3": "Choose the correct stitch type below",
+		"rule4": "Fill the entire board and tap \"Check Pattern\""
+	}
+}

@@ -1,0 +1,41 @@
+{
+	"title": "Jeu de Mots",
+	"newGame": "Nouveau Jeu",
+	"guess": "Deviner",
+	"loading": "Chargement du mot...",
+	"fetchError": "Impossible de charger le mot. Veuillez réessayer.",
+	"tooShort": "Le mot doit contenir 5 lettres",
+	"won": "Félicitations ! Vous avez trouvé le mot !",
+	"lost": "Le mot était : {word}",
+	"winMessages": {
+		"genius": "Génial !",
+		"amazing": "Incroyable !",
+		"great": "Super !",
+		"good": "Bien joué !",
+		"nice": "Pas mal !",
+		"phew": "Ouf !"
+	},
+	"status": {
+		"attempts": "Tentative {current} sur {max}"
+	},
+	"difficulty": {
+		"easy": "Facile",
+		"medium": "Moyen",
+		"hard": "Difficile"
+	},
+	"categories": {
+		"mixed": "Mixte",
+		"kids": "Enfants",
+		"slang": "Argot",
+		"animals": "Animaux",
+		"food": "Nourriture"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "Devinez le mot secret de 5 lettres en 6 tentatives",
+		"rule2": "Tapez un mot et appuyez sur Deviner pour valider",
+		"rule3": "Vert = la lettre est bien placée",
+		"rule4": "Jaune = la lettre est dans le mot mais mal placée",
+		"rule5": "Gris = la lettre n'est pas dans le mot"
+	}
+}

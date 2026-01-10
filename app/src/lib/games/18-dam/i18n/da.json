@@ -1,0 +1,30 @@
+{
+	"title": "Dam",
+	"newGame": "Nyt Spil",
+	"status": {
+		"yourTurn": "Din tur",
+		"aiThinking": "AI tænker...",
+		"won": "Du vandt!",
+		"lost": "Du tabte!",
+		"mustCapture": "Du skal slå!"
+	},
+	"score": {
+		"you": "Dig",
+		"ai": "AI"
+	},
+	"difficulty": {
+		"label": "Sværhedsgrad",
+		"easy": "Let",
+		"medium": "Medium",
+		"hard": "Svær"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Tryk på en brik for at vælge den",
+		"rule2": "Tryk på et gyldigt felt for at flytte",
+		"rule3": "Spring over modstanderens brikker for at slå dem",
+		"rule4": "Hvis du kan slå, skal du slå (tvunget slag)",
+		"rule5": "Brikker der når modsat side bliver til damer",
+		"rule6": "Damer kan bevæge sig baglæns"
+	}
+}
