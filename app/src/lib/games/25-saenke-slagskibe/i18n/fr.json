@@ -1,31 +1,64 @@
 {
 	"title": "Bataille Navale",
-	"newGame": "Nouvelle Partie",
-	"difficulty": {
-		"title": "Difficulte",
-		"easy": "Facile",
-		"medium": "Moyen",
-		"hard": "Difficile"
+	"back": "Retour",
+	"cancel": "Annuler",
+	"loading": "Chargement...",
+	"menu": {
+		"title": "Bataille Navale",
+		"subtitle": "Jouez contre un ami!",
+		"createGame": "Creer une partie",
+		"joinGame": "Rejoindre une partie"
 	},
-	"markMode": {
-		"ship": "Navire",
-		"water": "Eau"
+	"create": {
+		"title": "Creer une partie",
+		"selectStakes": "Choisir la structure de points",
+		"start": "Commencer"
 	},
-	"fleet": {
-		"title": "Flotte",
-		"battleship": "Cuirasse",
-		"cruiser": "Croiseur",
-		"destroyer": "Destroyer",
-		"submarine": "Sous-marin"
+	"stakes": {
+		"highStakes": "Enjeux eleves",
+		"mediumStakes": "Enjeux moyens",
+		"lowStakes": "Enjeux faibles"
 	},
-	"won": "Felicitations! Vous avez trouve tous les navires!",
-	"rules": {
-		"title": "Regles",
-		"goal": "Trouvez tous les navires dans la grille en utilisant les nombres comme indices.",
-		"numbers": "Les nombres indiquent combien de segments de navire se trouvent dans chaque ligne et colonne.",
-		"ships": "La flotte se compose de: 1 cuirasse (4), 2 croiseurs (3), 3 destroyers (2), 4 sous-marins (1).",
-		"noTouch": "Les navires ne peuvent pas se toucher - meme pas en diagonale!",
-		"howTo": "Appuyez sur une cellule pour la marquer. Utilisez les boutons pour alterner entre navire et eau.",
-		"tip": "Commencez par les lignes/colonnes avec 0 (tout eau) ou des nombres eleves."
+	"waiting": {
+		"title": "En attente d'un adversaire...",
+		"gameCode": "Code de jeu",
+		"hint": "Partagez le code avec votre ami"
+	},
+	"join": {
+		"title": "Rejoindre une partie",
+		"noGames": "Pas de parties ouvertes",
+		"refresh": "Actualiser"
+	},
+	"time": {
+		"justNow": "A l'instant",
+		"oneMinuteAgo": "Il y a 1 minute",
+		"minutesAgo": "Il y a {n} minutes"
+	},
+	"placing": {
+		"title": "Placez vos navires",
+		"vs": "contre",
+		"waitingOpponent": "En attente de l'adversaire...",
+		"placeShip": "Placer le navire",
+		"allPlaced": "Tous les navires sont places!",
+		"horizontal": "Horizontal",
+		"vertical": "Vertical",
+		"undo": "Annuler",
+		"ready": "Pret!",
+		"waitingForOpponent": "En attente du placement des navires de l'adversaire..."
+	},
+	"battle": {
+		"vs": "contre",
+		"yourTurn": "Votre tour",
+		"opponentTurn": "Tour de l'adversaire",
+		"opponentBoard": "Plateau de l'adversaire",
+		"yourBoard": "Votre plateau"
+	},
+	"ended": {
+		"youWon": "Vous avez gagne!",
+		"youLost": "Vous avez perdu",
+		"points": "points",
+		"yourShips": "Vos navires",
+		"opponentShips": "Navires de l'adversaire",
+		"playAgain": "Rejouer"
 	}
 }

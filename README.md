@@ -30,7 +30,7 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 | 22 | Tårnet i Hanoi | 3 | 2025-12-30 | | Move all disks to the rightmost peg |
 | 23 | Slange | 2/3/4 | 2025-12-30 | | Classic snake game with win condition |
 | 24 | Tangram | 1/3/5 | 2025-12-30 | 2026-01-06 | Drag and rotate pieces to cover the shape |
-| 25 | Sænke Slagskibe | 1/2/3 | 2025-12-31 | 2026-01-09 | Logic puzzle - use row/column numbers to find the hidden fleet |
+| 25 | Sænke Slagskibe | 3/4/5 | 2025-12-31 | 2026-01-10 | Multiplayer battleship - play against a friend! |
 | 26 | Gæt Dyret | 1/3/5 | 2026-01-02 | 2026-01-03 | Guess the animal by asking yes/no questions |
 | 27 | Ordsøgning | 1/3/5 | 2026-01-03 | | Find hidden words in the grid - AI generated puzzles |
 | 28 | Labyrint | 3 | 2026-01-05 | | Navigate through a maze with fog of war |

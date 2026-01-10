@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
-	import { trackStart, trackComplete } from '$lib/api';
+	import { trackStart, trackComplete, recordWin, getNickname } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	interface Props {
 		translations: Translations;
@@ -12,13 +13,22 @@
 	// Game constants
 	const GAME_NUMBER = '25';
 	const GRID_SIZE = 10;
+	const API_BASE = 'https://puzzlesapi.azurewebsites.net/api/game/25';
 
-	// Fleet configuration: 1x4, 2x3, 3x2, 4x1 = 10 ships, 20 segments
+	// Standard battleship fleet
 	const FLEET = [
-		{ nameKey: 'fleet.battleship', size: 4, count: 1 },
-		{ nameKey: 'fleet.cruiser', size: 3, count: 2 },
-		{ nameKey: 'fleet.destroyer', size: 2, count: 3 },
-		{ nameKey: 'fleet.submarine', size: 1, count: 4 }
+		{ name: 'Carrier', length: 5 },
+		{ name: 'Battleship', length: 4 },
+		{ name: 'Cruiser', length: 3 },
+		{ name: 'Submarine', length: 3 },
+		{ name: 'Destroyer', length: 2 }
+	];
+
+	// Point structure options
+	const POINT_OPTIONS = [
+		{ winnerPoints: 5, loserPoints: 2, label: 'highStakes' },
+		{ winnerPoints: 4, loserPoints: 1, label: 'mediumStakes' },
+		{ winnerPoints: 3, loserPoints: 0, label: 'lowStakes' }
 	];
 
 	// Helper to get translation
@@ -35,514 +45,811 @@
 		return typeof value === 'string' ? value : key;
 	}
 
-	// Cell state interface
-	interface Cell {
-		isShip: boolean;
-		shipId: number | null;
-		revealed: boolean;
-		playerMark: 'ship' | 'water' | null;
-	}
-
-	// Ship interface
+	// Types
 	interface Ship {
-		id: number;
-		size: number;
-		cells: [number, number][];
+		x: number;
+		y: number;
+		length: number;
 		horizontal: boolean;
 	}
 
-	// Game state
-	let difficulty = $state<'easy' | 'medium' | 'hard'>('medium');
-	let grid = $state<Cell[][]>([]);
-	let playerGrid = $state<Cell[][]>([]);
-	let rowClues = $state<number[]>([]);
-	let colClues = $state<number[]>([]);
-	let ships = $state<Ship[]>([]);
-	let markMode = $state<'ship' | 'water'>('ship');
-	let gameOver = $state(false);
+	interface Shot {
+		x: number;
+		y: number;
+		hit: boolean;
+	}
+
+	interface GameState {
+		gameId: string;
+		status: 'open' | 'placing' | 'playing' | 'ended';
+		creatorName: string;
+		joinerName: string | null;
+		winnerPoints: number;
+		loserPoints: number;
+		yourRole: 'creator' | 'joiner';
+		yourShips: Ship[] | null;
+		opponentShips: Ship[] | null;
+		yourShots: Shot[];
+		opponentShots: Shot[];
+		currentTurn: 'creator' | 'joiner';
+		isYourTurn: boolean;
+		winner: 'creator' | 'joiner' | null;
+		youWon: boolean | null;
+	}
+
+	interface OpenGame {
+		gameId: string;
+		creatorName: string;
+		winnerPoints: number;
+		loserPoints: number;
+		createdAt: string;
+	}
+
+	// UI phase
+	type Phase = 'menu' | 'creating' | 'waiting' | 'joining' | 'placing' | 'playing' | 'ended';
+
+	// State
+	let phase = $state<Phase>('menu');
+	let gameId = $state<string | null>(null);
+	let playerToken = $state<string | null>(null);
+	let gameState = $state<GameState | null>(null);
+	let openGames = $state<OpenGame[]>([]);
+	let selectedPointOption = $state(1); // Default to medium stakes
+	let loading = $state(false);
+	let error = $state<string | null>(null);
+	let pollInterval = $state<number | null>(null);
 	let showWinModal = $state(false);
 
-	// Points based on difficulty
-	let points = $derived(difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3);
+	// Ship placement state
+	let placingShips = $state<Ship[]>([]);
+	let currentShipIndex = $state(0);
+	let shipHorizontal = $state(true);
+	let placementPreview = $state<{ x: number; y: number } | null>(null);
 
-	// Create empty grid
-	function createEmptyGrid(): Cell[][] {
-		return Array(GRID_SIZE)
-			.fill(null)
-			.map(() =>
-				Array(GRID_SIZE)
-					.fill(null)
-					.map(() => ({
-						isShip: false,
-						shipId: null,
-						revealed: false,
-						playerMark: null
-					}))
+	// Get player name
+	let playerName = $derived(getNickname() || 'Player');
+
+	// Derived: current ship being placed
+	let currentShip = $derived(
+		currentShipIndex < FLEET.length ? FLEET[currentShipIndex] : null
+	);
+
+	// Derived: opponent name
+	let opponentName = $derived(
+		gameState
+			? gameState.yourRole === 'creator'
+				? gameState.joinerName
+				: gameState.creatorName
+			: null
+	);
+
+	// Clean up polling on destroy
+	onDestroy(() => {
+		stopPolling();
+	});
+
+	// ============ API Functions ============
+
+	async function createGame(): Promise<void> {
+		loading = true;
+		error = null;
+		const option = POINT_OPTIONS[selectedPointOption];
+
+		try {
+			const response = await fetch(`${API_BASE}/create`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					creatorName: playerName,
+					winnerPoints: option.winnerPoints,
+					loserPoints: option.loserPoints
+				})
+			});
+
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Failed to create game');
+			}
+
+			const data = await response.json();
+			gameId = data.gameId;
+			playerToken = data.playerToken;
+			phase = 'waiting';
+			startPolling();
+			trackStart(GAME_NUMBER);
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to create game';
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function fetchOpenGames(): Promise<void> {
+		loading = true;
+		error = null;
+
+		try {
+			const response = await fetch(`${API_BASE}/open`);
+			if (!response.ok) throw new Error('Failed to fetch games');
+
+			const data = await response.json();
+			openGames = data.games || [];
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to fetch games';
+			openGames = [];
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function joinGame(id: string): Promise<void> {
+		loading = true;
+		error = null;
+
+		try {
+			const response = await fetch(`${API_BASE}/${id}/join`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ joinerName: playerName })
+			});
+
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Failed to join game');
+			}
+
+			const data = await response.json();
+			gameId = id;
+			playerToken = data.playerToken;
+			gameState = data.state;
+			phase = 'placing';
+			resetShipPlacement();
+			startPolling();
+			trackStart(GAME_NUMBER);
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to join game';
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function fetchGameState(): Promise<void> {
+		if (!gameId || !playerToken) return;
+
+		try {
+			const response = await fetch(
+				`${API_BASE}/${gameId}/state?playerToken=${playerToken}`
 			);
-	}
 
-	// Check if a cell and its diagonal neighbors are free
-	function canPlaceAt(row: number, col: number, currentGrid: Cell[][]): boolean {
-		for (let dr = -1; dr <= 1; dr++) {
-			for (let dc = -1; dc <= 1; dc++) {
-				const r = row + dr;
-				const c = col + dc;
-				if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) {
-					if (currentGrid[r][c].isShip) return false;
-				}
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Failed to fetch state');
 			}
-		}
-		return true;
-	}
 
-	// Check if a ship can be placed at position
-	function canPlaceShip(
-		row: number,
-		col: number,
-		size: number,
-		horizontal: boolean,
-		currentGrid: Cell[][]
-	): boolean {
-		const cells: [number, number][] = [];
-		for (let i = 0; i < size; i++) {
-			const r = horizontal ? row : row + i;
-			const c = horizontal ? col + i : col;
+			const data: GameState = await response.json();
+			gameState = data;
 
-			if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) {
-				return false;
+			// Update phase based on status
+			if (data.status === 'placing' && phase === 'waiting') {
+				phase = 'placing';
+				resetShipPlacement();
+			} else if (data.status === 'playing' && phase === 'placing') {
+				phase = 'playing';
+			} else if (data.status === 'ended' && phase !== 'ended') {
+				phase = 'ended';
+				stopPolling();
+				handleGameEnd();
 			}
-			cells.push([r, c]);
+		} catch (err) {
+			console.error('Failed to fetch game state:', err);
 		}
-
-		// Check each cell and its neighbors (no touching rule)
-		for (const [r, c] of cells) {
-			if (!canPlaceAt(r, c, currentGrid)) return false;
-		}
-
-		return true;
 	}
 
-	// Place a ship on the grid
-	function placeShip(
-		row: number,
-		col: number,
-		size: number,
-		horizontal: boolean,
-		shipId: number,
-		currentGrid: Cell[][],
-		currentShips: Ship[]
-	): void {
+	async function submitShips(): Promise<void> {
+		if (!gameId || !playerToken) return;
+		loading = true;
+		error = null;
+
+		try {
+			const response = await fetch(`${API_BASE}/${gameId}/ships`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					playerToken,
+					ships: placingShips
+				})
+			});
+
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Failed to submit ships');
+			}
+
+			const data: GameState = await response.json();
+			gameState = data;
+
+			if (data.status === 'playing') {
+				phase = 'playing';
+			}
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to submit ships';
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function shoot(x: number, y: number): Promise<void> {
+		if (!gameId || !playerToken || !gameState?.isYourTurn) return;
+
+		// Check if already shot here
+		if (gameState.yourShots.some((s) => s.x === x && s.y === y)) return;
+
+		loading = true;
+		error = null;
+
+		try {
+			const response = await fetch(`${API_BASE}/${gameId}/shoot`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ playerToken, x, y })
+			});
+
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.error || 'Failed to shoot');
+			}
+
+			const data: GameState = await response.json();
+			gameState = data;
+
+			if (data.status === 'ended') {
+				phase = 'ended';
+				stopPolling();
+				handleGameEnd();
+			}
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to shoot';
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function cancelGame(): Promise<void> {
+		if (!gameId || !playerToken) return;
+
+		try {
+			await fetch(`${API_BASE}/${gameId}/cancel`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ playerToken })
+			});
+		} catch {
+			// Ignore errors
+		}
+
+		resetGame();
+	}
+
+	// ============ Polling ============
+
+	function startPolling(): void {
+		stopPolling();
+		// Poll every 2 seconds during play, 3 seconds while waiting
+		const interval = phase === 'playing' ? 2000 : 3000;
+		pollInterval = window.setInterval(fetchGameState, interval);
+	}
+
+	function stopPolling(): void {
+		if (pollInterval !== null) {
+			window.clearInterval(pollInterval);
+			pollInterval = null;
+		}
+	}
+
+	// ============ Ship Placement ============
+
+	function resetShipPlacement(): void {
+		placingShips = [];
+		currentShipIndex = 0;
+		shipHorizontal = true;
+		placementPreview = null;
+	}
+
+	function canPlaceShip(x: number, y: number, length: number, horizontal: boolean): boolean {
+		// Check bounds
+		if (horizontal) {
+			if (x + length > GRID_SIZE) return false;
+		} else {
+			if (y + length > GRID_SIZE) return false;
+		}
+
+		// Get all cells this ship would occupy
 		const cells: [number, number][] = [];
-		for (let i = 0; i < size; i++) {
-			const r = horizontal ? row : row + i;
-			const c = horizontal ? col + i : col;
-			currentGrid[r][c].isShip = true;
-			currentGrid[r][c].shipId = shipId;
-			cells.push([r, c]);
+		for (let i = 0; i < length; i++) {
+			const cx = horizontal ? x + i : x;
+			const cy = horizontal ? y : y + i;
+			cells.push([cx, cy]);
 		}
 
-		currentShips.push({
-			id: shipId,
-			size: size,
-			cells: cells,
-			horizontal: horizontal
-		});
-	}
+		// Check each cell and its neighbors for existing ships
+		for (const [cx, cy] of cells) {
+			for (let dx = -1; dx <= 1; dx++) {
+				for (let dy = -1; dy <= 1; dy++) {
+					const nx = cx + dx;
+					const ny = cy + dy;
+					if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) continue;
 
-	// Place all ships on the grid
-	function placeAllShips(currentGrid: Cell[][], currentShips: Ship[]): void {
-		let shipId = 0;
-
-		for (const shipType of FLEET) {
-			for (let i = 0; i < shipType.count; i++) {
-				let placed = false;
-				let attempts = 0;
-
-				while (!placed && attempts < 1000) {
-					const row = Math.floor(Math.random() * GRID_SIZE);
-					const col = Math.floor(Math.random() * GRID_SIZE);
-					const horizontal = Math.random() > 0.5;
-
-					if (canPlaceShip(row, col, shipType.size, horizontal, currentGrid)) {
-						placeShip(row, col, shipType.size, horizontal, shipId, currentGrid, currentShips);
-						placed = true;
+					// Check if any placed ship occupies this neighbor cell
+					for (const ship of placingShips) {
+						for (let i = 0; i < ship.length; i++) {
+							const sx = ship.horizontal ? ship.x + i : ship.x;
+							const sy = ship.horizontal ? ship.y : ship.y + i;
+							if (sx === nx && sy === ny) return false;
+						}
 					}
-					attempts++;
-				}
-				shipId++;
-			}
-		}
-	}
-
-	// Calculate row and column clues
-	function calculateClues(currentGrid: Cell[][]): { rowClues: number[]; colClues: number[] } {
-		const newRowClues: number[] = [];
-		const newColClues: number[] = [];
-
-		for (let i = 0; i < GRID_SIZE; i++) {
-			let rowCount = 0;
-			let colCount = 0;
-			for (let j = 0; j < GRID_SIZE; j++) {
-				if (currentGrid[i][j].isShip) rowCount++;
-				if (currentGrid[j][i].isShip) colCount++;
-			}
-			newRowClues.push(rowCount);
-			newColClues.push(colCount);
-		}
-
-		return { rowClues: newRowClues, colClues: newColClues };
-	}
-
-	// Shuffle array helper
-	function shuffle<T>(array: T[]): void {
-		for (let i = array.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[array[i], array[j]] = [array[j], array[i]];
-		}
-	}
-
-	// Reveal starting clues based on difficulty
-	function revealStartingClues(solutionGrid: Cell[][], newPlayerGrid: Cell[][]): void {
-		const revealCounts = {
-			easy: { ships: 8, water: 12 },
-			medium: { ships: 4, water: 6 },
-			hard: { ships: 2, water: 2 }
-		};
-
-		const counts = revealCounts[difficulty];
-
-		// Collect ship cells
-		const shipCells: [number, number][] = [];
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
-				if (solutionGrid[r][c].isShip) {
-					shipCells.push([r, c]);
 				}
 			}
 		}
 
-		shuffle(shipCells);
-		for (let i = 0; i < Math.min(counts.ships, shipCells.length); i++) {
-			const [r, c] = shipCells[i];
-			newPlayerGrid[r][c].revealed = true;
-			newPlayerGrid[r][c].playerMark = 'ship';
-			newPlayerGrid[r][c].isShip = true;
-		}
+		return true;
+	}
 
-		// Collect water cells
-		const waterCells: [number, number][] = [];
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
-				if (!solutionGrid[r][c].isShip) {
-					waterCells.push([r, c]);
-				}
+	function placeShip(x: number, y: number): void {
+		if (!currentShip) return;
+		if (!canPlaceShip(x, y, currentShip.length, shipHorizontal)) return;
+
+		placingShips = [
+			...placingShips,
+			{
+				x,
+				y,
+				length: currentShip.length,
+				horizontal: shipHorizontal
+			}
+		];
+		currentShipIndex++;
+		placementPreview = null;
+	}
+
+	function undoLastShip(): void {
+		if (placingShips.length === 0) return;
+		placingShips = placingShips.slice(0, -1);
+		currentShipIndex--;
+	}
+
+	function toggleOrientation(): void {
+		shipHorizontal = !shipHorizontal;
+		placementPreview = null;
+	}
+
+	function handlePlacementHover(x: number, y: number): void {
+		placementPreview = { x, y };
+	}
+
+	function handlePlacementLeave(): void {
+		placementPreview = null;
+	}
+
+	// Check if a cell is occupied by a placed ship
+	function isShipCell(x: number, y: number, ships: Ship[]): boolean {
+		for (const ship of ships) {
+			for (let i = 0; i < ship.length; i++) {
+				const sx = ship.horizontal ? ship.x + i : ship.x;
+				const sy = ship.horizontal ? ship.y : ship.y + i;
+				if (sx === x && sy === y) return true;
 			}
 		}
-
-		shuffle(waterCells);
-		for (let i = 0; i < Math.min(counts.water, waterCells.length); i++) {
-			const [r, c] = waterCells[i];
-			newPlayerGrid[r][c].revealed = true;
-			newPlayerGrid[r][c].playerMark = 'water';
-		}
+		return false;
 	}
 
-	// Start a new game
-	function newGame(): void {
-		gameOver = false;
-		showWinModal = false;
+	// Get preview cells for current ship placement
+	function getPreviewCells(): { x: number; y: number; valid: boolean }[] {
+		if (!currentShip || !placementPreview) return [];
+		const cells: { x: number; y: number; valid: boolean }[] = [];
+		const valid = canPlaceShip(
+			placementPreview.x,
+			placementPreview.y,
+			currentShip.length,
+			shipHorizontal
+		);
 
-		const newGrid = createEmptyGrid();
-		const newShips: Ship[] = [];
-		placeAllShips(newGrid, newShips);
-
-		const clues = calculateClues(newGrid);
-		rowClues = clues.rowClues;
-		colClues = clues.colClues;
-
-		const newPlayerGrid = createEmptyGrid();
-		revealStartingClues(newGrid, newPlayerGrid);
-
-		grid = newGrid;
-		playerGrid = newPlayerGrid;
-		ships = newShips;
-
-		trackStart(GAME_NUMBER);
-	}
-
-	// Set difficulty and start new game
-	function setDifficulty(diff: 'easy' | 'medium' | 'hard'): void {
-		difficulty = diff;
-		newGame();
-	}
-
-	// Handle cell click
-	function handleCellClick(row: number, col: number): void {
-		if (gameOver) return;
-		if (playerGrid[row][col].revealed) return;
-
-		const cell = playerGrid[row][col];
-
-		if (cell.playerMark === markMode) {
-			// Toggle off if same mode
-			cell.playerMark = null;
-		} else {
-			cell.playerMark = markMode;
-		}
-
-		// Trigger reactivity
-		playerGrid = [...playerGrid];
-
-		checkVictory();
-	}
-
-	// Check for victory
-	function checkVictory(): void {
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
-				const solution = grid[r][c].isShip;
-				const playerMark = playerGrid[r][c].playerMark;
-
-				if (solution && playerMark !== 'ship') return;
-				if (!solution && playerMark === 'ship') return;
+		for (let i = 0; i < currentShip.length; i++) {
+			const x = shipHorizontal ? placementPreview.x + i : placementPreview.x;
+			const y = shipHorizontal ? placementPreview.y : placementPreview.y + i;
+			if (x < GRID_SIZE && y < GRID_SIZE) {
+				cells.push({ x, y, valid });
 			}
 		}
-
-		// Victory!
-		gameOver = true;
-		trackComplete(GAME_NUMBER);
-
-		setTimeout(() => {
-			showWinModal = true;
-		}, 500);
-	}
-
-	// Get ship segment type for visual rendering
-	function getShipSegmentType(row: number, col: number): string | null {
-		if (!grid[row][col].isShip) return null;
-
-		const shipId = grid[row][col].shipId;
-		const ship = ships.find((s) => s.id === shipId);
-		if (!ship) return 'submarine';
-
-		if (ship.size === 1) return 'submarine';
-
-		const cellIndex = ship.cells.findIndex(([r, c]) => r === row && c === col);
-
-		if (cellIndex === 0) {
-			return ship.horizontal ? 'left' : 'top';
-		} else if (cellIndex === ship.size - 1) {
-			return ship.horizontal ? 'right' : 'bottom';
-		} else {
-			return ship.horizontal ? 'horizontal' : 'vertical';
-		}
-	}
-
-	// Count ships marked in player grid by size (using flood fill)
-	function floodFillShip(
-		startR: number,
-		startC: number,
-		visited: Set<string>
-	): [number, number][] {
-		const cells: [number, number][] = [];
-		const stack: [number, number][] = [[startR, startC]];
-
-		while (stack.length > 0) {
-			const [r, c] = stack.pop()!;
-			const key = `${r},${c}`;
-
-			if (visited.has(key)) continue;
-			if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) continue;
-			if (playerGrid[r][c].playerMark !== 'ship') continue;
-
-			visited.add(key);
-			cells.push([r, c]);
-
-			// Only horizontal and vertical neighbors (ships are straight)
-			stack.push([r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]);
-		}
-
 		return cells;
 	}
 
-	// Get fleet status (placed ships by size)
-	let fleetStatus = $derived.by(() => {
-		const placedBySize: Record<number, number> = {};
-		const visited = new Set<string>();
+	// ============ Game End ============
 
-		for (let r = 0; r < GRID_SIZE; r++) {
-			for (let c = 0; c < GRID_SIZE; c++) {
-				if (playerGrid[r]?.[c]?.playerMark === 'ship' && !visited.has(`${r},${c}`)) {
-					const shipCells = floodFillShip(r, c, visited);
-					const size = shipCells.length;
-					placedBySize[size] = (placedBySize[size] || 0) + 1;
-				}
+	async function handleGameEnd(): Promise<void> {
+		if (!gameState) return;
+
+		trackComplete(GAME_NUMBER);
+
+		// Record win/loss to leaderboard
+		if (gameState.youWon) {
+			await recordWin(GAME_NUMBER, playerName, gameState.winnerPoints);
+			setTimeout(() => {
+				showWinModal = true;
+			}, 500);
+		} else {
+			// Record loss (negative points)
+			if (gameState.loserPoints > 0) {
+				await recordWin(GAME_NUMBER, playerName, -gameState.loserPoints);
 			}
 		}
-
-		return FLEET.map((shipType) => ({
-			name: t(shipType.nameKey),
-			size: shipType.size,
-			needed: shipType.count,
-			placed: placedBySize[shipType.size] || 0
-		}));
-	});
-
-	// Get row completion status
-	function getRowStatus(rowIndex: number): 'complete' | 'over' | '' {
-		let marked = 0;
-		for (let c = 0; c < GRID_SIZE; c++) {
-			if (playerGrid[rowIndex]?.[c]?.playerMark === 'ship') marked++;
-		}
-		if (marked === rowClues[rowIndex]) return 'complete';
-		if (marked > rowClues[rowIndex]) return 'over';
-		return '';
 	}
 
-	// Get column completion status
-	function getColStatus(colIndex: number): 'complete' | 'over' | '' {
-		let marked = 0;
-		for (let r = 0; r < GRID_SIZE; r++) {
-			if (playerGrid[r]?.[colIndex]?.playerMark === 'ship') marked++;
-		}
-		if (marked === colClues[colIndex]) return 'complete';
-		if (marked > colClues[colIndex]) return 'over';
-		return '';
+	// ============ Reset ============
+
+	function resetGame(): void {
+		stopPolling();
+		phase = 'menu';
+		gameId = null;
+		playerToken = null;
+		gameState = null;
+		openGames = [];
+		loading = false;
+		error = null;
+		showWinModal = false;
+		resetShipPlacement();
 	}
 
-	// Initialize game
-	newGame();
+	// ============ UI Helpers ============
+
+	function goToJoin(): void {
+		phase = 'joining';
+		fetchOpenGames();
+	}
+
+	function goToCreate(): void {
+		phase = 'creating';
+	}
+
+	function goBack(): void {
+		if (phase === 'creating' || phase === 'joining') {
+			phase = 'menu';
+		} else if (phase === 'waiting') {
+			cancelGame();
+		}
+	}
+
+	function formatTime(dateString: string): string {
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffMs = now.getTime() - date.getTime();
+		const diffMins = Math.floor(diffMs / 60000);
+
+		if (diffMins < 1) return t('time.justNow');
+		if (diffMins === 1) return t('time.oneMinuteAgo');
+		return t('time.minutesAgo').replace('{n}', diffMins.toString());
+	}
+
+	function getStakesLabel(option: typeof POINT_OPTIONS[0]): string {
+		return `+${option.winnerPoints} / -${option.loserPoints}`;
+	}
 </script>
 
 <div class="game">
-	<!-- Difficulty Selection -->
-	<div class="difficulty-bar">
-		<button
-			class="diff-btn"
-			class:active={difficulty === 'easy'}
-			onclick={() => setDifficulty('easy')}
-		>
-			{t('difficulty.easy')}
-		</button>
-		<button
-			class="diff-btn"
-			class:active={difficulty === 'medium'}
-			onclick={() => setDifficulty('medium')}
-		>
-			{t('difficulty.medium')}
-		</button>
-		<button
-			class="diff-btn"
-			class:active={difficulty === 'hard'}
-			onclick={() => setDifficulty('hard')}
-		>
-			{t('difficulty.hard')}
-		</button>
-	</div>
+	{#if phase === 'menu'}
+		<!-- Main Menu -->
+		<div class="menu">
+			<h2>{t('menu.title')}</h2>
+			<p class="menu-subtitle">{t('menu.subtitle')}</p>
 
-	<!-- Mark Mode Toggle -->
-	<div class="mark-toggle">
-		<button
-			class="mark-btn"
-			class:active={markMode === 'ship'}
-			onclick={() => (markMode = 'ship')}
-		>
-			<span class="mark-icon ship-icon">&#9632;</span>
-			<span>{t('markMode.ship')}</span>
-		</button>
-		<button
-			class="mark-btn"
-			class:active={markMode === 'water'}
-			onclick={() => (markMode = 'water')}
-		>
-			<span class="mark-icon water-icon">~</span>
-			<span>{t('markMode.water')}</span>
-		</button>
-	</div>
-
-	<!-- Puzzle Grid -->
-	<div class="grid-wrapper">
-		<div class="grid">
-			<!-- Corner cell -->
-			<div class="clue-cell corner"></div>
-
-			<!-- Column clues -->
-			{#each colClues as clue, colIndex}
-				<div class="clue-cell col-clue" class:complete={getColStatus(colIndex) === 'complete'} class:over={getColStatus(colIndex) === 'over'}>
-					{clue}
-				</div>
-			{/each}
-
-			<!-- Rows -->
-			{#each { length: GRID_SIZE } as _, rowIndex}
-				<!-- Row clue -->
-				<div class="clue-cell row-clue" class:complete={getRowStatus(rowIndex) === 'complete'} class:over={getRowStatus(rowIndex) === 'over'}>
-					{rowClues[rowIndex]}
-				</div>
-
-				<!-- Grid cells -->
-				{#each { length: GRID_SIZE } as _, colIndex}
-					{@const cell = playerGrid[rowIndex]?.[colIndex]}
-					{@const segmentType = cell?.revealed && cell?.playerMark === 'ship' ? getShipSegmentType(rowIndex, colIndex) : null}
-					<button
-						class="cell"
-						class:revealed={cell?.revealed}
-						class:ship={cell?.playerMark === 'ship'}
-						class:water={cell?.playerMark === 'water'}
-						class:player-marked={!cell?.revealed && cell?.playerMark !== null}
-						class:submarine={segmentType === 'submarine'}
-						class:left={segmentType === 'left'}
-						class:right={segmentType === 'right'}
-						class:top={segmentType === 'top'}
-						class:bottom={segmentType === 'bottom'}
-						class:horizontal={segmentType === 'horizontal'}
-						class:vertical={segmentType === 'vertical'}
-						onclick={() => handleCellClick(rowIndex, colIndex)}
-						disabled={cell?.revealed || gameOver}
-						aria-label="Cell {rowIndex},{colIndex}"
-					></button>
-				{/each}
-			{/each}
+			<div class="menu-buttons">
+				<button class="btn btn-primary" onclick={goToCreate}>
+					{t('menu.createGame')}
+				</button>
+				<button class="btn btn-secondary" onclick={goToJoin}>
+					{t('menu.joinGame')}
+				</button>
+			</div>
 		</div>
-	</div>
+	{:else if phase === 'creating'}
+		<!-- Create Game - Select Stakes -->
+		<div class="create-game">
+			<button class="back-btn" onclick={goBack}>&larr; {t('back')}</button>
 
-	<!-- Fleet Status -->
-	<div class="fleet-status">
-		{#each fleetStatus as ship}
-			<div class="fleet-item">
-				<span class="ship-icons">{'\u25A0'.repeat(ship.size)}</span>
-				<span class="ship-name">{ship.name}</span>
-				<span class="ship-count" class:complete={ship.placed === ship.needed}>
-					{ship.placed}/{ship.needed}
+			<h2>{t('create.title')}</h2>
+			<p class="subtitle">{t('create.selectStakes')}</p>
+
+			<div class="stakes-options">
+				{#each POINT_OPTIONS as option, i}
+					<button
+						class="stakes-option"
+						class:selected={selectedPointOption === i}
+						onclick={() => (selectedPointOption = i)}
+					>
+						<span class="stakes-label">{t(`stakes.${option.label}`)}</span>
+						<span class="stakes-points">{getStakesLabel(option)}</span>
+					</button>
+				{/each}
+			</div>
+
+			<button
+				class="btn btn-primary"
+				onclick={createGame}
+				disabled={loading}
+			>
+				{loading ? t('loading') : t('create.start')}
+			</button>
+
+			{#if error}
+				<p class="error">{error}</p>
+			{/if}
+		</div>
+	{:else if phase === 'waiting'}
+		<!-- Waiting for Opponent -->
+		<div class="waiting">
+			<button class="back-btn" onclick={goBack}>&larr; {t('cancel')}</button>
+
+			<div class="waiting-content">
+				<div class="spinner"></div>
+				<h2>{t('waiting.title')}</h2>
+				<p class="game-code">{t('waiting.gameCode')}: <strong>{gameId}</strong></p>
+				<p class="waiting-hint">{t('waiting.hint')}</p>
+			</div>
+		</div>
+	{:else if phase === 'joining'}
+		<!-- Join Game - List Open Games -->
+		<div class="join-game">
+			<button class="back-btn" onclick={goBack}>&larr; {t('back')}</button>
+
+			<h2>{t('join.title')}</h2>
+
+			{#if loading}
+				<div class="spinner"></div>
+			{:else if openGames.length === 0}
+				<p class="no-games">{t('join.noGames')}</p>
+				<button class="btn btn-secondary" onclick={fetchOpenGames}>
+					{t('join.refresh')}
+				</button>
+			{:else}
+				<div class="game-list">
+					{#each openGames as game}
+						<button class="game-item" onclick={() => joinGame(game.gameId)}>
+							<div class="game-item-left">
+								<span class="creator-name">{game.creatorName}</span>
+								<span class="game-time">{formatTime(game.createdAt)}</span>
+							</div>
+							<div class="game-item-right">
+								<span class="game-stakes">+{game.winnerPoints} / -{game.loserPoints}</span>
+							</div>
+						</button>
+					{/each}
+				</div>
+				<button class="btn btn-secondary refresh-btn" onclick={fetchOpenGames}>
+					{t('join.refresh')}
+				</button>
+			{/if}
+
+			{#if error}
+				<p class="error">{error}</p>
+			{/if}
+		</div>
+	{:else if phase === 'placing'}
+		<!-- Ship Placement Phase -->
+		<div class="placing">
+			<div class="phase-header">
+				<span class="opponent-label">
+					{#if gameState?.joinerName || gameState?.yourRole === 'joiner'}
+						{t('placing.vs')} {opponentName || t('placing.waitingOpponent')}
+					{:else}
+						{t('placing.waitingOpponent')}
+					{/if}
 				</span>
 			</div>
-		{/each}
-	</div>
 
-	<!-- New Game Button -->
-	<div class="controls">
-		<button class="btn" onclick={newGame}>{t('newGame')}</button>
-	</div>
+			<h2>{t('placing.title')}</h2>
 
-	<!-- Rules -->
-	<div class="rules">
-		<h3>{t('rules.title')}</h3>
-		<ul>
-			<li>{t('rules.goal')}</li>
-			<li>{t('rules.numbers')}</li>
-			<li>{t('rules.ships')}</li>
-			<li>{t('rules.noTouch')}</li>
-			<li>{t('rules.howTo')}</li>
-			<li>{t('rules.tip')}</li>
-		</ul>
-	</div>
+			{#if currentShip}
+				<p class="placing-instruction">
+					{t('placing.placeShip')}: <strong>{currentShip.name}</strong> ({currentShip.length})
+				</p>
+			{:else}
+				<p class="placing-instruction">{t('placing.allPlaced')}</p>
+			{/if}
+
+			<div class="placement-grid">
+				{#each { length: GRID_SIZE } as _, y}
+					<div class="grid-row">
+						{#each { length: GRID_SIZE } as _, x}
+							{@const isPlaced = isShipCell(x, y, placingShips)}
+							{@const previewCells = getPreviewCells()}
+							{@const previewCell = previewCells.find((c) => c.x === x && c.y === y)}
+							<button
+								class="cell"
+								class:ship={isPlaced}
+								class:preview={previewCell !== undefined}
+								class:valid={previewCell?.valid}
+								class:invalid={previewCell !== undefined && !previewCell.valid}
+								onclick={() => placeShip(x, y)}
+								onmouseenter={() => handlePlacementHover(x, y)}
+								onmouseleave={handlePlacementLeave}
+								disabled={!currentShip}
+							></button>
+						{/each}
+					</div>
+				{/each}
+			</div>
+
+			<div class="placement-controls">
+				<button class="btn btn-small" onclick={toggleOrientation} disabled={!currentShip}>
+					{shipHorizontal ? t('placing.horizontal') : t('placing.vertical')}
+				</button>
+				<button
+					class="btn btn-small btn-secondary"
+					onclick={undoLastShip}
+					disabled={placingShips.length === 0}
+				>
+					{t('placing.undo')}
+				</button>
+			</div>
+
+			{#if currentShipIndex >= FLEET.length}
+				<button
+					class="btn btn-primary"
+					onclick={submitShips}
+					disabled={loading}
+				>
+					{loading ? t('loading') : t('placing.ready')}
+				</button>
+
+				{#if gameState?.yourShips}
+					<p class="waiting-opponent">{t('placing.waitingForOpponent')}</p>
+				{/if}
+			{/if}
+
+			{#if error}
+				<p class="error">{error}</p>
+			{/if}
+		</div>
+	{:else if phase === 'playing'}
+		<!-- Battle Phase -->
+		<div class="battle">
+			<div class="battle-header">
+				<span class="opponent-name">{t('battle.vs')} {opponentName}</span>
+				<span class="turn-indicator" class:your-turn={gameState?.isYourTurn}>
+					{gameState?.isYourTurn ? t('battle.yourTurn') : t('battle.opponentTurn')}
+				</span>
+			</div>
+
+			<!-- Opponent's Board (where you shoot) -->
+			<div class="board-section">
+				<h3>{t('battle.opponentBoard')}</h3>
+				<div class="battle-grid opponent-board">
+					{#each { length: GRID_SIZE } as _, y}
+						<div class="grid-row">
+							{#each { length: GRID_SIZE } as _, x}
+								{@const shot = gameState?.yourShots.find((s) => s.x === x && s.y === y)}
+								<button
+									class="cell"
+									class:hit={shot?.hit}
+									class:miss={shot !== undefined && !shot.hit}
+									onclick={() => shoot(x, y)}
+									disabled={!gameState?.isYourTurn || shot !== undefined || loading}
+								></button>
+							{/each}
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Your Board (shows your ships and opponent's shots) -->
+			<div class="board-section your-board-section">
+				<h3>{t('battle.yourBoard')}</h3>
+				<div class="battle-grid your-board">
+					{#each { length: GRID_SIZE } as _, y}
+						<div class="grid-row">
+							{#each { length: GRID_SIZE } as _, x}
+								{@const isShip = gameState?.yourShips
+									? isShipCell(x, y, gameState.yourShips)
+									: false}
+								{@const opponentShot = gameState?.opponentShots.find(
+									(s) => s.x === x && s.y === y
+								)}
+								<div
+									class="cell"
+									class:ship={isShip}
+									class:hit={opponentShot?.hit}
+									class:miss={opponentShot !== undefined && !opponentShot.hit}
+								></div>
+							{/each}
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			{#if error}
+				<p class="error">{error}</p>
+			{/if}
+		</div>
+	{:else if phase === 'ended'}
+		<!-- Game Ended -->
+		<div class="ended">
+			<h2 class="result" class:won={gameState?.youWon} class:lost={!gameState?.youWon}>
+				{gameState?.youWon ? t('ended.youWon') : t('ended.youLost')}
+			</h2>
+
+			<p class="points-change">
+				{#if gameState?.youWon}
+					+{gameState.winnerPoints} {t('ended.points')}
+				{:else if gameState && gameState.loserPoints > 0}
+					-{gameState.loserPoints} {t('ended.points')}
+				{/if}
+			</p>
+
+			<!-- Show both boards -->
+			<div class="final-boards">
+				<div class="board-section">
+					<h3>{t('ended.yourShips')}</h3>
+					<div class="battle-grid small-grid">
+						{#each { length: GRID_SIZE } as _, y}
+							<div class="grid-row">
+								{#each { length: GRID_SIZE } as _, x}
+									{@const isShip = gameState?.yourShips
+										? isShipCell(x, y, gameState.yourShips)
+										: false}
+									{@const shot = gameState?.opponentShots.find(
+										(s) => s.x === x && s.y === y
+									)}
+									<div
+										class="cell"
+										class:ship={isShip}
+										class:hit={shot?.hit}
+										class:miss={shot !== undefined && !shot.hit}
+									></div>
+								{/each}
+							</div>
+						{/each}
+					</div>
+				</div>
+
+				<div class="board-section">
+					<h3>{t('ended.opponentShips')}</h3>
+					<div class="battle-grid small-grid">
+						{#each { length: GRID_SIZE } as _, y}
+							<div class="grid-row">
+								{#each { length: GRID_SIZE } as _, x}
+									{@const isShip = gameState?.opponentShips
+										? isShipCell(x, y, gameState.opponentShips)
+										: false}
+									{@const shot = gameState?.yourShots.find(
+										(s) => s.x === x && s.y === y
+									)}
+									<div
+										class="cell"
+										class:ship={isShip}
+										class:hit={shot?.hit}
+										class:miss={shot !== undefined && !shot.hit}
+									></div>
+								{/each}
+							</div>
+						{/each}
+					</div>
+				</div>
+			</div>
+
+			<button class="btn btn-primary" onclick={resetGame}>
+				{t('ended.playAgain')}
+			</button>
+		</div>
+	{/if}
 </div>
 
 <WinModal
 	isOpen={showWinModal}
-	{points}
+	points={gameState?.winnerPoints || 3}
 	gameNumber={GAME_NUMBER}
-	onClose={() => (showWinModal = false)}
+	onClose={() => {
+		showWinModal = false;
+		resetGame();
+	}}
 />
 
 <style>
@@ -551,334 +858,479 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding: 10px;
 	}
 
-	/* Difficulty Bar */
-	.difficulty-bar {
-		display: flex;
-		gap: 8px;
-		margin-bottom: 15px;
+	/* Menu */
+	.menu {
+		text-align: center;
+		padding: 40px 20px;
 	}
 
-	.diff-btn {
-		padding: 8px 16px;
-		font-size: 0.9rem;
-		font-weight: 600;
-		font-family: 'Poppins', sans-serif;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 20px;
-		color: rgba(255, 255, 255, 0.7);
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.diff-btn.active {
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		border-color: #8b5cf6;
+	.menu h2 {
+		font-size: 1.5rem;
+		margin-bottom: 10px;
 		color: white;
 	}
 
-	.diff-btn:active {
-		transform: scale(0.95);
-	}
-
-	/* Mark Mode Toggle */
-	.mark-toggle {
-		display: flex;
-		gap: 10px;
-		margin-bottom: 15px;
-	}
-
-	.mark-btn {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		padding: 10px 18px;
-		font-size: 0.9rem;
-		font-weight: 600;
-		font-family: 'Poppins', sans-serif;
-		background: rgba(255, 255, 255, 0.1);
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		border-radius: 25px;
+	.menu-subtitle {
 		color: rgba(255, 255, 255, 0.7);
-		cursor: pointer;
-		transition: all 0.2s ease;
+		margin-bottom: 30px;
 	}
 
-	.mark-btn.active {
-		border-color: #22c55e;
-		background: rgba(34, 197, 94, 0.2);
-		color: white;
-	}
-
-	.mark-btn:active {
-		transform: scale(0.95);
-	}
-
-	.mark-icon {
-		font-size: 1.2rem;
-	}
-
-	.ship-icon {
-		color: #60a5fa;
-	}
-
-	.water-icon {
-		color: #38bdf8;
-	}
-
-	/* Grid Wrapper */
-	.grid-wrapper {
-		width: 100%;
-		max-width: 360px;
-		margin-bottom: 15px;
-		overflow-x: auto;
-	}
-
-	.grid {
-		display: grid;
-		grid-template-columns: 28px repeat(10, 1fr);
-		gap: 2px;
-		background: rgba(255, 255, 255, 0.05);
-		padding: 8px;
-		border-radius: 12px;
-	}
-
-	/* Clue Cells */
-	.clue-cell {
+	.menu-buttons {
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.85rem;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.8);
-		min-width: 28px;
-		min-height: 28px;
-	}
-
-	.clue-cell.corner {
-		background: transparent;
-	}
-
-	.clue-cell.col-clue,
-	.clue-cell.row-clue {
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 4px;
-	}
-
-	.clue-cell.complete {
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.15);
-	}
-
-	.clue-cell.over {
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
-	}
-
-	/* Grid Cells */
-	.cell {
-		aspect-ratio: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(255, 255, 255, 0.08);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 4px;
-		cursor: pointer;
-		transition: all 0.15s ease;
-		font-family: 'Poppins', sans-serif;
-		min-width: 28px;
-		min-height: 28px;
-	}
-
-	.cell:active:not(:disabled) {
-		transform: scale(0.9);
-	}
-
-	.cell:disabled {
-		cursor: default;
-	}
-
-	.cell.revealed {
-		cursor: default;
-	}
-
-	/* Ship cells */
-	.cell.ship {
-		background: linear-gradient(145deg, rgba(96, 165, 250, 0.5) 0%, rgba(59, 130, 246, 0.3) 100%);
-		border-color: rgba(96, 165, 250, 0.6);
-	}
-
-	.cell.ship.revealed {
-		background: linear-gradient(145deg, rgba(96, 165, 250, 0.7) 0%, rgba(59, 130, 246, 0.5) 100%);
-	}
-
-	/* Ship segment shapes */
-	.cell.ship.submarine::after {
-		content: '';
-		width: 60%;
-		height: 60%;
-		background: #3b82f6;
-		border-radius: 50%;
-	}
-
-	.cell.ship.left::after,
-	.cell.ship.right::after,
-	.cell.ship.top::after,
-	.cell.ship.bottom::after,
-	.cell.ship.horizontal::after,
-	.cell.ship.vertical::after {
-		content: '';
-		background: #3b82f6;
-	}
-
-	.cell.ship.left::after {
+		flex-direction: column;
+		gap: 15px;
 		width: 100%;
-		height: 60%;
-		border-radius: 50% 0 0 50%;
+		max-width: 280px;
+		margin: 0 auto;
 	}
 
-	.cell.ship.right::after {
-		width: 100%;
-		height: 60%;
-		border-radius: 0 50% 50% 0;
-	}
-
-	.cell.ship.top::after {
-		width: 60%;
-		height: 100%;
-		border-radius: 50% 50% 0 0;
-	}
-
-	.cell.ship.bottom::after {
-		width: 60%;
-		height: 100%;
-		border-radius: 0 0 50% 50%;
-	}
-
-	.cell.ship.horizontal::after {
-		width: 100%;
-		height: 60%;
-		border-radius: 0;
-	}
-
-	.cell.ship.vertical::after {
-		width: 60%;
-		height: 100%;
-		border-radius: 0;
-	}
-
-	/* Water cells */
-	.cell.water {
-		background: rgba(56, 189, 248, 0.15);
-		border-color: rgba(56, 189, 248, 0.3);
-	}
-
-	.cell.water::after {
-		content: '~';
-		color: rgba(56, 189, 248, 0.6);
-		font-size: 1rem;
-	}
-
-	.cell.water.revealed::after {
-		color: rgba(56, 189, 248, 0.8);
-	}
-
-	/* Fleet Status */
-	.fleet-status {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		justify-content: center;
-		margin-bottom: 15px;
-		width: 100%;
-		max-width: 360px;
-	}
-
-	.fleet-item {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		padding: 6px 12px;
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 20px;
-		font-size: 0.8rem;
-	}
-
-	.ship-icons {
-		color: #60a5fa;
-		letter-spacing: 1px;
-	}
-
-	.ship-name {
-		color: rgba(255, 255, 255, 0.7);
-	}
-
-	.ship-count {
-		color: rgba(255, 255, 255, 0.5);
-		font-weight: 600;
-	}
-
-	.ship-count.complete {
-		color: #22c55e;
-	}
-
-	/* Controls */
-	.controls {
-		margin-bottom: 20px;
-	}
-
+	/* Buttons */
 	.btn {
-		padding: 12px 30px;
+		padding: 14px 28px;
 		font-size: 1rem;
 		font-weight: 600;
 		font-family: 'Poppins', sans-serif;
-		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-		color: white;
 		border: none;
 		border-radius: 25px;
 		cursor: pointer;
 		transition: all 0.3s ease;
 	}
 
-	.btn:active {
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.btn:active:not(:disabled) {
 		transform: scale(0.95);
 	}
 
-	/* Rules */
-	.rules {
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 15px;
-		padding: 20px;
-		width: 100%;
+	.btn-primary {
+		background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+		color: white;
 	}
 
-	.rules h3 {
-		margin-bottom: 15px;
-		font-size: 1rem;
-		color: rgba(255, 255, 255, 0.9);
+	.btn-secondary {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: white;
 	}
 
-	.rules ul {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+	.btn-small {
+		padding: 10px 20px;
+		font-size: 0.9rem;
 	}
 
-	.rules li {
-		padding: 6px 0;
+	.back-btn {
+		align-self: flex-start;
+		background: none;
+		border: none;
 		color: rgba(255, 255, 255, 0.7);
-		font-size: 0.85rem;
-		padding-left: 20px;
-		position: relative;
+		font-size: 0.9rem;
+		cursor: pointer;
+		padding: 8px 0;
+		margin-bottom: 15px;
 	}
 
-	.rules li::before {
-		content: '\2022';
-		position: absolute;
-		left: 0;
+	.back-btn:hover {
+		color: white;
+	}
+
+	/* Create Game */
+	.create-game {
+		width: 100%;
+		max-width: 350px;
+	}
+
+	.create-game h2,
+	.join-game h2 {
+		text-align: center;
+		margin-bottom: 10px;
+		color: white;
+	}
+
+	.subtitle {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 20px;
+	}
+
+	.stakes-options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-bottom: 25px;
+	}
+
+	.stakes-option {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 15px 20px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 2px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.stakes-option.selected {
+		border-color: #8b5cf6;
+		background: rgba(139, 92, 246, 0.15);
+	}
+
+	.stakes-label {
+		color: white;
+		font-weight: 500;
+	}
+
+	.stakes-points {
+		color: rgba(255, 255, 255, 0.7);
+		font-family: monospace;
+	}
+
+	/* Waiting */
+	.waiting {
+		width: 100%;
+		max-width: 350px;
+	}
+
+	.waiting-content {
+		text-align: center;
+		padding: 40px 20px;
+	}
+
+	.waiting h2 {
+		margin: 20px 0 15px;
+		color: white;
+	}
+
+	.game-code {
+		font-size: 1.1rem;
+		color: rgba(255, 255, 255, 0.9);
+		margin-bottom: 15px;
+	}
+
+	.game-code strong {
+		font-family: monospace;
+		font-size: 1.4rem;
 		color: #8b5cf6;
+		letter-spacing: 2px;
+	}
+
+	.waiting-hint {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.85rem;
+	}
+
+	.spinner {
+		width: 40px;
+		height: 40px;
+		border: 3px solid rgba(255, 255, 255, 0.1);
+		border-top-color: #8b5cf6;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+		margin: 0 auto;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	/* Join Game */
+	.join-game {
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.no-games {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.6);
+		padding: 30px;
+	}
+
+	.game-list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-bottom: 20px;
+	}
+
+	.game-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 15px 20px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.game-item:hover {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(255, 255, 255, 0.2);
+	}
+
+	.game-item-left {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.creator-name {
+		color: white;
+		font-weight: 500;
+	}
+
+	.game-time {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.8rem;
+	}
+
+	.game-stakes {
+		color: rgba(255, 255, 255, 0.7);
+		font-family: monospace;
+	}
+
+	.refresh-btn {
+		display: block;
+		margin: 0 auto;
+	}
+
+	/* Ship Placement */
+	.placing {
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.phase-header {
+		text-align: center;
+		margin-bottom: 15px;
+	}
+
+	.opponent-label {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.9rem;
+	}
+
+	.placing h2 {
+		text-align: center;
+		color: white;
+		margin-bottom: 10px;
+	}
+
+	.placing-instruction {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.8);
+		margin-bottom: 15px;
+	}
+
+	.placing-instruction strong {
+		color: #8b5cf6;
+	}
+
+	.placement-grid,
+	.battle-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		background: rgba(255, 255, 255, 0.05);
+		padding: 8px;
+		border-radius: 12px;
+		margin-bottom: 15px;
+	}
+
+	.grid-row {
+		display: flex;
+		gap: 2px;
+	}
+
+	.cell {
+		width: 32px;
+		height: 32px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 4px;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.cell:disabled {
+		cursor: default;
+	}
+
+	.cell.ship {
+		background: linear-gradient(145deg, rgba(96, 165, 250, 0.6) 0%, rgba(59, 130, 246, 0.4) 100%);
+		border-color: rgba(96, 165, 250, 0.6);
+	}
+
+	.cell.preview.valid {
+		background: rgba(34, 197, 94, 0.3);
+		border-color: rgba(34, 197, 94, 0.5);
+	}
+
+	.cell.preview.invalid {
+		background: rgba(239, 68, 68, 0.3);
+		border-color: rgba(239, 68, 68, 0.5);
+	}
+
+	.cell.hit {
+		background: rgba(239, 68, 68, 0.6) !important;
+		border-color: rgba(239, 68, 68, 0.8) !important;
+	}
+
+	.cell.hit::after {
+		content: '✕';
+		color: white;
+		font-size: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+	}
+
+	.cell.miss {
+		background: rgba(56, 189, 248, 0.2);
+		border-color: rgba(56, 189, 248, 0.4);
+	}
+
+	.cell.miss::after {
+		content: '○';
+		color: rgba(56, 189, 248, 0.8);
+		font-size: 0.8rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+	}
+
+	.placement-controls {
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+		margin-bottom: 15px;
+	}
+
+	.waiting-opponent {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.6);
+		margin-top: 15px;
+		font-size: 0.9rem;
+	}
+
+	/* Battle Phase */
+	.battle {
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.battle-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 15px;
+		padding: 10px;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 10px;
+	}
+
+	.opponent-name {
+		color: white;
+		font-weight: 500;
+	}
+
+	.turn-indicator {
+		padding: 6px 12px;
+		border-radius: 15px;
+		font-size: 0.85rem;
+		background: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.turn-indicator.your-turn {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
+
+	.board-section {
+		margin-bottom: 20px;
+	}
+
+	.board-section h3 {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 0.9rem;
+		margin-bottom: 8px;
+	}
+
+	.your-board-section .battle-grid {
+		opacity: 0.8;
+	}
+
+	.your-board .cell {
+		cursor: default;
+	}
+
+	.opponent-board .cell:not(:disabled):hover {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	/* Game Ended */
+	.ended {
+		width: 100%;
+		max-width: 400px;
+		text-align: center;
+	}
+
+	.result {
+		font-size: 1.8rem;
+		margin-bottom: 10px;
+	}
+
+	.result.won {
+		color: #22c55e;
+	}
+
+	.result.lost {
+		color: #ef4444;
+	}
+
+	.points-change {
+		font-size: 1.2rem;
+		margin-bottom: 20px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.final-boards {
+		display: flex;
+		gap: 15px;
+		justify-content: center;
+		margin-bottom: 25px;
+		flex-wrap: wrap;
+	}
+
+	.small-grid {
+		transform: scale(0.8);
+		transform-origin: top center;
+	}
+
+	.small-grid .cell {
+		width: 24px;
+		height: 24px;
+	}
+
+	/* Error */
+	.error {
+		color: #ef4444;
+		text-align: center;
+		margin-top: 15px;
+		font-size: 0.9rem;
 	}
 </style>

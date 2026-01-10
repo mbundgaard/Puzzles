@@ -254,9 +254,9 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./25-saenke-slagskibe/SaenkeSlagskibe.svelte'),
 		accentColor: '#0ea5e9',
-		points: 3,
+		points: 5,
 		created: '2025-12-31',
-		updated: '2026-01-09'
+		updated: '2026-01-10'
 	},
 	{
 		id: '26-gaet-dyret',

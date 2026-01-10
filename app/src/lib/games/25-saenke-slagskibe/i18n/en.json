@@ -1,31 +1,64 @@
 {
-	"title": "Battleship Puzzle",
-	"newGame": "New Game",
-	"difficulty": {
-		"title": "Difficulty",
-		"easy": "Easy",
-		"medium": "Medium",
-		"hard": "Hard"
+	"title": "Battleship",
+	"back": "Back",
+	"cancel": "Cancel",
+	"loading": "Loading...",
+	"menu": {
+		"title": "Battleship",
+		"subtitle": "Play against a friend!",
+		"createGame": "Create Game",
+		"joinGame": "Join Game"
 	},
-	"markMode": {
-		"ship": "Ship",
-		"water": "Water"
+	"create": {
+		"title": "Create Game",
+		"selectStakes": "Choose point structure",
+		"start": "Start Game"
 	},
-	"fleet": {
-		"title": "Fleet",
-		"battleship": "Battleship",
-		"cruiser": "Cruiser",
-		"destroyer": "Destroyer",
-		"submarine": "Submarine"
+	"stakes": {
+		"highStakes": "High Stakes",
+		"mediumStakes": "Medium Stakes",
+		"lowStakes": "Low Stakes"
 	},
-	"won": "Congratulations! You found all the ships!",
-	"rules": {
-		"title": "Rules",
-		"goal": "Find all ships in the grid using the numbers as clues.",
-		"numbers": "Numbers show how many ship segments are in each row and column.",
-		"ships": "The fleet consists of: 1 battleship (4), 2 cruisers (3), 3 destroyers (2), 4 submarines (1).",
-		"noTouch": "Ships cannot touch each other - not even diagonally!",
-		"howTo": "Tap a cell to mark it. Use the buttons to switch between ship and water.",
-		"tip": "Start with rows/columns that have 0 (all water) or high numbers."
+	"waiting": {
+		"title": "Waiting for opponent...",
+		"gameCode": "Game code",
+		"hint": "Share the code with your friend"
+	},
+	"join": {
+		"title": "Join Game",
+		"noGames": "No open games",
+		"refresh": "Refresh"
+	},
+	"time": {
+		"justNow": "Just now",
+		"oneMinuteAgo": "1 minute ago",
+		"minutesAgo": "{n} minutes ago"
+	},
+	"placing": {
+		"title": "Place your ships",
+		"vs": "vs",
+		"waitingOpponent": "Waiting for opponent...",
+		"placeShip": "Place ship",
+		"allPlaced": "All ships placed!",
+		"horizontal": "Horizontal",
+		"vertical": "Vertical",
+		"undo": "Undo",
+		"ready": "Ready!",
+		"waitingForOpponent": "Waiting for opponent to place ships..."
+	},
+	"battle": {
+		"vs": "vs",
+		"yourTurn": "Your turn",
+		"opponentTurn": "Opponent's turn",
+		"opponentBoard": "Opponent's board",
+		"yourBoard": "Your board"
+	},
+	"ended": {
+		"youWon": "You won!",
+		"youLost": "You lost",
+		"points": "points",
+		"yourShips": "Your ships",
+		"opponentShips": "Opponent's ships",
+		"playAgain": "Play again"
 	}
 }

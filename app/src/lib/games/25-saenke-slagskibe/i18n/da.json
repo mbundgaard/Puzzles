@@ -1,31 +1,64 @@
 {
 	"title": "Saenke Slagskibe",
-	"newGame": "Nyt Spil",
-	"difficulty": {
-		"title": "Svaerhedsgrad",
-		"easy": "Let",
-		"medium": "Normal",
-		"hard": "Svaer"
+	"back": "Tilbage",
+	"cancel": "Annuller",
+	"loading": "Indlaeser...",
+	"menu": {
+		"title": "Saenke Slagskibe",
+		"subtitle": "Spil mod en ven!",
+		"createGame": "Opret Spil",
+		"joinGame": "Tilslut Spil"
 	},
-	"markMode": {
-		"ship": "Skib",
-		"water": "Vand"
+	"create": {
+		"title": "Opret Spil",
+		"selectStakes": "Vaelg pointstruktur",
+		"start": "Start Spil"
 	},
-	"fleet": {
-		"title": "Flaade",
-		"battleship": "Slagskib",
-		"cruiser": "Krydser",
-		"destroyer": "Destroyer",
-		"submarine": "Ubaad"
+	"stakes": {
+		"highStakes": "Hoej Indsats",
+		"mediumStakes": "Medium Indsats",
+		"lowStakes": "Lav Indsats"
 	},
-	"won": "Tilykke! Du fandt alle skibene!",
-	"rules": {
-		"title": "Regler",
-		"goal": "Find alle skibene i gitteret ved at bruge tallene som ledetraade.",
-		"numbers": "Tallene viser hvor mange skibsfelter der er i hver raekke og kolonne.",
-		"ships": "Flaaden bestaar af: 1 slagskib (4), 2 krydsere (3), 3 destroyere (2), 4 ubaade (1).",
-		"noTouch": "Skibe maa ikke roere hinanden - heller ikke diagonalt!",
-		"howTo": "Tryk paa et felt for at markere det. Brug knapperne til at skifte mellem skib og vand.",
-		"tip": "Start med raekker/kolonner der har 0 (alt er vand) eller hoeje tal."
+	"waiting": {
+		"title": "Venter paa modstander...",
+		"gameCode": "Spilkode",
+		"hint": "Del koden med din ven"
+	},
+	"join": {
+		"title": "Tilslut Spil",
+		"noGames": "Ingen aabne spil",
+		"refresh": "Opdater"
+	},
+	"time": {
+		"justNow": "Lige nu",
+		"oneMinuteAgo": "1 minut siden",
+		"minutesAgo": "{n} minutter siden"
+	},
+	"placing": {
+		"title": "Placer dine skibe",
+		"vs": "Mod",
+		"waitingOpponent": "Venter paa modstander...",
+		"placeShip": "Placer skib",
+		"allPlaced": "Alle skibe er placeret!",
+		"horizontal": "Vandret",
+		"vertical": "Lodret",
+		"undo": "Fortryd",
+		"ready": "Klar!",
+		"waitingForOpponent": "Venter paa at modstanderen placerer skibe..."
+	},
+	"battle": {
+		"vs": "Mod",
+		"yourTurn": "Din tur",
+		"opponentTurn": "Modstanderens tur",
+		"opponentBoard": "Modstanderens bord",
+		"yourBoard": "Dit bord"
+	},
+	"ended": {
+		"youWon": "Du vandt!",
+		"youLost": "Du tabte",
+		"points": "point",
+		"yourShips": "Dine skibe",
+		"opponentShips": "Modstanderens skibe",
+		"playAgain": "Spil igen"
 	}
 }
