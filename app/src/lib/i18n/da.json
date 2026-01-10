@@ -114,6 +114,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"55": "Tilføjet Quiz Mester - Millionær-stil quizspil med AI-genererede spørgsmål",
 		"71": "Tilføjet 'Giv Op' knap til Ordsøgning der viser alle ord",
 		"86": "Tilføjet favoritspil - tryk på hjertet for at sætte spil øverst",
 		"88": "Fjernet 'går tilbage til forsiden' besked efter feedback",

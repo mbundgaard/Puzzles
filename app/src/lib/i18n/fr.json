@@ -114,6 +114,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"55": "Ajout de Maître du Quiz - jeu de quiz style Millionnaire avec questions générées par IA",
 		"71": "Ajout du bouton 'Abandonner' aux Mots Cachés qui révèle tous les mots",
 		"86": "Ajout des jeux favoris - appuyez sur le cœur pour épingler les jeux en haut",
 		"88": "Suppression du message 'retour à l'accueil' après envoi de commentaires",
