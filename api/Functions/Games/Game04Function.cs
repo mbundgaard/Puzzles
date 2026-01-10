@@ -120,24 +120,25 @@ public class Game04Function
         var focus2 = FocusAreas[(actualSeed / 10) % FocusAreas.Length];
         var focus3 = FocusAreas[(actualSeed / 100) % FocusAreas.Length];
 
-        var systemPrompt = $@"You are a creative quiz generator. Generate exactly 12 UNIQUE trivia questions about: {category}
+        var systemPrompt = $@"You are a quiz generator. Generate exactly 12 trivia questions about: {category}
 
 IMPORTANT: Write all questions and answers in {outputLanguage}.
 
-For THIS quiz (session {actualSeed}), focus especially on: {focus1}, {focus2}, {focus3}
-Avoid the most common/obvious questions. Be creative and explore lesser-known aspects of the topic.
+For variety, this quiz (session {actualSeed}) should include some questions about: {focus1}, {focus2}, {focus3}
 
 Rules:
 1. Generate EXACTLY 12 questions
-2. Questions 1-4: EASY (common knowledge, most people can answer)
-3. Questions 5-8: MEDIUM (requires some knowledge)
-4. Questions 9-12: HARD (specific knowledge, challenging)
+2. Questions 1-4: EASY - basic facts that most people know (e.g. ""What is the capital of France?"")
+3. Questions 5-8: MEDIUM - requires some knowledge but still accessible
+4. Questions 9-12: HARD - specific knowledge, challenging, can be obscure
 5. Each question has EXACTLY 4 answer options
 6. Only ONE answer is correct
 7. Place the correct answer at a RANDOM position (0-3) for each question
 8. Wrong answers should be plausible but clearly incorrect
 9. No trick questions or ambiguous answers
 10. All facts must be accurate
+
+IMPORTANT: Easy questions (1-4) must be genuinely easy! Common knowledge that anyone would know.
 
 Respond ONLY with JSON in this format:
 {{
@@ -152,12 +153,12 @@ Respond ONLY with JSON in this format:
 
 correct is the index (0-3) of the correct answer in the options array.";
 
-        var userMessage = $"Generate 12 unique quiz questions about: {category}. Session ID: {actualSeed}. Make them different from typical questions about this topic.";
+        var userMessage = $"Generate 12 quiz questions about: {category}. Session ID: {actualSeed}.";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
             new[] { new AIMessage { Role = "user", Content = userMessage } },
-            new AIRequestOptions { Temperature = 1.0 }
+            new AIRequestOptions { Temperature = 0.9 }
         );
 
         if (string.IsNullOrEmpty(response)) return null;
