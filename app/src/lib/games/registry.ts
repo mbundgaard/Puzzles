@@ -72,7 +72,7 @@ export const games: GameInfo[] = [
 		component: () => import('./02-tents/Tents.svelte'),
 		accentColor: '#22c55e',
 		points: 3,
-		created: '2026-01-10'
+		created: '2025-12-28'
 	},
 	{
 		id: '03-sudoku',
@@ -92,7 +92,7 @@ export const games: GameInfo[] = [
 		component: () => import('./05-2048/Game2048.svelte'),
 		accentColor: '#ffd700',
 		points: 3,
-		created: '2026-01-10'
+		created: '2025-12-28'
 	},
 	{
 		id: '06-minestryger',
@@ -255,8 +255,7 @@ export const games: GameInfo[] = [
 		component: () => import('./24-tangram/Tangram.svelte'),
 		accentColor: '#a855f7',
 		points: 5,
-		created: '2025-12-30',
-		updated: '2026-01-06'
+		created: '2025-12-30'
 	},
 	{
 		id: '25-saenke-slagskibe',
