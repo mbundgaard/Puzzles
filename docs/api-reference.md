@@ -25,11 +25,10 @@ Protected endpoints are marked with 🔐 below.
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| POST | `/api/feedback` | Submit feedback `{game?, rating, text?, nickname?}` → creates GitHub issue |
+| POST | `/api/feedback` | Submit feedback `{game?, text?, nickname?}` → creates GitHub issue |
 | POST | `/api/issue/create` | 🔐 Create issue `{title, body, label?}` → `{issueNumber}` |
 | POST | `/api/issue/edit` | 🔐 Edit issue `{issueNumber, title?, body?, state?, label?}` |
 | POST | `/api/issue/close` | 🔐 Close issue with comment `{issueNumber, comment}` |
-| POST | `/api/issue/delete` | 🔐 Delete issue `{issueNumber}` |
 
 **Valid labels:** `Game feedback`, `General feedback`, `Suggest new game`
 
