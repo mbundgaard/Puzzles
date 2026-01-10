@@ -124,7 +124,6 @@ export function trackComplete(game: string): void {
 // ============ Feedback ============
 
 export interface FeedbackOptions {
-	rating: number;
 	text?: string;
 	nickname?: string;
 }
@@ -143,7 +142,6 @@ export async function submitFeedback(game: string | null, options: FeedbackOptio
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				game: game || undefined,
-				rating: options.rating,
 				text: options.text || undefined,
 				nickname: nickname || undefined
 			})

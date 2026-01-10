@@ -22,7 +22,6 @@
 
 	let category = $state<FeedbackCategory>('general');
 	let selectedGame = $state('');
-	let rating = $state(0);
 	let comment = $state('');
 	let submitting = $state(false);
 	let submitted = $state(false);
@@ -38,7 +37,6 @@
 			// Reset form when opening
 			category = 'general';
 			selectedGame = '';
-			rating = 0;
 			comment = '';
 			submitted = false;
 			submitting = false;
@@ -47,11 +45,6 @@
 	});
 
 	async function handleSubmit() {
-		if (category !== 'newGame' && rating === 0) {
-			errorMessage = tr('feedback.ratingRequired');
-			return;
-		}
-
 		if (category === 'newGame' && !comment.trim()) {
 			errorMessage = tr('feedback.descriptionRequired');
 			return;
@@ -69,7 +62,6 @@
 			}
 
 			const result = await submitFeedback(gameId, {
-				rating: category === 'newGame' ? 5 : rating,
 				text: comment.trim() || undefined
 			});
 
@@ -92,10 +84,6 @@
 		if (e.target === e.currentTarget) {
 			onClose();
 		}
-	}
-
-	function setRating(value: number) {
-		rating = value;
 	}
 </script>
 
@@ -157,25 +145,6 @@
 									<option value={game.id}>{game.name}</option>
 								{/each}
 							</select>
-						</div>
-					{/if}
-
-					<!-- Rating (not for new game suggestions) -->
-					{#if category !== 'newGame'}
-						<div class="field">
-							<label>{tr('feedback.rating')}</label>
-							<div class="stars">
-								{#each [1, 2, 3, 4, 5] as star}
-									<button
-										class="star"
-										class:filled={star <= rating}
-										onclick={() => setRating(star)}
-										aria-label="{star} stars"
-									>
-										★
-									</button>
-								{/each}
-							</div>
 						</div>
 					{/if}
 
@@ -340,29 +309,6 @@
 	select option {
 		background: #1e1e3f;
 		color: white;
-	}
-
-	.stars {
-		display: flex;
-		gap: 8px;
-	}
-
-	.star {
-		font-size: 2rem;
-		background: none;
-		border: none;
-		color: rgba(255, 255, 255, 0.2);
-		cursor: pointer;
-		padding: 0;
-		transition: all 0.15s ease;
-	}
-
-	.star:active {
-		transform: scale(1.2);
-	}
-
-	.star.filled {
-		color: #fbbf24;
 	}
 
 	textarea {

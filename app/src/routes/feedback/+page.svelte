@@ -55,7 +55,6 @@
 			}
 
 			const result = await submitFeedback(gameId, {
-				rating: 5, // Default rating
 				text: comment.trim() || undefined
 			});
 

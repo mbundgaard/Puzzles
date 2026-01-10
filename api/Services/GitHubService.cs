@@ -36,7 +36,7 @@ public class GitHubService : IGitHubService
         }
     }
 
-    public async Task<bool> CreateFeedbackIssueAsync(string? game, int? rating, string? text, string? nickname,
+    public async Task<bool> CreateFeedbackIssueAsync(string? game, string? text, string? nickname,
         string? aiTitle = null, string? aiTranslation = null)
     {
         if (string.IsNullOrEmpty(_token))
@@ -103,10 +103,10 @@ public class GitHubService : IGitHubService
             }
             body.AppendLine();
 
-            // Show rating if provided (for game-specific feedback only)
-            if (!isGameSuggestion && !isGeneralFeedback && rating.HasValue)
+            // Show game number and name for game-specific feedback
+            if (!isGameSuggestion && !isGeneralFeedback && gameName != null)
             {
-                body.AppendLine($"**Rating:** {new string('⭐', rating.Value)} ({rating.Value}/5)");
+                body.AppendLine($"**Game:** {game} - {gameName}");
                 body.AppendLine();
             }
 

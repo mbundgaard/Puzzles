@@ -9,13 +9,12 @@ public interface IGitHubService
     /// Creates a GitHub issue for feedback.
     /// </summary>
     /// <param name="game">Game number: "00" = new game suggestion, "01"-"99" = game-specific, null = general feedback</param>
-    /// <param name="rating">Optional rating 1-5</param>
     /// <param name="text">Optional feedback text (original)</param>
     /// <param name="nickname">Optional nickname</param>
     /// <param name="aiTitle">Optional AI-generated title</param>
     /// <param name="aiTranslation">Optional AI-translated text (English)</param>
     /// <returns>True if issue was created successfully</returns>
-    Task<bool> CreateFeedbackIssueAsync(string? game, int? rating, string? text, string? nickname,
+    Task<bool> CreateFeedbackIssueAsync(string? game, string? text, string? nickname,
         string? aiTitle = null, string? aiTranslation = null);
 
     /// <summary>
