@@ -32,7 +32,7 @@
 
 	page.subscribe((value) => {
 		const newIsGamePage = value.url.pathname.includes('/spil/');
-		const newIsHomePage = value.url.pathname === `${base}/` || value.url.pathname === `${base}`;
+		const newIsHomePage = value.url.pathname === `${base}/` || value.url.pathname === `${base}` || value.url.pathname === `${base}/index.html`;
 
 		// Check if returning from game to home - trigger silent version check
 		if (wasOnGamePage && newIsHomePage && !newIsGamePage) {

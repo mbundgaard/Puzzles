@@ -33,7 +33,7 @@
 
 	function isActive(tabPath: string): boolean {
 		if (tabPath === `${base}/`) {
-			return currentPath === `${base}/` || currentPath === `${base}` || currentPath.startsWith(`${base}/spil`);
+			return currentPath === `${base}/` || currentPath === `${base}` || currentPath === `${base}/index.html` || currentPath.startsWith(`${base}/spil`);
 		}
 		return currentPath.startsWith(tabPath);
 	}
