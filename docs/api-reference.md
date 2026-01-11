@@ -52,12 +52,44 @@ Protected endpoints are marked with 🔐 below.
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| POST | `/api/game/04/generate` | Generate quiz `{language, category, seed?}` → 12 questions |
+| POST | `/api/game/04/generate` | Generate quiz (see details below) |
 | POST | `/api/game/10/word` | Get word for Ordleg `{length, difficulty, category}` |
 | POST | `/api/game/26/pick` | Pick animal `{category?, difficulty?}` |
 | POST | `/api/game/26/ask` | Ask about animal `{animal, question}` → yes/no/maybe |
 | POST | `/api/game/26/hint` | Get hint `{animal, previousHints?}` |
 | POST | `/api/game/27/generate` | Generate word search `{difficulty}` → grid + words |
+
+### Quiz Master (`/api/game/04/generate`)
+
+**Request:**
+```json
+{
+  "language": "da",           // Required: da, en, or fr
+  "categoryId": "K01",        // Required: Category ID (K=kids, A=adults)
+  "category": "Dyreriget",    // Required: Category name for AI prompt
+  "difficulty": 3,            // Optional: 1-5 (default: 3)
+  "count": 4,                 // Optional: 1-20 questions (default: 4)
+  "nickname": "player1"       // Optional: For tracking asked questions
+}
+```
+
+**Response:**
+```json
+{
+  "questions": [
+    {
+      "question": "What is the largest mammal?",
+      "options": ["Elephant", "Blue whale", "Giraffe", "Hippo"],
+      "correct": 1
+    }
+  ]
+}
+```
+
+**Notes:**
+- Questions are tracked per user/category/day to avoid repeats
+- CategoryId prefix determines audience: "K" = kids (ages 8-12), "A" = adults
+- Difficulty affects question complexity and AI prompt guidance
 
 ## API Functions (Frontend)
 
