@@ -13,7 +13,6 @@ public class AzureOpenAIService : IAIService
     private readonly ILogger<AzureOpenAIService> _logger;
     private readonly string? _endpoint;
     private readonly string? _apiKey;
-    private readonly string _deploymentName;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -28,7 +27,6 @@ public class AzureOpenAIService : IAIService
         _logger = logger;
         _endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
         _apiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
-        _deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
     }
 
     public async Task<string?> GenerateAsync(string systemMessage, AIMessage[] messages, AIRequestOptions? options = null)
@@ -77,7 +75,7 @@ public class AzureOpenAIService : IAIService
             var json = JsonSerializer.Serialize(requestBody, JsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = $"{_endpoint!.TrimEnd('/')}/openai/deployments/{_deploymentName}/chat/completions?api-version=2025-01-01-preview";
+            var url = $"{_endpoint!.TrimEnd('/')}/openai/deployments/{options.Model}/chat/completions?api-version=2025-01-01-preview";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = content;

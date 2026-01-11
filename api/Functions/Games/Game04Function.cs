@@ -209,7 +209,7 @@ correct is the index (0-3) of the correct answer in the options array.";
         var response = await _aiService.GenerateAsync(
             systemPrompt,
             new[] { new AIMessage { Role = "user", Content = userMessage } },
-            new AIRequestOptions { Temperature = 0.9 }
+            new AIRequestOptions { Model = "gpt-4.1", Temperature = 0.9 }
         );
 
         if (string.IsNullOrEmpty(response)) return null;

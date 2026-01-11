@@ -22,6 +22,12 @@ public class AIMessage
 public class AIRequestOptions
 {
     /// <summary>
+    /// The model/deployment to use (e.g., "gpt-4.1", "gpt-4.1-mini").
+    /// Defaults to "gpt-4.1-mini" if not specified.
+    /// </summary>
+    public string Model { get; set; } = "gpt-4.1-mini";
+
+    /// <summary>
     /// Temperature for response randomness (0.0 = deterministic, 1.0 = creative).
     /// </summary>
     public double Temperature { get; set; } = 0.7;
