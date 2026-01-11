@@ -114,6 +114,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"89": "All games now appear in feedback dropdown",
 		"55": "Added Quiz Master - Millionaire-style trivia game with AI-generated questions",
 		"71": "Added 'Give Up' button to Word Search that reveals all words",
 		"86": "Added favorite games - tap the heart to pin games to the top",

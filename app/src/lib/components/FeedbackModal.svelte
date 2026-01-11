@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
 	import { submitFeedback } from '$lib/api';
+	import { games } from '$lib/games/registry';
 
 	interface Props {
 		isOpen: boolean;
@@ -27,10 +28,14 @@
 	let submitted = $state(false);
 	let errorMessage = $state('');
 
-	// Available games for feedback
-	const games = [
-		{ id: '11', name: 'Kryds og Bolle' }
-	];
+	// Games sorted alphabetically by translated name
+	function getSortedGames() {
+		return [...games].sort((a, b) => {
+			const nameA = tr(`games.${a.id}.title`);
+			const nameB = tr(`games.${b.id}.title`);
+			return nameA.localeCompare(nameB);
+		});
+	}
 
 	$effect(() => {
 		if (isOpen) {
@@ -141,8 +146,8 @@
 							<label>{tr('feedback.selectGame')}</label>
 							<select bind:value={selectedGame}>
 								<option value="">--</option>
-								{#each games as game}
-									<option value={game.id}>{game.name}</option>
+								{#each getSortedGames() as game}
+									<option value={game.number}>{tr(`games.${game.id}.title`)}</option>
 								{/each}
 							</select>
 						</div>
