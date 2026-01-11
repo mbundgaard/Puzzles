@@ -2,7 +2,6 @@
 	import type { Translations } from '$lib/i18n';
 	import { trackStart, trackComplete } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
-	import { onMount } from 'svelte';
 
 	interface Props {
 		translations: Translations;
@@ -25,6 +24,8 @@
 	let showWinModal = $state(false);
 
 	// Quiz data
+	type AudienceMode = 'kids' | 'adults';
+	let audienceMode = $state<AudienceMode | null>(null);
 	let availableCategories = $state<string[]>([]);
 	let selectedCategory = $state('');
 	let questions = $state<Array<{question: string; options: string[]; correct: number}>>([]);
@@ -89,15 +90,16 @@
 	}
 
 	// Get today's categories (same for everyone, changes daily)
-	function getDailyCategories(): string[] {
-		const allCategories = (translations as Record<string, unknown>)['categories'] as string[];
+	function getDailyCategories(mode: AudienceMode): string[] {
+		const categoriesObj = (translations as Record<string, unknown>)['categories'] as Record<string, string[]>;
+		const allCategories = categoriesObj?.[mode];
 		if (!Array.isArray(allCategories) || allCategories.length === 0) {
 			return [];
 		}
 
-		// Use today's date as seed
+		// Use today's date + mode as seed (so kids and adults get different categories)
 		const today = new Date().toISOString().split('T')[0]; // "2026-01-10"
-		const seed = hashString(today);
+		const seed = hashString(today + mode);
 		const random = seededRandom(seed);
 
 		// Seeded shuffle using Fisher-Yates
@@ -110,10 +112,11 @@
 		return shuffled.slice(0, 4);
 	}
 
-	// Initialize categories on mount
-	onMount(() => {
-		availableCategories = getDailyCategories();
-	});
+	// Select audience mode and load categories
+	function selectAudience(mode: AudienceMode) {
+		audienceMode = mode;
+		availableCategories = getDailyCategories(mode);
+	}
 
 	async function startGame(category: string) {
 		selectedCategory = category;
@@ -256,6 +259,8 @@
 	function newGame() {
 		stopTimer();
 		gamePhase = 'select';
+		audienceMode = null;
+		availableCategories = [];
 		questions = [];
 		currentQuestionIndex = 0;
 		selectedAnswer = null;
@@ -263,7 +268,6 @@
 		bankedPoints = 0;
 		checkpointValue = 0;
 		showWinModal = false;
-		// Categories stay the same (daily categories)
 	}
 
 	function getAnswerClass(index: number): string {
@@ -284,19 +288,39 @@
 	{#if gamePhase === 'select'}
 		<!-- Category Selection Screen -->
 		<div class="select-screen">
-			<h2>{t('todaysCategories')}</h2>
-
-			<div class="category-grid">
-				{#each availableCategories as category}
-					<button
-						class="category-btn"
-						onclick={() => startGame(category)}
-						disabled={isLoading}
-					>
-						{category}
+			{#if audienceMode === null}
+				<!-- Audience Selection -->
+				<h2>{t('audience.title')}</h2>
+				<div class="audience-grid">
+					<button class="audience-btn kids" onclick={() => selectAudience('kids')}>
+						<span class="audience-icon">&#128118;</span>
+						<span class="audience-label">{t('audience.kids')}</span>
 					</button>
-				{/each}
-			</div>
+					<button class="audience-btn adults" onclick={() => selectAudience('adults')}>
+						<span class="audience-icon">&#129489;</span>
+						<span class="audience-label">{t('audience.adults')}</span>
+					</button>
+				</div>
+			{:else}
+				<!-- Category Selection -->
+				<h2>{t('todaysCategories')}</h2>
+
+				<div class="category-grid">
+					{#each availableCategories as category}
+						<button
+							class="category-btn"
+							onclick={() => startGame(category)}
+							disabled={isLoading}
+						>
+							{category}
+						</button>
+					{/each}
+				</div>
+
+				<button class="back-btn" onclick={() => { audienceMode = null; availableCategories = []; }}>
+					&#8592; {t('audience.title')}
+				</button>
+			{/if}
 
 			<div class="rules">
 				<h3>{t('rules.title')}</h3>
@@ -511,6 +535,68 @@
 	.category-btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
+	}
+
+	/* Audience Selection */
+	.audience-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.audience-btn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		padding: 2rem 1.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		border: 2px solid rgba(255, 215, 0, 0.4);
+		border-radius: 16px;
+		color: white;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		min-height: 140px;
+	}
+
+	.audience-btn.kids {
+		background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+		border-color: rgba(34, 197, 94, 0.4);
+	}
+
+	.audience-btn.adults {
+		background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+		border-color: rgba(99, 102, 241, 0.4);
+	}
+
+	.audience-btn:active {
+		transform: scale(0.98);
+	}
+
+	.audience-icon {
+		font-size: 3rem;
+	}
+
+	.audience-label {
+		font-size: 1.25rem;
+	}
+
+	.back-btn {
+		margin-top: 1rem;
+		padding: 0.75rem 1.5rem;
+		font-size: 0.95rem;
+		background: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		color: rgba(255, 255, 255, 0.7);
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.back-btn:active {
+		background: rgba(255, 255, 255, 0.1);
 	}
 
 	.rules {

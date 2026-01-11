@@ -114,6 +114,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"93": "Quiz Mester har nu separate kategorier til børn og voksne",
 		"91": "Feedback får nu automatisk labels i GitHub",
 		"89": "Alle spil vises nu i feedback-dropdown",
 		"55": "Tilføjet Quiz Mester - Millionær-stil quizspil med AI-genererede spørgsmål",

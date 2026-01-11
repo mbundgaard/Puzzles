@@ -24,6 +24,7 @@
 	// Add new entries at the TOP of this array
 	// NOTE: Text is stored in translation files under changelog.[issue] keys
 	const changelogEntries = [
+		{ issue: 93, closedAt: '2026-01-11T18:00:00Z', submitter: 'Martin' },
 		{ issue: 91, closedAt: '2026-01-11T14:00:00Z', submitter: 'Martin' },
 		{ issue: 89, closedAt: '2026-01-11T12:00:00Z', submitter: 'Martin' },
 		{ issue: 55, closedAt: '2026-01-11T00:30:00Z', submitter: 'Sara' },
