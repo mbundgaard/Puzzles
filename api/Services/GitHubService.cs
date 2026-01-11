@@ -92,21 +92,20 @@ public class GitHubService : IGitHubService
             if (isGameSuggestion)
             {
                 body.AppendLine("## Game Suggestion");
+                body.AppendLine();
             }
             else if (isGeneralFeedback)
             {
                 body.AppendLine("## General Feedback");
+                body.AppendLine();
             }
             else
             {
-                body.AppendLine($"## Feedback for Game {game}");
-            }
-            body.AppendLine();
-
-            // Show game number and name for game-specific feedback
-            if (!isGameSuggestion && !isGeneralFeedback && gameName != null)
-            {
-                body.AppendLine($"**Game:** {game} - {gameName}");
+                body.AppendLine(gameName != null
+                    ? $"## Feedback for Game {game} - {gameName}"
+                    : $"## Feedback for Game {game}");
+                body.AppendLine();
+                body.AppendLine($"**Game:** {game}{(gameName != null ? $" - {gameName}" : "")}");
                 body.AppendLine();
             }
 
