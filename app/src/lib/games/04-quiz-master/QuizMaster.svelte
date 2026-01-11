@@ -131,6 +131,7 @@
 				body: JSON.stringify({
 					language: getLanguage(),
 					category: category,
+					audience: audienceMode,
 					seed: seed
 				})
 			});

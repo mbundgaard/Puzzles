@@ -68,11 +68,11 @@ public class Game04Function
         // Try up to 3 times to generate valid questions
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var questions = await GenerateQuestionsAsync(request.Language, request.Category, request.Seed);
+            var questions = await GenerateQuestionsAsync(request.Language, request.Category, request.Audience, request.Seed);
             if (questions != null && questions.Count == 12)
             {
-                _logger.LogInformation("Quiz generated: {Category} ({Language}), attempt {Attempt}",
-                    request.Category, request.Language, attempt + 1);
+                _logger.LogInformation("Quiz generated: {Category} ({Language}, {Audience}), attempt {Attempt}",
+                    request.Category, request.Language, request.Audience ?? "adults", attempt + 1);
 
                 return new OkObjectResult(new QuizGenerateResponse
                 {
@@ -104,7 +104,7 @@ public class Game04Function
         "technical details"
     };
 
-    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, int? seed)
+    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, string? audience, int? seed)
     {
         var outputLanguage = language.ToLower() switch
         {
@@ -114,23 +114,39 @@ public class Game04Function
             _ => "English"
         };
 
+        var isKids = audience?.ToLower() == "kids";
+
         // Use seed to select different focus areas for variety
         var actualSeed = seed ?? Random.Shared.Next();
         var focus1 = FocusAreas[actualSeed % FocusAreas.Length];
         var focus2 = FocusAreas[(actualSeed / 10) % FocusAreas.Length];
         var focus3 = FocusAreas[(actualSeed / 100) % FocusAreas.Length];
 
+        var audienceGuidance = isKids
+            ? @"TARGET AUDIENCE: CHILDREN (ages 8-12)
+- Use simple, clear language appropriate for children
+- Focus on fun, engaging facts that kids find interesting
+- Avoid complex vocabulary, abstract concepts, or adult themes
+- Questions should be educational but entertaining
+- Use concrete examples kids can relate to"
+            : @"TARGET AUDIENCE: ADULTS
+- Questions can include complex topics and vocabulary
+- Include historical dates, technical details, and nuanced facts
+- Challenge players with deeper knowledge";
+
         var systemPrompt = $@"You are a quiz generator. Generate exactly 12 trivia questions about: {category}
 
 IMPORTANT: Write all questions and answers in {outputLanguage}.
+
+{audienceGuidance}
 
 For variety, this quiz (session {actualSeed}) should include some questions about: {focus1}, {focus2}, {focus3}
 
 Rules:
 1. Generate EXACTLY 12 questions
-2. Questions 1-4: EASY - basic facts that most people know (e.g. ""What is the capital of France?"")
-3. Questions 5-8: MEDIUM - requires some knowledge but still accessible
-4. Questions 9-12: HARD - specific knowledge, challenging, can be obscure
+2. Questions 1-4: EASY - basic facts{(isKids ? " that children would learn in school" : " that most people know")}
+3. Questions 5-8: MEDIUM - requires some knowledge but still accessible{(isKids ? " to children" : "")}
+4. Questions 9-12: HARD - {(isKids ? "challenging for children but still age-appropriate" : "specific knowledge, challenging, can be obscure")}
 5. Each question has EXACTLY 4 answer options
 6. Only ONE answer is correct
 7. Place the correct answer at a RANDOM position (0-3) for each question
@@ -200,6 +216,7 @@ correct is the index (0-3) of the correct answer in the options array.";
     {
         public string Language { get; set; } = "";
         public string Category { get; set; } = "";
+        public string? Audience { get; set; }
         public int? Seed { get; set; }
     }
 
