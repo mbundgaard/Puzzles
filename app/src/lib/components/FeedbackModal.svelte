@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
 	import { submitFeedback } from '$lib/api';
-	import { games } from '$lib/games/registry';
 
 	interface Props {
 		isOpen: boolean;
@@ -19,29 +18,14 @@
 		return translate(translations, key);
 	}
 
-	type FeedbackCategory = 'general' | 'game' | 'newGame';
-
-	let category = $state<FeedbackCategory>('general');
-	let selectedGame = $state('');
 	let comment = $state('');
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let errorMessage = $state('');
 
-	// Games sorted alphabetically by translated name
-	function getSortedGames() {
-		return [...games].sort((a, b) => {
-			const nameA = tr(`games.${a.id}.title`);
-			const nameB = tr(`games.${b.id}.title`);
-			return nameA.localeCompare(nameB);
-		});
-	}
-
 	$effect(() => {
 		if (isOpen) {
 			// Reset form when opening
-			category = 'general';
-			selectedGame = '';
 			comment = '';
 			submitted = false;
 			submitting = false;
@@ -50,23 +34,11 @@
 	});
 
 	async function handleSubmit() {
-		if (category === 'newGame' && !comment.trim()) {
-			errorMessage = tr('feedback.descriptionRequired');
-			return;
-		}
-
 		submitting = true;
 		errorMessage = '';
 
 		try {
-			let gameId: string | null = null;
-			if (category === 'game' && selectedGame) {
-				gameId = selectedGame;
-			} else if (category === 'newGame') {
-				gameId = '00'; // Special code for new game suggestions
-			}
-
-			const result = await submitFeedback(gameId, {
+			const result = await submitFeedback(null, {
 				text: comment.trim() || undefined
 			});
 
@@ -112,53 +84,12 @@
 				</div>
 			{:else}
 				<div class="form">
-					<!-- Category Selection -->
-					<div class="field">
-						<label>{tr('feedback.category')}</label>
-						<div class="category-buttons">
-							<button
-								class="category-btn"
-								class:active={category === 'general'}
-								onclick={() => category = 'general'}
-							>
-								{tr('feedback.categories.general')}
-							</button>
-							<button
-								class="category-btn"
-								class:active={category === 'game'}
-								onclick={() => category = 'game'}
-							>
-								{tr('feedback.categories.game')}
-							</button>
-							<button
-								class="category-btn"
-								class:active={category === 'newGame'}
-								onclick={() => category = 'newGame'}
-							>
-								{tr('feedback.categories.newGame')}
-							</button>
-						</div>
-					</div>
-
-					<!-- Game Selection (only for game feedback) -->
-					{#if category === 'game'}
-						<div class="field">
-							<label>{tr('feedback.selectGame')}</label>
-							<select bind:value={selectedGame}>
-								<option value="">--</option>
-								{#each getSortedGames() as game}
-									<option value={game.number}>{tr(`games.${game.id}.title`)}</option>
-								{/each}
-							</select>
-						</div>
-					{/if}
-
 					<!-- Comment -->
 					<div class="field">
 						<label>{tr('feedback.comment')}</label>
 						<textarea
 							bind:value={comment}
-							placeholder={category === 'newGame' ? tr('feedback.suggestionPlaceholder') : tr('feedback.commentPlaceholder')}
+							placeholder={tr('feedback.commentPlaceholder')}
 							rows="4"
 							disabled={submitting}
 						></textarea>
@@ -269,51 +200,6 @@
 		font-size: 0.85rem;
 		color: rgba(255, 255, 255, 0.6);
 		font-weight: 500;
-	}
-
-	.category-buttons {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
-
-	.category-btn {
-		flex: 1;
-		min-width: 100px;
-		padding: 10px 12px;
-		background: rgba(255, 255, 255, 0.08);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
-		color: rgba(255, 255, 255, 0.7);
-		font-size: 0.85rem;
-		font-family: 'Poppins', sans-serif;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.category-btn:active {
-		transform: scale(0.98);
-	}
-
-	.category-btn.active {
-		background: rgba(236, 72, 153, 0.2);
-		border-color: rgba(236, 72, 153, 0.4);
-		color: white;
-	}
-
-	select {
-		padding: 12px 15px;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 10px;
-		color: white;
-		font-size: 1rem;
-		font-family: 'Poppins', sans-serif;
-	}
-
-	select option {
-		background: #1e1e3f;
-		color: white;
 	}
 
 	textarea {

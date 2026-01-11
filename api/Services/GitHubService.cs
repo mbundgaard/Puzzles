@@ -120,7 +120,7 @@ public class GitHubService : IGitHubService
                 if (!string.IsNullOrWhiteSpace(text) && text != aiTranslation)
                 {
                     body.AppendLine("<details>");
-                    body.AppendLine("<summary>Original (Danish)</summary>");
+                    body.AppendLine("<summary>Original</summary>");
                     body.AppendLine();
                     body.AppendLine(text);
                     body.AppendLine("</details>");
