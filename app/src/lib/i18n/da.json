@@ -114,6 +114,8 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"96": "Quiz Mester går nu direkte til kategorivalg efter et spil i stedet for tilbage til børn/voksne",
+		"97": "Quiz Mester AI opgraderet til GPT-4.1 for klogere og mere præcise svar",
 		"92": "Quiz Mester husker nu hvilke spørgsmål du har fået, så du ikke får de samme igen samme dag",
 		"93": "Quiz Mester har nu separate kategorier til børn og voksne",
 		"91": "Feedback får nu automatisk labels i GitHub",

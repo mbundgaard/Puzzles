@@ -114,6 +114,8 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"96": "Quiz Master now goes directly to category selection after a game instead of back to kids/adults",
+		"97": "Quiz Master AI upgraded to GPT-4.1 for smarter and more accurate responses",
 		"92": "Quiz Master now remembers which questions you've been asked, so you won't get the same ones again the same day",
 		"93": "Quiz Master now has separate categories for kids and adults",
 		"91": "Feedback now automatically gets labels in GitHub",

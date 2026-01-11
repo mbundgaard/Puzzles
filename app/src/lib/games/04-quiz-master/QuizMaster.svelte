@@ -246,8 +246,7 @@
 	function newGame() {
 		stopTimer();
 		gamePhase = 'select';
-		audienceMode = null;
-		availableCategories = [];
+		// Keep audienceMode and availableCategories so player goes to category selection
 		selectedCategory = null;
 		selectedDifficulty = null;
 		questions = [];
