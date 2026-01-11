@@ -133,7 +133,6 @@
 					language: getLanguage(),
 					categoryId: category.id,
 					category: category.name,
-					audience: audienceMode,
 					seed: seed
 				})
 			});

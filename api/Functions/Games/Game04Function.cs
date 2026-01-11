@@ -65,14 +65,17 @@ public class Game04Function
             return new ObjectResult(new { error = "AI service not configured" }) { StatusCode = 503 };
         }
 
+        // Derive audience from category ID (K = kids, A = adults)
+        var isKids = request.CategoryId?.StartsWith("K", StringComparison.OrdinalIgnoreCase) == true;
+
         // Try up to 3 times to generate valid questions
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var questions = await GenerateQuestionsAsync(request.Language, request.Category, request.Audience, request.Seed);
+            var questions = await GenerateQuestionsAsync(request.Language, request.Category, isKids, request.Seed);
             if (questions != null && questions.Count == 12)
             {
-                _logger.LogInformation("Quiz generated: {Category} ({Language}, {Audience}), attempt {Attempt}",
-                    request.Category, request.Language, request.Audience ?? "adults", attempt + 1);
+                _logger.LogInformation("Quiz generated: {CategoryId} {Category} ({Language}, {Audience}), attempt {Attempt}",
+                    request.CategoryId, request.Category, request.Language, isKids ? "kids" : "adults", attempt + 1);
 
                 return new OkObjectResult(new QuizGenerateResponse
                 {
@@ -104,7 +107,7 @@ public class Game04Function
         "technical details"
     };
 
-    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, string? audience, int? seed)
+    private async Task<List<QuizQuestion>?> GenerateQuestionsAsync(string language, string category, bool isKids, int? seed)
     {
         var outputLanguage = language.ToLower() switch
         {
@@ -113,8 +116,6 @@ public class Game04Function
             "fr" => "French",
             _ => "English"
         };
-
-        var isKids = audience?.ToLower() == "kids";
 
         // Use seed to select different focus areas for variety
         var actualSeed = seed ?? Random.Shared.Next();
@@ -215,8 +216,8 @@ correct is the index (0-3) of the correct answer in the options array.";
     private class QuizGenerateRequest
     {
         public string Language { get; set; } = "";
+        public string? CategoryId { get; set; }
         public string Category { get; set; } = "";
-        public string? Audience { get; set; }
         public int? Seed { get; set; }
     }
 
