@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
-	import { trackStart, trackComplete } from '$lib/api';
+	import { trackStart, trackComplete, getApiBase } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
 
 	interface Props {
@@ -75,7 +75,7 @@
 		phase = 'loading';
 
 		try {
-			const response = await fetch('https://puzzlesapi.azurewebsites.net/api/game/27/generate', {
+			const response = await fetch(`${getApiBase()}/game/27/generate`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ difficulty })

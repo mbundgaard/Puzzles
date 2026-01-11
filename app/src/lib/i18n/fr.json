@@ -114,6 +114,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"94": "Mots Cachés affiche maintenant les 8 mots de manière fiable dans plusieurs directions",
 		"96": "Maître du Quiz va maintenant directement à la sélection de catégorie après un jeu",
 		"97": "L'IA de Maître du Quiz mise à niveau vers GPT-4.1 pour des réponses plus intelligentes",
 		"92": "Maître du Quiz mémorise maintenant les questions posées pour ne pas les répéter le même jour",
