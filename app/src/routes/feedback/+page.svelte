@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import PageHeader from '$lib/components/PageHeader.svelte';
+	import { games } from '$lib/games/registry';
 
 	let translations = $state<Translations>({});
 	t.subscribe((value) => {
@@ -23,10 +24,14 @@
 	let submitted = $state(false);
 	let errorMessage = $state('');
 
-	// Available games for feedback
-	const games = [
-		{ id: '11', name: 'Kryds og Bolle' }
-	];
+	// Games sorted alphabetically by translated name
+	function getSortedGames() {
+		return [...games].sort((a, b) => {
+			const nameA = tr(`games.${a.id}.title`);
+			const nameB = tr(`games.${b.id}.title`);
+			return nameA.localeCompare(nameB);
+		});
+	}
 
 	function resetForm() {
 		category = 'general';
@@ -125,8 +130,8 @@
 						<label for="game-select">{tr('feedback.selectGame')}</label>
 						<select id="game-select" bind:value={selectedGame}>
 							<option value="">--</option>
-							{#each games as game}
-								<option value={game.id}>{game.name}</option>
+							{#each getSortedGames() as game}
+								<option value={game.number}>{tr(`games.${game.id}.title`)}</option>
 							{/each}
 						</select>
 					</div>
