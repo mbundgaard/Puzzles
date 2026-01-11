@@ -57,6 +57,9 @@ public class FeedbackFunction
             return new BadRequestObjectResult(new { error = "Invalid game number" });
         }
 
+        // Get game name from request (caller provides it)
+        var gameName = feedbackRequest.GameName?.Trim();
+
         // Validate text length if provided
         var text = feedbackRequest.Text?.Trim();
         if (text != null && text.Length > 500)
@@ -94,7 +97,7 @@ public class FeedbackFunction
         }
 
         // Create GitHub issue (fire-and-forget, don't block response)
-        _ = _gitHubService.CreateFeedbackIssueAsync(game, text, nickname, aiTitle, aiTranslation);
+        _ = _gitHubService.CreateFeedbackIssueAsync(game, gameName, text, nickname, aiTitle, aiTranslation);
 
         _logger.LogInformation("Feedback submitted: game={Game}, aiProcessed={AiProcessed}",
             game, aiTitle != null);

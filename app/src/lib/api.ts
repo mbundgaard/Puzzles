@@ -134,7 +134,7 @@ export interface FeedbackResponse {
 	error?: string;
 }
 
-export async function submitFeedback(game: string | null, options: FeedbackOptions): Promise<FeedbackResponse> {
+export async function submitFeedback(game: string | null, gameName: string | null, options: FeedbackOptions): Promise<FeedbackResponse> {
 	try {
 		const nickname = options.nickname || getNickname();
 		const response = await fetch(`${API_BASE}/feedback`, {
@@ -142,6 +142,7 @@ export async function submitFeedback(game: string | null, options: FeedbackOptio
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				game: game || undefined,
+				gameName: gameName || undefined,
 				text: options.text || undefined,
 				nickname: nickname || undefined
 			})

@@ -53,13 +53,19 @@
 
 		try {
 			let gameId: string | null = null;
+			let gameName: string | null = null;
 			if (category === 'game' && selectedGame) {
 				gameId = selectedGame;
+				// Find the game and get its translated name
+				const game = games.find(g => g.number === selectedGame);
+				if (game) {
+					gameName = tr(`games.${game.id}.title`);
+				}
 			} else if (category === 'newGame') {
 				gameId = '00'; // Special code for new game suggestions
 			}
 
-			const result = await submitFeedback(gameId, {
+			const result = await submitFeedback(gameId, gameName, {
 				text: comment.trim() || undefined
 			});
 
