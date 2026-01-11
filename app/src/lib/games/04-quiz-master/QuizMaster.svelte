@@ -25,9 +25,10 @@
 
 	// Quiz data
 	type AudienceMode = 'kids' | 'adults';
+	type Category = { id: string; name: string };
 	let audienceMode = $state<AudienceMode | null>(null);
-	let availableCategories = $state<string[]>([]);
-	let selectedCategory = $state('');
+	let availableCategories = $state<Category[]>([]);
+	let selectedCategory = $state<Category | null>(null);
 	let questions = $state<Array<{question: string; options: string[]; correct: number}>>([]);
 	let currentQuestionIndex = $state(0);
 	let selectedAnswer = $state<number | null>(null);
@@ -90,8 +91,8 @@
 	}
 
 	// Get today's categories (same for everyone, changes daily)
-	function getDailyCategories(mode: AudienceMode): string[] {
-		const categoriesObj = (translations as Record<string, unknown>)['categories'] as Record<string, string[]>;
+	function getDailyCategories(mode: AudienceMode): Category[] {
+		const categoriesObj = (translations as Record<string, unknown>)['categories'] as Record<string, Category[]>;
 		const allCategories = categoriesObj?.[mode];
 		if (!Array.isArray(allCategories) || allCategories.length === 0) {
 			return [];
@@ -118,7 +119,7 @@
 		availableCategories = getDailyCategories(mode);
 	}
 
-	async function startGame(category: string) {
+	async function startGame(category: Category) {
 		selectedCategory = category;
 		isLoading = true;
 
@@ -130,7 +131,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					language: getLanguage(),
-					category: category,
+					categoryId: category.id,
+					category: category.name,
 					audience: audienceMode,
 					seed: seed
 				})
@@ -262,6 +264,7 @@
 		gamePhase = 'select';
 		audienceMode = null;
 		availableCategories = [];
+		selectedCategory = null;
 		questions = [];
 		currentQuestionIndex = 0;
 		selectedAnswer = null;
@@ -313,7 +316,7 @@
 							onclick={() => startGame(category)}
 							disabled={isLoading}
 						>
-							{category}
+							{category.name}
 						</button>
 					{/each}
 				</div>
