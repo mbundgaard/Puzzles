@@ -13,4 +13,5 @@ public class FeedbackRequest
     public string? GameName { get; set; }
     public string? Text { get; set; }
     public string? Nickname { get; set; }
+    public string? ImageUrl { get; set; }
 }

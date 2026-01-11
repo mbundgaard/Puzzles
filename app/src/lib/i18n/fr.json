@@ -50,6 +50,12 @@
 		"comment": "Commentaire",
 		"commentPlaceholder": "Écrivez vos commentaires ici... (toutes langues bienvenues, liens OK)",
 		"suggestionPlaceholder": "Décrivez votre idée de jeu... (toutes langues bienvenues, liens OK)",
+		"image": "Image",
+		"addImage": "Ajouter une image",
+		"uploading": "Téléchargement...",
+		"imageInvalidType": "Type de fichier invalide. Utilisez PNG, JPEG, GIF ou WebP",
+		"imageTooLarge": "Image trop grande. Maximum 5 Mo",
+		"imageUploadError": "Impossible de télécharger l'image",
 		"send": "Envoyer",
 		"sending": "Envoi...",
 		"sent": "Merci pour vos commentaires!",
@@ -114,6 +120,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"90": "Les commentaires peuvent maintenant inclure des images",
 		"94": "Mots Cachés affiche maintenant les 8 mots de manière fiable dans plusieurs directions",
 		"96": "Maître du Quiz va maintenant directement à la sélection de catégorie après un jeu",
 		"97": "L'IA de Maître du Quiz mise à niveau vers GPT-4.1 pour des réponses plus intelligentes",

@@ -35,4 +35,7 @@ builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 // Register AI service (Azure OpenAI)
 builder.Services.AddHttpClient<IAIService, AzureOpenAIService>();
 
+// Register blob storage service for feedback images
+builder.Services.AddSingleton<IBlobStorageService, AzureBlobStorageService>();
+
 builder.Build().Run();

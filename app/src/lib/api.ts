@@ -127,11 +127,33 @@ export function trackComplete(game: string): void {
 	trackEvent(game, 'complete');
 }
 
+// ============ Image Upload ============
+
+export interface UploadResponse {
+	url?: string;
+	error?: string;
+}
+
+export async function uploadImage(file: File): Promise<UploadResponse> {
+	try {
+		const response = await fetch(`${getApiBase()}/upload/image`, {
+			method: 'POST',
+			headers: { 'Content-Type': file.type },
+			body: file
+		});
+		return await response.json();
+	} catch (error) {
+		console.warn('Failed to upload image:', error);
+		return { error: 'Upload failed' };
+	}
+}
+
 // ============ Feedback ============
 
 export interface FeedbackOptions {
 	text?: string;
 	nickname?: string;
+	imageUrl?: string;
 }
 
 export interface FeedbackResponse {
@@ -150,7 +172,8 @@ export async function submitFeedback(game: string | null, gameName: string | nul
 				game: game || undefined,
 				gameName: gameName || undefined,
 				text: options.text || undefined,
-				nickname: nickname || undefined
+				nickname: nickname || undefined,
+				imageUrl: options.imageUrl || undefined
 			})
 		});
 		return await response.json();

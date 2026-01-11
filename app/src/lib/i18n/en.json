@@ -50,6 +50,12 @@
 		"comment": "Comment",
 		"commentPlaceholder": "Write your feedback here... (any language welcome, links OK)",
 		"suggestionPlaceholder": "Describe your game idea... (any language welcome, links OK)",
+		"image": "Image",
+		"addImage": "Add image",
+		"uploading": "Uploading...",
+		"imageInvalidType": "Invalid file type. Use PNG, JPEG, GIF or WebP",
+		"imageTooLarge": "Image too large. Maximum 5 MB",
+		"imageUploadError": "Could not upload image",
 		"send": "Send",
 		"sending": "Sending...",
 		"sent": "Thanks for your feedback!",
@@ -114,6 +120,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"90": "Feedback can now include images",
 		"94": "Word Search now reliably shows all 8 words in multiple directions",
 		"96": "Quiz Master now goes directly to category selection after a game instead of back to kids/adults",
 		"97": "Quiz Master AI upgraded to GPT-4.1 for smarter and more accurate responses",

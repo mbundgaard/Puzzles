@@ -14,9 +14,10 @@ public interface IGitHubService
     /// <param name="nickname">Optional nickname</param>
     /// <param name="aiTitle">Optional AI-generated title</param>
     /// <param name="aiTranslation">Optional AI-translated text (English)</param>
+    /// <param name="imageUrl">Optional URL to attached image</param>
     /// <returns>True if issue was created successfully</returns>
     Task<bool> CreateFeedbackIssueAsync(string? game, string? gameName, string? text, string? nickname,
-        string? aiTitle = null, string? aiTranslation = null);
+        string? aiTitle = null, string? aiTranslation = null, string? imageUrl = null);
 
     /// <summary>
     /// Creates a GitHub issue with the specified title, body, and optional label.
