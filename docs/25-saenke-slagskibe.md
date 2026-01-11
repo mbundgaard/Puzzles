@@ -1,4 +1,4 @@
-# Sænke Slagskibe - Multiplayer Battleship
+# 25 - Sænke Slagskibe (Battleship)
 
 Two-player battleship game where players compete on separate devices via the API.
 
