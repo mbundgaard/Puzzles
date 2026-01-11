@@ -211,32 +211,29 @@
 				</div>
 
 				<!-- Image Attachment -->
-				<div class="field">
-					<label>{tr('feedback.image')}</label>
-					{#if imagePreview}
-						<div class="image-preview">
-							<img src={imagePreview} alt="Preview" />
-							<button type="button" class="remove-image" onclick={removeImage} disabled={submitting}>
-								<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-									<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-								</svg>
-							</button>
-						</div>
-					{:else}
-						<label class="image-picker" class:disabled={submitting}>
-							<input
-								type="file"
-								accept="image/png,image/jpeg,image/gif,image/webp"
-								onchange={handleImageSelect}
-								disabled={submitting}
-							/>
-							<svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-								<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+				{#if imagePreview}
+					<div class="image-preview">
+						<img src={imagePreview} alt="Preview" />
+						<button type="button" class="remove-image" onclick={removeImage} disabled={submitting}>
+							<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
 							</svg>
-							<span>{tr('feedback.addImage')}</span>
-						</label>
-					{/if}
-				</div>
+						</button>
+					</div>
+				{:else}
+					<label class="image-picker" class:disabled={submitting}>
+						<input
+							type="file"
+							accept="image/png,image/jpeg,image/gif,image/webp"
+							onchange={handleImageSelect}
+							disabled={submitting}
+						/>
+						<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+							<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+						</svg>
+						<span>{tr('feedback.addImage')}</span>
+					</label>
+				{/if}
 
 				{#if errorMessage}
 					<p class="error">{errorMessage}</p>
@@ -415,22 +412,22 @@
 	}
 
 	.image-picker {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		gap: 10px;
-		padding: 16px;
+		gap: 6px;
+		padding: 8px 14px;
 		background: rgba(255, 255, 255, 0.08);
-		border: 2px dashed rgba(255, 255, 255, 0.2);
-		border-radius: 12px;
-		color: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 20px;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.85rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
 	}
 
 	.image-picker:active:not(.disabled) {
 		background: rgba(255, 255, 255, 0.12);
-		border-color: rgba(236, 72, 153, 0.4);
+		border-color: rgba(255, 255, 255, 0.25);
 	}
 
 	.image-picker.disabled {
@@ -444,10 +441,6 @@
 
 	.image-picker svg {
 		flex-shrink: 0;
-	}
-
-	.image-picker span {
-		font-size: 0.9rem;
 	}
 
 	.image-preview {
