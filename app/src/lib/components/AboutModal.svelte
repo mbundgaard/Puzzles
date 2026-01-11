@@ -124,8 +124,8 @@
 	}
 
 	.section p {
-		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.85);
 		line-height: 1.4;
 		margin: 0;
 	}
