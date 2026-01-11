@@ -143,10 +143,16 @@ public class GitHubService : IGitHubService
                 body.AppendLine($"**From:** {nickname}");
             }
 
+            // Determine label based on feedback type
+            var label = isGameSuggestion ? "Suggest new game"
+                      : isGeneralFeedback ? "General feedback"
+                      : "Game feedback";
+
             var payload = new
             {
                 title,
-                body = body.ToString()
+                body = body.ToString(),
+                labels = new[] { label }
             };
 
             var json = JsonSerializer.Serialize(payload);

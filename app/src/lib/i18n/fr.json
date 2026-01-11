@@ -114,6 +114,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"91": "Les commentaires reçoivent maintenant automatiquement des labels sur GitHub",
 		"89": "Tous les jeux apparaissent maintenant dans le menu déroulant de feedback",
 		"55": "Ajout de Maître du Quiz - jeu de quiz style Millionnaire avec questions générées par IA",
 		"71": "Ajout du bouton 'Abandonner' aux Mots Cachés qui révèle tous les mots",
