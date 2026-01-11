@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IEventStorage>(new AzureTableEventStorage(connecti
 builder.Services.AddSingleton<IVersionStorage>(new AzureTableVersionStorage(connectionString));
 builder.Services.AddSingleton<ISessionStorage>(new AzureTableSessionStorage(connectionString));
 builder.Services.AddSingleton<IBattleshipStorage>(new AzureTableBattleshipStorage(connectionString));
+builder.Services.AddSingleton<IQuizQuestionStorage>(new AzureTableQuizQuestionStorage(connectionString));
 
 // Register admin auth service
 builder.Services.AddSingleton<IAdminAuthService, AdminAuthService>();

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
-	import { trackStart, trackComplete } from '$lib/api';
+	import { trackStart, trackComplete, getNickname } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
 
 	interface Props {
@@ -12,29 +12,37 @@
 	// Constants
 	const GAME_NUMBER = '04';
 	const API_BASE = 'https://puzzlesapi.azurewebsites.net/api/game/04';
-	const QUESTIONS_PER_LEVEL = 4;
-	const TOTAL_QUESTIONS = 12;
-	const LEVEL_POINTS = [2, 4, 7]; // Points for completing each level
-	const TIMER_SECONDS = [15, 20, 25]; // Timer per level (easy, medium, hard)
+	const QUESTIONS_COUNT = 4;
+	const TIMER_SECONDS = 20;
+
+	// Difficulty settings: { apiDifficulty, points }
+	const DIFFICULTY_SETTINGS = {
+		easy: { apiDifficulty: 2, points: 1 },
+		medium: { apiDifficulty: 3, points: 3 },
+		hard: { apiDifficulty: 4, points: 5 }
+	};
 
 	// Game state
-	type GamePhase = 'select' | 'playing' | 'checkpoint' | 'won' | 'lost' | 'walkaway';
+	type GamePhase = 'select' | 'playing' | 'won' | 'lost';
+	type Difficulty = 'easy' | 'medium' | 'hard';
 	let gamePhase = $state<GamePhase>('select');
 	let isLoading = $state(false);
 	let showWinModal = $state(false);
 
-	// Quiz data
+	// Selection state
 	type AudienceMode = 'kids' | 'adults';
 	type Category = { id: string; name: string };
 	let audienceMode = $state<AudienceMode | null>(null);
 	let availableCategories = $state<Category[]>([]);
 	let selectedCategory = $state<Category | null>(null);
+	let selectedDifficulty = $state<Difficulty | null>(null);
+
+	// Quiz data
 	let questions = $state<Array<{question: string; options: string[]; correct: number}>>([]);
 	let currentQuestionIndex = $state(0);
 	let selectedAnswer = $state<number | null>(null);
 	let answerRevealed = $state(false);
-	let bankedPoints = $state(0); // Points that are SAFE (only when walked away)
-	let checkpointValue = $state(0); // Points available to bank at checkpoint
+	let earnedPoints = $state(0);
 
 	// Timer
 	let timeRemaining = $state(0);
@@ -63,13 +71,7 @@
 	}
 
 	// Derived state
-	let currentLevel = $derived(Math.floor(currentQuestionIndex / QUESTIONS_PER_LEVEL));
-	let questionInLevel = $derived(currentQuestionIndex % QUESTIONS_PER_LEVEL);
 	let currentQuestion = $derived(questions[currentQuestionIndex]);
-	let currentTimerMax = $derived(TIMER_SECONDS[currentLevel] || 15);
-	let potentialPoints = $derived(LEVEL_POINTS[currentLevel] || 0);
-	let isLastQuestionInLevel = $derived(questionInLevel === QUESTIONS_PER_LEVEL - 1);
-	let isCheckpoint = $derived(currentQuestionIndex > 0 && currentQuestionIndex % QUESTIONS_PER_LEVEL === 0);
 
 	// Simple hash function for seeding
 	function hashString(str: string): number {
@@ -77,7 +79,7 @@
 		for (let i = 0; i < str.length; i++) {
 			const char = str.charCodeAt(i);
 			hash = ((hash << 5) - hash) + char;
-			hash = hash & hash; // Convert to 32bit integer
+			hash = hash & hash;
 		}
 		return Math.abs(hash);
 	}
@@ -98,12 +100,10 @@
 			return [];
 		}
 
-		// Use today's date + mode as seed (so kids and adults get different categories)
-		const today = new Date().toISOString().split('T')[0]; // "2026-01-10"
+		const today = new Date().toISOString().split('T')[0];
 		const seed = hashString(today + mode);
 		const random = seededRandom(seed);
 
-		// Seeded shuffle using Fisher-Yates
 		const shuffled = [...allCategories];
 		for (let i = shuffled.length - 1; i > 0; i--) {
 			const j = Math.floor(random() * (i + 1));
@@ -119,21 +119,32 @@
 		availableCategories = getDailyCategories(mode);
 	}
 
-	async function startGame(category: Category) {
+	// Select category
+	function selectCategory(category: Category) {
 		selectedCategory = category;
+	}
+
+	// Start game with selected difficulty
+	async function startGame(difficulty: Difficulty) {
+		if (!selectedCategory) return;
+
+		selectedDifficulty = difficulty;
 		isLoading = true;
 
 		try {
-			// Add random seed to ensure question variety
-			const seed = Math.floor(Math.random() * 1000000);
+			const nickname = getNickname();
+			const settings = DIFFICULTY_SETTINGS[difficulty];
+
 			const response = await fetch(`${API_BASE}/generate`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					language: getLanguage(),
-					categoryId: category.id,
-					category: category.name,
-					seed: seed
+					categoryId: selectedCategory.id,
+					category: selectedCategory.name,
+					difficulty: settings.apiDifficulty,
+					count: QUESTIONS_COUNT,
+					nickname: nickname || undefined
 				})
 			});
 
@@ -146,7 +157,7 @@
 			currentQuestionIndex = 0;
 			selectedAnswer = null;
 			answerRevealed = false;
-			bankedPoints = 0;
+			earnedPoints = settings.points;
 			gamePhase = 'playing';
 			trackStart(GAME_NUMBER);
 			startTimer();
@@ -160,7 +171,7 @@
 
 	function startTimer() {
 		stopTimer();
-		timeRemaining = currentTimerMax;
+		timeRemaining = TIMER_SECONDS;
 		timerInterval = setInterval(() => {
 			timeRemaining--;
 			if (timeRemaining <= 0) {
@@ -178,9 +189,8 @@
 	}
 
 	function handleTimeout() {
-		// Time ran out - treat as wrong answer
 		answerRevealed = true;
-		selectedAnswer = -1; // No selection
+		selectedAnswer = -1;
 		setTimeout(() => {
 			endGame(false);
 		}, 1500);
@@ -207,14 +217,9 @@
 	function handleCorrectAnswer() {
 		const nextIndex = currentQuestionIndex + 1;
 
-		if (nextIndex >= TOTAL_QUESTIONS) {
+		if (nextIndex >= questions.length) {
 			// Completed all questions - winner!
-			bankedPoints = LEVEL_POINTS[2]; // 7 points
 			endGame(true);
-		} else if (nextIndex % QUESTIONS_PER_LEVEL === 0) {
-			// Completed a level - checkpoint (points not banked yet!)
-			checkpointValue = LEVEL_POINTS[currentLevel];
-			gamePhase = 'checkpoint';
 		} else {
 			// Next question
 			currentQuestionIndex = nextIndex;
@@ -222,25 +227,6 @@
 			answerRevealed = false;
 			startTimer();
 		}
-	}
-
-	function continueAfterCheckpoint() {
-		currentQuestionIndex++;
-		selectedAnswer = null;
-		answerRevealed = false;
-		gamePhase = 'playing';
-		startTimer();
-	}
-
-	function walkAway() {
-		// Bank the checkpoint value - this makes the points SAFE
-		bankedPoints = checkpointValue;
-		gamePhase = 'walkaway';
-		stopTimer();
-		trackComplete(GAME_NUMBER);
-		setTimeout(() => {
-			showWinModal = true;
-		}, 800);
 	}
 
 	function endGame(won: boolean) {
@@ -252,9 +238,8 @@
 				showWinModal = true;
 			}, 800);
 		} else {
-			// Lost - no points (unless they had banked earlier, but that's not possible in current flow)
 			gamePhase = 'lost';
-			bankedPoints = 0; // Ensure no points on loss
+			earnedPoints = 0;
 		}
 	}
 
@@ -264,13 +249,22 @@
 		audienceMode = null;
 		availableCategories = [];
 		selectedCategory = null;
+		selectedDifficulty = null;
 		questions = [];
 		currentQuestionIndex = 0;
 		selectedAnswer = null;
 		answerRevealed = false;
-		bankedPoints = 0;
-		checkpointValue = 0;
+		earnedPoints = 0;
 		showWinModal = false;
+	}
+
+	function goBack() {
+		if (selectedCategory) {
+			selectedCategory = null;
+		} else if (audienceMode) {
+			audienceMode = null;
+			availableCategories = [];
+		}
 	}
 
 	function getAnswerClass(index: number): string {
@@ -285,14 +279,17 @@
 		}
 		return 'dimmed';
 	}
+
+	function getDifficultyClass(diff: Difficulty): string {
+		return diff;
+	}
 </script>
 
 <div class="game-container">
 	{#if gamePhase === 'select'}
-		<!-- Category Selection Screen -->
 		<div class="select-screen">
 			{#if audienceMode === null}
-				<!-- Audience Selection -->
+				<!-- Step 1: Audience Selection -->
 				<h2>{t('audience.title')}</h2>
 				<div class="audience-grid">
 					<button class="audience-btn kids" onclick={() => selectAudience('kids')}>
@@ -304,36 +301,45 @@
 						<span class="audience-label">{t('audience.adults')}</span>
 					</button>
 				</div>
-			{:else}
-				<!-- Category Selection -->
-				<h2>{t('todaysCategories')}</h2>
 
+			{:else if selectedCategory === null}
+				<!-- Step 2: Category Selection -->
+				<h2>{t('todaysCategories')}</h2>
 				<div class="category-grid">
 					{#each availableCategories as category}
-						<button
-							class="category-btn"
-							onclick={() => startGame(category)}
-							disabled={isLoading}
-						>
+						<button class="category-btn" onclick={() => selectCategory(category)}>
 							{category.name}
 						</button>
 					{/each}
 				</div>
-
-				<button class="back-btn" onclick={() => { audienceMode = null; availableCategories = []; }}>
+				<button class="back-btn" onclick={goBack}>
 					&#8592; {t('audience.title')}
 				</button>
-			{/if}
 
-			<div class="rules">
-				<h3>{t('rules.title')}</h3>
-				<ul>
-					<li>{t('rules.rule1')}</li>
-					<li>{t('rules.rule2')}</li>
-					<li>{t('rules.rule3')}</li>
-					<li>{t('rules.rule4')}</li>
-				</ul>
-			</div>
+			{:else}
+				<!-- Step 3: Difficulty Selection -->
+				<h2>{t('difficulty.title')}</h2>
+				<p class="category-label">{selectedCategory.name}</p>
+
+				<div class="difficulty-grid">
+					<button class="difficulty-btn easy" onclick={() => startGame('easy')} disabled={isLoading}>
+						<span class="difficulty-label">{t('difficulty.easy')}</span>
+						<span class="difficulty-points">1 {t('points')}</span>
+					</button>
+					<button class="difficulty-btn medium" onclick={() => startGame('medium')} disabled={isLoading}>
+						<span class="difficulty-label">{t('difficulty.medium')}</span>
+						<span class="difficulty-points">3 {t('points')}</span>
+					</button>
+					<button class="difficulty-btn hard" onclick={() => startGame('hard')} disabled={isLoading}>
+						<span class="difficulty-label">{t('difficulty.hard')}</span>
+						<span class="difficulty-points">5 {t('points')}</span>
+					</button>
+				</div>
+
+				<button class="back-btn" onclick={goBack}>
+					&#8592; {t('todaysCategories')}
+				</button>
+			{/if}
 
 			{#if isLoading}
 				<div class="loading-overlay">
@@ -346,92 +352,50 @@
 	{:else if gamePhase === 'playing' && currentQuestion}
 		<!-- Playing Screen -->
 		<div class="playing-screen">
-			<!-- Money Ladder -->
-			<div class="money-ladder">
-				{#each Array(TOTAL_QUESTIONS) as _, i}
-					{@const qLevel = Math.floor(i / QUESTIONS_PER_LEVEL)}
-					{@const isCheckpointRow = (i + 1) % QUESTIONS_PER_LEVEL === 0}
-					{@const isCurrent = i === currentQuestionIndex}
-					{@const isCompleted = i < currentQuestionIndex}
+			<!-- Progress indicator -->
+			<div class="progress-bar">
+				{#each Array(questions.length) as _, i}
 					<div
-						class="ladder-row"
-						class:checkpoint={isCheckpointRow}
-						class:current={isCurrent}
-						class:completed={isCompleted}
-					>
-						<span class="q-num">Q{i + 1}</span>
-						{#if isCheckpointRow}
-							<span class="points">{LEVEL_POINTS[qLevel]} pt</span>
-						{/if}
-					</div>
+						class="progress-dot"
+						class:completed={i < currentQuestionIndex}
+						class:current={i === currentQuestionIndex}
+					></div>
 				{/each}
 			</div>
 
-			<!-- Question Area -->
-			<div class="question-area">
-				<!-- Timer -->
-				<div class="timer" class:warning={timeRemaining <= 5} class:critical={timeRemaining <= 3}>
-					<div class="timer-bar" style="width: {(timeRemaining / currentTimerMax) * 100}%"></div>
-					<span class="timer-text">{timeRemaining}s</span>
-				</div>
-
-				<!-- Question Info -->
-				<div class="question-info">
-					<span class="level-badge level-{currentLevel + 1}">
-						{t(`levels.level${currentLevel + 1}`)}
-					</span>
-					<span class="question-number">
-						{t('questionNumber').replace('{current}', String(currentQuestionIndex + 1)).replace('{total}', String(TOTAL_QUESTIONS))}
-					</span>
-				</div>
-
-				<!-- Question -->
-				<div class="question-text">
-					{currentQuestion.question}
-				</div>
-
-				<!-- Answers -->
-				<div class="answers-grid">
-					{#each currentQuestion.options as option, i}
-						<button
-							class="answer-btn {getAnswerClass(i)}"
-							onclick={() => selectAnswer(i)}
-							disabled={answerRevealed}
-						>
-							<span class="answer-letter">{String.fromCharCode(65 + i)}</span>
-							<span class="answer-text">{option}</span>
-						</button>
-					{/each}
-				</div>
-
-				<!-- Banked Points -->
-				{#if bankedPoints > 0}
-					<div class="banked-info">
-						{t('banked')}: {bankedPoints} {t('points')}
-					</div>
-				{/if}
+			<!-- Timer -->
+			<div class="timer" class:warning={timeRemaining <= 5} class:critical={timeRemaining <= 3}>
+				<div class="timer-bar" style="width: {(timeRemaining / TIMER_SECONDS) * 100}%"></div>
+				<span class="timer-text">{timeRemaining}s</span>
 			</div>
-		</div>
 
-	{:else if gamePhase === 'checkpoint'}
-		<!-- Checkpoint Screen -->
-		<div class="checkpoint-screen">
-			<div class="checkpoint-content">
-				<div class="checkpoint-icon">&#10003;</div>
-				<h2>{t(`levels.level${currentLevel + 1}`)} {t('checkpoint.complete')}!</h2>
-				<p class="checkpoint-points">{checkpointValue} {t('points')}</p>
+			<!-- Question Info -->
+			<div class="question-info">
+				<span class="difficulty-badge {selectedDifficulty}">
+					{selectedDifficulty ? t(`difficulty.${selectedDifficulty}`) : ''}
+				</span>
+				<span class="question-number">
+					{currentQuestionIndex + 1} / {questions.length}
+				</span>
+			</div>
 
-				<div class="checkpoint-buttons">
-					<button class="bank-btn" onclick={walkAway}>
-						{t('checkpoint.bank')} {checkpointValue} {t('points')}
+			<!-- Question -->
+			<div class="question-text">
+				{currentQuestion.question}
+			</div>
+
+			<!-- Answers -->
+			<div class="answers-grid">
+				{#each currentQuestion.options as option, i}
+					<button
+						class="answer-btn {getAnswerClass(i)}"
+						onclick={() => selectAnswer(i)}
+						disabled={answerRevealed}
+					>
+						<span class="answer-letter">{String.fromCharCode(65 + i)}</span>
+						<span class="answer-text">{option}</span>
 					</button>
-					<p class="btn-hint bank-hint">{t('checkpoint.bankDesc')}</p>
-
-					<button class="risk-btn" onclick={continueAfterCheckpoint}>
-						{t('checkpoint.chasePoints').replace('{points}', String(LEVEL_POINTS[currentLevel + 1]))}
-					</button>
-					<p class="btn-hint risk-hint">{t('checkpoint.continueDesc')}</p>
-				</div>
+				{/each}
 			</div>
 		</div>
 
@@ -441,18 +405,7 @@
 			<div class="result-content">
 				<div class="result-icon">&#127942;</div>
 				<h2>{t('won.title')}</h2>
-				<p class="result-points">{bankedPoints} {t('points')}</p>
-				<button class="new-game-btn" onclick={newGame}>{t('newGame')}</button>
-			</div>
-		</div>
-
-	{:else if gamePhase === 'walkaway'}
-		<!-- Walk Away Screen -->
-		<div class="result-screen walkaway">
-			<div class="result-content">
-				<div class="result-icon">&#128176;</div>
-				<h2>{t('walkaway.title')}</h2>
-				<p class="result-points">{bankedPoints} {t('points')}</p>
+				<p class="result-points">{earnedPoints} {t('points')}</p>
 				<button class="new-game-btn" onclick={newGame}>{t('newGame')}</button>
 			</div>
 		</div>
@@ -466,11 +419,7 @@
 				{#if currentQuestion}
 					<p class="correct-answer">{t('lost.correctWas')}: {currentQuestion.options[currentQuestion.correct]}</p>
 				{/if}
-				{#if bankedPoints > 0}
-					<p class="result-points">{t('lost.youKeep')} {bankedPoints} {t('points')}</p>
-				{:else}
-					<p class="result-points">{t('lost.noPoints')}</p>
-				{/if}
+				<p class="result-points">{t('lost.noPoints')}</p>
 				<button class="new-game-btn" onclick={newGame}>{t('newGame')}</button>
 			</div>
 		</div>
@@ -479,7 +428,7 @@
 
 <WinModal
 	isOpen={showWinModal}
-	points={bankedPoints}
+	points={earnedPoints}
 	gameNumber={GAME_NUMBER}
 	onClose={() => { showWinModal = false; }}
 />
@@ -508,36 +457,10 @@
 		margin: 0;
 	}
 
-	.category-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-	}
-
-	.category-btn {
-		padding: 1.25rem 1rem;
-		font-size: 1rem;
-		font-weight: 600;
-		background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-		border: 2px solid rgba(255, 215, 0, 0.4);
-		border-radius: 12px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		min-height: 80px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	.category-label {
 		text-align: center;
-	}
-
-	.category-btn:active:not(:disabled) {
-		transform: scale(0.98);
-	}
-
-	.category-btn:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+		color: rgba(255, 255, 255, 0.7);
+		margin: -0.5rem 0 0.5rem 0;
 	}
 
 	/* Audience Selection */
@@ -586,8 +509,90 @@
 		font-size: 1.25rem;
 	}
 
+	/* Category Selection */
+	.category-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.category-btn {
+		padding: 1.25rem 1rem;
+		font-size: 1rem;
+		font-weight: 600;
+		background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+		border: 2px solid rgba(255, 215, 0, 0.4);
+		border-radius: 12px;
+		color: white;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		min-height: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.category-btn:active {
+		transform: scale(0.98);
+	}
+
+	/* Difficulty Selection */
+	.difficulty-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.difficulty-btn {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1.25rem 1.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		border: 2px solid;
+		border-radius: 12px;
+		color: white;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.difficulty-btn.easy {
+		background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+		border-color: rgba(34, 197, 94, 0.4);
+	}
+
+	.difficulty-btn.medium {
+		background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+		border-color: rgba(245, 158, 11, 0.4);
+	}
+
+	.difficulty-btn.hard {
+		background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+		border-color: rgba(239, 68, 68, 0.4);
+	}
+
+	.difficulty-btn:active:not(:disabled) {
+		transform: scale(0.98);
+	}
+
+	.difficulty-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.difficulty-label {
+		font-size: 1.1rem;
+	}
+
+	.difficulty-points {
+		color: #ffd700;
+		font-size: 0.95rem;
+	}
+
 	.back-btn {
-		margin-top: 1rem;
+		margin-top: 0.5rem;
 		padding: 0.75rem 1.5rem;
 		font-size: 0.95rem;
 		background: transparent;
@@ -600,26 +605,6 @@
 
 	.back-btn:active {
 		background: rgba(255, 255, 255, 0.1);
-	}
-
-	.rules {
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 12px;
-		padding: 1rem;
-	}
-
-	.rules h3 {
-		margin: 0 0 0.75rem 0;
-		font-size: 1rem;
-		color: #ffd700;
-	}
-
-	.rules ul {
-		margin: 0;
-		padding-left: 1.25rem;
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.8);
-		line-height: 1.6;
 	}
 
 	.loading-overlay {
@@ -650,65 +635,38 @@
 	/* Playing Screen */
 	.playing-screen {
 		display: flex;
+		flex-direction: column;
 		gap: 1rem;
 	}
 
-	/* Money Ladder */
-	.money-ladder {
+	/* Progress Bar */
+	.progress-bar {
 		display: flex;
-		flex-direction: column-reverse;
-		gap: 4px;
-		min-width: 80px;
-		padding: 0.5rem;
-		background: rgba(0, 0, 0, 0.3);
-		border-radius: 8px;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0;
 	}
 
-	.ladder-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 4px 8px;
-		font-size: 0.75rem;
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 4px;
-		color: rgba(255, 255, 255, 0.5);
+	.progress-dot {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.2);
 		transition: all 0.3s ease;
 	}
 
-	.ladder-row.checkpoint {
-		background: rgba(255, 215, 0, 0.1);
-		border: 1px solid rgba(255, 215, 0, 0.3);
+	.progress-dot.completed {
+		background: #22c55e;
 	}
 
-	.ladder-row.current {
-		background: rgba(255, 215, 0, 0.3);
-		color: white;
-		font-weight: bold;
+	.progress-dot.current {
+		background: #ffd700;
 		animation: pulse 1.5s ease-in-out infinite;
-	}
-
-	.ladder-row.completed {
-		background: rgba(34, 197, 94, 0.2);
-		color: #22c55e;
-	}
-
-	.ladder-row .points {
-		color: #ffd700;
-		font-weight: bold;
 	}
 
 	@keyframes pulse {
 		0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
 		50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
-	}
-
-	/* Question Area */
-	.question-area {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
 	}
 
 	/* Timer */
@@ -762,24 +720,24 @@
 		align-items: center;
 	}
 
-	.level-badge {
+	.difficulty-badge {
 		padding: 0.25rem 0.75rem;
 		border-radius: 12px;
 		font-size: 0.8rem;
 		font-weight: 600;
 	}
 
-	.level-badge.level-1 {
+	.difficulty-badge.easy {
 		background: rgba(34, 197, 94, 0.2);
 		color: #22c55e;
 	}
 
-	.level-badge.level-2 {
+	.difficulty-badge.medium {
 		background: rgba(245, 158, 11, 0.2);
 		color: #f59e0b;
 	}
 
-	.level-badge.level-3 {
+	.difficulty-badge.hard {
 		background: rgba(239, 68, 68, 0.2);
 		color: #ef4444;
 	}
@@ -876,90 +834,6 @@
 		flex: 1;
 	}
 
-	.banked-info {
-		text-align: center;
-		padding: 0.5rem;
-		background: rgba(34, 197, 94, 0.2);
-		border-radius: 8px;
-		color: #22c55e;
-		font-weight: 600;
-	}
-
-	/* Checkpoint Screen */
-	.checkpoint-screen {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 400px;
-	}
-
-	.checkpoint-content {
-		text-align: center;
-		padding: 2rem;
-		background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
-		border: 2px solid rgba(255, 215, 0, 0.3);
-		border-radius: 16px;
-		max-width: 400px;
-	}
-
-	.checkpoint-icon {
-		font-size: 4rem;
-		color: #22c55e;
-		margin-bottom: 1rem;
-	}
-
-	.checkpoint-content h2 {
-		color: #ffd700;
-		margin: 0 0 0.5rem 0;
-		font-size: 1.3rem;
-	}
-
-	.checkpoint-points {
-		font-size: 2.5rem;
-		font-weight: bold;
-		color: #ffd700;
-		margin: 0 0 2rem 0;
-	}
-
-	.checkpoint-buttons {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		width: 100%;
-	}
-
-	.bank-btn {
-		padding: 1rem 2rem;
-		font-size: 1.1rem;
-		font-weight: bold;
-		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-		border: none;
-		border-radius: 12px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.3s ease;
-	}
-
-	.risk-btn {
-		padding: 1rem 2rem;
-		font-size: 1.1rem;
-		font-weight: bold;
-		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-		border: none;
-		border-radius: 12px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		margin-top: 1rem;
-	}
-
-	.btn-hint {
-		margin: 0.25rem 0 0 0;
-		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.5);
-		text-align: center;
-	}
-
 	/* Result Screens */
 	.result-screen {
 		display: flex;
@@ -980,11 +854,6 @@
 		border: 2px solid rgba(255, 215, 0, 0.4);
 	}
 
-	.result-screen.walkaway .result-content {
-		background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.05) 100%);
-		border: 2px solid rgba(34, 197, 94, 0.4);
-	}
-
 	.result-screen.lost .result-content {
 		background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
 		border: 2px solid rgba(239, 68, 68, 0.3);
@@ -1003,10 +872,6 @@
 		color: #ffd700;
 	}
 
-	.result-screen.walkaway h2 {
-		color: #22c55e;
-	}
-
 	.result-screen.lost h2 {
 		color: #ef4444;
 	}
@@ -1017,8 +882,7 @@
 		margin: 0 0 0.5rem 0;
 	}
 
-	.result-screen.won .result-points,
-	.result-screen.walkaway .result-points {
+	.result-screen.won .result-points {
 		color: #22c55e;
 	}
 
@@ -1040,31 +904,17 @@
 		transition: all 0.3s ease;
 	}
 
-	.new-game-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+	.new-game-btn:active {
+		transform: scale(0.98);
 	}
 
 	/* Responsive */
 	@media (max-width: 500px) {
-		.playing-screen {
-			flex-direction: column;
-		}
-
-		.money-ladder {
-			flex-direction: row;
-			flex-wrap: wrap;
-			justify-content: center;
-			min-width: unset;
-		}
-
-		.ladder-row {
-			flex: 0 0 auto;
-			padding: 4px 6px;
-			font-size: 0.7rem;
-		}
-
 		.category-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.audience-grid {
 			grid-template-columns: 1fr;
 		}
 	}

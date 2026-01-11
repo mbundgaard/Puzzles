@@ -16,6 +16,12 @@
 		"level2": "Mellem",
 		"level3": "Svær"
 	},
+	"difficulty": {
+		"title": "Vælg sværhedsgrad",
+		"easy": "Let",
+		"medium": "Mellem",
+		"hard": "Svær"
+	},
 	"checkpoint": {
 		"complete": "gennemført",
 		"bank": "Gem",

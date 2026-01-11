@@ -16,6 +16,12 @@
 		"level2": "Medium",
 		"level3": "Hard"
 	},
+	"difficulty": {
+		"title": "Choose difficulty",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard"
+	},
 	"checkpoint": {
 		"complete": "complete",
 		"bank": "Bank",
