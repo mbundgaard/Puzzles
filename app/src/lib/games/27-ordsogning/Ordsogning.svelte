@@ -55,20 +55,11 @@
 	let phase = $state<'difficulty' | 'loading' | 'game'>('difficulty');
 	let difficulty = $state<Difficulty>('easy');
 	let grid = $state<string[][]>([]);
-	let words = $state<string[]>([]);
 	let wordPositions = $state<WordPosition[]>([]);
 	let foundWords = $state<Set<string>>(new Set());
 	let startCell = $state<StartCell | null>(null);
 	let gameOver = $state(false);
 	let gaveUp = $state(false);
-
-	// Valid directions: right, down, diagonal down-right, diagonal up-right
-	const directions = [
-		{ dx: 1, dy: 0 },   // right (horizontal)
-		{ dx: 0, dy: 1 },   // down (vertical)
-		{ dx: 1, dy: 1 },   // diagonal down-right
-		{ dx: 1, dy: -1 }   // diagonal up-right
-	];
 
 	// Derived values
 	let points = $derived(DIFFICULTY_CONFIG[difficulty].points);
@@ -94,12 +85,15 @@
 
 			const data = await response.json();
 
-			// Store grid and words from API
+			// Store grid and word positions from API (positions are now validated by backend)
 			grid = data.grid;
-			words = data.words;
-
-			// Find positions of all words in the grid
-			wordPositions = findAllWordPositions();
+			wordPositions = data.words.map((w: {word: string; startX: number; startY: number; endX: number; endY: number}) => ({
+				word: w.word,
+				startX: w.startX,
+				startY: w.startY,
+				endX: w.endX,
+				endY: w.endY
+			}));
 			foundWords = new Set();
 			startCell = null;
 			gameOver = false;
@@ -115,57 +109,6 @@
 			alert(t('error'));
 			phase = 'difficulty';
 		}
-	}
-
-	function findAllWordPositions(): WordPosition[] {
-		const positions: WordPosition[] = [];
-		for (const word of words) {
-			const pos = findWordInGrid(word);
-			if (pos) {
-				positions.push(pos);
-			} else {
-				console.warn(`Word "${word}" not found in grid`);
-			}
-		}
-		return positions;
-	}
-
-	function findWordInGrid(word: string): WordPosition | null {
-		for (let y = 0; y < gridSize; y++) {
-			for (let x = 0; x < gridSize; x++) {
-				for (const dir of directions) {
-					if (checkWordAt(word, x, y, dir.dx, dir.dy)) {
-						return {
-							word: word,
-							startX: x,
-							startY: y,
-							endX: x + (word.length - 1) * dir.dx,
-							endY: y + (word.length - 1) * dir.dy
-						};
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	function checkWordAt(word: string, startX: number, startY: number, dx: number, dy: number): boolean {
-		const endX = startX + (word.length - 1) * dx;
-		const endY = startY + (word.length - 1) * dy;
-
-		// Check bounds
-		if (endX < 0 || endX >= gridSize || endY < 0 || endY >= gridSize) {
-			return false;
-		}
-
-		for (let i = 0; i < word.length; i++) {
-			const x = startX + i * dx;
-			const y = startY + i * dy;
-			if (grid[y][x] !== word[i]) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	function handleCellClick(x: number, y: number): void {

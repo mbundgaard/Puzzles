@@ -93,11 +93,12 @@ public class Game27Function
 Regler:
 - Gitteret skal være præcis 12x12 bogstaver
 - Placer præcis 8 RIGTIGE danske ord i gitteret
-- Ord kan placeres: vandret (venstre→højre), lodret (top→bund), diagonalt (↘ eller ↗)
+- Ord kan placeres i 4 retninger: right (vandret), down (lodret), diag-down (diagonal ↘), diag-up (diagonal ↗)
 - Det er OK hvis ord overlapper (deler bogstaver) - det gør spillet mere interessant!
 - Fyld tomme felter med tilfældige danske bogstaver (A-Z, Æ, Ø, Å)
 - ALLE ord SKAL være RIGTIGE danske navneord
 - Alle bogstaver skal være STORE BOGSTAVER
+- x er kolonne (0-11 fra venstre), y er række (0-11 fra top)
 
 Svar med JSON i dette format:
 {{
@@ -105,7 +106,11 @@ Svar med JSON i dette format:
     [""A"",""B"",""C"",""D"",""E"",""F"",""G"",""H"",""I"",""J"",""K"",""L""],
     ... (12 rækker med 12 bogstaver hver)
   ],
-  ""words"": [""ORD1"", ""ORD2"", ""ORD3"", ""ORD4"", ""ORD5"", ""ORD6"", ""ORD7"", ""ORD8""]
+  ""words"": [
+    {{ ""word"": ""HUND"", ""x"": 0, ""y"": 2, ""dir"": ""right"" }},
+    {{ ""word"": ""KAT"", ""x"": 5, ""y"": 1, ""dir"": ""down"" }},
+    ... (8 ord total med deres positioner)
+  ]
 }}";
 
         var response = await _aiService.GenerateAsync(
@@ -118,40 +123,90 @@ Svar med JSON i dette format:
 
         try
         {
-            var result = JsonSerializer.Deserialize<WordSearchBoardResult>(response, JsonOptions);
-            if (result == null || result.Grid == null || result.Words == null)
+            var aiResult = JsonSerializer.Deserialize<AIWordSearchResponse>(response, JsonOptions);
+            if (aiResult == null || aiResult.Grid == null || aiResult.Words == null)
             {
                 _logger.LogWarning("Failed to parse word search board response: {Content}", response);
                 return null;
             }
 
             // Validate grid size
-            if (result.Grid.Length != 12 || result.Grid.Any(row => row.Length != 12))
+            if (aiResult.Grid.Length != 12 || aiResult.Grid.Any(row => row.Length != 12))
             {
                 _logger.LogWarning("Invalid grid size in word search board");
                 return null;
             }
 
             // Validate word count
-            if (result.Words.Count != 8)
+            if (aiResult.Words.Count != 8)
             {
-                _logger.LogWarning("Invalid word count: {Count}, expected 8", result.Words.Count);
+                _logger.LogWarning("Invalid word count: {Count}, expected 8", aiResult.Words.Count);
                 return null;
             }
 
-            // Ensure all letters are uppercase
+            // Ensure all grid letters are uppercase
             for (int y = 0; y < 12; y++)
             {
                 for (int x = 0; x < 12; x++)
                 {
-                    result.Grid[y][x] = result.Grid[y][x].ToUpper();
+                    aiResult.Grid[y][x] = aiResult.Grid[y][x].ToUpper();
                 }
             }
 
-            result.Words = result.Words.Select(w => w.ToUpper()).ToList();
+            // Convert AI response to result with validated positions
+            var result = new WordSearchBoardResult
+            {
+                Grid = aiResult.Grid,
+                Words = new List<WordPosition>()
+            };
+
+            foreach (var wordInfo in aiResult.Words)
+            {
+                var word = wordInfo.Word.ToUpper();
+                var (dx, dy) = GetDirection(wordInfo.Dir);
+
+                // Calculate end position
+                var endX = wordInfo.X + (word.Length - 1) * dx;
+                var endY = wordInfo.Y + (word.Length - 1) * dy;
+
+                // Validate bounds
+                if (wordInfo.X < 0 || wordInfo.X >= 12 || wordInfo.Y < 0 || wordInfo.Y >= 12 ||
+                    endX < 0 || endX >= 12 || endY < 0 || endY >= 12)
+                {
+                    _logger.LogWarning("Word {Word} is out of bounds: start({X},{Y}) end({EndX},{EndY})",
+                        word, wordInfo.X, wordInfo.Y, endX, endY);
+                    return null;
+                }
+
+                // Validate word is actually in grid at specified position
+                bool valid = true;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    var gx = wordInfo.X + i * dx;
+                    var gy = wordInfo.Y + i * dy;
+                    if (aiResult.Grid[gy][gx] != word[i].ToString())
+                    {
+                        _logger.LogWarning("Word {Word} not found at position ({X},{Y}) dir={Dir}. Expected '{Expected}' at ({GX},{GY}) but found '{Found}'",
+                            word, wordInfo.X, wordInfo.Y, wordInfo.Dir, word[i], gx, gy, aiResult.Grid[gy][gx]);
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (!valid) return null;
+
+                result.Words.Add(new WordPosition
+                {
+                    Word = word,
+                    StartX = wordInfo.X,
+                    StartY = wordInfo.Y,
+                    EndX = endX,
+                    EndY = endY
+                });
+            }
 
             _logger.LogInformation("Word search board generated with words: {Words} (difficulty: {Difficulty})",
-                string.Join(", ", result.Words), diff);
+                string.Join(", ", result.Words.Select(w => w.Word)), diff);
             return result;
         }
         catch (Exception ex)
@@ -161,6 +216,18 @@ Svar med JSON i dette format:
         }
     }
 
+    private static (int dx, int dy) GetDirection(string dir)
+    {
+        return dir?.ToLower() switch
+        {
+            "right" => (1, 0),
+            "down" => (0, 1),
+            "diag-down" => (1, 1),
+            "diag-up" => (1, -1),
+            _ => (1, 0) // default to right
+        };
+    }
+
     // Request/Response models
 
     private class WordSearchRequest
@@ -168,9 +235,34 @@ Svar med JSON i dette format:
         public string? Difficulty { get; set; }
     }
 
+    // AI response format (what ChatGPT returns)
+    private class AIWordSearchResponse
+    {
+        public string[][] Grid { get; set; } = Array.Empty<string[]>();
+        public List<AIWordInfo> Words { get; set; } = new();
+    }
+
+    private class AIWordInfo
+    {
+        public string Word { get; set; } = "";
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Dir { get; set; } = "right";
+    }
+
+    // Result format (what we send to frontend)
     private class WordSearchBoardResult
     {
         public string[][] Grid { get; set; } = Array.Empty<string[]>();
-        public List<string> Words { get; set; } = new();
+        public List<WordPosition> Words { get; set; } = new();
+    }
+
+    private class WordPosition
+    {
+        public string Word { get; set; } = "";
+        public int StartX { get; set; }
+        public int StartY { get; set; }
+        public int EndX { get; set; }
+        public int EndY { get; set; }
     }
 }
