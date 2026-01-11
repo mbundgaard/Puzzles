@@ -80,6 +80,14 @@
 		return typeof value === 'string' ? value : key;
 	}
 
+	// Get language from translations
+	function getLanguage(): string {
+		const title = t('selectCategory');
+		if (title === 'Vælg kategori') return 'da';
+		if (title === 'Choisissez une catégorie') return 'fr';
+		return 'en';
+	}
+
 	// Derived values
 	let currentPoints = $derived.by(() => {
 		const config = DIFFICULTY_CONFIG[selectedDifficulty];
@@ -114,7 +122,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					category: category.apiValue,
-					difficulty: selectedDifficulty
+					difficulty: selectedDifficulty,
+					language: getLanguage()
 				})
 			});
 
@@ -149,7 +158,7 @@
 			const response = await fetch(`${API_BASE}/ask`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ animal, question })
+				body: JSON.stringify({ animal, question, language: getLanguage() })
 			});
 
 			if (!response.ok) throw new Error('Failed to ask question');
@@ -241,7 +250,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					animal,
-					previousHints: hints
+					previousHints: hints,
+					language: getLanguage()
 				})
 			});
 

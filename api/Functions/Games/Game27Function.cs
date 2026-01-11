@@ -53,11 +53,19 @@ public class Game27Function
         }
 
         var difficulty = request?.Difficulty?.Trim() ?? "medium";
+        var language = request?.Language?.Trim()?.ToLower() ?? "en";
+
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
 
         // Try up to 3 times to generate a valid board
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var result = await GenerateWordSearchBoardAsync(difficulty);
+            var result = await GenerateWordSearchBoardAsync(difficulty, outputLanguage);
             if (result != null)
             {
                 _logger.LogInformation("Word search board generated with {Count} words (difficulty: {Difficulty})",
@@ -75,7 +83,7 @@ public class Game27Function
         };
     }
 
-    private async Task<WordSearchBoardResult?> GenerateWordSearchBoardAsync(string difficulty)
+    private async Task<WordSearchBoardResult?> GenerateWordSearchBoardAsync(string difficulty, string outputLanguage)
     {
         var diff = string.IsNullOrWhiteSpace(difficulty) ? "medium" : difficulty.ToLower();
 
@@ -86,18 +94,18 @@ public class Game27Function
             _ => (6, 10)
         };
 
-        var systemPrompt = $@"Return exactly 8 Danish nouns for a word search game.
+        var systemPrompt = $@"Return exactly 8 {outputLanguage} nouns for a word search game.
 Requirements:
 - Each word must be {minLen}-{maxLen} letters long
 - All uppercase letters
-- Real Danish words only
+- Real {outputLanguage} words only
 - No duplicates
 
-Return ONLY a JSON array like: [""HUND"", ""KAT"", ""SOL"", ""BIL"", ""HUS"", ""MAD"", ""BÅD"", ""SØ""]";
+Return ONLY a JSON array like: [""DOG"", ""CAT"", ""SUN"", ""CAR"", ""HOUSE"", ""FOOD"", ""BOAT"", ""SEA""]";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = "Give me 8 Danish words" } },
+            new[] { new AIMessage { Role = "user", Content = $"Give me 8 {outputLanguage} words" } },
             new AIRequestOptions { Temperature = 0.7, Model = "gpt-4.1-mini" }
         );
 
@@ -214,8 +222,13 @@ Return ONLY a JSON array like: [""HUND"", ""KAT"", ""SOL"", ""BIL"", ""HUS"", ""
                 }
             }
 
-            // Fill empty cells with random Danish letters
-            var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ";
+            // Fill empty cells with random letters (include Danish/French special chars for those languages)
+            var letters = outputLanguage switch
+            {
+                "Danish" => "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ",
+                "French" => "ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÊËÀÂÙÛÔÎÏÇ",
+                _ => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            };
             for (int y = 0; y < 12; y++)
             {
                 for (int x = 0; x < 12; x++)
@@ -246,6 +259,7 @@ Return ONLY a JSON array like: [""HUND"", ""KAT"", ""SOL"", ""BIL"", ""HUS"", ""
     private class WordSearchRequest
     {
         public string? Difficulty { get; set; }
+        public string? Language { get; set; }
     }
 
     private class WordSearchBoardResult

@@ -34,15 +34,40 @@ public class Game29Function
     public async Task<IActionResult> Generate(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "game/29/generate")] HttpRequest req)
     {
+        PatternRequest? request = null;
+
+        try
+        {
+            using var reader = new StreamReader(req.Body);
+            var body = await reader.ReadToEndAsync();
+            if (!string.IsNullOrWhiteSpace(body))
+            {
+                request = JsonSerializer.Deserialize<PatternRequest>(body, JsonOptions);
+            }
+        }
+        catch
+        {
+            return new BadRequestObjectResult(new { error = "Invalid JSON" });
+        }
+
         if (!_aiService.IsConfigured)
         {
             return new ObjectResult(new { error = "AI service not configured" }) { StatusCode = 503 };
         }
 
+        var language = request?.Language?.Trim()?.ToLower() ?? "en";
+
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
+
         // Try up to 3 times to generate a valid pattern
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            var result = await GeneratePatternAsync();
+            var result = await GeneratePatternAsync(outputLanguage);
             if (result != null)
             {
                 _logger.LogInformation("Knitting pattern generated: {Name}", result.Name);
@@ -58,36 +83,37 @@ public class Game29Function
         };
     }
 
-    private async Task<PatternResult?> GeneratePatternAsync()
+    private async Task<PatternResult?> GeneratePatternAsync(string outputLanguage)
     {
-        var systemPrompt = @"Du genererer strikkemønstre til et puslespil.
+        var systemPrompt = $@"You generate knitting patterns for a puzzle game.
 
-Opret et mønster til et 10x6 gitter (10 kolonner, 6 rækker).
-Hver celle skal have én af disse 4 værdier:
-- KL = Ret maske i lys farve (knit light)
-- KM = Ret maske i mørk farve (knit dark)
-- PL = Vrang maske i lys farve (purl light)
-- PM = Vrang maske i mørk farve (purl dark)
+Create a pattern for a 10x6 grid (10 columns, 6 rows).
+Each cell must have one of these 4 values:
+- KL = Knit stitch in light color
+- KM = Knit stitch in dark color
+- PL = Purl stitch in light color
+- PM = Purl stitch in dark color
 
-Mønsteret skal følge en logisk regel som brugeren kan forstå ud fra beskrivelsen.
+The pattern must follow a logical rule that the user can understand from the description.
 
-Eksempler på mønstre:
-- Skaktern: 2x2 blokke der skifter farve
-- Striber: Rækker eller kolonner der skifter
-- Ramme: Kant i én farve, midte i anden
-- Diagonal: Skrå linjer
-- Rib: Skiftevis ret og vrang
-- Kombination af ovenstående
+Examples of patterns:
+- Checkerboard: 2x2 blocks alternating colors
+- Stripes: Rows or columns alternating
+- Frame: Border in one color, center in another
+- Diagonal: Slanted lines
+- Rib: Alternating knit and purl
+- Combination of the above
 
-VIGTIGT:
-- Beskrivelsen (recipe) skal være præcis nok til at brugeren kan udfylde hele gitteret
-- Brug række 1-6 (ikke 0-5) og kolonne 1-10 (ikke 0-9) i beskrivelsen
-- Vær specifik om hvornår der bruges ret/vrang og lys/mørk
+IMPORTANT:
+- The description (recipe) must be precise enough for the user to fill the entire grid
+- Use rows 1-6 (not 0-5) and columns 1-10 (not 0-9) in the description
+- Be specific about when to use knit/purl and light/dark
+- IMPORTANT: The name and recipe must be in {outputLanguage}
 
-Svar med JSON i dette format:
-{
-  ""name"": ""Mønstrets navn"",
-  ""recipe"": ""Detaljeret dansk beskrivelse af mønsteret..."",
+Respond with JSON in this format:
+{{
+  ""name"": ""Checkerboard"",
+  ""recipe"": ""Detailed description of the pattern..."",
   ""solution"": [
     [""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM""],
     [""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL""],
@@ -96,13 +122,13 @@ Svar med JSON i dette format:
     [""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM""],
     [""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL"",""KM"",""KL""]
   ]
-}
+}}
 
-Vær kreativ med mønsteret - lav noget interessant og varieret!";
+Be creative with the pattern - make something interesting and varied!";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = "Generér et strikkemønster" } },
+            new[] { new AIMessage { Role = "user", Content = "Generate a knitting pattern" } },
             new AIRequestOptions { Temperature = 0.9 }
         );
 
@@ -154,7 +180,12 @@ Vær kreativ med mønsteret - lav noget interessant og varieret!";
         }
     }
 
-    // Response model
+    // Request/Response models
+    private class PatternRequest
+    {
+        public string? Language { get; set; }
+    }
+
     private class PatternResult
     {
         public string Name { get; set; } = "";
