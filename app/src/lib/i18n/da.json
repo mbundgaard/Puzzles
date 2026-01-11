@@ -114,6 +114,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"92": "Quiz Mester husker nu hvilke spørgsmål du har fået, så du ikke får de samme igen samme dag",
 		"93": "Quiz Mester har nu separate kategorier til børn og voksne",
 		"91": "Feedback får nu automatisk labels i GitHub",
 		"89": "Alle spil vises nu i feedback-dropdown",

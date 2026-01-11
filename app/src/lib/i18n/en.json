@@ -114,6 +114,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"92": "Quiz Master now remembers which questions you've been asked, so you won't get the same ones again the same day",
 		"93": "Quiz Master now has separate categories for kids and adults",
 		"91": "Feedback now automatically gets labels in GitHub",
 		"89": "All games now appear in feedback dropdown",
