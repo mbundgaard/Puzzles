@@ -12,6 +12,9 @@ export function getApiBase(): string {
 }
 
 const NICKNAME_KEY = 'hjernespil_nickname';
+const AGE_GROUP_KEY = 'hjernespil_age_group';
+
+export type AgeGroup = 'kid' | 'adult';
 
 // ============ Version Check ============
 
@@ -66,6 +69,20 @@ export function setNickname(nickname: string): void {
 
 export function isValidNickname(nickname: string): boolean {
 	return nickname && nickname.trim().length >= 2 && nickname.trim().length <= 20;
+}
+
+// ============ Age Group Management ============
+
+export function getAgeGroup(): AgeGroup | null {
+	if (typeof localStorage === 'undefined') return null;
+	const value = localStorage.getItem(AGE_GROUP_KEY);
+	if (value === 'kid' || value === 'adult') return value;
+	return null;
+}
+
+export function setAgeGroup(ageGroup: AgeGroup): void {
+	if (typeof localStorage === 'undefined') return;
+	localStorage.setItem(AGE_GROUP_KEY, ageGroup);
 }
 
 // ============ Leaderboard ============
