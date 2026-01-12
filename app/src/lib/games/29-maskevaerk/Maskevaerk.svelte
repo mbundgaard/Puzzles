@@ -28,6 +28,14 @@
 		return typeof value === 'string' ? value : key;
 	}
 
+	// Get language from translations
+	function getLanguage(): string {
+		const title = t('recipe');
+		if (title === 'Opskrift') return 'da';
+		if (title === 'Recette') return 'fr';
+		return 'en';
+	}
+
 	// Constants
 	const COLS = 10;
 	const ROWS = 6;
@@ -187,7 +195,8 @@
 	async function fetchAIPattern(): Promise<{ name: string; recipe: string; solution: string[][] }> {
 		const response = await fetch(`${API_BASE}/game/29/generate`, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ language: getLanguage() })
 		});
 
 		if (!response.ok) {

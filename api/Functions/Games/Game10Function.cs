@@ -55,6 +55,7 @@ public class Game10Function
         var category = request?.Category?.Trim();
         var difficulty = request?.Difficulty?.Trim();
         var length = request?.Length;
+        var language = request?.Language?.Trim()?.ToLower() ?? "en";
 
         // All 3 parameters are required
         if (string.IsNullOrWhiteSpace(category))
@@ -77,7 +78,14 @@ public class Game10Function
             return new BadRequestObjectResult(new { error = "Length must be between 3 and 15" });
         }
 
-        var result = await GetRandomWordAsync(category, difficulty, length.Value);
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
+
+        var result = await GetRandomWordAsync(category, difficulty, length.Value, outputLanguage);
         if (result == null)
         {
             return new ObjectResult(new { error = "Kunne ikke generere ord. Prøv igen." })
@@ -99,35 +107,37 @@ public class Game10Function
 
     // AI methods with prompts
 
-    private async Task<WordResult?> GetRandomWordAsync(string category, string difficulty, int length)
+    private async Task<WordResult?> GetRandomWordAsync(string category, string difficulty, int length, string outputLanguage)
     {
         var diff = difficulty.ToLower();
 
         // Difficulty prompt - how common/known the word should be
         var difficultyPrompt = diff switch
         {
-            "easy" => "Ordet skal være NEMT - et meget almindeligt dansk ord som børn kender.",
-            "hard" => "Ordet skal være SVÆRT - et mindre almindeligt eller uventet dansk ord.",
-            _ => "Ordet skal være MELLEM - et almindeligt dansk ord."
+            "easy" => $"The word should be EASY - a very common {outputLanguage} word that children know.",
+            "hard" => $"The word should be HARD - a less common or unexpected {outputLanguage} word.",
+            _ => $"The word should be MEDIUM - a common {outputLanguage} word."
         };
 
-        var systemPrompt = $@"Du hjælper med et ordgættespil.
+        var systemPrompt = $@"You help with a word guessing game.
 
-Vælg et tilfældigt dansk ord fra kategorien: {category}
-Ordet SKAL være PRÆCIS {length} bogstaver langt.
+Pick a random {outputLanguage} word from the category: {category}
+The word MUST be EXACTLY {length} letters long.
 {difficultyPrompt}
 
-Regler:
-- Ordet SKAL være et RIGTIGT dansk navneord i ental
-- Ordet må KUN indeholde bogstaverne A-Z, Æ, Ø, Å (ingen bindestreger eller specialtegn)
-- Alle bogstaver skal være STORE BOGSTAVER
+IMPORTANT: All output must be in {outputLanguage}.
 
-Svar med JSON i dette format:
-{{""word"": ""ORDET"", ""category"": ""kategorien""}}";
+Rules:
+- The word MUST be a REAL {outputLanguage} noun in singular form
+- The word may ONLY contain letters (no hyphens or special characters)
+- All letters must be UPPERCASE
+
+Respond with JSON in this format:
+{{""word"": ""DOG"", ""category"": ""animals""}}";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = "Giv mig et ord" } },
+            new[] { new AIMessage { Role = "user", Content = "Give me a word" } },
             new AIRequestOptions { Temperature = 0.9 }
         );
 
@@ -157,6 +167,7 @@ Svar med JSON i dette format:
 
     private class WordRequest
     {
+        public string? Language { get; set; }
         public string? Category { get; set; }
         public string? Difficulty { get; set; }
         public int? Length { get; set; }

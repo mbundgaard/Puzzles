@@ -4,14 +4,20 @@
 
 import { APP_VERSION } from './version';
 
-const API_BASE = 'https://puzzlesapi.azurewebsites.net/api';
+export function getApiBase(): string {
+	if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+		return 'http://localhost:7295/api';
+	}
+	return 'https://puzzlesapi.azurewebsites.net/api';
+}
+
 const NICKNAME_KEY = 'hjernespil_nickname';
 
 // ============ Version Check ============
 
 export async function checkForUpdates(): Promise<boolean> {
 	try {
-		const response = await fetch(`${API_BASE}/version`, {
+		const response = await fetch(`${getApiBase()}/version`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ version: APP_VERSION })
@@ -69,7 +75,7 @@ export async function getLeaderboard(game: string | null = null): Promise<Leader
 		const params = new URLSearchParams();
 		if (game) params.set('game', game);
 
-		const url = params.toString() ? `${API_BASE}/leaderboard?${params}` : `${API_BASE}/leaderboard`;
+		const url = params.toString() ? `${getApiBase()}/leaderboard?${params}` : `${getApiBase()}/leaderboard`;
 		const response = await fetch(url);
 		return await response.json();
 	} catch (error) {
@@ -82,7 +88,7 @@ export async function getLeaderboard(game: string | null = null): Promise<Leader
 
 export async function recordWin(game: string, nickname: string, points: number = 1): Promise<WinResponse> {
 	try {
-		const response = await fetch(`${API_BASE}/win`, {
+		const response = await fetch(`${getApiBase()}/win`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ game, nickname, points })
@@ -99,7 +105,7 @@ export async function recordWin(game: string, nickname: string, points: number =
 export async function trackEvent(game: string, event: 'start' | 'complete'): Promise<void> {
 	try {
 		const nickname = getNickname();
-		await fetch(`${API_BASE}/event`, {
+		await fetch(`${getApiBase()}/event`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -121,11 +127,33 @@ export function trackComplete(game: string): void {
 	trackEvent(game, 'complete');
 }
 
+// ============ Image Upload ============
+
+export interface UploadResponse {
+	url?: string;
+	error?: string;
+}
+
+export async function uploadImage(file: File): Promise<UploadResponse> {
+	try {
+		const response = await fetch(`${getApiBase()}/upload/image`, {
+			method: 'POST',
+			headers: { 'Content-Type': file.type },
+			body: file
+		});
+		return await response.json();
+	} catch (error) {
+		console.warn('Failed to upload image:', error);
+		return { error: 'Upload failed' };
+	}
+}
+
 // ============ Feedback ============
 
 export interface FeedbackOptions {
 	text?: string;
 	nickname?: string;
+	imageUrl?: string;
 }
 
 export interface FeedbackResponse {
@@ -137,14 +165,15 @@ export interface FeedbackResponse {
 export async function submitFeedback(game: string | null, gameName: string | null, options: FeedbackOptions): Promise<FeedbackResponse> {
 	try {
 		const nickname = options.nickname || getNickname();
-		const response = await fetch(`${API_BASE}/feedback`, {
+		const response = await fetch(`${getApiBase()}/feedback`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				game: game || undefined,
 				gameName: gameName || undefined,
 				text: options.text || undefined,
-				nickname: nickname || undefined
+				nickname: nickname || undefined,
+				imageUrl: options.imageUrl || undefined
 			})
 		});
 		return await response.json();

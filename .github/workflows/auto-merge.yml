@@ -1,13 +1,8 @@
 name: Auto-merge Claude branches
-
 on:
   push:
     branches:
       - 'claude/**'
-
-permissions:
-  contents: write
-
 jobs:
   merge:
     runs-on: ubuntu-latest
@@ -17,14 +12,30 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-
+          token: ${{ secrets.AUTO_MERGE_TOKEN }}
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Merge branch into main
         run: |
           git fetch origin ${{ github.ref_name }}
-          git merge origin/${{ github.ref_name }} --no-edit || echo "Merge failed, skipping"
-          git push origin main || echo "Push failed, skipping"
+
+          # Attempt merge
+          if git merge origin/${{ github.ref_name }} --no-edit; then
+            echo "Merge succeeded"
+          else
+            # Check if only version.ts has conflict
+            CONFLICTED_FILES=$(git diff --name-only --diff-filter=U)
+            if [ "$CONFLICTED_FILES" = "app/src/lib/version.ts" ]; then
+              echo "Auto-resolving version.ts conflict with incoming version"
+              git checkout --theirs app/src/lib/version.ts
+              git add app/src/lib/version.ts
+              git commit --no-edit
+            else
+              echo "Merge failed with conflicts in: $CONFLICTED_FILES"
+              exit 1
+            fi
+          fi
+
+          git push origin main

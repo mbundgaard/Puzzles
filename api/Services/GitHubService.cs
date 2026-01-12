@@ -37,7 +37,7 @@ public class GitHubService : IGitHubService
     }
 
     public async Task<bool> CreateFeedbackIssueAsync(string? game, string? gameName, string? text, string? nickname,
-        string? aiTitle = null, string? aiTranslation = null)
+        string? aiTitle = null, string? aiTranslation = null, string? imageUrl = null)
     {
         if (string.IsNullOrEmpty(_token))
         {
@@ -139,6 +139,16 @@ public class GitHubService : IGitHubService
             if (!string.IsNullOrWhiteSpace(nickname))
             {
                 body.AppendLine($"**From:** {nickname}");
+                body.AppendLine();
+            }
+
+            // Include attached image if provided
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+            {
+                body.AppendLine("**Attachment:**");
+                body.AppendLine();
+                body.AppendLine($"![Attached image]({imageUrl})");
+                body.AppendLine();
             }
 
             // Determine label based on feedback type

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t, translate, type Translations } from '$lib/i18n';
-	import { submitFeedback } from '$lib/api';
+	import { submitFeedback, uploadImage } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import PageHeader from '$lib/components/PageHeader.svelte';
@@ -23,6 +23,9 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let errorMessage = $state('');
+	let selectedImage = $state<File | null>(null);
+	let imagePreview = $state<string | null>(null);
+	let uploading = $state(false);
 
 	// Games sorted alphabetically by translated name
 	function getSortedGames() {
@@ -40,6 +43,42 @@
 		submitted = false;
 		submitting = false;
 		errorMessage = '';
+		selectedImage = null;
+		imagePreview = null;
+		uploading = false;
+	}
+
+	function handleImageSelect(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+
+		// Validate file type
+		if (!file.type.startsWith('image/')) {
+			errorMessage = tr('feedback.imageInvalidType');
+			return;
+		}
+
+		// Validate file size (5 MB)
+		if (file.size > 5 * 1024 * 1024) {
+			errorMessage = tr('feedback.imageTooLarge');
+			return;
+		}
+
+		selectedImage = file;
+		errorMessage = '';
+
+		// Create preview
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			imagePreview = e.target?.result as string;
+		};
+		reader.readAsDataURL(file);
+	}
+
+	function removeImage() {
+		selectedImage = null;
+		imagePreview = null;
 	}
 
 	async function handleSubmit() {
@@ -65,8 +104,24 @@
 				gameId = '00'; // Special code for new game suggestions
 			}
 
+			// Upload image first if selected
+			let imageUrl: string | undefined;
+			if (selectedImage) {
+				uploading = true;
+				const uploadResult = await uploadImage(selectedImage);
+				uploading = false;
+
+				if (uploadResult.error || !uploadResult.url) {
+					errorMessage = tr('feedback.imageUploadError');
+					submitting = false;
+					return;
+				}
+				imageUrl = uploadResult.url;
+			}
+
 			const result = await submitFeedback(gameId, gameName, {
-				text: comment.trim() || undefined
+				text: comment.trim() || undefined,
+				imageUrl
 			});
 
 			if (result.success) {
@@ -155,6 +210,31 @@
 					></textarea>
 				</div>
 
+				<!-- Image Attachment -->
+				{#if imagePreview}
+					<div class="image-preview">
+						<img src={imagePreview} alt="Preview" />
+						<button type="button" class="remove-image" onclick={removeImage} disabled={submitting}>
+							<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+							</svg>
+						</button>
+					</div>
+				{:else}
+					<label class="image-picker" class:disabled={submitting}>
+						<input
+							type="file"
+							accept="image/png,image/jpeg,image/gif,image/webp"
+							onchange={handleImageSelect}
+							disabled={submitting}
+						/>
+						<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+							<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+						</svg>
+						<span>{tr('feedback.addImage')}</span>
+					</label>
+				{/if}
+
 				{#if errorMessage}
 					<p class="error">{errorMessage}</p>
 				{/if}
@@ -164,7 +244,13 @@
 					onclick={handleSubmit}
 					disabled={submitting}
 				>
-					{submitting ? tr('feedback.sending') : tr('feedback.send')}
+					{#if uploading}
+						{tr('feedback.uploading')}
+					{:else if submitting}
+						{tr('feedback.sending')}
+					{:else}
+						{tr('feedback.send')}
+					{/if}
 				</button>
 			</div>
 		{/if}
@@ -323,6 +409,79 @@
 		color: rgba(255, 255, 255, 0.8);
 		font-size: 1.1rem;
 		margin: 0;
+	}
+
+	.image-picker {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 14px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 20px;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.85rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.image-picker:active:not(.disabled) {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(255, 255, 255, 0.25);
+	}
+
+	.image-picker.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.image-picker input {
+		display: none;
+	}
+
+	.image-picker svg {
+		flex-shrink: 0;
+	}
+
+	.image-preview {
+		position: relative;
+		border-radius: 12px;
+		overflow: hidden;
+		background: rgba(0, 0, 0, 0.3);
+	}
+
+	.image-preview img {
+		display: block;
+		width: 100%;
+		max-height: 200px;
+		object-fit: contain;
+	}
+
+	.remove-image {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 32px;
+		height: 32px;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.6);
+		border: none;
+		border-radius: 50%;
+		color: white;
+		cursor: pointer;
+		transition: background 0.2s ease;
+	}
+
+	.remove-image:active:not(:disabled) {
+		background: rgba(239, 68, 68, 0.8);
+	}
+
+	.remove-image:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 
 </style>

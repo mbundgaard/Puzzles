@@ -96,8 +96,11 @@ public class FeedbackFunction
             }
         }
 
+        // Get image URL if provided
+        var imageUrl = feedbackRequest.ImageUrl?.Trim();
+
         // Create GitHub issue (fire-and-forget, don't block response)
-        _ = _gitHubService.CreateFeedbackIssueAsync(game, gameName, text, nickname, aiTitle, aiTranslation);
+        _ = _gitHubService.CreateFeedbackIssueAsync(game, gameName, text, nickname, aiTitle, aiTranslation, imageUrl);
 
         _logger.LogInformation("Feedback submitted: game={Game}, aiProcessed={AiProcessed}",
             game, aiTitle != null);

@@ -55,8 +55,16 @@ public class Game26Function
 
         var category = pickRequest?.Category?.Trim();
         var difficulty = pickRequest?.Difficulty?.Trim() ?? "hard";
+        var language = pickRequest?.Language?.Trim()?.ToLower() ?? "en";
 
-        var result = await PickAnimalAsync(category, difficulty);
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
+
+        var result = await PickAnimalAsync(category, difficulty, outputLanguage);
         if (result == null)
         {
             return new ObjectResult(new { error = "Kunne ikke vælge et dyr. Prøv igen." })
@@ -111,7 +119,16 @@ public class Game26Function
             return new ObjectResult(new { error = "AI service not configured" }) { StatusCode = 503 };
         }
 
-        var answer = await AskAboutAnimalAsync(askRequest.Animal, askRequest.Question);
+        var language = askRequest.Language?.Trim()?.ToLower() ?? "en";
+
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
+
+        var answer = await AskAboutAnimalAsync(askRequest.Animal, askRequest.Question, outputLanguage);
         if (answer == null)
         {
             return new ObjectResult(new { error = "Kunne ikke besvare spørgsmålet. Prøv igen." })
@@ -158,7 +175,16 @@ public class Game26Function
             return new ObjectResult(new { error = "AI service not configured" }) { StatusCode = 503 };
         }
 
-        var hint = await GetHintAboutAnimalAsync(hintRequest.Animal, hintRequest.PreviousHints);
+        var language = hintRequest.Language?.Trim()?.ToLower() ?? "en";
+
+        var outputLanguage = language switch
+        {
+            "da" => "Danish",
+            "fr" => "French",
+            _ => "English"
+        };
+
+        var hint = await GetHintAboutAnimalAsync(hintRequest.Animal, hintRequest.PreviousHints, outputLanguage);
         if (hint == null)
         {
             return new ObjectResult(new { error = "Kunne ikke generere hint. Prøv igen." })
@@ -177,33 +203,37 @@ public class Game26Function
 
     // AI methods with prompts
 
-    private async Task<AnimalPickResult?> PickAnimalAsync(string? category, string difficulty)
+    private async Task<AnimalPickResult?> PickAnimalAsync(string? category, string difficulty, string outputLanguage)
     {
         var diff = string.IsNullOrWhiteSpace(difficulty) ? "hard" : difficulty.ToLower();
 
         var categoryPrompt = string.IsNullOrWhiteSpace(category)
-            ? "Vælg en tilfældig kategori (f.eks. havdyr, fugle, pattedyr, insekter, krybdyr) og et dyr fra den kategori."
-            : $"Vælg et tilfældigt dyr fra kategorien: {category}";
+            ? "Pick a random category (e.g. sea animals, birds, mammals, insects, reptiles) and an animal from that category."
+            : $"Pick a random animal from the category: {category}";
 
         var difficultyPrompt = diff switch
         {
-            "easy" => "Vælg et MEGET ALMINDELIGT dyr som alle børn kender, f.eks. hund, kat, ko, hest, elefant, løve, giraf, zebra, kanin, and, høne, gris.",
-            "medium" => "Vælg et dyr som de fleste kender, men undgå de mest oplagte som hund, kat, ko. Vælg f.eks. delfin, pingvin, flamingo, bæver, vaskebjørn, papegøje.",
-            _ => "Vælg et MINDRE KENDT eller UVENTET dyr. Undgå almindelige dyr som hund, kat, ko, hest, elefant. Vælg f.eks. næbdyr, tapir, okapien, axolotl, capybara, fennekræv, pangolin, manati."
+            "easy" => "Pick a VERY COMMON animal that all children know, e.g. dog, cat, cow, horse, elephant, lion, giraffe, zebra, rabbit, duck, chicken, pig.",
+            "medium" => "Pick an animal that most people know, but avoid the most obvious ones like dog, cat, cow. Pick e.g. dolphin, penguin, flamingo, beaver, raccoon, parrot.",
+            _ => "Pick a LESS KNOWN or UNEXPECTED animal. Avoid common animals like dog, cat, cow, horse, elephant. Pick e.g. platypus, tapir, okapi, axolotl, capybara, fennec fox, pangolin, manatee."
         };
 
-        var systemPrompt = $@"Du hjælper med et gættespil om dyr. {categoryPrompt}
+        var systemPrompt = $@"You help with an animal guessing game.
+
+{categoryPrompt}
 
 {difficultyPrompt}
 
-Svar med JSON i dette format:
-{{""animal"": ""navnet på dyret"", ""category"": ""kategorien""}}
+IMPORTANT: All text output must be in {outputLanguage}.
 
-Dyrenavnet skal være på dansk og i ental (f.eks. ""delfin"" ikke ""delfiner"").";
+Respond with JSON in this format:
+{{""animal"": ""dolphin"", ""category"": ""sea animals""}}
+
+The animal name must be singular (e.g. ""dolphin"" not ""dolphins"").";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = "Vælg et dyr" } },
+            new[] { new AIMessage { Role = "user", Content = "Pick an animal" } },
             new AIRequestOptions { Temperature = 0.9 }
         );
 
@@ -226,15 +256,16 @@ Dyrenavnet skal være på dansk og i ental (f.eks. ""delfin"" ikke ""delfiner"")
         }
     }
 
-    private async Task<string?> AskAboutAnimalAsync(string animal, string question)
+    private async Task<string?> AskAboutAnimalAsync(string animal, string question, string outputLanguage)
     {
-        var systemPrompt = $@"Du spiller et gættespil. Dyret der skal gættes er: {animal}
+        var systemPrompt = $@"You are playing a guessing game. The animal to guess is: {animal}
 
-Besvar brugerens ja/nej spørgsmål ærligt om dette dyr.
-Svar KUN med JSON i dette format:
-{{""answer"": ""Ja""}} eller {{""answer"": ""Nej""}} eller {{""answer"": ""Måske""}}
+Answer the user's yes/no question honestly about this animal.
+Respond ONLY with JSON in this format:
+{{""answer"": ""Yes""}} or {{""answer"": ""No""}} or {{""answer"": ""Maybe""}}
 
-Svar ""Måske"" hvis spørgsmålet er uklart, tvetydigt, eller ikke kan besvares entydigt.";
+Answer ""Maybe"" if the question is unclear, ambiguous, or cannot be answered definitively.
+IMPORTANT: The answer must be in {outputLanguage}.";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
@@ -262,27 +293,29 @@ Svar ""Måske"" hvis spørgsmålet er uklart, tvetydigt, eller ikke kan besvares
         }
     }
 
-    private async Task<string?> GetHintAboutAnimalAsync(string animal, List<string>? previousHints)
+    private async Task<string?> GetHintAboutAnimalAsync(string animal, List<string>? previousHints, string outputLanguage)
     {
         var previousHintsText = previousHints != null && previousHints.Count > 0
-            ? $"\n\nTidligere hints (giv IKKE disse igen):\n- {string.Join("\n- ", previousHints)}"
+            ? $"\n\nPrevious hints (do NOT repeat these):\n- {string.Join("\n- ", previousHints)}"
             : "";
 
-        var systemPrompt = $@"Du hjælper med et gættespil om dyr. Dyret der skal gættes er: {animal}
+        var systemPrompt = $@"You help with an animal guessing game. The animal to guess is: {animal}
 
-Giv ET kort, hjælpsomt hint om dyret på dansk. Hintet skal:
-- Være 1 sætning (max 15 ord)
-- Give nyttig information der kan hjælpe med at gætte dyret
-- IKKE nævne dyrets navn eller dele af navnet
-- Være faktuelt korrekt
+Give ONE short, helpful hint about the animal. The hint must:
+- Be 1 sentence (max 15 words)
+- Give useful information that can help guess the animal
+- NOT mention the animal's name or parts of the name
+- Be factually correct
 {previousHintsText}
 
-Svar KUN med JSON i dette format:
-{{""hint"": ""Dit hint her""}}";
+IMPORTANT: The hint must be in {outputLanguage}.
+
+Respond ONLY with JSON in this format:
+{{""hint"": ""This animal lives in the ocean""}}";
 
         var response = await _aiService.GenerateAsync(
             systemPrompt,
-            new[] { new AIMessage { Role = "user", Content = "Giv et hint" } },
+            new[] { new AIMessage { Role = "user", Content = "Give a hint" } },
             new AIRequestOptions { Temperature = 0.7 }
         );
 
@@ -311,6 +344,7 @@ Svar KUN med JSON i dette format:
     {
         public string? Category { get; set; }
         public string? Difficulty { get; set; }
+        public string? Language { get; set; }
     }
 
     private class AnimalPickResponse
@@ -329,6 +363,7 @@ Svar KUN med JSON i dette format:
     {
         public required string Animal { get; set; }
         public required string Question { get; set; }
+        public string? Language { get; set; }
     }
 
     private class AnimalAskResponse
@@ -345,6 +380,7 @@ Svar KUN med JSON i dette format:
     {
         public required string Animal { get; set; }
         public List<string>? PreviousHints { get; set; }
+        public string? Language { get; set; }
     }
 
     private class AnimalHintResponse

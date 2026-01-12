@@ -50,6 +50,12 @@
 		"comment": "Kommentar",
 		"commentPlaceholder": "Skriv din feedback her... (alle sprog velkommen, links OK)",
 		"suggestionPlaceholder": "Beskriv dit spilidé... (alle sprog velkommen, links OK)",
+		"image": "Billede",
+		"addImage": "Tilføj billede",
+		"uploading": "Uploader...",
+		"imageInvalidType": "Ugyldigt filformat. Brug PNG, JPEG, GIF eller WebP",
+		"imageTooLarge": "Billedet er for stort. Maks 5 MB",
+		"imageUploadError": "Kunne ikke uploade billede",
 		"send": "Send",
 		"sending": "Sender...",
 		"sent": "Tak for din feedback!",
@@ -118,6 +124,8 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"90": "Feedback kan nu indeholde billeder",
+		"94": "Ordsøgning viser nu alle 8 ord pålideligt i flere retninger",
 		"96": "Quiz Mester går nu direkte til kategorivalg efter et spil i stedet for tilbage til børn/voksne",
 		"97": "Quiz Mester AI opgraderet til GPT-4.1 for klogere og mere præcise svar",
 		"92": "Quiz Mester husker nu hvilke spørgsmål du har fået, så du ikke får de samme igen samme dag",
