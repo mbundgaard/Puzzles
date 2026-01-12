@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { t, translate, type Translations } from '$lib/i18n';
-	import { getNickname, setNickname, isValidNickname } from '$lib/api';
+	import { getNickname, setNickname, isValidNickname, getAgeGroup, setAgeGroup, type AgeGroup } from '$lib/api';
 
 	interface Props {
 		isOpen: boolean;
@@ -22,17 +22,20 @@
 	}
 
 	let name = $state('');
+	let ageGroup = $state<AgeGroup>('adult');
 	let saved = $state(false);
 	let error = $state(false);
 
 	onMount(() => {
 		name = getNickname() || '';
+		ageGroup = getAgeGroup() || 'adult';
 	});
 
 	// Reset state when modal opens
 	$effect(() => {
 		if (isOpen) {
 			name = getNickname() || '';
+			ageGroup = getAgeGroup() || 'adult';
 			saved = false;
 			error = false;
 		}
@@ -41,6 +44,7 @@
 	function handleSave() {
 		if (isValidNickname(name)) {
 			setNickname(name.trim());
+			setAgeGroup(ageGroup);
 			saved = true;
 			error = false;
 			setTimeout(() => {
@@ -92,6 +96,25 @@
 			{#if error}
 				<p class="error-text">{tr('win.nameError')}</p>
 			{/if}
+
+			<div class="age-toggle">
+				<button
+					class="age-btn"
+					class:active={ageGroup === 'kid'}
+					onclick={() => ageGroup = 'kid'}
+				>
+					<span class="age-icon">👶</span>
+					<span class="age-label">{tr('settings.ageKid')}</span>
+				</button>
+				<button
+					class="age-btn"
+					class:active={ageGroup === 'adult'}
+					onclick={() => ageGroup = 'adult'}
+				>
+					<span class="age-icon">🧑</span>
+					<span class="age-label">{tr('settings.ageAdult')}</span>
+				</button>
+			</div>
 
 			<button class="save-btn" class:saved onclick={handleSave} disabled={saved}>
 				{saved ? tr('settings.nameSaved') : tr('settings.nameSave')}
@@ -168,6 +191,45 @@
 		color: #ef4444;
 		font-size: 0.85rem;
 		margin: 8px 0 0 0;
+	}
+
+	.age-toggle {
+		display: flex;
+		gap: 10px;
+		margin-top: 16px;
+	}
+
+	.age-btn {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+		padding: 12px 8px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.age-btn:active {
+		transform: scale(0.98);
+	}
+
+	.age-btn.active {
+		background: rgba(236, 72, 153, 0.2);
+		border-color: rgba(236, 72, 153, 0.5);
+	}
+
+	.age-icon {
+		font-size: 1.5rem;
+	}
+
+	.age-label {
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.8);
 	}
 
 	.save-btn {

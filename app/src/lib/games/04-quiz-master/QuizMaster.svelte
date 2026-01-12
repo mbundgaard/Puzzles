@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Translations } from '$lib/i18n';
-	import { trackStart, trackComplete, getNickname } from '$lib/api';
+	import { trackStart, trackComplete, getNickname, getAgeGroup } from '$lib/api';
 	import WinModal from '$lib/components/WinModal.svelte';
 
 	interface Props {
@@ -112,6 +112,18 @@
 
 		return shuffled.slice(0, 4);
 	}
+
+	// Auto-select audience based on saved age preference
+	$effect(() => {
+		if (gamePhase === 'select' && audienceMode === null) {
+			const savedAge = getAgeGroup();
+			if (savedAge) {
+				const mode: AudienceMode = savedAge === 'kid' ? 'kids' : 'adults';
+				audienceMode = mode;
+				availableCategories = getDailyCategories(mode);
+			}
+		}
+	});
 
 	// Select audience mode and load categories
 	function selectAudience(mode: AudienceMode) {
