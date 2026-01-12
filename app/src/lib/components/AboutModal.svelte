@@ -37,6 +37,10 @@
 						<p>{tr('about.sections.points.text')}</p>
 					</div>
 					<div class="section">
+						<span class="icon">✨</span>
+						<p>{tr('about.sections.badges.text')}</p>
+					</div>
+					<div class="section">
 						<span class="icon">⭐</span>
 						<p>{tr('about.sections.feedback.text')}</p>
 					</div>

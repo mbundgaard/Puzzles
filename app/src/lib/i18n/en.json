@@ -73,6 +73,10 @@
 				"title": "Points",
 				"text": "When you solve a game, you earn points. Enter your name to appear on the leaderboard."
 			},
+			"badges": {
+				"title": "Badges",
+				"text": "Games show a sparkle icon when new and a star icon when recently updated."
+			},
 			"feedback": {
 				"title": "Feedback",
 				"text": "Use the feedback page to suggest new games or share your thoughts."

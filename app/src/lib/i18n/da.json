@@ -73,6 +73,10 @@
 				"title": "Point",
 				"text": "Når du løser et spil, optjener du point. Indtast dit navn for at komme på ranglisten."
 			},
+			"badges": {
+				"title": "Badges",
+				"text": "Spil viser et gnist-ikon når de er nye og et stjerne-ikon når de er opdateret."
+			},
 			"feedback": {
 				"title": "Feedback",
 				"text": "Brug feedback-siden til at foreslå nye spil eller give os din mening."

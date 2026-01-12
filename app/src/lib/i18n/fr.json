@@ -73,6 +73,10 @@
 				"title": "Points",
 				"text": "Lorsque vous résolvez un jeu, vous gagnez des points. Entrez votre nom pour apparaître dans le classement."
 			},
+			"badges": {
+				"title": "Badges",
+				"text": "Les jeux affichent une étincelle quand ils sont nouveaux et une étoile quand ils sont mis à jour."
+			},
 			"feedback": {
 				"title": "Commentaires",
 				"text": "Utilisez la page de commentaires pour suggérer de nouveaux jeux ou partager vos idées."
