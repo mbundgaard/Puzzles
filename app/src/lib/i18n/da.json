@@ -13,6 +13,10 @@
 		"add": "Tilføj til favoritter",
 		"remove": "Fjern fra favoritter"
 	},
+	"badge": {
+		"new": "Dette er et nyt spil!",
+		"updated": "Nyligt opdateret"
+	},
 	"tabs": {
 		"games": "Spil"
 	},

@@ -2,12 +2,13 @@
 	import { base } from '$app/paths';
 	import { t, translate, type Translations } from '$lib/i18n';
 	import InstallBanner from '$lib/components/InstallBanner.svelte';
-	import { getSortedGames, getGameBadge, type GameInfo } from '$lib/games/registry';
+	import { getSortedGames, getGameBadge, type GameInfo, type Badge } from '$lib/games/registry';
 	import { favorites } from '$lib/favorites';
 	import { onMount } from 'svelte';
 
 	let translations = $state<Translations>({});
 	let favoriteIds = $state<string[]>([]);
+	let badgePopup = $state<{ badge: Badge; gameName: string } | null>(null);
 
 	t.subscribe((value) => {
 		translations = value;
@@ -45,6 +46,16 @@
 
 	function isFavorite(gameId: string): boolean {
 		return favoriteIds.includes(gameId);
+	}
+
+	function showBadgePopup(e: Event, badge: Badge, gameName: string) {
+		e.preventDefault();
+		e.stopPropagation();
+		badgePopup = { badge, gameName };
+	}
+
+	function closeBadgePopup() {
+		badgePopup = null;
 	}
 </script>
 
@@ -85,14 +96,38 @@
 						<div class="game-desc">{translate(translations, `games.${game.id}.description`)}</div>
 					</div>
 					{#if badge === 'new'}
-						<span class="badge badge-new">✨</span>
+						<button
+							class="badge badge-new"
+							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`))}
+							aria-label={translate(translations, 'badge.new')}
+						>✨</button>
 					{:else if badge === 'updated'}
-						<span class="badge badge-updated">💫</span>
+						<button
+							class="badge badge-updated"
+							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`))}
+							aria-label={translate(translations, 'badge.updated')}
+						>💫</button>
 					{/if}
 				</a>
 			{/each}
 	</div>
 </div>
+
+{#if badgePopup}
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_interactive_supports_focus -->
+	<div class="badge-overlay" onclick={closeBadgePopup} role="dialog" aria-modal="true">
+		<div class="badge-popup">
+			<div class="badge-popup-icon">
+				{badgePopup.badge === 'new' ? '✨' : '💫'}
+			</div>
+			<div class="badge-popup-title">{badgePopup.gameName}</div>
+			<div class="badge-popup-text">
+				{translate(translations, badgePopup.badge === 'new' ? 'badge.new' : 'badge.updated')}
+			</div>
+			<button class="badge-popup-close" onclick={closeBadgePopup}>OK</button>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.home {
@@ -174,6 +209,88 @@
 	.badge {
 		font-size: 1.1rem;
 		line-height: 1;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		border-radius: 50%;
+		transition: all 0.2s ease;
+		z-index: 5;
+	}
+
+	.badge:active {
+		transform: scale(1.2);
+	}
+
+	.badge-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.7);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+		padding: 20px;
+		animation: fadeIn 0.2s ease;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	.badge-popup {
+		background: linear-gradient(145deg, #1e1e3f 0%, #0f0f23 100%);
+		border-radius: 20px;
+		padding: 25px;
+		text-align: center;
+		max-width: 280px;
+		width: 100%;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		animation: popIn 0.3s ease;
+	}
+
+	@keyframes popIn {
+		from { transform: scale(0.9); opacity: 0; }
+		to { transform: scale(1); opacity: 1; }
+	}
+
+	.badge-popup-icon {
+		font-size: 3rem;
+		margin-bottom: 10px;
+	}
+
+	.badge-popup-title {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: white;
+		margin-bottom: 8px;
+	}
+
+	.badge-popup-text {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.95rem;
+		margin-bottom: 20px;
+	}
+
+	.badge-popup-close {
+		padding: 10px 30px;
+		font-size: 1rem;
+		font-weight: 600;
+		font-family: 'Poppins', sans-serif;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		border: none;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.badge-popup-close:active {
+		transform: scale(0.95);
 	}
 
 	.favorite-btn {

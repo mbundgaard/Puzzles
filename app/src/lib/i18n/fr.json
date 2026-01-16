@@ -13,6 +13,10 @@
 		"add": "Ajouter aux favoris",
 		"remove": "Retirer des favoris"
 	},
+	"badge": {
+		"new": "C'est un nouveau jeu !",
+		"updated": "Récemment mis à jour"
+	},
 	"tabs": {
 		"games": "Jeux"
 	},
