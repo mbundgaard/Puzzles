@@ -124,4 +124,44 @@ public class EventFunction
             completions
         });
     }
+
+    [Function("GetStats")]
+    public async Task<IActionResult> GetStats(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stats")] HttpRequest req)
+    {
+        var authResult = _adminAuth.Authorize(req);
+        if (authResult != null) return authResult;
+
+        // Parse 'from' parameter (required)
+        var fromParam = req.Query["from"].FirstOrDefault();
+        if (string.IsNullOrEmpty(fromParam) || !DateTime.TryParse(fromParam, out var from))
+        {
+            return new BadRequestObjectResult(new { error = "Invalid or missing 'from' parameter. Use yyyy-MM-dd format." });
+        }
+
+        // Parse 'to' parameter (required)
+        var toParam = req.Query["to"].FirstOrDefault();
+        if (string.IsNullOrEmpty(toParam) || !DateTime.TryParse(toParam, out var to))
+        {
+            return new BadRequestObjectResult(new { error = "Invalid or missing 'to' parameter. Use yyyy-MM-dd format." });
+        }
+
+        // Validate date range
+        if (from > to)
+        {
+            return new BadRequestObjectResult(new { error = "'from' date must be before or equal to 'to' date." });
+        }
+
+        // Limit range to 366 days to prevent excessive queries
+        if ((to - from).Days > 366)
+        {
+            return new BadRequestObjectResult(new { error = "Date range cannot exceed 366 days." });
+        }
+
+        var stats = await _storage.GetStatsAsync(from, to);
+
+        _logger.LogInformation("Stats requested: from={From}, to={To}", fromParam, toParam);
+
+        return new OkObjectResult(stats);
+    }
 }

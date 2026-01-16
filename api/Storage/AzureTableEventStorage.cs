@@ -123,4 +123,127 @@ public class AzureTableEventStorage : IEventStorage
 
         return count;
     }
+
+    public async Task<StatsResponse> GetStatsAsync(DateTime from, DateTime to)
+    {
+        // Get events for the requested period
+        var events = await GetEventsForDateRangeAsync(from, to);
+
+        // Calculate the previous period (same length, immediately before)
+        var days = (to - from).Days + 1;
+        var previousFrom = from.AddDays(-days);
+        var previousTo = from.AddDays(-1);
+        var previousEvents = await GetEventsForDateRangeAsync(previousFrom, previousTo);
+
+        var response = new StatsResponse
+        {
+            Period = new StatsPeriod
+            {
+                From = from.ToString("yyyy-MM-dd"),
+                To = to.ToString("yyyy-MM-dd"),
+                Days = days
+            },
+            Summary = new StatsSummary
+            {
+                TotalStarts = events.Count(e => e.EventType == "Start"),
+                TotalCompletions = events.Count(e => e.EventType == "Complete")
+            }
+        };
+
+        // Previous period comparison
+        var prevStarts = previousEvents.Count(e => e.EventType == "Start");
+        var prevCompletions = previousEvents.Count(e => e.EventType == "Complete");
+
+        if (prevStarts > 0 || prevCompletions > 0)
+        {
+            response.PreviousPeriod = new PreviousPeriodStats
+            {
+                From = previousFrom.ToString("yyyy-MM-dd"),
+                To = previousTo.ToString("yyyy-MM-dd"),
+                TotalStarts = prevStarts,
+                TotalCompletions = prevCompletions,
+                StartsChange = prevStarts > 0 ? Math.Round((response.Summary.TotalStarts - prevStarts) / (double)prevStarts * 100, 1) : 0,
+                CompletionsChange = prevCompletions > 0 ? Math.Round((response.Summary.TotalCompletions - prevCompletions) / (double)prevCompletions * 100, 1) : 0
+            };
+        }
+
+        // Per-game breakdown
+        response.PerGame = events
+            .GroupBy(e => e.Game)
+            .Select(g => new GameStatsWithName
+            {
+                Game = g.Key,
+                Name = GameNames.GetName(g.Key),
+                Starts = g.Count(e => e.EventType == "Start"),
+                Completions = g.Count(e => e.EventType == "Complete")
+            })
+            .OrderBy(g => g.Game)
+            .ToList();
+
+        // Daily breakdown
+        response.DailyBreakdown = Enumerable.Range(0, days)
+            .Select(offset => from.AddDays(offset))
+            .Select(date => new DailyStats
+            {
+                Date = date.ToString("yyyy-MM-dd"),
+                DayOfWeek = date.DayOfWeek.ToString(),
+                Starts = events.Count(e => e.RecordedAt.Date == date && e.EventType == "Start"),
+                Completions = events.Count(e => e.RecordedAt.Date == date && e.EventType == "Complete")
+            })
+            .ToList();
+
+        // Player stats (only include events with nicknames)
+        response.Players = events
+            .Where(e => !string.IsNullOrEmpty(e.Nickname))
+            .GroupBy(e => e.Nickname!)
+            .Select(g => new PlayerStats
+            {
+                Nickname = g.Key,
+                Starts = g.Count(e => e.EventType == "Start"),
+                Completions = g.Count(e => e.EventType == "Complete"),
+                Games = g
+                    .GroupBy(e => e.Game)
+                    .Select(gg => new PlayerGameStats
+                    {
+                        Game = gg.Key,
+                        Name = GameNames.GetName(gg.Key),
+                        Starts = gg.Count(e => e.EventType == "Start"),
+                        Completions = gg.Count(e => e.EventType == "Complete")
+                    })
+                    .OrderBy(gg => gg.Game)
+                    .ToList()
+            })
+            .OrderByDescending(p => p.Completions)
+            .ThenBy(p => p.Nickname)
+            .ToList();
+
+        return response;
+    }
+
+    private async Task<List<EventEntity>> GetEventsForDateRangeAsync(DateTime from, DateTime to)
+    {
+        // Get all months that overlap with the date range
+        var months = new HashSet<string>();
+        for (var date = from; date <= to; date = date.AddMonths(1).AddDays(1 - date.Day))
+        {
+            months.Add(date.ToString("yyyy-MM"));
+        }
+        months.Add(to.ToString("yyyy-MM")); // Ensure the end month is included
+
+        var events = new List<EventEntity>();
+
+        foreach (var month in months)
+        {
+            var filter = $"PartitionKey eq '{month}'";
+            await foreach (var entity in _tableClient.QueryAsync<EventEntity>(filter))
+            {
+                if (entity.RecordedAt.Date >= from.Date && entity.RecordedAt.Date <= to.Date)
+                {
+                    events.Add(entity);
+                }
+            }
+        }
+
+        return events;
+    }
 }

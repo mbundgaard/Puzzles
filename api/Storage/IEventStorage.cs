@@ -28,4 +28,11 @@ public interface IEventStorage
     /// Gets total completions today.
     /// </summary>
     Task<int> GetTodayCompletionsAsync();
+
+    /// <summary>
+    /// Gets statistics for a date range.
+    /// </summary>
+    /// <param name="from">Start date (inclusive)</param>
+    /// <param name="to">End date (inclusive)</param>
+    Task<StatsResponse> GetStatsAsync(DateTime from, DateTime to);
 }
