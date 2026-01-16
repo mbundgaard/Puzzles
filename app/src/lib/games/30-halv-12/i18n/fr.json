@@ -1,5 +1,5 @@
 {
-	"title": "Demi Douze",
+	"title": "Blackjack",
 	"newGame": "Nouvelle Partie",
 	"hit": "Tirer",
 	"stand": "Rester",
@@ -9,7 +9,8 @@
 		"pressStart": "Appuyez pour commencer",
 		"yourTurn": "Votre tour - tirez ou restez",
 		"dealerTurn": "Tour du croupier...",
-		"bust": "Perdu ! Plus de 11,5",
+		"bust": "Perdu ! Plus de 21",
+		"blackjack": "21 !",
 		"won": "Vous avez gagné !",
 		"lost": "Le croupier a gagné !",
 		"push": "Égalité !"
@@ -19,10 +20,11 @@
 		"dealer": "Croupier"
 	},
 	"rules": {
-		"title": "Comment jouer",
-		"rule1": "But : Approchez-vous de 11,5 sans dépasser",
-		"rule2": "Cartes 2-10 = valeur faciale, As = 1, Valet/Dame/Roi = 0,5",
-		"rule3": "Appuyez 'Tirer' pour une carte, 'Rester' pour arrêter",
-		"rule4": "Le croupier tire jusqu'à au moins 10,5 points"
+		"title": "Règles (Mode difficile)",
+		"rule1": "Approchez-vous de 21 sans dépasser",
+		"rule2": "Cartes 2-10 = valeur, As = 1 ou 11, Figures = 10",
+		"rule3": "Le croupier gagne en cas d'égalité",
+		"rule4": "Le croupier tire sur 17 souple",
+		"rule5": "6 jeux de cartes (pas de comptage !)"
 	}
 }

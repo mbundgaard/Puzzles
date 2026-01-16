@@ -1,5 +1,5 @@
 {
-	"title": "Half Twelve",
+	"title": "Blackjack",
 	"newGame": "New Game",
 	"hit": "Hit",
 	"stand": "Stand",
@@ -9,7 +9,8 @@
 		"pressStart": "Press to start",
 		"yourTurn": "Your turn - hit or stand",
 		"dealerTurn": "Dealer's turn...",
-		"bust": "Bust! Over 11.5",
+		"bust": "Bust! Over 21",
+		"blackjack": "21!",
 		"won": "You won!",
 		"lost": "Dealer won!",
 		"push": "Push!"
@@ -19,10 +20,11 @@
 		"dealer": "Dealer"
 	},
 	"rules": {
-		"title": "How to play",
-		"rule1": "Goal: Get as close to 11.5 as possible without going over",
-		"rule2": "Cards 2-10 = face value, Ace = 1, Jack/Queen/King = 0.5",
-		"rule3": "Tap 'Hit' for a card, 'Stand' to stop",
-		"rule4": "Dealer draws until at least 10.5 points"
+		"title": "Rules (Hard Mode)",
+		"rule1": "Get as close to 21 as possible without going over",
+		"rule2": "Cards 2-10 = value, Ace = 1 or 11, Face cards = 10",
+		"rule3": "Dealer wins ties (house edge)",
+		"rule4": "Dealer hits on soft 17 (house edge)",
+		"rule5": "6 decks used (no counting!)"
 	}
 }

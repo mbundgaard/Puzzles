@@ -12,8 +12,9 @@
 	// Win modal state
 	let showWinModal = $state(false);
 	const GAME_NUMBER = '30';
-	const POINTS = 3;
-	const TARGET = 11.5;
+	const POINTS = 5; // Higher points because it's harder
+	const TARGET = 21;
+	const NUM_DECKS = 6; // 6 decks makes counting harder
 
 	// Helper to get translation
 	function t(key: string): string {
@@ -33,7 +34,7 @@
 	interface Card {
 		suit: 'hearts' | 'diamonds' | 'clubs' | 'spades';
 		rank: string;
-		value: number;
+		value: number; // Base value (Ace = 1, face = 10)
 	}
 
 	// Game state
@@ -45,19 +46,64 @@
 	let result = $state<'win' | 'lose' | 'push' | null>(null);
 	let scores = $state({ player: 0, dealer: 0 });
 
-	// Calculate hand value
+	// Calculate hand value with Ace handling (Ace can be 1 or 11)
 	function calculateValue(hand: Card[]): number {
-		return hand.reduce((sum, card) => sum + card.value, 0);
+		let sum = 0;
+		let aces = 0;
+
+		for (const card of hand) {
+			if (card.rank === 'A') {
+				aces++;
+				sum += 11; // Count Ace as 11 initially
+			} else {
+				sum += card.value;
+			}
+		}
+
+		// Convert Aces from 11 to 1 if needed to avoid bust
+		while (sum > TARGET && aces > 0) {
+			sum -= 10;
+			aces--;
+		}
+
+		return sum;
+	}
+
+	// Check if hand is "soft" (has an Ace counting as 11)
+	function isSoftHand(hand: Card[]): boolean {
+		let sum = 0;
+		let aces = 0;
+
+		for (const card of hand) {
+			if (card.rank === 'A') {
+				aces++;
+				sum += 11;
+			} else {
+				sum += card.value;
+			}
+		}
+
+		// If we have aces and haven't busted, at least one ace is counting as 11
+		while (sum > TARGET && aces > 0) {
+			sum -= 10;
+			aces--;
+		}
+
+		return aces > 0 && sum <= TARGET;
 	}
 
 	let playerValue = $derived(calculateValue(playerHand));
 	let dealerValue = $derived(calculateValue(dealerHand));
+	let dealerVisibleValue = $derived(dealerHidden && dealerHand.length > 0
+		? calculateValue([dealerHand[0]])
+		: dealerValue);
 
 	// Status message
 	let status = $derived.by(() => {
 		if (gamePhase === 'betting') return t('status.pressStart');
 		if (gamePhase === 'playing') {
 			if (playerValue > TARGET) return t('status.bust');
+			if (playerValue === TARGET) return t('status.blackjack');
 			return t('status.yourTurn');
 		}
 		if (gamePhase === 'dealer') return t('status.dealerTurn');
@@ -75,41 +121,52 @@
 		return '';
 	});
 
-	// Create and shuffle deck
+	// Create and shuffle multiple decks
 	function createDeck(): Card[] {
 		const suits: Card['suit'][] = ['hearts', 'diamonds', 'clubs', 'spades'];
 		const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 		const cards: Card[] = [];
 
-		for (const suit of suits) {
-			for (const rank of ranks) {
-				let value: number;
-				if (rank === 'A') {
-					value = 1; // Ace starts as 1, can be counted as 11 later
-				} else if (['J', 'Q', 'K'].includes(rank)) {
-					value = 0.5;
-				} else {
-					value = parseInt(rank);
+		// Create multiple decks
+		for (let d = 0; d < NUM_DECKS; d++) {
+			for (const suit of suits) {
+				for (const rank of ranks) {
+					let value: number;
+					if (rank === 'A') {
+						value = 1; // Base value, actual calculation handles 1 or 11
+					} else if (['J', 'Q', 'K'].includes(rank)) {
+						value = 10;
+					} else {
+						value = parseInt(rank);
+					}
+					cards.push({ suit, rank, value });
 				}
-				cards.push({ suit, rank, value });
 			}
 		}
 
-		// Shuffle
-		for (let i = cards.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[cards[i], cards[j]] = [cards[j], cards[i]];
+		// Shuffle thoroughly (multiple passes for 6 decks)
+		for (let pass = 0; pass < 3; pass++) {
+			for (let i = cards.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[cards[i], cards[j]] = [cards[j], cards[i]];
+			}
 		}
 
 		return cards;
 	}
 
 	function drawCard(): Card | undefined {
+		// Reshuffle if deck is getting low
+		if (deck.length < 52) {
+			deck = createDeck();
+		}
 		return deck.pop();
 	}
 
 	function newGame() {
-		deck = createDeck();
+		if (deck.length < 52) {
+			deck = createDeck();
+		}
 		playerHand = [];
 		dealerHand = [];
 		dealerHidden = true;
@@ -133,8 +190,20 @@
 
 		trackStart(GAME_NUMBER);
 
-		// Check for natural 11.5
-		if (playerValue === TARGET) {
+		// Check for dealer blackjack first (dealer advantage)
+		const dealerHasBlackjack = dealerHand.length === 2 && calculateValue(dealerHand) === 21;
+		const playerHasBlackjack = playerHand.length === 2 && playerValue === 21;
+
+		if (dealerHasBlackjack) {
+			dealerHidden = false;
+			if (playerHasBlackjack) {
+				// Both have blackjack - dealer wins ties!
+				endGame('lose');
+			} else {
+				endGame('lose');
+			}
+		} else if (playerHasBlackjack) {
+			// Player has blackjack, dealer doesn't - but no bonus payout
 			stand();
 		}
 	}
@@ -151,6 +220,7 @@
 		if (playerValue > TARGET) {
 			endGame('lose');
 		} else if (playerValue === TARGET) {
+			// Auto-stand on 21
 			stand();
 		}
 	}
@@ -161,13 +231,18 @@
 		gamePhase = 'dealer';
 		dealerHidden = false;
 
-		// Dealer draws until 10.5 or more
+		// Dealer plays
 		dealerPlay();
 	}
 
 	function dealerPlay() {
 		setTimeout(() => {
-			if (dealerValue < 10.5) {
+			const value = calculateValue(dealerHand);
+			const soft = isSoftHand(dealerHand);
+
+			// Dealer hits on soft 17 (more house edge)
+			// Dealer stands on hard 17 or soft 18+
+			if (value < 17 || (value === 17 && soft)) {
 				const card = drawCard();
 				if (card) {
 					dealerHand.push(card);
@@ -181,14 +256,18 @@
 	}
 
 	function determineWinner() {
-		if (dealerValue > TARGET) {
+		const finalDealerValue = calculateValue(dealerHand);
+
+		if (finalDealerValue > TARGET) {
+			// Dealer busts
 			endGame('win');
-		} else if (playerValue > dealerValue) {
+		} else if (playerValue > finalDealerValue) {
 			endGame('win');
-		} else if (dealerValue > playerValue) {
+		} else if (finalDealerValue > playerValue) {
 			endGame('lose');
 		} else {
-			endGame('push');
+			// Tie - DEALER WINS (house edge!)
+			endGame('lose');
 		}
 	}
 
@@ -222,10 +301,6 @@
 	function getSuitColor(suit: Card['suit']): string {
 		return suit === 'hearts' || suit === 'diamonds' ? 'red' : 'black';
 	}
-
-	function formatValue(value: number): string {
-		return value % 1 === 0 ? value.toString() : value.toFixed(1);
-	}
 </script>
 
 <div class="game">
@@ -235,7 +310,7 @@
 		<!-- Dealer's hand -->
 		<div class="hand-section">
 			<div class="hand-label">
-				{t('dealer')} {#if !dealerHidden}({formatValue(dealerValue)}){/if}
+				{t('dealer')} {#if !dealerHidden}({dealerValue}){:else if dealerHand.length > 0}({dealerVisibleValue}+?){/if}
 			</div>
 			<div class="hand">
 				{#each dealerHand as card, i}
@@ -256,7 +331,7 @@
 		<!-- Player's hand -->
 		<div class="hand-section">
 			<div class="hand-label">
-				{t('you')} ({formatValue(playerValue)})
+				{t('you')} ({playerValue})
 			</div>
 			<div class="hand">
 				{#each playerHand as card}
@@ -296,6 +371,7 @@
 			<li>{t('rules.rule2')}</li>
 			<li>{t('rules.rule3')}</li>
 			<li>{t('rules.rule4')}</li>
+			<li>{t('rules.rule5')}</li>
 		</ul>
 	</div>
 </div>
@@ -508,7 +584,7 @@
 	}
 
 	.rules li::before {
-		content: '\2663';
+		content: '\2660';
 		position: absolute;
 		left: 0;
 		color: #10b981;
