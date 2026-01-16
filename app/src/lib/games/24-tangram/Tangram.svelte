@@ -548,8 +548,8 @@
 			dragState.moved = true;
 		}
 
-		// Update piece position
-		const pieceIdx = pieces.indexOf(dragState.piece);
+		// Update piece position - use ID lookup since piece objects are replaced
+		const pieceIdx = pieces.findIndex(p => p.data.id === dragState.piece.data.id);
 		if (pieceIdx !== -1) {
 			pieces[pieceIdx] = {
 				...pieces[pieceIdx],
@@ -564,20 +564,24 @@
 	function handleDragEnd(e: MouseEvent | TouchEvent) {
 		if (!dragState) return;
 
-		const piece = dragState.piece;
+		const pieceId = dragState.piece.data.id;
 		const moved = dragState.moved;
+
+		// Find piece by ID since object reference may have changed
+		const pieceIdx = pieces.findIndex(p => p.data.id === pieceId);
 
 		if (!moved) {
 			// It was a tap/click - rotate the piece
-			rotatePiece(piece);
+			if (pieceIdx !== -1) {
+				rotatePieceByIndex(pieceIdx);
+			}
 		} else {
 			// Snap to grid on release
-			const pieceIdx = pieces.indexOf(piece);
 			if (pieceIdx !== -1) {
 				pieces[pieceIdx] = {
 					...pieces[pieceIdx],
-					x: snap(piece.x),
-					y: snap(piece.y)
+					x: snap(pieces[pieceIdx].x),
+					y: snap(pieces[pieceIdx].y)
 				};
 				pieces = [...pieces];
 			}
@@ -589,19 +593,16 @@
 		dragState = null;
 	}
 
-	// Rotate piece
-	function rotatePiece(piece: Piece) {
-		if (hasWon) return;
+	// Rotate piece by index
+	function rotatePieceByIndex(pieceIdx: number) {
+		if (hasWon || pieceIdx === -1) return;
 
-		const pieceIdx = pieces.indexOf(piece);
-		if (pieceIdx !== -1) {
-			pieces[pieceIdx] = {
-				...pieces[pieceIdx],
-				rotation: (piece.rotation + 45) % 360
-			};
-			pieces = [...pieces];
-			updateCoverage();
-		}
+		pieces[pieceIdx] = {
+			...pieces[pieceIdx],
+			rotation: (pieces[pieceIdx].rotation + 45) % 360
+		};
+		pieces = [...pieces];
+		updateCoverage();
 	}
 
 	// Event listeners setup

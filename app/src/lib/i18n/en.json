@@ -127,6 +127,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"104": "Tangram pieces can now be moved freely",
 		"107": "Half Twelve no longer asks for age at start",
 		"106": "Half Twelve added to feedback list",
 		"90": "Feedback can now include images",

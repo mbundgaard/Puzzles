@@ -127,6 +127,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"104": "Tangram brikker kan nu flyttes frit rundt",
 		"107": "Halv 12 spørger ikke længere om alder ved start",
 		"106": "Halv 12 tilføjet til feedback-listen",
 		"90": "Feedback kan nu indeholde billeder",
