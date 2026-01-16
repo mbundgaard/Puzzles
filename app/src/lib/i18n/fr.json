@@ -127,6 +127,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"103": "La liste des parties de Bataille Navale se met à jour automatiquement",
 		"104": "Les pièces du Tangram peuvent maintenant être déplacées librement",
 		"107": "Demi Douze ne demande plus l'âge au démarrage",
 		"106": "Demi Douze ajouté à la liste de feedback",

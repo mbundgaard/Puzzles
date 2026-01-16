@@ -127,6 +127,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"103": "Sænke Slagskibe spilisten opdateres nu automatisk",
 		"104": "Tangram brikker kan nu flyttes frit rundt",
 		"107": "Halv 12 spørger ikke længere om alder ved start",
 		"106": "Halv 12 tilføjet til feedback-listen",
