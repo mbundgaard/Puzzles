@@ -5,10 +5,11 @@
 	import { getSortedGames, getGameBadge, type GameInfo, type Badge } from '$lib/games/registry';
 	import { favorites } from '$lib/favorites';
 	import { onMount } from 'svelte';
+	import { getRecentGameChangelog } from '$lib/changelog';
 
 	let translations = $state<Translations>({});
 	let favoriteIds = $state<string[]>([]);
-	let badgePopup = $state<{ badge: Badge; gameName: string } | null>(null);
+	let badgePopup = $state<{ badge: Badge; gameName: string; gameId: string } | null>(null);
 
 	t.subscribe((value) => {
 		translations = value;
@@ -48,10 +49,10 @@
 		return favoriteIds.includes(gameId);
 	}
 
-	function showBadgePopup(e: Event, badge: Badge, gameName: string) {
+	function showBadgePopup(e: Event, badge: Badge, gameName: string, gameId: string) {
 		e.preventDefault();
 		e.stopPropagation();
-		badgePopup = { badge, gameName };
+		badgePopup = { badge, gameName, gameId };
 	}
 
 	function closeBadgePopup() {
@@ -98,13 +99,13 @@
 					{#if badge === 'new'}
 						<button
 							class="badge badge-new"
-							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`))}
+							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`), game.id)}
 							aria-label={translate(translations, 'badge.new')}
 						>✨</button>
 					{:else if badge === 'updated'}
 						<button
 							class="badge badge-updated"
-							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`))}
+							onclick={(e) => showBadgePopup(e, badge, translate(translations, `games.${game.id}.title`), game.id)}
 							aria-label={translate(translations, 'badge.updated')}
 						>💫</button>
 					{/if}
@@ -114,6 +115,7 @@
 </div>
 
 {#if badgePopup}
+	{@const recentChanges = getRecentGameChangelog(badgePopup.gameId, 1)}
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y_interactive_supports_focus -->
 	<div class="badge-overlay" onclick={closeBadgePopup} role="dialog" aria-modal="true">
 		<div class="badge-popup">
@@ -122,7 +124,11 @@
 			</div>
 			<div class="badge-popup-title">{badgePopup.gameName}</div>
 			<div class="badge-popup-text">
-				{translate(translations, badgePopup.badge === 'new' ? 'badge.new' : 'badge.updated')}
+				{#if badgePopup.badge === 'updated' && recentChanges.length > 0}
+					{translate(translations, `changelog.${recentChanges[0].issue}`)}
+				{:else}
+					{translate(translations, badgePopup.badge === 'new' ? 'badge.new' : 'badge.updated')}
+				{/if}
 			</div>
 			<button class="badge-popup-close" onclick={closeBadgePopup}>OK</button>
 		</div>
