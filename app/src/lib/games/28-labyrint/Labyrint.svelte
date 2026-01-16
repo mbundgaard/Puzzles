@@ -266,9 +266,9 @@
 		exit = { x: COLS - 2, y: ROWS - 2 };
 		maze = generateMaze();
 
-		// Calculate max steps as 2.5x optimal path
+		// Calculate max steps as 2x optimal path
 		const optimalPath = findShortestPath(maze, 1, 1, exit.x, exit.y);
-		maxSteps = Math.floor(optimalPath * 2.5);
+		maxSteps = Math.floor(optimalPath * 2);
 
 		trackStart(GAME_NUMBER);
 	}
