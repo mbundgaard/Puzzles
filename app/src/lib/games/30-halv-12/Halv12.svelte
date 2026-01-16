@@ -392,7 +392,6 @@
 			<li>{t('rules.rule2')}</li>
 			<li>{t('rules.rule3')}</li>
 			<li>{t('rules.rule4')}</li>
-			<li>{t('rules.rule5')}</li>
 		</ul>
 	</div>
 </div>

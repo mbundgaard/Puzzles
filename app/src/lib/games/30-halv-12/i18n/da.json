@@ -33,8 +33,7 @@
 		"title": "Regler",
 		"rule1": "Kom så tæt på 21 som muligt uden at gå over",
 		"rule2": "Kort 2-10 = værdi, Es = 1 eller 11, Billedkort = 10",
-		"rule3": "Dealer står på 17 eller højere",
-		"rule4": "Uafgjort = ingen vinder (push)",
-		"rule5": "Sæt 1-3 point ind - vind 2x din indsats"
+		"rule3": "Uafgjort = ingen vinder (push)",
+		"rule4": "Sæt 1-3 point ind - vind 2x din indsats"
 	}
 }
