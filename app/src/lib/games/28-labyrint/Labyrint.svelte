@@ -50,7 +50,7 @@
 	let steps = $state(0);
 	let gameOver = $state(false);
 
-	// Generate maze using recursive backtracking
+	// Generate maze using Prim's algorithm (creates more dead ends)
 	function generateMaze(): MazeCell[][] {
 		// Initialize maze with all walls
 		const newMaze: MazeCell[][] = [];
@@ -64,35 +64,64 @@
 			}
 		}
 
-		// Recursive backtracking maze generation
-		const stack: { x: number; y: number }[] = [];
+		// Prim's algorithm - creates more branching and dead ends
+		const frontier: { x: number; y: number }[] = [];
 		const startX = 1;
 		const startY = 1;
 
 		newMaze[startY][startX].visited = true;
-		stack.push({ x: startX, y: startY });
+		addToFrontier(newMaze, frontier, startX, startY);
 
-		while (stack.length > 0) {
-			const current = stack[stack.length - 1];
-			const neighbors = getUnvisitedNeighbors(newMaze, current.x, current.y);
+		while (frontier.length > 0) {
+			// Pick random frontier cell (key difference from backtracking)
+			const idx = Math.floor(Math.random() * frontier.length);
+			const cell = frontier[idx];
+			frontier.splice(idx, 1);
 
-			if (neighbors.length === 0) {
-				stack.pop();
-			} else {
-				const next = neighbors[Math.floor(Math.random() * neighbors.length)];
-				removeWall(newMaze, current, next);
-				newMaze[next.y][next.x].visited = true;
-				stack.push({ x: next.x, y: next.y });
+			if (newMaze[cell.y][cell.x].visited) continue;
+
+			// Connect to a random visited neighbor
+			const visitedNeighbors = getVisitedNeighbors(newMaze, cell.x, cell.y);
+			if (visitedNeighbors.length > 0) {
+				const neighbor = visitedNeighbors[Math.floor(Math.random() * visitedNeighbors.length)];
+				removeWall(newMaze, cell, neighbor);
+				newMaze[cell.y][cell.x].visited = true;
+				addToFrontier(newMaze, frontier, cell.x, cell.y);
 			}
 		}
 
-		// Ensure exit is marked as visited
+		// Ensure exit is reachable
 		newMaze[exit.y][exit.x].visited = true;
 
 		return newMaze;
 	}
 
-	function getUnvisitedNeighbors(
+	function addToFrontier(
+		m: MazeCell[][],
+		frontier: { x: number; y: number }[],
+		x: number,
+		y: number
+	): void {
+		const directions = [
+			{ dx: 0, dy: -1 },
+			{ dx: 1, dy: 0 },
+			{ dx: 0, dy: 1 },
+			{ dx: -1, dy: 0 }
+		];
+
+		for (const dir of directions) {
+			const nx = x + dir.dx;
+			const ny = y + dir.dy;
+
+			if (nx > 0 && nx < COLS - 1 && ny > 0 && ny < ROWS - 1) {
+				if (!m[ny][nx].visited) {
+					frontier.push({ x: nx, y: ny });
+				}
+			}
+		}
+	}
+
+	function getVisitedNeighbors(
 		m: MazeCell[][],
 		x: number,
 		y: number
@@ -110,7 +139,7 @@
 			const ny = y + dir.dy;
 
 			if (nx > 0 && nx < COLS - 1 && ny > 0 && ny < ROWS - 1) {
-				if (!m[ny][nx].visited) {
+				if (m[ny][nx].visited) {
 					neighbors.push({ x: nx, y: ny });
 				}
 			}
