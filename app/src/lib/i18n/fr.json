@@ -276,6 +276,10 @@
 		"29-maskevaerk": {
 			"title": "Tricot",
 			"description": "Suivez le modèle"
+		},
+		"30-halv-12": {
+			"title": "Demi Douze",
+			"description": "Jeu de cartes danois classique"
 		}
 	}
 }

@@ -1,0 +1,28 @@
+{
+	"title": "Demi Douze",
+	"newGame": "Nouvelle Partie",
+	"hit": "Tirer",
+	"stand": "Rester",
+	"dealer": "Croupier",
+	"you": "Vous",
+	"status": {
+		"pressStart": "Appuyez pour commencer",
+		"yourTurn": "Votre tour - tirez ou restez",
+		"dealerTurn": "Tour du croupier...",
+		"bust": "Perdu ! Plus de 11,5",
+		"won": "Vous avez gagné !",
+		"lost": "Le croupier a gagné !",
+		"push": "Égalité !"
+	},
+	"score": {
+		"you": "Vous",
+		"dealer": "Croupier"
+	},
+	"rules": {
+		"title": "Comment jouer",
+		"rule1": "But : Approchez-vous de 11,5 sans dépasser",
+		"rule2": "Cartes 2-10 = valeur faciale, As = 1, Valet/Dame/Roi = 0,5",
+		"rule3": "Appuyez 'Tirer' pour une carte, 'Rester' pour arrêter",
+		"rule4": "Le croupier tire jusqu'à au moins 10,5 points"
+	}
+}

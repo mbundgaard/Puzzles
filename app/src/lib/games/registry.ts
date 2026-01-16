@@ -312,6 +312,16 @@ export const games: GameInfo[] = [
 		points: 3,
 		created: '2026-01-09',
 		ai: true
+	},
+	{
+		id: '30-halv-12',
+		number: '30',
+		icon: '🃏',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./30-halv-12/Halv12.svelte'),
+		accentColor: '#10b981',
+		points: 3,
+		created: '2026-01-16'
 	}
 ];
 

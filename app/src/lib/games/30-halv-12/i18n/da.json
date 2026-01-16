@@ -1,0 +1,28 @@
+{
+	"title": "Halv 12",
+	"newGame": "Nyt Spil",
+	"hit": "Træk",
+	"stand": "Pas",
+	"dealer": "Dealer",
+	"you": "Du",
+	"status": {
+		"pressStart": "Tryk for at starte",
+		"yourTurn": "Din tur - træk eller pas",
+		"dealerTurn": "Dealers tur...",
+		"bust": "Bust! Over 11,5",
+		"won": "Du vandt!",
+		"lost": "Dealer vandt!",
+		"push": "Uafgjort!"
+	},
+	"score": {
+		"you": "Du",
+		"dealer": "Dealer"
+	},
+	"rules": {
+		"title": "Sådan spiller du",
+		"rule1": "Målet er at komme så tæt på 11,5 som muligt uden at gå over",
+		"rule2": "Kort 2-10 tæller deres værdi, Es = 1, Knægt/Dame/Konge = 0,5",
+		"rule3": "Tryk 'Træk' for at få et kort, 'Pas' for at stoppe",
+		"rule4": "Dealer trækker indtil mindst 10,5 point"
+	}
+}

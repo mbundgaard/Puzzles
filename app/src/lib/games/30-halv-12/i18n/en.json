@@ -1,0 +1,28 @@
+{
+	"title": "Half Twelve",
+	"newGame": "New Game",
+	"hit": "Hit",
+	"stand": "Stand",
+	"dealer": "Dealer",
+	"you": "You",
+	"status": {
+		"pressStart": "Press to start",
+		"yourTurn": "Your turn - hit or stand",
+		"dealerTurn": "Dealer's turn...",
+		"bust": "Bust! Over 11.5",
+		"won": "You won!",
+		"lost": "Dealer won!",
+		"push": "Push!"
+	},
+	"score": {
+		"you": "You",
+		"dealer": "Dealer"
+	},
+	"rules": {
+		"title": "How to play",
+		"rule1": "Goal: Get as close to 11.5 as possible without going over",
+		"rule2": "Cards 2-10 = face value, Ace = 1, Jack/Queen/King = 0.5",
+		"rule3": "Tap 'Hit' for a card, 'Stand' to stop",
+		"rule4": "Dealer draws until at least 10.5 points"
+	}
+}

@@ -276,6 +276,10 @@
 		"29-maskevaerk": {
 			"title": "Knitting",
 			"description": "Follow the pattern"
+		},
+		"30-halv-12": {
+			"title": "Half Twelve",
+			"description": "Classic Danish card game"
 		}
 	}
 }

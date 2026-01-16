@@ -276,6 +276,10 @@
 		"29-maskevaerk": {
 			"title": "Maskeværk",
 			"description": "Strik efter opskriften"
+		},
+		"30-halv-12": {
+			"title": "Halv 12",
+			"description": "Klassisk dansk kortspil"
 		}
 	}
 }
