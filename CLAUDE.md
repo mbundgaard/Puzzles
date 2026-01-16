@@ -45,15 +45,38 @@ All puzzles MUST work on mobile devices with touch-only input:
 - **No hover-only interactions** - Hover effects are supplementary only
 - **Tap targets** - Interactive elements must be at least 44x44 pixels
 
-### Admin API Authentication
+### API Authentication
 
-Admin endpoints require an API key in the `X-API-Key` header:
-- **issue/*** - All issue management endpoints
-- **version/set** - Deploy version endpoint
-- **usage** - Usage stats
-- **today** - Today's stats
+**Base URL:** `https://puzzlesapi.azurewebsites.net/api`
 
-The API key is stored in `api/local.settings.json` (for local dev) and as `ADMIN_API_KEY` environment variable in Azure.
+Admin endpoints require an API key in the `X-API-Key` header. The key is stored in `api/local.settings.json` (local dev) and as `ADMIN_API_KEY` in Azure.
+
+#### Endpoints Requiring API Key (Admin)
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/issue/create` | Create GitHub issue |
+| POST | `/issue/edit` | Edit GitHub issue |
+| POST | `/issue/close` | Close issue with comment |
+| GET | `/usage` | Get monthly usage stats |
+| GET | `/today` | Get today's stats |
+| GET | `/stats?from=&to=` | Get stats for date range |
+
+#### Anonymous Endpoints (No Auth)
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/event` | Record game event (start/complete) |
+| POST | `/feedback` | Submit user feedback |
+| POST | `/win` | Record win to leaderboard |
+| GET | `/leaderboard` | Get leaderboard |
+| POST | `/version` | Check for new version |
+| POST | `/version/set` | Set deployed version |
+| POST | `/upload/image` | Upload image for feedback |
+| POST | `/session/{game}/{id}/start` | Start session |
+| POST | `/session/{game}/{id}/update` | Add session event |
+| POST | `/session/{game}/{id}/end` | End session |
+| GET | `/session/{game}/{id}` | Get session details |
 
 ### Closing Issues (MUST follow)
 
