@@ -129,6 +129,11 @@
 					<span class="menu-label">{tr('settings.about')}</span>
 					<span class="menu-arrow">›</span>
 				</button>
+				<button class="menu-item" onclick={() => location.reload()}>
+					<span class="menu-icon">🔄</span>
+					<span class="menu-label">{tr('settings.reload')}</span>
+					<span class="menu-arrow">›</span>
+				</button>
 				<a href={githubUrl} target="_blank" rel="noopener noreferrer" class="menu-item">
 					<span class="menu-icon">
 						<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
