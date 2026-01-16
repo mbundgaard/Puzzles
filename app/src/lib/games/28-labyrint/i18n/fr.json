@@ -2,7 +2,10 @@
 	"title": "Labyrinthe",
 	"newGame": "Nouveau Jeu",
 	"steps": "Pas",
-	"won": "Vous avez trouve la sortie !",
+	"won": "Vous avez trouvé la sortie !",
+	"status": {
+		"lost": "Plus de mouvements !"
+	},
 	"controls": {
 		"up": "Haut",
 		"down": "Bas",
@@ -11,8 +14,9 @@
 	},
 	"rules": {
 		"title": "Comment jouer",
-		"rule1": "Trouvez votre chemin a travers le labyrinthe jusqu'a la sortie",
+		"rule1": "Trouvez votre chemin à travers le labyrinthe jusqu'à la sortie",
 		"rule2": "Vous ne pouvez voir que 3 cases autour de vous",
-		"rule3": "La sortie est marquee en vert"
+		"rule3": "La sortie est marquée en vert",
+		"rule4": "Vous avez des mouvements limités - soyez efficace !"
 	}
 }

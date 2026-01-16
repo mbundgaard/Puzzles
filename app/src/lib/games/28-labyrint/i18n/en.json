@@ -3,6 +3,9 @@
 	"newGame": "New Game",
 	"steps": "Steps",
 	"won": "You found the exit!",
+	"status": {
+		"lost": "Out of moves!"
+	},
 	"controls": {
 		"up": "Up",
 		"down": "Down",
@@ -13,6 +16,7 @@
 		"title": "How to play",
 		"rule1": "Find your way through the maze to the exit",
 		"rule2": "You can only see 3 cells around you",
-		"rule3": "The exit is marked in green"
+		"rule3": "The exit is marked in green",
+		"rule4": "You have limited moves - be efficient!"
 	}
 }

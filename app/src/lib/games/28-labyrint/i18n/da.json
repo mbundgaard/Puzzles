@@ -3,16 +3,20 @@
 	"newGame": "Nyt Spil",
 	"steps": "Skridt",
 	"won": "Du fandt udgangen!",
+	"status": {
+		"lost": "Ikke flere skridt!"
+	},
 	"controls": {
 		"up": "Op",
 		"down": "Ned",
 		"left": "Venstre",
-		"right": "Hojre"
+		"right": "Højre"
 	},
 	"rules": {
-		"title": "Sadan spiller du",
+		"title": "Sådan spiller du",
 		"rule1": "Find vej gennem labyrinten til udgangen",
 		"rule2": "Du kan kun se 3 felter omkring dig",
-		"rule3": "Udgangen er markeret med gront"
+		"rule3": "Udgangen er markeret med grønt",
+		"rule4": "Du har begrænsede skridt - vær effektiv!"
 	}
 }

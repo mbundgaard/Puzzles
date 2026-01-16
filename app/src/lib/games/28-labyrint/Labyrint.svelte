@@ -48,7 +48,9 @@
 	let player = $state({ x: 1, y: 1 });
 	let exit = $state({ x: COLS - 2, y: ROWS - 2 });
 	let steps = $state(0);
+	let maxSteps = $state(0);
 	let gameOver = $state(false);
+	let gameLost = $state(false);
 
 	// Generate maze using Prim's algorithm (creates more dead ends)
 	function generateMaze(): MazeCell[][] {
@@ -176,6 +178,43 @@
 		return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
 	}
 
+	// BFS to find shortest path length
+	function findShortestPath(m: MazeCell[][], startX: number, startY: number, endX: number, endY: number): number {
+		const queue: { x: number; y: number; dist: number }[] = [{ x: startX, y: startY, dist: 0 }];
+		const visited = new Set<string>();
+		visited.add(`${startX},${startY}`);
+
+		while (queue.length > 0) {
+			const { x, y, dist } = queue.shift()!;
+
+			if (x === endX && y === endY) {
+				return dist;
+			}
+
+			const cell = m[y][x];
+			const moves = [
+				{ dx: 0, dy: -1, wall: cell.walls.top },
+				{ dx: 1, dy: 0, wall: cell.walls.right },
+				{ dx: 0, dy: 1, wall: cell.walls.bottom },
+				{ dx: -1, dy: 0, wall: cell.walls.left }
+			];
+
+			for (const move of moves) {
+				if (move.wall) continue;
+				const nx = x + move.dx;
+				const ny = y + move.dy;
+				const key = `${nx},${ny}`;
+
+				if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && !visited.has(key)) {
+					visited.add(key);
+					queue.push({ x: nx, y: ny, dist: dist + 1 });
+				}
+			}
+		}
+
+		return -1; // No path found
+	}
+
 	// Movement function
 	function move(dx: number, dy: number) {
 		if (gameOver) return;
@@ -203,6 +242,10 @@
 		// Check for victory
 		if (player.x === exit.x && player.y === exit.y) {
 			victory();
+		} else if (steps >= maxSteps) {
+			// Out of moves - lost
+			gameLost = true;
+			gameOver = true;
 		}
 	}
 
@@ -217,10 +260,16 @@
 	function newGame() {
 		steps = 0;
 		gameOver = false;
+		gameLost = false;
 		showWinModal = false;
 		player = { x: 1, y: 1 };
 		exit = { x: COLS - 2, y: ROWS - 2 };
 		maze = generateMaze();
+
+		// Calculate max steps as 2.5x optimal path
+		const optimalPath = findShortestPath(maze, 1, 1, exit.x, exit.y);
+		maxSteps = Math.floor(optimalPath * 2.5);
+
 		trackStart(GAME_NUMBER);
 	}
 
@@ -264,10 +313,14 @@
 </script>
 
 <div class="game">
+	{#if gameLost}
+		<div class="status loser">{t('status.lost')}</div>
+	{/if}
+
 	<div class="stats">
 		<div class="stat">
 			<span class="stat-label">{t('steps')}</span>
-			<span class="stat-value">{steps}</span>
+			<span class="stat-value" class:warning={steps > maxSteps * 0.8}>{steps} / {maxSteps}</span>
 		</div>
 	</div>
 
@@ -316,6 +369,7 @@
 			<li>{t('rules.rule1')}</li>
 			<li>{t('rules.rule2')}</li>
 			<li>{t('rules.rule3')}</li>
+			<li>{t('rules.rule4')}</li>
 		</ul>
 	</div>
 </div>
@@ -359,6 +413,22 @@
 		font-size: 1.4rem;
 		font-weight: 700;
 		color: #06b6d4;
+	}
+
+	.stat-value.warning {
+		color: #f59e0b;
+	}
+
+	.status {
+		font-size: 1.1rem;
+		font-weight: 600;
+		margin-bottom: 15px;
+		padding: 10px 25px;
+		border-radius: 25px;
+	}
+
+	.status.loser {
+		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 	}
 
 	.board-wrapper {
