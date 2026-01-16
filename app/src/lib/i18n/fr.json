@@ -126,6 +126,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"107": "Demi Douze ne demande plus l'âge au démarrage",
 		"106": "Demi Douze ajouté à la liste de feedback",
 		"90": "Les commentaires peuvent maintenant inclure des images",
 		"94": "Mots Cachés affiche maintenant les 8 mots de manière fiable dans plusieurs directions",

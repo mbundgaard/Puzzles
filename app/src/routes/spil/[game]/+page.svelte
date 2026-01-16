@@ -88,6 +88,7 @@
 	onClose={handleNameModalClose}
 	required={true}
 	onCancel={handleNameModalCancel}
+	showAgeSelection={gameInfo?.number === '04'}
 />
 
 <style>

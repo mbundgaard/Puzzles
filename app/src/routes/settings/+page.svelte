@@ -150,7 +150,7 @@
 </div>
 
 <!-- Modals -->
-<NameModal isOpen={showName} onClose={handleNameClose} />
+<NameModal isOpen={showName} onClose={handleNameClose} showAgeSelection={true} />
 <ChangelogModal isOpen={showChangelog} onClose={() => showChangelog = false} />
 <AboutModal isOpen={showAbout} onClose={() => showAbout = false} />
 <ShareQRModal isOpen={showShareQR} onClose={() => showShareQR = false} />

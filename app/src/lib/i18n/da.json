@@ -126,6 +126,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"107": "Halv 12 spørger ikke længere om alder ved start",
 		"106": "Halv 12 tilføjet til feedback-listen",
 		"90": "Feedback kan nu indeholde billeder",
 		"94": "Ordsøgning viser nu alle 8 ord pålideligt i flere retninger",

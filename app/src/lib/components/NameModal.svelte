@@ -8,9 +8,10 @@
 		onClose: () => void;
 		required?: boolean;
 		onCancel?: () => void;
+		showAgeSelection?: boolean;
 	}
 
-	let { isOpen, onClose, required = false, onCancel }: Props = $props();
+	let { isOpen, onClose, required = false, onCancel, showAgeSelection = false }: Props = $props();
 
 	let translations = $state<Translations>({});
 	t.subscribe((value) => {
@@ -97,24 +98,26 @@
 				<p class="error-text">{tr('win.nameError')}</p>
 			{/if}
 
-			<div class="age-toggle">
-				<button
-					class="age-btn"
-					class:active={ageGroup === 'kid'}
-					onclick={() => ageGroup = 'kid'}
-				>
-					<span class="age-icon">👶</span>
-					<span class="age-label">{tr('settings.ageKid')}</span>
-				</button>
-				<button
-					class="age-btn"
-					class:active={ageGroup === 'adult'}
-					onclick={() => ageGroup = 'adult'}
-				>
-					<span class="age-icon">🧑</span>
-					<span class="age-label">{tr('settings.ageAdult')}</span>
-				</button>
-			</div>
+			{#if showAgeSelection}
+				<div class="age-toggle">
+					<button
+						class="age-btn"
+						class:active={ageGroup === 'kid'}
+						onclick={() => ageGroup = 'kid'}
+					>
+						<span class="age-icon">👶</span>
+						<span class="age-label">{tr('settings.ageKid')}</span>
+					</button>
+					<button
+						class="age-btn"
+						class:active={ageGroup === 'adult'}
+						onclick={() => ageGroup = 'adult'}
+					>
+						<span class="age-icon">🧑</span>
+						<span class="age-label">{tr('settings.ageAdult')}</span>
+					</button>
+				</div>
+			{/if}
 
 			<button class="save-btn" class:saved onclick={handleSave} disabled={saved}>
 				{saved ? tr('settings.nameSaved') : tr('settings.nameSave')}
