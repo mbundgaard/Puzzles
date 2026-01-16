@@ -126,6 +126,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"106": "Halv 12 tilføjet til feedback-listen",
 		"90": "Feedback kan nu indeholde billeder",
 		"94": "Ordsøgning viser nu alle 8 ord pålideligt i flere retninger",
 		"96": "Quiz Mester går nu direkte til kategorivalg efter et spil i stedet for tilbage til børn/voksne",
