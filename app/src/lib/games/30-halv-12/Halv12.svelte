@@ -12,9 +12,9 @@
 	// Win modal state
 	let showWinModal = $state(false);
 	const GAME_NUMBER = '30';
-	const POINTS = 5; // Higher points because it's harder
+	const POINTS = 2;
 	const TARGET = 21;
-	const NUM_DECKS = 6; // 6 decks makes counting harder
+	const NUM_DECKS = 6;
 
 	// Helper to get translation
 	function t(key: string): string {
@@ -190,20 +190,19 @@
 
 		trackStart(GAME_NUMBER);
 
-		// Check for dealer blackjack first (dealer advantage)
+		// Check for blackjack (natural 21)
 		const dealerHasBlackjack = dealerHand.length === 2 && calculateValue(dealerHand) === 21;
 		const playerHasBlackjack = playerHand.length === 2 && playerValue === 21;
 
-		if (dealerHasBlackjack) {
+		if (dealerHasBlackjack && playerHasBlackjack) {
+			// Both have blackjack - push
 			dealerHidden = false;
-			if (playerHasBlackjack) {
-				// Both have blackjack - dealer wins ties!
-				endGame('lose');
-			} else {
-				endGame('lose');
-			}
+			endGame('push');
+		} else if (dealerHasBlackjack) {
+			dealerHidden = false;
+			endGame('lose');
 		} else if (playerHasBlackjack) {
-			// Player has blackjack, dealer doesn't - but no bonus payout
+			// Player blackjack wins
 			stand();
 		}
 	}
@@ -238,11 +237,9 @@
 	function dealerPlay() {
 		setTimeout(() => {
 			const value = calculateValue(dealerHand);
-			const soft = isSoftHand(dealerHand);
 
-			// Dealer hits on soft 17 (more house edge)
-			// Dealer stands on hard 17 or soft 18+
-			if (value < 17 || (value === 17 && soft)) {
+			// Dealer must hit on 16 or less, stand on 17 or more
+			if (value < 17) {
 				const card = drawCard();
 				if (card) {
 					dealerHand.push(card);
@@ -266,8 +263,8 @@
 		} else if (finalDealerValue > playerValue) {
 			endGame('lose');
 		} else {
-			// Tie - DEALER WINS (house edge!)
-			endGame('lose');
+			// Tie - push (no winner)
+			endGame('push');
 		}
 	}
 
@@ -371,7 +368,6 @@
 			<li>{t('rules.rule2')}</li>
 			<li>{t('rules.rule3')}</li>
 			<li>{t('rules.rule4')}</li>
-			<li>{t('rules.rule5')}</li>
 		</ul>
 	</div>
 </div>

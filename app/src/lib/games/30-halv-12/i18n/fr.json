@@ -10,7 +10,7 @@
 		"yourTurn": "Votre tour - tirez ou restez",
 		"dealerTurn": "Tour du croupier...",
 		"bust": "Perdu ! Plus de 21",
-		"blackjack": "21 !",
+		"blackjack": "Blackjack !",
 		"won": "Vous avez gagné !",
 		"lost": "Le croupier a gagné !",
 		"push": "Égalité !"
@@ -20,11 +20,10 @@
 		"dealer": "Croupier"
 	},
 	"rules": {
-		"title": "Règles (Mode difficile)",
+		"title": "Règles",
 		"rule1": "Approchez-vous de 21 sans dépasser",
 		"rule2": "Cartes 2-10 = valeur, As = 1 ou 11, Figures = 10",
-		"rule3": "Le croupier gagne en cas d'égalité",
-		"rule4": "Le croupier tire sur 17 souple",
-		"rule5": "6 jeux de cartes (pas de comptage !)"
+		"rule3": "Le croupier reste à 17 ou plus",
+		"rule4": "Égalité = personne ne gagne (push)"
 	}
 }

@@ -10,7 +10,7 @@
 		"yourTurn": "Din tur - træk eller pas",
 		"dealerTurn": "Dealers tur...",
 		"bust": "Bust! Over 21",
-		"blackjack": "21!",
+		"blackjack": "Blackjack!",
 		"won": "Du vandt!",
 		"lost": "Dealer vandt!",
 		"push": "Uafgjort!"
@@ -20,11 +20,10 @@
 		"dealer": "Dealer"
 	},
 	"rules": {
-		"title": "Regler (Svær udgave)",
+		"title": "Regler",
 		"rule1": "Kom så tæt på 21 som muligt uden at gå over",
 		"rule2": "Kort 2-10 = værdi, Es = 1 eller 11, Billedkort = 10",
-		"rule3": "Dealer vinder ved uafgjort (hus-fordel)",
-		"rule4": "Dealer trækker på blød 17 (hus-fordel)",
-		"rule5": "6 kortspil bruges (ingen tælling!)"
+		"rule3": "Dealer står på 17 eller højere",
+		"rule4": "Uafgjort = ingen vinder (push)"
 	}
 }

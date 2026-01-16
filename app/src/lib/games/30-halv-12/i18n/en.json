@@ -10,7 +10,7 @@
 		"yourTurn": "Your turn - hit or stand",
 		"dealerTurn": "Dealer's turn...",
 		"bust": "Bust! Over 21",
-		"blackjack": "21!",
+		"blackjack": "Blackjack!",
 		"won": "You won!",
 		"lost": "Dealer won!",
 		"push": "Push!"
@@ -20,11 +20,10 @@
 		"dealer": "Dealer"
 	},
 	"rules": {
-		"title": "Rules (Hard Mode)",
+		"title": "Rules",
 		"rule1": "Get as close to 21 as possible without going over",
 		"rule2": "Cards 2-10 = value, Ace = 1 or 11, Face cards = 10",
-		"rule3": "Dealer wins ties (house edge)",
-		"rule4": "Dealer hits on soft 17 (house edge)",
-		"rule5": "6 decks used (no counting!)"
+		"rule3": "Dealer stands on 17 or higher",
+		"rule4": "Tie = no winner (push)"
 	}
 }

@@ -320,7 +320,7 @@ export const games: GameInfo[] = [
 		languages: ['da', 'en', 'fr'],
 		component: () => import('./30-halv-12/Halv12.svelte'),
 		accentColor: '#1e40af',
-		points: 5,
+		points: 2,
 		created: '2026-01-16',
 		updated: '2026-01-16'
 	}
