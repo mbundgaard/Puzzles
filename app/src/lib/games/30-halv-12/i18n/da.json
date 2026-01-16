@@ -7,6 +7,7 @@
 	"you": "Du",
 	"status": {
 		"pressStart": "Tryk for at starte",
+		"placeBet": "Vælg dit indsats",
 		"yourTurn": "Din tur - træk eller pas",
 		"dealerTurn": "Dealers tur...",
 		"bust": "Bust! Over 21",
@@ -15,15 +16,25 @@
 		"lost": "Dealer vandt!",
 		"push": "Uafgjort!"
 	},
+	"bet": {
+		"choose": "Vælg indsats",
+		"point": "point",
+		"points": "point",
+		"info": "Vind = 2x indsats",
+		"current": "Indsats"
+	},
 	"score": {
 		"you": "Du",
-		"dealer": "Dealer"
+		"dealer": "Dealer",
+		"won": "Vundet",
+		"lost": "Tabt"
 	},
 	"rules": {
 		"title": "Regler",
 		"rule1": "Kom så tæt på 21 som muligt uden at gå over",
 		"rule2": "Kort 2-10 = værdi, Es = 1 eller 11, Billedkort = 10",
 		"rule3": "Dealer står på 17 eller højere",
-		"rule4": "Uafgjort = ingen vinder (push)"
+		"rule4": "Uafgjort = ingen vinder (push)",
+		"rule5": "Sæt 1-3 point ind - vind 2x din indsats"
 	}
 }

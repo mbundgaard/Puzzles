@@ -12,9 +12,12 @@
 	// Win modal state
 	let showWinModal = $state(false);
 	const GAME_NUMBER = '30';
-	const POINTS = 2;
 	const TARGET = 21;
 	const NUM_DECKS = 6;
+
+	// Betting state
+	let currentBet = $state(0);
+	let winPoints = $state(0);
 
 	// Helper to get translation
 	function t(key: string): string {
@@ -69,29 +72,6 @@
 		return sum;
 	}
 
-	// Check if hand is "soft" (has an Ace counting as 11)
-	function isSoftHand(hand: Card[]): boolean {
-		let sum = 0;
-		let aces = 0;
-
-		for (const card of hand) {
-			if (card.rank === 'A') {
-				aces++;
-				sum += 11;
-			} else {
-				sum += card.value;
-			}
-		}
-
-		// If we have aces and haven't busted, at least one ace is counting as 11
-		while (sum > TARGET && aces > 0) {
-			sum -= 10;
-			aces--;
-		}
-
-		return aces > 0 && sum <= TARGET;
-	}
-
 	let playerValue = $derived(calculateValue(playerHand));
 	let dealerValue = $derived(calculateValue(dealerHand));
 	let dealerVisibleValue = $derived(dealerHidden && dealerHand.length > 0
@@ -100,7 +80,7 @@
 
 	// Status message
 	let status = $derived.by(() => {
-		if (gamePhase === 'betting') return t('status.pressStart');
+		if (gamePhase === 'betting') return t('status.placeBet');
 		if (gamePhase === 'playing') {
 			if (playerValue > TARGET) return t('status.bust');
 			if (playerValue === TARGET) return t('status.blackjack');
@@ -163,7 +143,12 @@
 		return deck.pop();
 	}
 
-	function newGame() {
+	function placeBet(amount: number) {
+		currentBet = amount;
+		startGame();
+	}
+
+	function startGame() {
 		if (deck.length < 52) {
 			deck = createDeck();
 		}
@@ -173,6 +158,7 @@
 		gamePhase = 'playing';
 		result = null;
 		showWinModal = false;
+		winPoints = 0;
 
 		// Deal initial cards
 		const p1 = drawCard();
@@ -274,16 +260,27 @@
 		dealerHidden = false;
 
 		if (outcome === 'win') {
-			scores.player++;
+			// Win 2x the bet
+			winPoints = currentBet * 2;
+			scores.player += winPoints;
 			scores = { ...scores };
 			trackComplete(GAME_NUMBER);
 			setTimeout(() => {
 				showWinModal = true;
 			}, 800);
 		} else if (outcome === 'lose') {
-			scores.dealer++;
+			// Lose the bet
+			scores.dealer += currentBet;
 			scores = { ...scores };
 		}
+		// Push: no points change
+	}
+
+	function newRound() {
+		gamePhase = 'betting';
+		currentBet = 0;
+		result = null;
+		showWinModal = false;
 	}
 
 	function getSuitSymbol(suit: Card['suit']): string {
@@ -303,61 +300,88 @@
 <div class="game">
 	<div class="status {statusClass}">{status}</div>
 
-	<div class="table">
-		<!-- Dealer's hand -->
-		<div class="hand-section">
-			<div class="hand-label">
-				{t('dealer')} {#if !dealerHidden}({dealerValue}){:else if dealerHand.length > 0}({dealerVisibleValue}+?){/if}
+	{#if gamePhase === 'betting'}
+		<!-- Betting Phase -->
+		<div class="betting-section">
+			<div class="bet-label">{t('bet.choose')}</div>
+			<div class="bet-buttons">
+				<button class="bet-btn" onclick={() => placeBet(1)}>
+					<span class="bet-amount">1</span>
+					<span class="bet-text">{t('bet.point')}</span>
+				</button>
+				<button class="bet-btn" onclick={() => placeBet(2)}>
+					<span class="bet-amount">2</span>
+					<span class="bet-text">{t('bet.points')}</span>
+				</button>
+				<button class="bet-btn" onclick={() => placeBet(3)}>
+					<span class="bet-amount">3</span>
+					<span class="bet-text">{t('bet.points')}</span>
+				</button>
 			</div>
-			<div class="hand">
-				{#each dealerHand as card, i}
-					{#if i === 1 && dealerHidden}
-						<div class="card hidden-card">
-							<div class="card-back"></div>
-						</div>
-					{:else}
+			<div class="bet-info">{t('bet.info')}</div>
+		</div>
+	{:else}
+		<!-- Game Table -->
+		<div class="current-bet">
+			{t('bet.current')}: {currentBet} {currentBet === 1 ? t('bet.point') : t('bet.points')}
+		</div>
+
+		<div class="table">
+			<!-- Dealer's hand -->
+			<div class="hand-section">
+				<div class="hand-label">
+					{t('dealer')} {#if !dealerHidden}({dealerValue}){:else if dealerHand.length > 0}({dealerVisibleValue}+?){/if}
+				</div>
+				<div class="hand">
+					{#each dealerHand as card, i}
+						{#if i === 1 && dealerHidden}
+							<div class="card hidden-card">
+								<div class="card-back"></div>
+							</div>
+						{:else}
+							<div class="card {getSuitColor(card.suit)}">
+								<div class="card-rank">{card.rank}</div>
+								<div class="card-suit">{getSuitSymbol(card.suit)}</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
+
+			<!-- Player's hand -->
+			<div class="hand-section">
+				<div class="hand-label">
+					{t('you')} ({playerValue})
+				</div>
+				<div class="hand">
+					{#each playerHand as card}
 						<div class="card {getSuitColor(card.suit)}">
 							<div class="card-rank">{card.rank}</div>
 							<div class="card-suit">{getSuitSymbol(card.suit)}</div>
 						</div>
-					{/if}
-				{/each}
+					{/each}
+				</div>
 			</div>
 		</div>
-
-		<!-- Player's hand -->
-		<div class="hand-section">
-			<div class="hand-label">
-				{t('you')} ({playerValue})
-			</div>
-			<div class="hand">
-				{#each playerHand as card}
-					<div class="card {getSuitColor(card.suit)}">
-						<div class="card-rank">{card.rank}</div>
-						<div class="card-suit">{getSuitSymbol(card.suit)}</div>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</div>
+	{/if}
 
 	<div class="score">
-		<div class="score-item">
-			<span class="score-label">{t('score.you')}</span>
+		<div class="score-item won">
+			<span class="score-label">{t('score.won')}</span>
 			<span class="score-value">{scores.player}</span>
 		</div>
-		<div class="score-item">
-			<span class="score-label">{t('score.dealer')}</span>
+		<div class="score-item lost">
+			<span class="score-label">{t('score.lost')}</span>
 			<span class="score-value">{scores.dealer}</span>
 		</div>
 	</div>
 
 	<div class="controls">
-		{#if gamePhase === 'betting' || gamePhase === 'ended'}
-			<button class="btn primary" onclick={newGame}>{t('newGame')}</button>
-		{:else if gamePhase === 'playing'}
+		{#if gamePhase === 'playing'}
 			<button class="btn hit" onclick={hit} disabled={playerValue > TARGET}>{t('hit')}</button>
 			<button class="btn stand" onclick={stand}>{t('stand')}</button>
+		{:else if gamePhase === 'ended'}
+			<button class="btn primary" onclick={newRound}>{t('newGame')}</button>
 		{/if}
 	</div>
 
@@ -368,13 +392,14 @@
 			<li>{t('rules.rule2')}</li>
 			<li>{t('rules.rule3')}</li>
 			<li>{t('rules.rule4')}</li>
+			<li>{t('rules.rule5')}</li>
 		</ul>
 	</div>
 </div>
 
 <WinModal
 	isOpen={showWinModal}
-	points={POINTS}
+	points={winPoints}
 	gameNumber={GAME_NUMBER}
 	onClose={() => showWinModal = false}
 />
@@ -408,6 +433,79 @@
 
 	.status.draw {
 		background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+	}
+
+	/* Betting Section */
+	.betting-section {
+		width: 100%;
+		max-width: 400px;
+		background: linear-gradient(135deg, #065f46 0%, #064e3b 100%);
+		border-radius: 20px;
+		padding: 30px 20px;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.bet-label {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: white;
+		margin-bottom: 20px;
+	}
+
+	.bet-buttons {
+		display: flex;
+		justify-content: center;
+		gap: 15px;
+		margin-bottom: 20px;
+	}
+
+	.bet-btn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 80px;
+		height: 80px;
+		background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+		border: 3px solid rgba(255, 255, 255, 0.3);
+		border-radius: 50%;
+		color: white;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-family: 'Poppins', sans-serif;
+	}
+
+	.bet-btn:active {
+		transform: scale(0.95);
+		background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+	}
+
+	.bet-amount {
+		font-size: 1.8rem;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.bet-text {
+		font-size: 0.7rem;
+		font-weight: 500;
+		opacity: 0.9;
+	}
+
+	.bet-info {
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.current-bet {
+		font-size: 0.9rem;
+		color: #f59e0b;
+		font-weight: 600;
+		margin-bottom: 10px;
+		padding: 8px 16px;
+		background: rgba(245, 158, 11, 0.15);
+		border-radius: 20px;
 	}
 
 	.table {
@@ -502,11 +600,27 @@
 		border-radius: 12px;
 	}
 
+	.score-item.won {
+		background: rgba(34, 197, 94, 0.15);
+	}
+
+	.score-item.lost {
+		background: rgba(239, 68, 68, 0.15);
+	}
+
 	.score-label {
 		display: block;
 		font-size: 0.75rem;
 		color: white;
 		margin-bottom: 4px;
+	}
+
+	.score-item.won .score-label {
+		color: #22c55e;
+	}
+
+	.score-item.lost .score-label {
+		color: #ef4444;
 	}
 
 	.score-value {
@@ -518,6 +632,7 @@
 		display: flex;
 		gap: 15px;
 		margin-bottom: 20px;
+		min-height: 52px;
 	}
 
 	.btn {
