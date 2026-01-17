@@ -37,6 +37,6 @@
 		"rule1": "You are dealt 5 cards",
 		"rule2": "Tap cards you want to keep",
 		"rule3": "Press Draw to replace the rest",
-		"rule4": "Win with Jacks or Better"
+		"rule4": "Pair of J, Q, K or A wins 1x bet"
 	}
 }
