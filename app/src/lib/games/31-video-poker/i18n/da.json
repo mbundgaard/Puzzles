@@ -31,5 +31,12 @@
 	"score": {
 		"won": "Vundet",
 		"lost": "Tabt"
+	},
+	"rules": {
+		"title": "Regler",
+		"rule1": "Du far 5 kort",
+		"rule2": "Tryk pa kort du vil beholde",
+		"rule3": "Tryk Byt for at fa nye kort",
+		"rule4": "Vind med knaegte eller bedre"
 	}
 }

@@ -31,5 +31,12 @@
 	"score": {
 		"won": "Gagne",
 		"lost": "Perdu"
+	},
+	"rules": {
+		"title": "Regles",
+		"rule1": "Vous recevez 5 cartes",
+		"rule2": "Touchez les cartes a garder",
+		"rule3": "Appuyez sur Tirer pour remplacer",
+		"rule4": "Gagnez avec Valets ou mieux"
 	}
 }

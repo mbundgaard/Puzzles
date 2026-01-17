@@ -341,6 +341,16 @@
 			<button class="btn primary" onclick={newRound}>{t('newGame')}</button>
 		{/if}
 	</div>
+
+	<div class="rules">
+		<h3>{t('rules.title')}</h3>
+		<ul>
+			<li>{t('rules.rule1')}</li>
+			<li>{t('rules.rule2')}</li>
+			<li>{t('rules.rule3')}</li>
+			<li>{t('rules.rule4')}</li>
+		</ul>
+	</div>
 </div>
 
 <WinModal
@@ -648,5 +658,37 @@
 
 	.btn.primary {
 		background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+	}
+
+	.rules {
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 15px;
+		padding: 20px;
+		width: 100%;
+	}
+
+	.rules h3 {
+		margin-bottom: 15px;
+		font-size: 1rem;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.rules ul {
+		list-style: none;
+	}
+
+	.rules li {
+		padding: 6px 0;
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.85rem;
+		padding-left: 20px;
+		position: relative;
+	}
+
+	.rules li::before {
+		content: '\2663';
+		position: absolute;
+		left: 0;
+		color: #6366f1;
 	}
 </style>
