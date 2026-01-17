@@ -131,6 +131,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"98": "Cliquer sur les badges NOUVEAU ou MIS À JOUR affiche maintenant plus d'infos sur le jeu",
 		"100": "Le labyrinthe a maintenant plus d'impasses et est plus difficile",
 		"103": "La liste des parties de Bataille Navale se met à jour automatiquement",
 		"104": "Les pièces du Tangram peuvent maintenant être déplacées librement",

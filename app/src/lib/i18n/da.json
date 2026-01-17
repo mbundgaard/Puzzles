@@ -131,6 +131,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"98": "Klik på NY eller OPDATERET badges viser nu mere info om spillet",
 		"100": "Labyrint har nu flere blindgyder og er sværere at løse",
 		"103": "Sænke Slagskibe spilisten opdateres nu automatisk",
 		"104": "Tangram brikker kan nu flyttes frit rundt",

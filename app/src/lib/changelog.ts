@@ -10,6 +10,7 @@ export interface ChangelogEntry {
 }
 
 export const changelogEntries: ChangelogEntry[] = [
+	{ issue: 98, closedAt: '2026-01-17T10:00:00Z', submitter: 'Martin' },
 	{ issue: 100, closedAt: '2026-01-16T15:00:00Z', submitter: 'Martin', game: '28-labyrint' },
 	{ issue: 103, closedAt: '2026-01-16T14:30:00Z', submitter: 'Martin', game: '25-saenke-slagskibe' },
 	{ issue: 104, closedAt: '2026-01-16T12:00:00Z', submitter: 'Martin', game: '24-tangram' },
