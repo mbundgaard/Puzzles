@@ -342,15 +342,17 @@
 		{/if}
 	</div>
 
-	<div class="rules">
-		<h3>{t('rules.title')}</h3>
-		<ul>
-			<li>{t('rules.rule1')}</li>
-			<li>{t('rules.rule2')}</li>
-			<li>{t('rules.rule3')}</li>
-			<li>{t('rules.rule4')}</li>
-		</ul>
-	</div>
+	{#if gamePhase !== 'betting'}
+		<div class="rules">
+			<h3>{t('rules.title')}</h3>
+			<ul>
+				<li>{t('rules.rule1')}</li>
+				<li>{t('rules.rule2')}</li>
+				<li>{t('rules.rule3')}</li>
+				<li>{t('rules.rule4')}</li>
+			</ul>
+		</div>
+	{/if}
 </div>
 
 <WinModal
