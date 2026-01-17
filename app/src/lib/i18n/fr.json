@@ -290,6 +290,10 @@
 		"30-halv-12": {
 			"title": "Blackjack",
 			"description": "Battez le croupier - si vous pouvez !"
+		},
+		"31-video-poker": {
+			"title": "Video Poker",
+			"description": "Construisez la meilleure main de poker"
 		}
 	}
 }

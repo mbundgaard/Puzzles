@@ -324,6 +324,16 @@ export const games: GameInfo[] = [
 		points: 2,
 		created: '2026-01-16',
 		updated: '2026-01-16'
+	},
+	{
+		id: '31-video-poker',
+		number: '31',
+		icon: '🃏',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./31-video-poker/VideoPoker.svelte'),
+		accentColor: '#6366f1',
+		points: 3,
+		created: '2026-01-17'
 	}
 ];
 

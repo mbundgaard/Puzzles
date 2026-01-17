@@ -290,6 +290,10 @@
 		"30-halv-12": {
 			"title": "Blackjack",
 			"description": "Slå dealeren - hvis du kan!"
+		},
+		"31-video-poker": {
+			"title": "Video Poker",
+			"description": "Byg den bedste pokerhånd"
 		}
 	}
 }

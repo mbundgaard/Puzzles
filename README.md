@@ -36,6 +36,8 @@ This is a family project made just for fun - built with [Claude Code](https://cl
 | 27 | Ordsøgning | 1/3/5 | 2026-01-03 | 2026-01-10 | Find hidden words in the grid - AI generated puzzles |
 | 28 | Labyrint | 3 | 2026-01-05 | | Navigate through a maze with fog of war |
 | 29 | Maskeværk | 3 | 2026-01-09 | | Read the AI-generated knitting pattern and fill the grid correctly |
+| 30 | Blackjack | 2 | 2026-01-16 | | Classic card game - beat the dealer to 21 |
+| 31 | Video Poker | 3 | 2026-01-17 | | Build the best 5-card poker hand |
 
 ## Features
 
