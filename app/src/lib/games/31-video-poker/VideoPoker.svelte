@@ -349,7 +349,6 @@
 				<li>{t('rules.rule1')}</li>
 				<li>{t('rules.rule2')}</li>
 				<li>{t('rules.rule3')}</li>
-				<li>{t('rules.rule4')}</li>
 			</ul>
 		</div>
 	{/if}
