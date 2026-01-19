@@ -127,6 +127,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"50": "Tic-Tac-Toe now has movable pieces - no more draws!",
 		"100": "Labyrinth maze now has more dead ends and is harder to solve",
 		"103": "Battleship game list now updates automatically",
 		"104": "Tangram pieces can now be moved freely",

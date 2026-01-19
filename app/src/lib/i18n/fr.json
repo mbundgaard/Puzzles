@@ -127,6 +127,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"50": "Le Morpion a maintenant des pièces mobiles - plus de matchs nuls !",
 		"100": "Le labyrinthe a maintenant plus d'impasses et est plus difficile",
 		"103": "La liste des parties de Bataille Navale se met à jour automatiquement",
 		"104": "Les pièces du Tangram peuvent maintenant être déplacées librement",

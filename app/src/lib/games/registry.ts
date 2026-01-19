@@ -154,7 +154,8 @@ export const games: GameInfo[] = [
 		component: () => import('./11-tictactoe/TicTacToe.svelte'),
 		accentColor: '#ec4899',
 		points: 1,
-		created: '2025-12-28'
+		created: '2025-12-28',
+		updated: '2026-01-19'
 	},
 	{
 		id: '12-roerfoering',

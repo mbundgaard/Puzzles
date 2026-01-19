@@ -2,16 +2,20 @@
 	"title": "Tic-Tac-Toe",
 	"newGame": "New Game",
 	"status": {
-		"yourTurn": "Your turn (X)",
+		"placePieces": "Place {n} more piece(s)",
+		"selectPiece": "Select a piece to move",
+		"moveSelected": "Tap an adjacent cell to move",
 		"aiThinking": "AI thinking...",
 		"won": "You won!",
-		"lost": "AI won!",
-		"draw": "Draw!"
+		"lost": "AI won!"
+	},
+	"phase": {
+		"placing": "Placing phase",
+		"moving": "Moving phase"
 	},
 	"score": {
 		"you": "You",
-		"ai": "AI",
-		"draw": "Draw"
+		"ai": "AI"
 	},
 	"difficulty": {
 		"label": "Difficulty",
@@ -21,9 +25,10 @@
 	},
 	"rules": {
 		"title": "How to play",
-		"rule1": "You play as X, the computer is O",
-		"rule2": "Tap a cell to place your mark",
-		"rule3": "Get three in a row (horizontal, vertical, or diagonal) to win",
-		"rule4": "Choose difficulty to adjust the AI level"
+		"rule1": "Each player has 3 pieces to place",
+		"rule2": "After all pieces are placed, move them to adjacent cells",
+		"rule3": "Get three in a row to win",
+		"rule4": "Tap your piece to select, then tap where to move",
+		"rule5": "No more draws - play until someone wins!"
 	}
 }

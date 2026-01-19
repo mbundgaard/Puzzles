@@ -2,16 +2,20 @@
 	"title": "Morpion",
 	"newGame": "Nouveau Jeu",
 	"status": {
-		"yourTurn": "Votre tour (X)",
+		"placePieces": "Placez {n} pièce(s) de plus",
+		"selectPiece": "Sélectionnez une pièce à déplacer",
+		"moveSelected": "Appuyez sur une case adjacente pour déplacer",
 		"aiThinking": "L'IA réfléchit...",
 		"won": "Vous avez gagné !",
-		"lost": "L'IA a gagné !",
-		"draw": "Match nul !"
+		"lost": "L'IA a gagné !"
+	},
+	"phase": {
+		"placing": "Phase de placement",
+		"moving": "Phase de déplacement"
 	},
 	"score": {
 		"you": "Vous",
-		"ai": "IA",
-		"draw": "Nul"
+		"ai": "IA"
 	},
 	"difficulty": {
 		"label": "Difficulté",
@@ -21,9 +25,10 @@
 	},
 	"rules": {
 		"title": "Comment jouer",
-		"rule1": "Vous jouez X, l'ordinateur joue O",
-		"rule2": "Appuyez sur une case pour placer votre marque",
-		"rule3": "Alignez trois symboles (horizontal, vertical ou diagonal) pour gagner",
-		"rule4": "Choisissez la difficulté pour ajuster le niveau de l'IA"
+		"rule1": "Chaque joueur a 3 pièces à placer",
+		"rule2": "Une fois toutes les pièces placées, déplacez-les vers les cases adjacentes",
+		"rule3": "Alignez trois pièces pour gagner",
+		"rule4": "Appuyez sur votre pièce pour la sélectionner, puis sur la destination",
+		"rule5": "Plus de matchs nuls - jouez jusqu'à ce qu'il y ait un gagnant !"
 	}
 }

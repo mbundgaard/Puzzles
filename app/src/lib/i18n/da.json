@@ -127,6 +127,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"50": "Kryds og Bolle har nu flytbare brikker - ingen flere uafgjorte!",
 		"100": "Labyrint har nu flere blindgyder og er sværere at løse",
 		"103": "Sænke Slagskibe spilisten opdateres nu automatisk",
 		"104": "Tangram brikker kan nu flyttes frit rundt",

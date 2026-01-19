@@ -2,16 +2,20 @@
 	"title": "Kryds og Bolle",
 	"newGame": "Nyt Spil",
 	"status": {
-		"yourTurn": "Din tur (X)",
+		"placePieces": "Placer {n} brik(ker) mere",
+		"selectPiece": "Vælg en brik at flytte",
+		"moveSelected": "Tryk på et tilstødende felt for at flytte",
 		"aiThinking": "AI tænker...",
 		"won": "Du vandt!",
-		"lost": "AI vandt!",
-		"draw": "Uafgjort!"
+		"lost": "AI vandt!"
+	},
+	"phase": {
+		"placing": "Placeringsfase",
+		"moving": "Flytningsfase"
 	},
 	"score": {
 		"you": "Du",
-		"ai": "AI",
-		"draw": "Uafgjort"
+		"ai": "AI"
 	},
 	"difficulty": {
 		"label": "Sværhedsgrad",
@@ -21,9 +25,10 @@
 	},
 	"rules": {
 		"title": "Sådan spiller du",
-		"rule1": "Du spiller som X, computeren er O",
-		"rule2": "Tryk på et felt for at placere dit kryds",
-		"rule3": "Få tre på stribe (vandret, lodret eller diagonalt) for at vinde",
-		"rule4": "Vælg sværhedsgrad for at justere AI'ens niveau"
+		"rule1": "Hver spiller har 3 brikker at placere",
+		"rule2": "Når alle brikker er placeret, flyt dem til tilstødende felter",
+		"rule3": "Få tre på stribe for at vinde",
+		"rule4": "Tryk på din brik for at vælge, derefter tryk hvor den skal flyttes",
+		"rule5": "Ingen flere uafgjorte - spil indtil nogen vinder!"
 	}
 }
