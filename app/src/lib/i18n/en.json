@@ -36,6 +36,7 @@
 		"info": "Info",
 		"changelog": "What's New",
 		"about": "About the app",
+		"reload": "Reload",
 		"sourceCode": "Source code"
 	},
 	"feedback": {
@@ -126,6 +127,11 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"100": "Labyrinth maze now has more dead ends and is harder to solve",
+		"103": "Battleship game list now updates automatically",
+		"104": "Tangram pieces can now be moved freely",
+		"107": "Half Twelve no longer asks for age at start",
+		"106": "Half Twelve added to feedback list",
 		"90": "Feedback can now include images",
 		"94": "Word Search now reliably shows all 8 words in multiple directions",
 		"96": "Quiz Master now goes directly to category selection after a game instead of back to kids/adults",
@@ -276,6 +282,10 @@
 		"29-maskevaerk": {
 			"title": "Knitting",
 			"description": "Follow the pattern"
+		},
+		"30-halv-12": {
+			"title": "Blackjack",
+			"description": "Beat the dealer - if you can!"
 		}
 	}
 }

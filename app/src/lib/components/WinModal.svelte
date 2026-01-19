@@ -25,6 +25,15 @@
 	let submitted = $state(false);
 	let errorMessage = $state('');
 
+	// Reset state when modal closes (handles both button close and external close)
+	$effect(() => {
+		if (!isOpen) {
+			submitted = false;
+			submitting = false;
+			errorMessage = '';
+		}
+	});
+
 	// Auto-submit when modal opens
 	$effect(() => {
 		if (isOpen && !submitting && !submitted) {

@@ -96,6 +96,7 @@
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 	let pollInterval = $state<number | null>(null);
+	let openGamesPollInterval = $state<number | null>(null);
 	let showWinModal = $state(false);
 
 	// Ship placement state
@@ -124,6 +125,7 @@
 	// Clean up polling on destroy
 	onDestroy(() => {
 		stopPolling();
+		stopOpenGamesPolling();
 	});
 
 	// ============ API Functions ============
@@ -183,6 +185,7 @@
 	async function joinGame(id: string): Promise<void> {
 		loading = true;
 		error = null;
+		stopOpenGamesPolling();
 
 		try {
 			const response = await fetch(`${API_BASE}/${id}/join`, {
@@ -354,6 +357,19 @@
 		}
 	}
 
+	function startOpenGamesPolling(): void {
+		stopOpenGamesPolling();
+		// Poll every 3 seconds for new games
+		openGamesPollInterval = window.setInterval(fetchOpenGames, 3000);
+	}
+
+	function stopOpenGamesPolling(): void {
+		if (openGamesPollInterval !== null) {
+			window.clearInterval(openGamesPollInterval);
+			openGamesPollInterval = null;
+		}
+	}
+
 	// ============ Ship Placement ============
 
 	function resetShipPlacement(): void {
@@ -509,6 +525,7 @@
 	function goToJoin(): void {
 		phase = 'joining';
 		fetchOpenGames();
+		startOpenGamesPolling();
 	}
 
 	function goToCreate(): void {
@@ -517,6 +534,9 @@
 
 	function goBack(): void {
 		if (phase === 'creating' || phase === 'joining') {
+			if (phase === 'joining') {
+				stopOpenGamesPolling();
+			}
 			phase = 'menu';
 		} else if (phase === 'waiting') {
 			cancelGame();
@@ -605,13 +625,10 @@
 
 			<h2>{t('join.title')}</h2>
 
-			{#if loading}
+			{#if loading && openGames.length === 0}
 				<div class="spinner"></div>
 			{:else if openGames.length === 0}
 				<p class="no-games">{t('join.noGames')}</p>
-				<button class="btn btn-secondary" onclick={fetchOpenGames}>
-					{t('join.refresh')}
-				</button>
 			{:else}
 				<div class="game-list">
 					{#each openGames as game}
@@ -626,9 +643,6 @@
 						</button>
 					{/each}
 				</div>
-				<button class="btn btn-secondary refresh-btn" onclick={fetchOpenGames}>
-					{t('join.refresh')}
-				</button>
 			{/if}
 
 			{#if error}
@@ -1100,11 +1114,6 @@
 	.game-stakes {
 		color: rgba(255, 255, 255, 0.7);
 		font-family: monospace;
-	}
-
-	.refresh-btn {
-		display: block;
-		margin: 0 auto;
 	}
 
 	/* Ship Placement */

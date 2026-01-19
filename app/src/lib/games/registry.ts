@@ -255,7 +255,8 @@ export const games: GameInfo[] = [
 		component: () => import('./24-tangram/Tangram.svelte'),
 		accentColor: '#a855f7',
 		points: 5,
-		created: '2025-12-30'
+		created: '2025-12-30',
+		updated: '2026-01-16'
 	},
 	{
 		id: '25-saenke-slagskibe',
