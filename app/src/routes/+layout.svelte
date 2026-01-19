@@ -141,13 +141,9 @@
 </svelte:head>
 
 <div class="app">
-	<!-- Animated background -->
+	<!-- Animated background (disabled for performance) -->
 	{#if !isGamePage}
-		<div class="background">
-			<div class="orb orb-1"></div>
-			<div class="orb orb-2"></div>
-			<div class="orb orb-3"></div>
-		</div>
+		<div class="background"></div>
 	{/if}
 
 	{#if isHomePage}
