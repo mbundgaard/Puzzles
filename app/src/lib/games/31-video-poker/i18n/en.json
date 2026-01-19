@@ -1,0 +1,42 @@
+{
+	"status": {
+		"placeBet": "Place your bet",
+		"selectCards": "Tap cards to hold, then Draw",
+		"drawing": "Drawing...",
+		"noWin": "No winning hand"
+	},
+	"bet": {
+		"choose": "Choose your bet",
+		"current": "Bet",
+		"point": "point",
+		"points": "points",
+		"info": "Win 2x your bet or more!"
+	},
+	"payouts": "Payouts",
+	"hands": {
+		"royalFlush": "Royal Flush",
+		"straightFlush": "Straight Flush",
+		"fourOfAKind": "Four of a Kind",
+		"fullHouse": "Full House",
+		"flush": "Flush",
+		"straight": "Straight",
+		"threeOfAKind": "Three of a Kind",
+		"twoPair": "Two Pair",
+		"jacksOrBetter": "Jacks or Better"
+	},
+	"held": "Hold",
+	"hint": "Tap cards to hold them",
+	"draw": "Draw",
+	"newGame": "New Game",
+	"score": {
+		"won": "Won",
+		"lost": "Lost"
+	},
+	"rules": {
+		"title": "Rules",
+		"rule1": "You are dealt 5 cards",
+		"rule2": "Tap cards you want to keep",
+		"rule3": "Press Draw to replace the rest",
+		"rule4": "Pair of J, Q, K or A wins 1x bet"
+	}
+}

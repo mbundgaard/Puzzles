@@ -1,0 +1,39 @@
+{
+	"title": "Blackjack",
+	"newGame": "Nouvelle Partie",
+	"hit": "Tirer",
+	"stand": "Rester",
+	"dealer": "Croupier",
+	"you": "Vous",
+	"status": {
+		"pressStart": "Appuyez pour commencer",
+		"placeBet": "Placez votre mise",
+		"yourTurn": "Votre tour - tirez ou restez",
+		"dealerTurn": "Tour du croupier...",
+		"bust": "Perdu ! Plus de 21",
+		"blackjack": "Blackjack !",
+		"won": "Vous avez gagné !",
+		"lost": "Le croupier a gagné !",
+		"push": "Égalité !"
+	},
+	"bet": {
+		"choose": "Choisir mise",
+		"point": "point",
+		"points": "points",
+		"info": "Gain = 2x mise",
+		"current": "Mise"
+	},
+	"score": {
+		"you": "Vous",
+		"dealer": "Croupier",
+		"won": "Gagné",
+		"lost": "Perdu"
+	},
+	"rules": {
+		"title": "Règles",
+		"rule1": "Approchez-vous de 21 sans dépasser",
+		"rule2": "Cartes 2-10 = valeur, As = 1 ou 11, Figures = 10",
+		"rule3": "Égalité = personne ne gagne (push)",
+		"rule4": "Misez 1-3 points - gagnez 2x votre mise"
+	}
+}

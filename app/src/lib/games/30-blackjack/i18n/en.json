@@ -1,0 +1,39 @@
+{
+	"title": "Blackjack",
+	"newGame": "New Game",
+	"hit": "Hit",
+	"stand": "Stand",
+	"dealer": "Dealer",
+	"you": "You",
+	"status": {
+		"pressStart": "Press to start",
+		"placeBet": "Place your bet",
+		"yourTurn": "Your turn - hit or stand",
+		"dealerTurn": "Dealer's turn...",
+		"bust": "Bust! Over 21",
+		"blackjack": "Blackjack!",
+		"won": "You won!",
+		"lost": "Dealer won!",
+		"push": "Push!"
+	},
+	"bet": {
+		"choose": "Choose bet",
+		"point": "point",
+		"points": "points",
+		"info": "Win = 2x bet",
+		"current": "Bet"
+	},
+	"score": {
+		"you": "You",
+		"dealer": "Dealer",
+		"won": "Won",
+		"lost": "Lost"
+	},
+	"rules": {
+		"title": "Rules",
+		"rule1": "Get as close to 21 as possible without going over",
+		"rule2": "Cards 2-10 = value, Ace = 1 or 11, Face cards = 10",
+		"rule3": "Tie = no winner (push)",
+		"rule4": "Bet 1-3 points - win 2x your bet"
+	}
+}

@@ -1,0 +1,42 @@
+{
+	"status": {
+		"placeBet": "Placez votre mise",
+		"selectCards": "Touchez pour garder, puis Tirez",
+		"drawing": "Tirage...",
+		"noWin": "Pas de combinaison gagnante"
+	},
+	"bet": {
+		"choose": "Choisissez votre mise",
+		"current": "Mise",
+		"point": "point",
+		"points": "points",
+		"info": "Gagnez 2x votre mise ou plus!"
+	},
+	"payouts": "Gains",
+	"hands": {
+		"royalFlush": "Quinte Flush Royale",
+		"straightFlush": "Quinte Flush",
+		"fourOfAKind": "Carre",
+		"fullHouse": "Full",
+		"flush": "Couleur",
+		"straight": "Suite",
+		"threeOfAKind": "Brelan",
+		"twoPair": "Deux Paires",
+		"jacksOrBetter": "Paire de Valets ou mieux"
+	},
+	"held": "Garder",
+	"hint": "Touchez les cartes pour les garder",
+	"draw": "Tirer",
+	"newGame": "Nouvelle Partie",
+	"score": {
+		"won": "Gagne",
+		"lost": "Perdu"
+	},
+	"rules": {
+		"title": "Regles",
+		"rule1": "Vous recevez 5 cartes",
+		"rule2": "Touchez les cartes a garder",
+		"rule3": "Appuyez sur Tirer pour remplacer",
+		"rule4": "Paire de V, D, R ou A gagne 1x"
+	}
+}

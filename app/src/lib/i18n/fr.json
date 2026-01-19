@@ -130,8 +130,8 @@
 		"100": "Le labyrinthe a maintenant plus d'impasses et est plus difficile",
 		"103": "La liste des parties de Bataille Navale se met à jour automatiquement",
 		"104": "Les pièces du Tangram peuvent maintenant être déplacées librement",
-		"107": "Demi Douze ne demande plus l'âge au démarrage",
-		"106": "Demi Douze ajouté à la liste de feedback",
+		"107": "Blackjack ne demande plus l'âge au démarrage",
+		"106": "Blackjack ajouté à la liste de feedback",
 		"90": "Les commentaires peuvent maintenant inclure des images",
 		"94": "Mots Cachés affiche maintenant les 8 mots de manière fiable dans plusieurs directions",
 		"96": "Maître du Quiz va maintenant directement à la sélection de catégorie après un jeu",
@@ -283,9 +283,13 @@
 			"title": "Tricot",
 			"description": "Suivez le modèle"
 		},
-		"30-halv-12": {
+		"30-blackjack": {
 			"title": "Blackjack",
 			"description": "Battez le croupier - si vous pouvez !"
+		},
+		"31-video-poker": {
+			"title": "Video Poker",
+			"description": "Construisez la meilleure main de poker"
 		}
 	}
 }

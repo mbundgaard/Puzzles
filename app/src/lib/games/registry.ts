@@ -313,6 +313,27 @@ export const games: GameInfo[] = [
 		points: 3,
 		created: '2026-01-09',
 		ai: true
+	},
+	{
+		id: '30-blackjack',
+		number: '30',
+		icon: '🂡',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./30-blackjack/Blackjack.svelte'),
+		accentColor: '#1e40af',
+		points: 2,
+		created: '2026-01-16',
+		updated: '2026-01-16'
+	},
+	{
+		id: '31-video-poker',
+		number: '31',
+		icon: '🃏',
+		languages: ['da', 'en', 'fr'],
+		component: () => import('./31-video-poker/VideoPoker.svelte'),
+		accentColor: '#6366f1',
+		points: 3,
+		created: '2026-01-17'
 	}
 ];
 

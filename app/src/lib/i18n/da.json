@@ -130,8 +130,8 @@
 		"100": "Labyrint har nu flere blindgyder og er sværere at løse",
 		"103": "Sænke Slagskibe spilisten opdateres nu automatisk",
 		"104": "Tangram brikker kan nu flyttes frit rundt",
-		"107": "Halv 12 spørger ikke længere om alder ved start",
-		"106": "Halv 12 tilføjet til feedback-listen",
+		"107": "Blackjack spørger ikke længere om alder ved start",
+		"106": "Blackjack tilføjet til feedback-listen",
 		"90": "Feedback kan nu indeholde billeder",
 		"94": "Ordsøgning viser nu alle 8 ord pålideligt i flere retninger",
 		"96": "Quiz Mester går nu direkte til kategorivalg efter et spil i stedet for tilbage til børn/voksne",
@@ -283,9 +283,13 @@
 			"title": "Maskeværk",
 			"description": "Strik efter opskriften"
 		},
-		"30-halv-12": {
+		"30-blackjack": {
 			"title": "Blackjack",
 			"description": "Slå dealeren - hvis du kan!"
+		},
+		"31-video-poker": {
+			"title": "Video Poker",
+			"description": "Byg den bedste pokerhånd"
 		}
 	}
 }

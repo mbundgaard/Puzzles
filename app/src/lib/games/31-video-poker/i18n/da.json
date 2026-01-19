@@ -1,0 +1,42 @@
+{
+	"status": {
+		"placeBet": "Placer dit indskud",
+		"selectCards": "Tryk for at beholde, tryk Byt",
+		"drawing": "Bytter...",
+		"noWin": "Ingen gevinstkombination"
+	},
+	"bet": {
+		"choose": "Vaelg dit indskud",
+		"current": "Indskud",
+		"point": "point",
+		"points": "point",
+		"info": "Vind 2x dit indskud eller mere!"
+	},
+	"payouts": "Gevinster",
+	"hands": {
+		"royalFlush": "Royal Flush",
+		"straightFlush": "Straight Flush",
+		"fourOfAKind": "Fire ens",
+		"fullHouse": "Fuldt Hus",
+		"flush": "Flush",
+		"straight": "Straight",
+		"threeOfAKind": "Tre ens",
+		"twoPair": "To par",
+		"jacksOrBetter": "Knaegte eller bedre"
+	},
+	"held": "Beholder",
+	"hint": "Tryk pa kort for at beholde dem",
+	"draw": "Byt",
+	"newGame": "Nyt Spil",
+	"score": {
+		"won": "Vundet",
+		"lost": "Tabt"
+	},
+	"rules": {
+		"title": "Regler",
+		"rule1": "Du far 5 kort",
+		"rule2": "Tryk pa kort du vil beholde",
+		"rule3": "Tryk Byt for at fa nye kort",
+		"rule4": "Par af kn, D, K eller Es vinder 1x"
+	}
+}
