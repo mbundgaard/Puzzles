@@ -127,6 +127,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"115": "Removed piece counter in placement phase in Tic-Tac-Toe",
 		"113": "Fixed win popup now showing a form to enter nickname when none is saved",
 		"50": "Tic-Tac-Toe now has movable pieces - no more draws!",
 		"100": "Labyrinth maze now has more dead ends and is harder to solve",

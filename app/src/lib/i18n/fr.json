@@ -127,6 +127,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"115": "Supprimé le compteur de pièces dans la phase de placement du Morpion",
 		"113": "Corrigé: la popup de victoire affiche maintenant un formulaire pour entrer le pseudo quand aucun n'est enregistré",
 		"50": "Le Morpion a maintenant des pièces mobiles - plus de matchs nuls !",
 		"100": "Le labyrinthe a maintenant plus d'impasses et est plus difficile",

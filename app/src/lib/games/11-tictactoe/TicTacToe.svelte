@@ -482,7 +482,6 @@
 	<div class="phase-indicator">
 		{#if gamePhase === 'placing'}
 			<span class="phase">{t('phase.placing')}</span>
-			<span class="piece-count">X: {countPieces('X')}/{MAX_PIECES} | O: {countPieces('O')}/{MAX_PIECES}</span>
 		{:else}
 			<span class="phase">{t('phase.moving')}</span>
 		{/if}
@@ -600,11 +599,6 @@
 		color: #a855f7;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
-	}
-
-	.piece-count {
-		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.6);
 	}
 
 	.board {
