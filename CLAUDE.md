@@ -24,6 +24,26 @@ General Feedback
 
 ---
 
+## ⚠️ ISSUE COMPLETION CHECKLIST (MUST follow every time)
+
+When an issue is DONE, complete ALL steps in order:
+
+**File changes (before commit):**
+- [ ] **1. Changelog** - Add entry to `app/src/lib/components/ChangelogModal.svelte`
+- [ ] **2. Translations** - Add changelog text to `app/src/lib/i18n/{da,en,fr}.json`
+- [ ] **3. Registry** - If game changed, add `updated: 'YYYY-MM-DD'` in registry.ts
+- [ ] **4. README** - If game changed, update the **Updated** column
+- [ ] **5. Version** - Set `APP_VERSION` in `app/src/lib/version.ts` (`date +%s`)
+
+**Deploy:**
+- [ ] **6. Commit & push** - `git add -A && git commit && git push`
+- [ ] **7. Set server version** - `/api/version/set?code=<key>` with same timestamp
+- [ ] **8. Close issue** - `/api/issue/close?code=<key>` with comment
+
+**Function key:** `echo -n "puzzles:PASSWORD" | openssl dgst -sha256 -binary | base64`
+
+---
+
 ## Critical Rules
 
 ### Language Requirements
@@ -62,60 +82,28 @@ echo -n "puzzles:PASSWORD" | openssl dgst -sha256 -binary | base64
 
 Replace `PASSWORD` with the actual password. Use the output as the `code` query parameter.
 
-### Closing Issues (MUST follow)
+### Closing Issues
 
-**Do NOT use `Fixes #X` in commit messages.** Follow this workflow:
+**Do NOT use `Fixes #X` in commit messages.** Follow the ISSUE COMPLETION CHECKLIST above.
 
-1. Fix the issue in the code
-2. Add changelog entry to `app/src/lib/components/ChangelogModal.svelte`
-3. Commit and push all changes
-4. Call the API to close the issue (include API key):
-
-```bash
-curl -X POST "https://puzzlesapi.azurewebsites.net/api/issue/close?code=<function_key>" \
-  -H "Content-Type: application/json" \
-  -d '{"issueNumber": 9, "comment": "**Fixed:** Description of what was fixed."}'
-```
-
-### Changelog Entries (MUST follow)
-
-Add new entries at the **TOP** of `changelogEntries` array in `ChangelogModal.svelte`:
-
+Changelog entry format in `ChangelogModal.svelte`:
 ```typescript
-{ issue: 37, closedAt: '2025-12-31T14:30:00Z', submitter: 'Martin', text: 'Description of fix' },
+{ issue: 37, closedAt: '2025-12-31T14:30:00Z', submitter: 'Martin' },
 ```
-
-- **issue**: GitHub issue number
-- **closedAt**: ISO timestamp from GitHub's `closed_at` field
 - **submitter**: Check the GitHub issue - do NOT assume it's Martin
-- **text**: Short English description
 
-### Deploy Workflow (MUST follow)
+API calls:
+```bash
+# Close issue
+curl -X POST "https://puzzlesapi.azurewebsites.net/api/issue/close?code=<key>" \
+  -H "Content-Type: application/json" \
+  -d '{"issueNumber": 9, "comment": "**Fixed:** Description"}'
 
-When ready to commit and deploy:
-
-1. **Update version timestamp** in `app/src/lib/version.ts`:
-   ```typescript
-   export const APP_VERSION = <current_unix_timestamp>;
-   ```
-   Get timestamp with: `date +%s`
-
-2. **Commit and push** all changes to main
-
-3. **Update server version** by calling the API (include API key):
-   ```bash
-   curl -X POST "https://puzzlesapi.azurewebsites.net/api/version/set?code=<function_key>" \
-     -H "Content-Type: application/json" \
-     -d '{"version": <same_timestamp>}'
-   ```
-
-### Updating Existing Games
-
-When making significant changes to a game:
-
-1. Update the `updated` field in the game registry
-2. Update the **Updated** column in README.md to today's date
-3. Commit all changes together
+# Set version
+curl -X POST "https://puzzlesapi.azurewebsites.net/api/version/set?code=<key>" \
+  -H "Content-Type: application/json" \
+  -d '{"version": <timestamp>}'
+```
 
 ---
 
