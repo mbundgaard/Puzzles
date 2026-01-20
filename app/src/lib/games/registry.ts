@@ -302,7 +302,8 @@ export const games: GameInfo[] = [
 		component: () => import('./28-labyrint/Labyrint.svelte'),
 		accentColor: '#06b6d4',
 		points: 3,
-		created: '2026-01-05'
+		created: '2026-01-05',
+		updated: '2026-01-20'
 	},
 	{
 		id: '29-maskevaerk',

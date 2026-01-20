@@ -3,6 +3,7 @@
 	"newGame": "Nouveau Jeu",
 	"steps": "Pas",
 	"won": "Vous avez trouve la sortie !",
+	"lost": "Trop de pas ! Reessayez.",
 	"controls": {
 		"up": "Haut",
 		"down": "Bas",

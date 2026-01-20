@@ -127,6 +127,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"114": "Labyrint viser nu skridt-tæller med maksimalt tilladte skridt",
 		"115": "Fjernet brik-tæller i placeringsfasen i Kryds og Bolle",
 		"113": "Rettet at gevinst-popup nu viser formular til at indtaste navn når ingen er gemt",
 		"50": "Kryds og Bolle har nu flytbare brikker - ingen flere uafgjorte!",

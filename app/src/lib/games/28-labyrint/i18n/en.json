@@ -3,6 +3,7 @@
 	"newGame": "New Game",
 	"steps": "Steps",
 	"won": "You found the exit!",
+	"lost": "Too many steps! Try again.",
 	"controls": {
 		"up": "Up",
 		"down": "Down",

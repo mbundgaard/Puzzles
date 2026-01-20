@@ -3,6 +3,7 @@
 	"newGame": "Nyt Spil",
 	"steps": "Skridt",
 	"won": "Du fandt udgangen!",
+	"lost": "For mange skridt! Prov igen.",
 	"controls": {
 		"up": "Op",
 		"down": "Ned",
