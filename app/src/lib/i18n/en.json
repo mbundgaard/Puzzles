@@ -127,6 +127,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"113": "Fixed win popup now showing a form to enter nickname when none is saved",
 		"50": "Tic-Tac-Toe now has movable pieces - no more draws!",
 		"100": "Labyrinth maze now has more dead ends and is harder to solve",
 		"103": "Battleship game list now updates automatically",
@@ -177,7 +178,9 @@
 		"saved": "Score saved!",
 		"skip": "Skip",
 		"nameError": "Name must be 2-20 characters",
-		"saveError": "Could not save score"
+		"saveError": "Could not save score",
+		"enterNickname": "Enter your name to save points:",
+		"claim": "Claim Points"
 	},
 	"games": {
 		"04-quiz-master": {

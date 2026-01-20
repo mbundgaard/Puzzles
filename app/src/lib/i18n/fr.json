@@ -127,6 +127,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"113": "Corrigé: la popup de victoire affiche maintenant un formulaire pour entrer le pseudo quand aucun n'est enregistré",
 		"50": "Le Morpion a maintenant des pièces mobiles - plus de matchs nuls !",
 		"100": "Le labyrinthe a maintenant plus d'impasses et est plus difficile",
 		"103": "La liste des parties de Bataille Navale se met à jour automatiquement",
@@ -177,7 +178,9 @@
 		"saved": "Score enregistré !",
 		"skip": "Passer",
 		"nameError": "Le nom doit contenir 2-20 caractères",
-		"saveError": "Impossible d'enregistrer le score"
+		"saveError": "Impossible d'enregistrer le score",
+		"enterNickname": "Entrez votre nom pour sauvegarder les points :",
+		"claim": "Réclamer les Points"
 	},
 	"games": {
 		"04-quiz-master": {

@@ -127,6 +127,7 @@
 		"close": "Luk"
 	},
 	"changelog": {
+		"113": "Rettet at gevinst-popup nu viser formular til at indtaste navn når ingen er gemt",
 		"50": "Kryds og Bolle har nu flytbare brikker - ingen flere uafgjorte!",
 		"100": "Labyrint har nu flere blindgyder og er sværere at løse",
 		"103": "Sænke Slagskibe spilisten opdateres nu automatisk",
@@ -177,7 +178,9 @@
 		"saved": "Score gemt!",
 		"skip": "Spring over",
 		"nameError": "Navnet skal være 2-20 tegn",
-		"saveError": "Kunne ikke gemme score"
+		"saveError": "Kunne ikke gemme score",
+		"enterNickname": "Indtast dit navn for at gemme point:",
+		"claim": "Gem Point"
 	},
 	"games": {
 		"04-quiz-master": {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getNickname, recordWin } from '$lib/api';
+	import { getNickname, setNickname, recordWin, isValidNickname } from '$lib/api';
 	import { t, translate, type Translations } from '$lib/i18n';
 
 	interface Props {
@@ -24,6 +24,7 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let errorMessage = $state('');
+	let needsNickname = $state(false);
 
 	// Reset state when modal closes (handles both button close and external close)
 	$effect(() => {
@@ -31,16 +32,20 @@
 			submitted = false;
 			submitting = false;
 			errorMessage = '';
+			needsNickname = false;
+			nickname = '';
 		}
 	});
 
-	// Auto-submit when modal opens
+	// Auto-submit when modal opens if nickname exists
 	$effect(() => {
-		if (isOpen && !submitting && !submitted) {
+		if (isOpen && !submitting && !submitted && !needsNickname) {
 			const saved = getNickname();
 			if (saved) {
 				nickname = saved;
 				submitWin(saved);
+			} else {
+				needsNickname = true;
 			}
 		}
 	});
@@ -52,11 +57,19 @@
 		const result = await recordWin(gameNumber, name, points);
 
 		if (result.success) {
+			setNickname(name);
 			submitted = true;
+			needsNickname = false;
 		} else {
 			errorMessage = result.error || tr('win.saveError');
 		}
 		submitting = false;
+	}
+
+	function handleSubmit() {
+		if (isValidNickname(nickname)) {
+			submitWin(nickname.trim());
+		}
 	}
 
 	function handleClose() {
@@ -64,6 +77,8 @@
 		submitted = false;
 		submitting = false;
 		errorMessage = '';
+		needsNickname = false;
+		nickname = '';
 		onClose();
 	}
 
@@ -91,6 +106,28 @@
 					<span class="checkmark">✓</span>
 					<p class="nickname">{nickname}</p>
 					<p class="saved-text">{tr('win.saved')}</p>
+				</div>
+			{:else if needsNickname}
+				<div class="nickname-form">
+					<p class="form-label">{tr('win.enterNickname')}</p>
+					<input
+						type="text"
+						bind:value={nickname}
+						placeholder={tr('leaderboard.nickname')}
+						maxlength="20"
+						class="nickname-input"
+						onkeydown={(e) => e.key === 'Enter' && handleSubmit()}
+					/>
+					{#if errorMessage}
+						<p class="error">{errorMessage}</p>
+					{/if}
+					<button
+						class="submit-btn"
+						onclick={handleSubmit}
+						disabled={!isValidNickname(nickname)}
+					>
+						{tr('win.claim')}
+					</button>
 				</div>
 			{:else if errorMessage}
 				<div class="error-state">
@@ -238,6 +275,62 @@
 	}
 
 	.close-btn:active {
+		transform: scale(0.95);
+	}
+
+	.nickname-form {
+		padding: 10px 0;
+	}
+
+	.form-label {
+		color: rgba(255, 255, 255, 0.8);
+		margin: 0 0 12px 0;
+		font-size: 0.95rem;
+	}
+
+	.nickname-input {
+		width: 100%;
+		padding: 12px 16px;
+		font-size: 1rem;
+		font-family: 'Poppins', sans-serif;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 12px;
+		color: white;
+		text-align: center;
+		outline: none;
+		transition: border-color 0.2s ease;
+	}
+
+	.nickname-input::placeholder {
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.nickname-input:focus {
+		border-color: #22c55e;
+	}
+
+	.submit-btn {
+		margin-top: 15px;
+		padding: 12px 30px;
+		font-size: 1rem;
+		font-weight: 600;
+		font-family: 'Poppins', sans-serif;
+		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+		color: white;
+		border: none;
+		border-radius: 25px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		width: 100%;
+	}
+
+	.submit-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.submit-btn:active:not(:disabled) {
 		transform: scale(0.95);
 	}
 </style>
