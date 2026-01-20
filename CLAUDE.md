@@ -47,13 +47,20 @@ All puzzles MUST work on mobile devices with touch-only input:
 
 ### Admin API Authentication
 
-Admin endpoints require an API key in the `X-API-Key` header:
+Admin endpoints use Azure Functions authentication. Protected endpoints:
 - **issue/*** - All issue management endpoints
 - **version/set** - Deploy version endpoint
-- **usage** - Usage stats
-- **today** - Today's stats
+- **usage**, **today**, **stats** - Usage statistics
 
-The API key is stored in `api/local.settings.json` (for local dev) and as `ADMIN_API_KEY` environment variable in Azure.
+**Getting the function key:**
+
+When you need to call an admin endpoint, ask the user for the admin password, then derive the function key:
+
+```bash
+echo -n "puzzles:PASSWORD" | openssl dgst -sha256 -binary | base64
+```
+
+Replace `PASSWORD` with the actual password. Use the output as the `code` query parameter.
 
 ### Closing Issues (MUST follow)
 
@@ -65,9 +72,8 @@ The API key is stored in `api/local.settings.json` (for local dev) and as `ADMIN
 4. Call the API to close the issue (include API key):
 
 ```bash
-curl -X POST https://puzzlesapi.azurewebsites.net/api/issue/close \
+curl -X POST "https://puzzlesapi.azurewebsites.net/api/issue/close?code=<function_key>" \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: <key from local.settings.json>" \
   -d '{"issueNumber": 9, "comment": "**Fixed:** Description of what was fixed."}'
 ```
 
@@ -98,9 +104,8 @@ When ready to commit and deploy:
 
 3. **Update server version** by calling the API (include API key):
    ```bash
-   curl -X POST https://puzzlesapi.azurewebsites.net/api/version/set \
+   curl -X POST "https://puzzlesapi.azurewebsites.net/api/version/set?code=<function_key>" \
      -H "Content-Type: application/json" \
-     -H "X-API-Key: <key from local.settings.json>" \
      -d '{"version": <same_timestamp>}'
    ```
 

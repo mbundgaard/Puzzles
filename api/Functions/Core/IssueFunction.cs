@@ -13,27 +13,22 @@ public class IssueFunction
 {
     private readonly ILogger<IssueFunction> _logger;
     private readonly IGitHubService _gitHubService;
-    private readonly IAdminAuthService _adminAuth;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
-    public IssueFunction(ILogger<IssueFunction> logger, IGitHubService gitHubService, IAdminAuthService adminAuth)
+    public IssueFunction(ILogger<IssueFunction> logger, IGitHubService gitHubService)
     {
         _logger = logger;
         _gitHubService = gitHubService;
-        _adminAuth = adminAuth;
     }
 
     [Function("CreateIssue")]
     public async Task<IActionResult> CreateIssue(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "issue/create")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "issue/create")] HttpRequest req)
     {
-        var authResult = _adminAuth.Authorize(req);
-        if (authResult != null) return authResult;
-
         CreateIssueRequest? request;
         try
         {
@@ -80,11 +75,8 @@ public class IssueFunction
 
     [Function("EditIssue")]
     public async Task<IActionResult> EditIssue(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "issue/edit")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "issue/edit")] HttpRequest req)
     {
-        var authResult = _adminAuth.Authorize(req);
-        if (authResult != null) return authResult;
-
         EditIssueRequest? request;
         try
         {
@@ -141,11 +133,8 @@ public class IssueFunction
 
     [Function("CloseIssue")]
     public async Task<IActionResult> CloseIssue(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "issue/close")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "issue/close")] HttpRequest req)
     {
-        var authResult = _adminAuth.Authorize(req);
-        if (authResult != null) return authResult;
-
         CloseIssueRequest? request;
         try
         {

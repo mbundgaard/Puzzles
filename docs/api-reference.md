@@ -4,9 +4,9 @@
 
 ## Authentication
 
-Admin endpoints require an API key in the `X-API-Key` header. The key is stored in:
-- **Local development:** `api/local.settings.json` (`ADMIN_API_KEY`)
-- **Production:** Azure environment variable `ADMIN_API_KEY`
+Admin endpoints use Azure Functions authentication. Pass the function key as `?code=<key>` query parameter.
+
+The key is derived from a password: `echo -n "puzzles:PASSWORD" | openssl dgst -sha256 -binary | base64`
 
 Protected endpoints are marked with 🔐 below.
 
