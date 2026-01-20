@@ -67,20 +67,10 @@ All puzzles MUST work on mobile devices with touch-only input:
 
 ### Admin API Authentication
 
-Admin endpoints use Azure Functions authentication. Protected endpoints:
+Admin endpoints use Azure Functions authentication (pass `?code=<key>`). Protected endpoints:
 - **issue/*** - All issue management endpoints
 - **version/set** - Deploy version endpoint
 - **usage**, **today**, **stats** - Usage statistics
-
-**Getting the function key:**
-
-When you need to call an admin endpoint, ask the user for the admin password, then derive the function key:
-
-```bash
-echo -n "puzzles:PASSWORD" | openssl dgst -sha256 -binary | base64
-```
-
-Replace `PASSWORD` with the actual password. Use the output as the `code` query parameter.
 
 ### Closing Issues
 
