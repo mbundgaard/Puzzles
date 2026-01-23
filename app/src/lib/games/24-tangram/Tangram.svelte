@@ -200,6 +200,9 @@
 		moved: boolean;
 	} | null>(null);
 
+	// Track touch events to prevent double-firing with synthesized mouse events
+	let lastTouchTime = 0;
+
 	// SVG and canvas refs
 	let playAreaEl: HTMLDivElement | null = null;
 	let svgEl: SVGSVGElement | null = null;
@@ -511,6 +514,13 @@
 	function startDrag(e: MouseEvent | TouchEvent, piece: Piece) {
 		if (hasWon) return;
 
+		// Prevent double-firing: ignore mouse events right after touch events
+		if ('touches' in e) {
+			lastTouchTime = Date.now();
+		} else if (Date.now() - lastTouchTime < 500) {
+			return; // Ignore synthesized mouse event
+		}
+
 		e.preventDefault();
 
 		const point = getEventPoint(e);
@@ -563,6 +573,13 @@
 	// End drag
 	function handleDragEnd(e: MouseEvent | TouchEvent) {
 		if (!dragState) return;
+
+		// Prevent double-firing: ignore mouse events right after touch events
+		if ('changedTouches' in e) {
+			lastTouchTime = Date.now();
+		} else if (Date.now() - lastTouchTime < 500) {
+			return; // Ignore synthesized mouse event
+		}
 
 		const pieceId = dragState.piece.data.id;
 		const moved = dragState.moved;

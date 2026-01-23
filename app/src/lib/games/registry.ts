@@ -257,7 +257,7 @@ export const games: GameInfo[] = [
 		accentColor: '#a855f7',
 		points: 5,
 		created: '2025-12-30',
-		updated: '2026-01-16'
+		updated: '2026-01-23'
 	},
 	{
 		id: '25-saenke-slagskibe',

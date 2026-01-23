@@ -127,6 +127,7 @@
 		"close": "Fermer"
 	},
 	"changelog": {
+		"119": "Corrigé la rotation du Tangram sur écrans tactiles - tourne maintenant correctement de 45 degrés",
 		"114": "Le labyrinthe affiche maintenant un compteur de pas avec le maximum autorise",
 		"115": "Supprimé le compteur de pièces dans la phase de placement du Morpion",
 		"113": "Corrigé: la popup de victoire affiche maintenant un formulaire pour entrer le pseudo quand aucun n'est enregistré",

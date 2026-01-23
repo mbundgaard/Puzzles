@@ -127,6 +127,7 @@
 		"close": "Close"
 	},
 	"changelog": {
+		"119": "Fixed Tangram rotation on touch devices - now correctly rotates 45 degrees",
 		"114": "Maze now shows move counter with maximum allowed steps",
 		"115": "Removed piece counter in placement phase in Tic-Tac-Toe",
 		"113": "Fixed win popup now showing a form to enter nickname when none is saved",
