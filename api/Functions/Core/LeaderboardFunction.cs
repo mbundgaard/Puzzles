@@ -43,9 +43,9 @@ public class LeaderboardFunction
         return new OkObjectResult(leaderboard);
     }
 
-    [Function("GetStats")]
-    public async Task<IActionResult> GetStats(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "stats")] HttpRequest req)
+    [Function("GetTotalPoints")]
+    public async Task<IActionResult> GetTotalPoints(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "points")] HttpRequest req)
     {
         var totalPoints = await _storage.GetTotalPointsAsync();
 
